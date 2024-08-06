@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 # RIMS PTS SERVICE
 
 RIMS_PTS_SERVICE
+=======
+# RIMS_PTS_SERVICE
+
+2024 운전자격확인시스템 웹 포털 서비스
+>>>>>>> 373babb6807af90249f63b0ebd1334e3919faf54
 
 ## Getting started
 
@@ -15,14 +21,22 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
+<<<<<<< HEAD
 git remote add origin https://gitlab.tspdev.synology.me:49200/ts/dqvs/2023/src/RIMS_PTS_SERVICE.git
+=======
+git remote add origin https://gitlab.tspdev.synology.me:49200/ts/dqvs/2024/src/rims_pts_service.git
+>>>>>>> 373babb6807af90249f63b0ebd1334e3919faf54
 git branch -M master
 git push -uf origin master
 ```
 
 ## Integrate with your tools
 
+<<<<<<< HEAD
 - [ ] [Set up project integrations](http://gitlab/ts/dqvs/2023/src/RIMS_PTS_SERVICE/-/settings/integrations)
+=======
+- [ ] [Set up project integrations](http://gitlab/ts/dqvs/2024/src/rims_pts_service/-/settings/integrations)
+>>>>>>> 373babb6807af90249f63b0ebd1334e3919faf54
 
 ## Collaborate with your team
 
