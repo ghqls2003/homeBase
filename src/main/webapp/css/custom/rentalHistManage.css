@@ -35,6 +35,8 @@ ul.yearBox li label {
 }
 
 @media (max-width:650px) {
+	.year_picker {display: block;}
+	.year_picker label{font-size: 1.4rem !important;}
     .sub03 .popup.detail_popup .box{height: 650px;}
     .sub03 .popup.detail_popup .info_wr {height: 477px;}
 }
