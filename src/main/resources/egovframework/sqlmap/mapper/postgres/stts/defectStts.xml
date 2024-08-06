@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="stts.defectStts">
+
+	<!-- 대여차량결함 유형별 통계 -->
+	<select id="defectCate" parameterType="paraMap" resultType="resultMap">
+	/* 대여차량결함 유형별 통계 */
+		SELECT SUM(CASE d.defects_type_cd WHEN '1' THEN 1 ELSE 0 END) recall
+			, SUM(CASE d.defects_type_cd WHEN '2' THEN 1 ELSE 0 END) refair 
+		FROM
+			dqvs.dvs_rac_mt_car car
+		LEFT OUTER JOIN
+			dqvs.dvs_rac_mt_defect d
+		ON d.vin = car.vin 
+	</select>
+	
+	<!-- 대여차량결함 내용별 통계 -->
+	<select id="defectCntnt" parameterType="paraMap" resultType="resultMap">
+	/* 대여차량결함 내용별 통계 */	
+		SELECT CASE d.defects_type_cd WHEN '1' THEN '리콜' WHEN '2' THEN '무상수리' ELSE '-' END defects_type_cd
+			, d.prcs_stts_cd 
+			, d.defects_sn
+			, COUNT(d.vin) cnt 
+		FROM
+			dqvs.dvs_rac_mt_car car
+		LEFT OUTER JOIN
+			dqvs.dvs_rac_mt_defect d
+		ON d.vin = car.vin 
+		WHERE NOT d.defects_type_cd ISNULL
+		GROUP BY d.defects_type_cd 
+			, d.prcs_stts_cd 
+			, d.defects_sn
+		ORDER BY d.defects_sn
+	</select>	
+	
+	<sql id="defectsDataSql">
+		(
+		SELECT ROW_NUMBER() OVER(ORDER BY m.defects_sn) sn
+			, COALESCE(m.defects_sn::TEXT, '-') defects_sn
+			, COALESCE(m.co_nm, '-') co_nm
+			, COALESCE(m.vin, '-') vin
+			, COALESCE(m.vhcl_reg_no, '-') vhcl_reg_no
+			, COALESCE(m.carmdl, '-') carmdl
+			, COALESCE(m.mdlyr, '-') mdlyr
+			, COALESCE(m.defects_type_cd, '-') defects_type_cd
+			, COALESCE(m.prcs_stts_cd, '-') prcs_stts_cd 
+			, COALESCE(m.crno, '-') crno
+		FROM
+			(
+			SELECT d.defects_sn 
+				, t.co_nm
+				, d.vin
+				, car.vhcl_reg_no 
+				, car.carmdl 
+				, car.mdlyr 
+				, CASE d.defects_type_cd WHEN '1' THEN '리콜' WHEN '2' THEN '무상수리' END defects_type_cd
+				, d.prcs_stts_cd 
+				, car.crno
+			FROM
+				dqvs.dvs_rac_mt_car car
+			LEFT OUTER JOIN
+				dqvs.dvs_rac_mt_defect d
+			ON d.vin = car.vin
+			LEFT OUTER JOIN
+				(
+				SELECT mstr.crno
+					, mstr.co_nm
+					, mstr.bzmn_sn
+				FROM
+					dqvs.dvs_rac_mt_agency mstr
+				WHERE mstr.up_brno ISNULL AND mstr.offi_sn IN(NULL, '1')
+					AND mstr.bsn_stts_cd = '0'
+				) AS t
+			ON car.crno = t.crno
+			WHERE NOT d.defects_sn ISNULL
+			) AS m
+		) AS main
+	</sql>
+
+	<!-- 대여차량 결함 현황 -->
+	<select id="defectsData" parameterType="paraMap" resultType="resultMap">
+	/* 대여차량 결함 현황 */
+		SELECT *
+		FROM
+			<include refid="defectsDataSql" />
+		<if test="take != '' and take != null">
+			WHERE main.sn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		</if>
+		<if test="skip != '' and skip != null">
+			AND main.sn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+		</if>
+	</select>
+
+	<!-- 대여차량 결함 현황 카운트 -->
+	<select id="defectsDataCnt" parameterType="paraMap" resultType="int">
+	/* 대여차량 결함 현황 카운트 */
+		SELECT COUNT(*)
+		FROM
+			<include refid="defectsDataSql" />
+	</select>
+	
+</mapper>

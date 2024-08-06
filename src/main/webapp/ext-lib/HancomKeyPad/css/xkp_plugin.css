@@ -1,0 +1,303 @@
+/**
+ * XecureKeypad Plugin
+ * @version 1.5.0.6
+ * @release 2022-12-13
+ */
+@charset "utf-8";
+/* HIVELAB Web Standard */
+
+/* 기본 환경 제공, 배포시 제외 */
+body,html{width:100%;height:100%;margin:0;padding:0}
+
+/* 배포 코드 */
+.xkp_ui_box,.xkp_ui_box div,.xkp_ui_box ul,.xkp_ui_box li,.xkp_ui_box p,.xkp_ui_box .xkp_sp,.xkp_ui_box img{overflow:visible !important;position:static !important;left:auto !important;right:auto !important;top: auto !important;bottom:auto !important;float:none !important;width:auto !important;height:auto !important;margin:0 !important;padding:0 !important;border:0 !important;border-radius:0 !important;background:none !important;font-size:inherit !important;font-weight:normal !important;line-height:normal !important;vertical-align:top !important;cursor:url(../img/xkcur.cur)/*IE*/, url(../img/xkcur.png)/*other*/, default !important}
+.xkp_ui_box ul,.xkp_ui_box li{list-style:none !important}
+.xkp_ui_box .blind{overflow:hidden !important;position:absolute !important;top:0 !important;left:0 !important;width:1px !important;height:1px !important;font-size:0 !important;line-height:100px !important;white-space:nowrap !important}
+.xkp_ui_box .xkp_top,.xkp_ui_box .xkp_btm{position:relative !important;height:9px !important;margin:0 10px !important}
+.xkp_ui_box .xkp_top img,.xkp_ui_box .xkp_btm img{width:100% !important;height:10px !important}
+.xkp_ui_box .xkp_top{border-top:1px solid #cfcdcd !important}
+.xkp_ui_box .xkp_btm{border-bottom:1px solid #cfcdcd !important}
+.xkp_ui_box .xkp_top span,.xkp_ui_box .xkp_btm span{position:absolute !important;top:0 !important;width:10px !important;height:10px !important;background:url(../img/xkp_white_bg.png) no-repeat !important}
+.xkp_ui_box .xkp_top span.xkp_lt{left:-10px !important;background-position:0 0 !important}
+.xkp_ui_box .xkp_top span.xkp_rt{right:-10px !important;background-position:-12px 0 !important}
+.xkp_ui_box .xkp_btm span.xkp_lb{left:-10px !important;background-position:0 -12px !important}
+.xkp_ui_box .xkp_btm span.xkp_rb{right:-10px !important;background-position:-12px -12px !important}
+.xkp_ui_box .xkp_sp,.xkp_ui_box .xkp_cnt .xkp_tip .xkp_lx,.xkp_ui_box .xkp_cnt .xkp_tip .xkp_rx{width:44px !important;height:44px !important;background:url(../img/xkp_white_button.png) no-repeat !important}
+.xkp_ui_box .xkp_sp{display:block !important;cursor:default !important}
+.xkp_ui_box .xkp_sp img{width:44px !important;height:44px !important}
+.xkp_ui_box .xkp_sp.xkp1{background-position:0 0 !important}
+.xkp_ui_box .xkp_sp.xkp1.active{background-position:-460px 0 !important}
+.xkp_ui_box .xkp_sp.xkp2{background-position:-46px 0 !important}
+.xkp_ui_box .xkp_sp.xkp2.active{background-position:-506px 0 !important}
+.xkp_ui_box .xkp_sp.xkp3{background-position:-92px 0 !important}
+.xkp_ui_box .xkp_sp.xkp3.active{background-position:-552px 0 !important}
+.xkp_ui_box .xkp_sp.xkp4{background-position:-138px 0 !important}
+.xkp_ui_box .xkp_sp.xkp4.active{background-position:-598px 0 !important}
+.xkp_ui_box .xkp_sp.xkp5{background-position:-184px 0 !important}
+.xkp_ui_box .xkp_sp.xkp5.active{background-position:-644px 0 !important}
+.xkp_ui_box .xkp_sp.xkp6{background-position:-230px 0 !important}
+.xkp_ui_box .xkp_sp.xkp6.active{background-position:-690px 0 !important}
+.xkp_ui_box .xkp_sp.xkp7{background-position:-276px 0 !important}
+.xkp_ui_box .xkp_sp.xkp7.active{background-position:-736px 0 !important}
+.xkp_ui_box .xkp_sp.xkp8{background-position:-322px 0 !important}
+.xkp_ui_box .xkp_sp.xkp8.active{background-position:-782px 0 !important}
+.xkp_ui_box .xkp_sp.xkp9{background-position:-368px 0 !important}
+.xkp_ui_box .xkp_sp.xkp9.active{background-position:-828px 0 !important}
+.xkp_ui_box .xkp_sp.xkp10{background-position:-414px 0 !important}
+.xkp_ui_box .xkp_sp.xkp10.active{background-position:-874px 0 !important}
+.xkp_ui_box .xkp_sp.xkp11{background-position:0 -46px !important}
+.xkp_ui_box .xkp_sp.xkp11.active{background-position:-460px -46px !important}
+.xkp_ui_box .xkp_sp.xkp12{background-position:-46px -46px !important}
+.xkp_ui_box .xkp_sp.xkp12.active{background-position:-506px -46px !important}
+.xkp_ui_box .xkp_sp.xkp13{background-position:-92px -46px !important}
+.xkp_ui_box .xkp_sp.xkp13.active{background-position:-552px -46px !important}
+.xkp_ui_box .xkp_sp.xkp14{background-position:-138px -46px !important}
+.xkp_ui_box .xkp_sp.xkp14.active{background-position:-598px -46px !important}
+.xkp_ui_box .xkp_sp.xkp15{background-position:-184px -46px !important}
+.xkp_ui_box .xkp_sp.xkp15.active{background-position:-644px -46px !important}
+.xkp_ui_box .xkp_sp.xkp16{background-position:-230px -46px !important}
+.xkp_ui_box .xkp_sp.xkp16.active{background-position:-690px -46px !important}
+.xkp_ui_box .xkp_sp.xkp17{background-position:-276px -46px !important}
+.xkp_ui_box .xkp_sp.xkp17.active{background-position:-736px -46px !important}
+.xkp_ui_box .xkp_sp.xkp18{background-position:-322px -46px !important}
+.xkp_ui_box .xkp_sp.xkp18.active{background-position:-782px -46px !important}
+.xkp_ui_box .xkp_sp.xkp19{background-position:-368px -46px !important}
+.xkp_ui_box .xkp_sp.xkp19.active{background-position:-828px -46px !important}
+.xkp_ui_box .xkp_sp.xkp20{background-position:-414px -46px !important}
+.xkp_ui_box .xkp_sp.xkp20.active{background-position:-874px -46px !important}
+.xkp_ui_box .xkp_sp.xkp21{background-position:0 -92px !important}
+.xkp_ui_box .xkp_sp.xkp21.active{background-position:-460px -92px !important}
+.xkp_ui_box .xkp_sp.xkp22{background-position:-46px -92px !important}
+.xkp_ui_box .xkp_sp.xkp22.active{background-position:-506px -92px !important}
+.xkp_ui_box .xkp_sp.xkp23{background-position:-92px -92px !important}
+.xkp_ui_box .xkp_sp.xkp23.active{background-position:-552px -92px !important}
+.xkp_ui_box .xkp_sp.xkp24{background-position:-138px -92px !important}
+.xkp_ui_box .xkp_sp.xkp24.active{background-position:-598px -92px !important}
+.xkp_ui_box .xkp_sp.xkp25{background-position:-184px -92px !important}
+.xkp_ui_box .xkp_sp.xkp25.active{background-position:-644px -92px !important}
+.xkp_ui_box .xkp_sp.xkp26{background-position:-230px -92px !important}
+.xkp_ui_box .xkp_sp.xkp26.active{background-position:-690px -92px !important}
+.xkp_ui_box .xkp_sp.xkp27{background-position:-276px -92px !important}
+.xkp_ui_box .xkp_sp.xkp27.active{background-position:-736px -92px !important}
+.xkp_ui_box .xkp_sp.xkp28{background-position:-322px -92px !important}
+.xkp_ui_box .xkp_sp.xkp28.active{background-position:-782px -92px !important}
+.xkp_ui_box .xkp_sp.xkp29{background-position:-368px -92px !important}
+.xkp_ui_box .xkp_sp.xkp29.active{background-position:-828px -92px !important}
+.xkp_ui_box .xkp_sp.xkp30{background-position:-414px -92px !important}
+.xkp_ui_box .xkp_sp.xkp30.active{background-position:-874px -92px !important}
+.xkp_ui_box .xkp_sp.xkp31{background-position:0 -138px !important}
+.xkp_ui_box .xkp_sp.xkp31.active{background-position:-460px -138px !important}
+.xkp_ui_box .xkp_sp.xkp32{background-position:-46px -138px !important}
+.xkp_ui_box .xkp_sp.xkp32.active{background-position:-506px -138px !important}
+.xkp_ui_box .xkp_sp.xkp33{background-position:-92px -138px !important}
+.xkp_ui_box .xkp_sp.xkp33.active{background-position:-552px -138px !important}
+.xkp_ui_box .xkp_sp.xkp34{background-position:-138px -138px !important}
+.xkp_ui_box .xkp_sp.xkp34.active{background-position:-598px -138px !important}
+.xkp_ui_box .xkp_sp.xkp35{background-position:-184px -138px !important}
+.xkp_ui_box .xkp_sp.xkp35.active{background-position:-644px -138px !important}
+.xkp_ui_box .xkp_sp.xkp36{background-position:-230px -138px !important}
+.xkp_ui_box .xkp_sp.xkp36.active{background-position:-690px -138px !important}
+.xkp_ui_box .xkp_sp.xkp37{background-position:-276px -138px !important}
+.xkp_ui_box .xkp_sp.xkp37.active{background-position:-736px -138px !important}
+.xkp_ui_box .xkp_sp.xkp38{background-position:-322px -138px !important}
+.xkp_ui_box .xkp_sp.xkp38.active{background-position:-782px -138px !important}
+.xkp_ui_box .xkp_sp.xkp39{background-position:-368px -138px !important}
+.xkp_ui_box .xkp_sp.xkp39.active{background-position:-828px -138px !important}
+.xkp_ui_box .xkp_sp.xkp40{background-position:-414px -138px !important}
+.xkp_ui_box .xkp_sp.xkp40.active{background-position:-874px -138px !important}
+.xkp_ui_box .xkp_sp.xkp41{background-position:0 -184px !important}
+.xkp_ui_box .xkp_sp.xkp41.active{background-position:-460px -184px !important}
+.xkp_ui_box .xkp_sp.xkp42{background-position:-46px -184px !important}
+.xkp_ui_box .xkp_sp.xkp42.active{background-position:-506px -184px !important}
+.xkp_ui_box .xkp_sp.xkp43{background-position:-92px -184px !important}
+.xkp_ui_box .xkp_sp.xkp43.active{background-position:-552px -184px !important}
+.xkp_ui_box .xkp_sp.xkp44{background-position:-138px -184px !important}
+.xkp_ui_box .xkp_sp.xkp44.active{background-position:-598px -184px !important}
+.xkp_ui_box .xkp_sp.xkp45{background-position:-184px -184px !important}
+.xkp_ui_box .xkp_sp.xkp45.active{background-position:-644px -184px !important}
+.xkp_ui_box .xkp_sp.xkp46{background-position:-230px -184px !important}
+.xkp_ui_box .xkp_sp.xkp46.active{background-position:-690px -184px !important}
+.xkp_ui_box .xkp_sp.xkp47{background-position:-276px -184px !important}
+.xkp_ui_box .xkp_sp.xkp47.active{background-position:-736px -184px !important}
+.xkp_ui_box .xkp_sp.xkp48{background-position:-322px -184px !important}
+.xkp_ui_box .xkp_sp.xkp48.active{background-position:-782px -184px !important}
+.xkp_ui_box .xkp_sp.xkp49{background-position:-368px -184px !important}
+.xkp_ui_box .xkp_sp.xkp49.active{background-position:-828px -184px !important}
+.xkp_ui_box .xkp_sp.xkp50{background-position:-414px -184px !important}
+.xkp_ui_box .xkp_sp.xkp50.active{background-position:-874px -184px !important}
+.xkp_ui_box .xkp_sp.xkp51{background-position:0 -230px !important}
+.xkp_ui_box .xkp_sp.xkp51.active{background-position:-460px -230px !important}
+.xkp_ui_box .xkp_sp.xkp52{background-position:-46px -230px !important}
+.xkp_ui_box .xkp_sp.xkp52.active{background-position:-506px -230px !important}
+.xkp_ui_box .xkp_sp.xkp53{background-position:-92px -230px !important}
+.xkp_ui_box .xkp_sp.xkp53.active{background-position:-552px -230px !important}
+.xkp_ui_box .xkp_sp.xkp54{background-position:-138px -230px !important}
+.xkp_ui_box .xkp_sp.xkp54.active{background-position:-598px -230px !important}
+.xkp_ui_box .xkp_sp.xkp55{background-position:-184px -230px !important}
+.xkp_ui_box .xkp_sp.xkp55.active{background-position:-644px -230px !important}
+.xkp_ui_box .xkp_sp.xkp56{background-position:-230px -230px !important}
+.xkp_ui_box .xkp_sp.xkp56.active{background-position:-690px -230px !important}
+.xkp_ui_box .xkp_sp.xkp57{background-position:-276px -230px !important}
+.xkp_ui_box .xkp_sp.xkp57.active{background-position:-736px -230px !important}
+.xkp_ui_box .xkp_sp.xkp58{background-position:-322px -230px !important}
+.xkp_ui_box .xkp_sp.xkp58.active{background-position:-782px -230px !important}
+.xkp_ui_box .xkp_sp.xkp59{background-position:-368px -230px !important}
+.xkp_ui_box .xkp_sp.xkp59.active{background-position:-828px -230px !important}
+.xkp_ui_box .xkp_sp.xkp60{background-position:-414px -230px !important}
+.xkp_ui_box .xkp_sp.xkp60.active{background-position:-874px -230px !important}
+.xkp_ui_box .xkp_sp.xkp61{background-position:0 -276px !important}
+.xkp_ui_box .xkp_sp.xkp61.active{background-position:-460px -276px !important}
+.xkp_ui_box .xkp_sp.xkp62{background-position:-46px -276px !important}
+.xkp_ui_box .xkp_sp.xkp62.active{background-position:-506px -276px !important}
+.xkp_ui_box .xkp_sp.xkp63{width:69px !important;background-position:-92px -276px !important}
+.xkp_ui_box .xkp_sp.xkp63.active{background-position:-552px -276px !important}
+.xkp_ui_box .xkp_sp.xkp63 img{width:69px !important}
+.xkp_ui_box .xkp_sp.xkp64{width:69px !important;background-position:-163px -276px !important}
+.xkp_ui_box .xkp_sp.xkp64.active{background-position:-623px -276px !important}
+.xkp_ui_box .xkp_sp.xkp64 img{width:69px !important}
+.xkp_ui_box.ko .xkp_sp.xkp64{background-position:-484px -506px !important}
+.xkp_ui_box.ko .xkp_sp.xkp64.active{background-position:-697px -506px !important}
+.xkp_ui_box .xkp_sp.xkp65{width:54px !important;background-position:-234px -276px !important}
+.xkp_ui_box .xkp_sp.xkp65.active{background-position:-694px -276px !important}
+.xkp_ui_box .xkp_sp.xkp65 img{width:54px !important}
+.xkp_ui_box .xkp_sp.xkp66{width:93px !important;background-position:-290px -276px !important}
+.xkp_ui_box .xkp_sp.xkp66.active{background-position:-750px -276px !important}
+.xkp_ui_box .xkp_sp.xkp66 img{width:93px !important}
+.xkp_ui_box .xkp_sp.xkp67{width:69px !important;background-position:-385px -276px !important}
+.xkp_ui_box .xkp_sp.xkp67.active{background-position:-845px -276px !important}
+.xkp_ui_box .xkp_sp.xkp67 img{width:69px !important}
+.xkp_ui_box.ko .xkp_sp.xkp67{background-position:-555px -506px !important}
+.xkp_ui_box.ko .xkp_sp.xkp67.active{background-position:-768px -506px !important}
+.xkp_ui_box .xkp_sp.xkp68{width:69px !important;background-position:0 -322px !important}
+.xkp_ui_box .xkp_sp.xkp68.active{background-position:-460px -322px !important}
+.xkp_ui_box .xkp_sp.xkp68 img{width:69px !important}
+.xkp_ui_box.ko .xkp_sp.xkp68{background-position:-626px -506px !important}
+.xkp_ui_box.ko .xkp_sp.xkp68.active{background-position:-839px -506px !important}
+.xkp_ui_box .xkp_sp.xkp69{width:59px !important;background-position:-71px -322px !important}
+.xkp_ui_box .xkp_sp.xkp69.active{background-position:-531px -322px !important}
+.xkp_ui_box .xkp_sp.xkp69 img{width:59px !important}
+.xkp_ui_box .xkp_sp.xkp70{width:93px !important;background-position:-132px -322px !important}
+.xkp_ui_box .xkp_sp.xkp70.active{background-position:-592px -322px !important}
+.xkp_ui_box .xkp_sp.xkp70 img{width:93px !important}
+.xkp_ui_box .xkp_sp.xkp71{background-position:-227px -322px !important}
+.xkp_ui_box .xkp_sp.xkp71.active{background-position:-687px -322px !important}
+.xkp_ui_box .xkp_sp.xkp72{width:93px !important;background-position:-273px -322px !important}
+.xkp_ui_box .xkp_sp.xkp72.active{background-position:-733px -322px !important}
+.xkp_ui_box .xkp_sp.xkp72 img{width:93px !important}
+.xkp_ui_box .xkp_sp.xkp73{background-position:-368px -322px !important}
+.xkp_ui_box .xkp_sp.xkp73.active{background-position:-828px -322px !important}
+.xkp_ui_box .xkp_sp.xkp74{background-position:-414px -322px !important}
+.xkp_ui_box .xkp_sp.xkp74.active{background-position:-874px -322px !important}
+.xkp_ui_box .xkp_sp.xkp75{background-position:0 -368px !important}
+.xkp_ui_box .xkp_sp.xkp75.active{background-position:-460px -368px !important}
+.xkp_ui_box .xkp_sp.xkp76{background-position:-46px -368px !important}
+.xkp_ui_box .xkp_sp.xkp76.active{background-position:-506px -368px !important}
+.xkp_ui_box .xkp_sp.xkp77{background-position:-92px -368px !important}
+.xkp_ui_box .xkp_sp.xkp77.active{background-position:-552px -368px !important}
+.xkp_ui_box .xkp_sp.xkp78{background-position:-138px -368px !important}
+.xkp_ui_box .xkp_sp.xkp78.active{background-position:-598px -368px !important}
+.xkp_ui_box .xkp_sp.xkp79{background-position:-184px -368px !important}
+.xkp_ui_box .xkp_sp.xkp79.active{background-position:-644px -368px !important}
+.xkp_ui_box .xkp_sp.xkp80{background-position:-230px -368px !important}
+.xkp_ui_box .xkp_sp.xkp80.active{background-position:-690px -368px !important}
+.xkp_ui_box .xkp_sp.xkp81{background-position:-276px -368px !important}
+.xkp_ui_box .xkp_sp.xkp81.active{background-position:-736px -368px !important}
+.xkp_ui_box .xkp_sp.xkp82{background-position:-322px -368px !important}
+.xkp_ui_box .xkp_sp.xkp82.active{background-position:-782px -368px !important}
+.xkp_ui_box .xkp_sp.xkp83{background-position:-368px -368px !important}
+.xkp_ui_box .xkp_sp.xkp83.active{background-position:-828px -368px !important}
+.xkp_ui_box .xkp_sp.xkp84{background-position:-414px -368px !important}
+.xkp_ui_box .xkp_sp.xkp84.active{background-position:-874px -368px !important}
+.xkp_ui_box .xkp_sp.xkp85{background-position:0 -414px !important}
+.xkp_ui_box .xkp_sp.xkp85.active{background-position:-460px -414px !important}
+.xkp_ui_box .xkp_sp.xkp86{background-position:-46px -414px !important}
+.xkp_ui_box .xkp_sp.xkp86.active{background-position:-506px -414px !important}
+.xkp_ui_box .xkp_sp.xkp87{background-position:-92px -414px !important}
+.xkp_ui_box .xkp_sp.xkp87.active{background-position:-552px -414px !important}
+.xkp_ui_box .xkp_sp.xkp88{background-position:-138px -414px !important}
+.xkp_ui_box .xkp_sp.xkp88.active{background-position:-598px -414px !important}
+.xkp_ui_box .xkp_sp.xkp89{background-position:-184px -414px !important}
+.xkp_ui_box .xkp_sp.xkp89.active{background-position:-644px -414px !important}
+.xkp_ui_box .xkp_sp.xkp90{background-position:-230px -414px !important}
+.xkp_ui_box .xkp_sp.xkp90.active{background-position:-690px -414px !important}
+.xkp_ui_box .xkp_sp.xkp91{background-position:-276px -414px !important}
+.xkp_ui_box .xkp_sp.xkp91.active{background-position:-736px -414px !important}
+.xkp_ui_box .xkp_sp.xkp92{background-position:-322px -414px !important}
+.xkp_ui_box .xkp_sp.xkp92.active{background-position:-782px -414px !important}
+.xkp_ui_box .xkp_sp.xkp93{background-position:-368px -414px !important}
+.xkp_ui_box .xkp_sp.xkp93.active{background-position:-828px -414px !important}
+.xkp_ui_box .xkp_sp.xkp94{background-position:-414px -414px !important}
+.xkp_ui_box .xkp_sp.xkp94.active{background-position:-874px -414px !important}
+.xkp_ui_box .xkp_sp.xkp95{background-position:0 -460px !important}
+.xkp_ui_box .xkp_sp.xkp95.active{background-position:-460px -460px !important}
+.xkp_ui_box .xkp_sp.xkp96{background-position:-46px -460px !important}
+.xkp_ui_box .xkp_sp.xkp96.active{background-position:-506px -460px !important}
+.xkp_ui_box .xkp_sp.xkp97{background-position:-92px -460px !important}
+.xkp_ui_box .xkp_sp.xkp97.active{background-position:-552px -460px !important}
+.xkp_ui_box .xkp_sp.xkp98{background-position:-138px -460px !important}
+.xkp_ui_box .xkp_sp.xkp98.active{background-position:-598px -460px !important}
+.xkp_ui_box .xkp_sp.xkp99{background-position:-184px -460px !important}
+.xkp_ui_box .xkp_sp.xkp99.active{background-position:-644px -460px !important}
+.xkp_ui_box .xkp_sp.xkp100{background-position:-230px -460px !important}
+.xkp_ui_box .xkp_sp.xkp100.active{background-position:-690px -460px !important}
+.xkp_ui_box .xkp_sp.xkp101{background-position:-276px -460px !important}
+.xkp_ui_box .xkp_sp.xkp101.active{background-position:-736px -460px !important}
+.xkp_ui_box .xkp_sp.xkp102{background-position:-322px -460px !important}
+.xkp_ui_box .xkp_sp.xkp102.active{background-position:-782px -460px !important}
+.xkp_ui_box .xkp_sp.xkp103{background-position:-368px -460px !important}
+.xkp_ui_box .xkp_sp.xkp103.active{background-position:-828px -460px !important}
+.xkp_ui_box .xkp_sp.xkp104{background-position:-414px -460px !important}
+.xkp_ui_box .xkp_sp.xkp104.active{background-position:-874px -460px !important}
+/*  space bar  105~106   */
+.xkp_ui_box .xkp_sp.xkp105{width:305px !important;background-position:0px -598px !important}
+.xkp_ui_box .xkp_sp.xkp105.active{background-position:-422px -598px !important}
+.xkp_ui_box .xkp_sp.xkp105 img{width:305px !important}
+.xkp_ui_box .xkp_sp.xkp106{width:305px !important;background-position:0px -598px !important}
+.xkp_ui_box .xkp_sp.xkp106.active{background-position:-422px -598px !important}
+.xkp_ui_box .xkp_sp.xkp106 img{width:305px !important}
+.xkp_ui_box .xkp_sp.xkp107{background-position:-92px -506px !important}
+.xkp_ui_box .xkp_sp.xkp107.active{background-position:-552px 0 !important}
+.xkp_ui_box .xkp_sp.xkp108{background-position:-138px -506px !important}
+.xkp_ui_box .xkp_sp.xkp108.active{background-position:-598px 0 !important}
+.xkp_ui_box .xkp_sp.xkp109{background-position:-184px -506px !important}
+.xkp_ui_box .xkp_sp.xkp109.active{background-position:-644px 0 !important}
+.xkp_ui_box .xkp_sp.xkp110{background-position:-230px -506px !important}
+.xkp_ui_box .xkp_sp.xkp110.active{background-position:-690px 0 !important}
+.xkp_ui_box .xkp_sp.xkp111{background-position:-276px -506px !important}
+.xkp_ui_box .xkp_sp.xkp111.active{background-position:-736px 0 !important}
+.xkp_ui_box .xkp_sp.xkp112{background-position:-322px -506px !important}
+.xkp_ui_box .xkp_sp.xkp112.active{background-position:-782px 0 !important}
+.xkp_ui_box .xkp_sp.xkp113{background-position:-368px -506px !important}
+.xkp_ui_box .xkp_sp.xkp113.active{background-position:-828px 0 !important}
+.xkp_ui_box .xkp_sp.xkp114{background-position:-414px -506px !important}
+.xkp_ui_box .xkp_sp.xkp114.active{background-position:-874px 0 !important}
+.xkp_ui_box .xkp_cnt{overflow:hidden !important;padding:0 14px !important;border-left:1px solid #cdcccc !important;border-right:1px solid #cdcccc !important}
+.xkp_ui_box .xkp_cnt ul{overflow:hidden !important;width:100% !important;margin-top:5px !important}
+.xkp_ui_box .xkp_cnt ul.space{text-align: center;}
+.xkp_ui_box .xkp_cnt ul.space li{float: none !important; display: inline-block;}
+.xkp_ui_box .xkp_cnt li{float:left !important;height:44px !important;margin-left:5px !important}
+.xkp_ui_box .xkp_cnt li:first-child{margin-left:0 !important}
+.xkp_ui_box .xkp_cnt .xkp_tip{position:relative !important;height:20px !important;margin-top:5px !important}
+.xkp_ui_box .xkp_cnt .xkp_tip img{width:100% !important;height:20px !important}
+.xkp_ui_box .xkp_cnt .xkp_tip .xkp_tx{width: 735px !important; box-sizing: border-box; display:block !important;position:absolute !important;top:-1px !important;left:10px !important;right:10px !important;height:22px !important;margin:0 !important;border-top:1px solid #6d7380 !important;border-bottom:1px solid #6d7380 !important;background:#9fa7b3 !important;font-size:11px !important;color:#fff !important;line-height:20px !important;text-align:center !important}
+.xkp_ui_box .xkp_cnt .xkp_tip .xkp_lx,.xkp_ui_box .xkp_cnt .xkp_tip .xkp_rx{position:absolute !important;top:-1px !important;width:10px !important;height:22px !important}
+.xkp_ui_box .xkp_cnt .xkp_tip .xkp_lx{left:0 !important;background-position:-460px -506px !important}
+.xkp_ui_box .xkp_cnt .xkp_tip .xkp_rx{right:0 !important;background-position:-472px -506px !important}
+.xkp_ui_box .xkp_cnt .xkp_time{float:right !important;height:20px !important;font-size:11px !important;color:#f31b2f !important;letter-spacing:-1px !important;line-height:20px !important;text-align:right !important;}
+.xkp_ui_box .xkp_cnt .xkp_session {position: absolute !important; bottom: 10px !important; right: 15px !important;}
+.xkp_ui_box.xkp_ui_letter{width:638px !important}
+.xkp_ui_box.xkp_ui_letter .xkp_cnt,.xkp_ui_box.xkp_ui_letter .xkp_cnt .xkp_tip,.xkp_ui_box.xkp_ui_letter .xkp_cnt .xkp_time{width:608px !important}
+.xkp_ui_box.xkp_ui_number{width:319px !important}
+.xkp_ui_box.xkp_ui_number li.xkp_gap{margin-left:4px !important}
+.xkp_ui_box.xkp_ui_qwerty{width:785px !important}
+.xkp_ui_box.xkp_ui_qwerty .xkp_cnt .xkp_tip, .xkp_ui_box.xkp_ui_qwerty .xkp_cnt .xkp_time{width:755px !important;}
+.xkp_ui_box.xkp_ui_qwerty .xkp_cnt .xkp_session{width: 200px !important;}
+.xkp_ui_box.xkp_ui_lower{width:613px !important}
+.xkp_ui_box.xkp_ui_lower .xkp_cnt .xkp_tip,.xkp_ui_box.xkp_ui_lower .xkp_cnt .xkp_time{width:583px !important}
+.xkp_ui_box.xkp_ui_lower li.xkp_gap{margin-left:4px !important}
+
+/* 키패드 bg컬러 */
+.xkp_ui_box .xkp_top,.xkp_ui_box .xkp_btm{background:#dbdde2 !important}
+.xkp_ui_box .xkp_cnt{background:#dbdde2 !important}
+
+/* //배포 코드 */

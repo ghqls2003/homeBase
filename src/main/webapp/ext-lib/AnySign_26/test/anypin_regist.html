@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="cache-control" content="no-cache">
+
+<script type="text/javascript" src="../anyPinInterface.js"></script>
+
+<!-- XecureKeyPad Plugin -->
+<script type="text/javascript" src="../XecureKeypad/js/xkeypad_config.js"></script>
+<script type="text/javascript" src="../XecureKeypad/js/xkeypad_html5_pin.js"></script>
+
+<!-- Pattern UI -->
+<link href="../patternLock/patternLock.css"  rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../patternLock/patternLockjQuery-1.12.4.js"></script>
+<script type="text/javascript" src="../patternLock/patternLock_min.js"></script>
+
+<style type="text/css">  
+.header-title {
+	border-bottom: 7px solid #4b5869;
+	cursor: pointer;
+}
+.logo {
+	width: 103px;
+	height: 36px;
+	background-position: 0 0;
+	background: url(../AnyPin/img/sp_com.png) no-repeat;
+}
+
+.visual_a {
+	border-bottom: 2px solid #ebebeb;
+	height: 81px;
+	padding-top: 58px;
+	text-align: center;
+}
+
+.visual_a h1 {
+	color: #4b5869;
+}
+
+.wrap {
+	width: 90%;
+	margin: 0 auto;
+}
+
+.visual_a h2 {
+	display: inline-block;
+	overflow: hidden;
+	font-size: 1px;
+	background: url(../AnyPin/img/sp_com2.png) no-repeat;
+	background-position: 0 -212px;
+	width: 219px;
+	height: 48px;
+	color: #fff;
+}
+
+</style>
+</head>
+<script>
+function goHome () {
+	location.href = 'anypin_regist.html';
+}
+
+function init () {
+	var input =	document.getElementById('test-id');
+	input.value = "hsecure";
+}
+
+function getPinIDList_callback (aResult) {
+	if (aResult > AnyPin.mPinCountNumber) {
+		alert("등록할 수 있는 핀 갯수를 초과하여 사용할 수 없습니다.");
+		return;
+	}
+
+	var id = document.getElementById('test-id');
+	AnyPin.setPinId (id.value);
+	AnyPin.UI.load('regist', regist_callback, regist_err_callback);
+}
+
+function getPinIDList_err_callback (aResult) {
+	alert(aResult.msg);
+}
+
+function load() {
+	AnyPin.InitAnyPin();
+
+	var aRequestCertRaFunc = function (callback, param) {
+		var ra_result_log = "";
+		ra_result_log = "id:" + param.id + "\n" + "deviceId:" + param.deviceId + "\n";
+
+		var req= new XMLHttpRequest ();
+		var url = AnyPin.mBasePath + "/../test/user_regist_anypin.jsp";
+		url += "?commandType=new";
+		url += "&user_policy_type=104";
+		url += "&targetRA=2048";
+		url += "&user_public_or_private=xecureca";
+		url += "&user_id=" + param.deviceId;
+		url += "&real_id=" + param.id;
+
+		req.open ("GET", url, false);
+		req.send (null);
+
+		var res = eval (req.responseText);
+
+		if (parseInt (res["code"]) == 0) {
+
+			var refNum = res["refcode"];
+			var authCode = res["authcode"];
+			var name = res["name"];
+			var ssn = res["ssn"];
+			var userid = res["userid"];
+			var realid = res["realid"];
+			var check_real_id = res["check_real_id"];
+			var cert_status = res["cert_status"];
+
+			ra_result_log += "[등록 결과]\n" + 
+				"refcode:" + refNum + "\n" +
+				"authcode:" + authCode + "\n" +
+				"name:" + name + "\n" +
+				"ssn:" + ssn + "\n" +
+				"userid(deviceId):" + userid + "\n" +
+				"realid(id):" + realid + "\n" +
+				"check_real_id(id):" + check_real_id + "\n" +
+				"cert_status:" + cert_status;
+
+			callback(refNum, authCode);
+		}
+		else
+		{
+			ra_result_log += "[등록 결과]\n" +
+				"code:" + res["code"] + "\n" +
+				"reason:" + res["reason"] + "\n" +
+				"moreInformation:" + res["moreinformation"] + "\n";
+
+		}
+	};
+	AnyPin.SetRequestCertRaFunc(aRequestCertRaFunc);
+	AnyPin.GetPinIDList("", 16, getPinIDList_callback, getPinIDList_err_callback);
+}
+
+function regist_callback() {
+	alert('핀번호 등록이 완료되었습니다.');
+	location.href = "anypin_login.html";
+}
+
+function regist_err_callback(aResult) {
+	alert(aResult.msg + "\n본인인증 단계부터 다시 진행하세요.");
+}
+
+</script>
+<body onload="init();">
+<div class="wrap">
+	<div class="header-title" onclick="goHome();"><h1 class="logo"></h1></div>
+	<div class="visual_a">
+		<h2></h2>
+	</div>
+	<div style="text-align:center;margin-top:10px;">
+		본인인증ID <input type="text" id="test-id" style="width:100px;">
+		<a href="javascript:load();" style="margin-left:10px;">Run</a>
+	</div>
+	<p>
+	<div id="anypin" class="anypin_common">
+</div>
+</body>
+</html>

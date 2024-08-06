@@ -1,0 +1,396 @@
+.leaflet-popup-close-button {
+    display: none;
+}
+.leaflet-popup-tip-container {
+    display: none;
+}
+.leaflet-popup-content-wrapper .hide-this {
+    display: none;
+}
+.leaflet-popup-content-wrapper {
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+.leaflet-popup-tip {
+    display: none;
+}
+.leaflet-popup-content {
+    visibility: visible !important;
+    margin: 0;
+    padding: 0;
+}
+.leaflet-popup-content p{
+    margin: 0;
+}
+
+.main .mapBox .bubbleBox.rotated {
+    background: url(../../images/main/bubble_bg_rotate.png) no-repeat center;
+    padding-top: 12px;
+    font-size: 1.3rem;
+    z-index: 99;
+}
+.main .mapBox .bubbleBox {
+    font-size: 1.3rem;
+}
+
+/* .main .mapBox .bubbleBoxAlpha{position: absolute;content: ''; top: 33%;left: 50%;transform: translate(-50%,-50%);background: url(../images/main/bubble_bg_alpha.png) no-repeat center;width: 148px;height: 106px;font-size: 1.4rem;font-weight: 300;text-align: center;padding-top: 27px;} */
+/* .main .mapBox .bubbleBoxAlpha span.green{display: inline-block; color: #00FF55;margin-bottom: 7px;} */
+/* .main .mapBox .bubbleBoxAlpha p.p_info{color: #fff;margin-bottom: 7px;} */
+/* .main .mapBox .bubbleBoxAlpha p.p_info:last-child{margin-bottom: 0;} */
+
+.main .mapBox .bubbleBoxAlpha.rotated {
+    background: url(../../images/main/bubble_bg_rotate_alpha.png) no-repeat center;
+    padding-top: 12px;
+    font-size: 1.3rem;
+    z-index: 99;
+}
+.main .mapBox .bubbleBoxAlpha {
+    font-size: 1.3rem;
+}
+
+.leaflet-control-attribution {
+    display: none;
+}
+.link_wrap .Shortcuts03{
+    background: linear-gradient(359deg, #FFB6C1, #FFE4E1, #FF69B4, #FFB6C1, #FFE4E1, #FFE4E1);
+    background-size: 19999%;
+    background-position: 50% 100%;
+    transition: background .3s ease;
+}
+
+.leaflet-container {
+    background-color: #ffffff;
+}
+
+.main .link_wrap .Shortcuts .link_name a{font-size: 2.0rem;}
+
+@keyframes scale {
+  0% {
+    transform: scale(1) rotate(90deg); /* 원래 크기 */
+  }
+  50% {
+    transform: scale(1.4) rotate(90deg); /* 50% 지점에서는 원래 크기의 1.2배로 확대 */
+  }
+  100% {
+    transform: scale(1) rotate(90deg); /* 마지막에는 원래 크기로 복귀 */
+  }
+}
+
+/* .main .link_wrap .Shortcuts02:hover .link_name img { */
+/*   animation: scale .9s linear infinite; */
+/* } */
+
+/* .main .link_wrap .Shortcuts02 .link_name img { */
+/*   transform: rotate(90deg); */
+/* } */
+
+/* .main .link_wrap .Shortcuts01:hover .link_name img { */
+/*   animation: scale .9s linear infinite; */
+/* } */
+
+/* .main .link_wrap .Shortcuts01 .link_name img { */
+/*   transform: rotate(90deg); */
+/* } */
+
+/*팝업 공지 스타일*/
+/*팝업 공지 CSS수정 주의. JS에서 내용에 따라 동적으로 처리함*/
+/*이에 CSS변경 시 JS에서 변경 필요할 수 있음*/
+.pop-wrap {
+    position: absolute;
+    /*  js 동적처리
+    left: 50%;   
+    top: 50%;
+    transform: translate(-50%, -50%);
+    */   
+    width:100%;
+    max-width: 600px; 
+    max-height: 800px;
+    background-color: #5e75f7; 
+    border: 1px solid #e1e1e1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 15px; 
+    z-index: 10001; 
+}
+
+/* 팝업공지 전체 안쪽 스타일 */
+.pop-cont {
+    padding: 8px 15px 8px 15px;
+}
+
+/* 팝업공지 제목 스타일 */
+.pop-ttl{
+    font-size: 3rem;
+    color: #ffffff;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding-bottom: 8px; 
+    border-bottom: 2px solid #ffffff;
+}
+/* 팝업공지 내용 스타일 */
+.pop-cont .pop-ment {
+    font-size: 2rem; 
+    color: #ffffff; 
+    line-height: 1.8;
+    margin-right: 9px;
+    word-wrap: break-word;
+ 	white-space: pre-wrap;
+}
+.scrollBar02{overflow-y:auto}
+
+/* 팝업공지 내용 ol 태그 */
+.pop-cont .pop-ment ol li{
+	list-style: initial;
+	list-style-type:decimal;
+	list-style-position: inside;	
+}
+/* 팝업공지 내용 ul 태그 */
+.pop-cont .pop-ment ul li{
+	list-style: initial;
+	list-style-type:disc;
+	list-style-position: inside;	
+}
+/* 팝업공지 파일 */
+.pop-file {
+	margin-top:4px;
+}
+
+.pop-file img, 
+.pop-file span{
+	display:inline-block;
+	vertical-align : middle;
+	margin-right: 5px;
+	color: #FFF;
+    font-weight: bold;
+}
+
+.pop-file-name {
+    display: inline-block;
+    vertical-align: middle;
+    cursor:pointer;
+    position: relative;
+    text-decoration: none;
+}
+
+.pop-file-name::before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: #FFF;
+    transition: width 0.3s ease-in-out;
+}
+
+.pop-file-name:hover::before {
+    width: 100%;
+}
+
+/* 팝업창 하단 옵션 스타일 */
+.pop-bottom {
+    display: flex;
+    flex-direction:column;
+    justify-content: center; 
+    align-items: center;     
+    margin-top: 10px;
+}
+/* 오늘 이 창을 열지 않음 스타일*/
+.pop-today-close {
+	padding-top: 10px;
+    font-size: 16px; 
+    color: #ffffff; 
+    display: flex;
+    align-items: center;
+}
+/* 닫기 버튼 스타일*/
+.pop-close-btn {
+    padding: 8px 12px;
+    background-color: #44c596;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+/* 닫기 버튼 마우스 오버 스타일*/
+.pop-close-btn:hover {
+    background-color: #29785b; /* 닫기 버튼의 호버 효과 색상 */
+}
+/*모바일 반응 js에서 동적 처리
+@media screen and (max-width:450px){
+	.pop-wrap {
+		margin-left: 3px;
+ 	    margin-right: 3px; 
+	    transform: translate(0, -50%);
+	    left: 0; 
+	    width: 98%; 
+	    max-height: 95%;
+	}
+}
+*/
+/* 팝업공지 배경 농도 0.25 */
+.overlay {
+    background: rgba(0, 0, 0, .20); 
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000; 
+}
+
+@media (max-width:1400px) {
+	.main .link_wrap .Shortcuts .link_name a{font-size: 1.5rem;}
+}
+
+@media (max-width:920px) {
+	.main .link_wrap .Shortcuts .link_name a{font-size: 2.5rem;}
+    .main .m_content .m_cont02 {
+        display: none !important;
+    }
+    .main .m_content .m_cont02_tablet {
+        display: block !important;
+    }
+    .mapBox{
+        height: 400px !important;
+    }
+    .leaflet-container {
+        height: 100%!important;
+    }
+    .leaflet-pane{
+        transform: translate3d(24px, -18px, 0px) !important;
+    }
+    .m_cont02_tablet{
+        margin-top: 0 !important;
+    }
+    
+}
+
+/********************* api 서버 모니터링 *********************/
+/* serverStatusBar */
+.main .serverStatusBar {
+    position: fixed;
+    right: 35px;
+    top: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 56px;
+    height: 272px;
+    padding: 24px 0;
+    border-radius: 50px;
+    z-index: 999;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    -ms-border-radius: 50px;
+    -o-border-radius: 50px;
+    transition: width 0.65s, height 0.65s;
+    -webkit-transition: width 0.65s, height 0.65s;
+    -moz-transition: width 0.65s, height 0.65s;
+    -ms-transition: width 0.65s, height 0.65s;
+    -o-transition: width 0.65s, height 0.65s;
+    overflow: hidden;
+    transform-origin: bottom left;
+    transform: scale(1);
+}
+.main .serverStatusBar .bar_head h4 {word-break: keep-all; font-size: 1.6rem; color: #2845D8; text-align: center;}
+.main .serverStatusBar .bar_cont {width: 100%; display: flex; flex-direction: column; gap: 16px;}
+.main .serverStatusBar .bar_cont .server_list {display: flex; flex-direction: column; gap: 12px; align-items: center;}
+.main .serverStatusBar .bar_cont .server_list .server_list_item .server_list_item_inner {width: 100%; display: flex; align-items: center; justify-content: space-between;}
+.main .serverStatusBar .bar_cont .server_list .server_list_item .status_icon_wrap .status_icon { width: 32px; height: 32px; border-radius:50% ; -webkit-border-radius:50% ; -moz-border-radius:50% ; -ms-border-radius:50% ; -o-border-radius:50% ; background-color: #e3e3e3
+}
+.main .serverStatusBar .bar_cont .server_list .server_list_item .status_icon_wrap .status_icon.is_ok {background-color: #70AD47;}
+.main .serverStatusBar .bar_cont .server_list .server_list_item .status_icon_wrap .status_icon.is_error{background-color: #FF0000;}
+.main .serverStatusBar .bar_cont .server_list .server_list_item .status {display: none; width: 72px; height: 30px; padding: 4px 0; border-radius: 4px ; -webkit-border-radius: 4px ; -moz-border-radius: 4px ; -ms-border-radius: 4px ; -o-border-radius: 4px ; text-align: center; font-size: 1.6rem; color: #fff; background-color: #4357CA; opacity: 0;}
+.main .serverStatusBar .bar_cont .server_list .server_list_item .server_name {display: none; font-size: 1.5rem; opacity: 0; }
+.main .serverStatusBar .bar_cont .chart_wrap {width: 432px; height: 320px;display: none; opacity: 0;}
+.main .serverStatusBar .bar_cont .chart_wrap #server_chart {width: 100%;}
+.main .serverStatusBar .bar_cont .server_btn_wrap {display: none; text-align: center; pointer-events: none; opacity: 0;}
+.main .serverStatusBar .bar_cont .server_btn_wrap #transfrom_btn {display: inline-block; width: 160px; height: 40px; background-color: #2845D8; border-radius:15px; -webkit-border-radius:15px; -moz-border-radius:15px; -ms-border-radius:15px; -o-border-radius:15px; color: #fff; font-size: 1.6rem; line-height: 40px;}
+.main .serverStatusBar .server_alarm_wrap {position: absolute; bottom: 24px; width: 32px; height: 32px;}
+.main .serverStatusBar .server_alarm_wrap .server_alarm_icon {display: block; width: 100%; height: 100%; background-repeat: no-repeat; background-position: center; background-size: cover;}
+.main .serverStatusBar .server_alarm_wrap .server_alarm_icon.on {background-image: url(../../images/main/bell-ring.png);}
+.main .serverStatusBar .server_alarm_wrap .server_alarm_icon.off {background-image: url(../../images/main/bell-off.png);}
+.main .serverStatusBar .server_alarm_wrap .server_alarm_icon #sirenAd, #if-siren {position: absolute; width: 0; left: 999em; opacity: 0;}
+
+.main .serverStatusBar .server_alarm_wrap .switch_wrap {display: none; gap: 4px; flex-direction: column; align-items: center; opacity: 0;}
+.main .serverStatusBar .server_alarm_wrap .switch_wrap .switch {position: relative; width: 50px; height: 16px; display: inline-block;}
+.main .serverStatusBar .server_alarm_wrap .switch_wrap .switch input[type="checkbox"] {display: none;}
+.main .serverStatusBar .server_alarm_wrap .switch_wrap .switch input[type="checkbox"] + span {position: absolute; background-color: #ccc;border-radius: 17px;cursor: pointer;top: 0;left: 0; right: 0; bottom: 0; transition: background-color .4s;}
+.main .serverStatusBar .server_alarm_wrap .switch_wrap .switch input[type="checkbox"]:checked ~ span {background-color: #2845D8;}
+.main .serverStatusBar .server_alarm_wrap .switch_wrap .switch span::before { background-color: white; box-shadow: 0px 3px 11px #3D3D4721; border-radius: 50%; content: ""; position: absolute; left: -2px; bottom: -4px; height: 24px; width: 24px; transition:0.35s ; -webkit-transition:0.35s ; -moz-transition:0.35s ; -ms-transition:0.35s ; -o-transition:0.35s ; }
+.main .serverStatusBar .server_alarm_wrap .switch_wrap .switch input[type="checkbox"]:checked ~ span::before {left: 32px;}
+.main .serverStatusBar .server_alarm_wrap .switch_wrap p {font-size: 1.2rem;}
+
+/* 호버, 클릭 시 */
+.main .serverStatusBar:hover { width: 480px; height: auto; gap: 32px; padding: 24px;}
+.main .serverStatusBar:hover .server_list {width: 100%; padding: 0 24px; flex-direction: column; align-items: flex-start;}
+.main .serverStatusBar:hover .server_list .server_list_item {display: flex; width: 100%; flex-direction: row; gap: 32px; align-items: center;}
+.main .serverStatusBar:hover .server_list .server_list_item .status_icon_wrap .status_icon {width: 48px; height: 48px;}
+.main .serverStatusBar:hover .bar_cont .server_list .server_list_item .status { display: inline-block; animation: bar-hover 0.45s linear 0.2s forwards alternate; -webkit-animation: bar-hover 0.45s linear 0.2s forwards alternate; }
+.main .serverStatusBar:hover .bar_cont .server_list .server_list_item .server_name { display: inline-block; animation: bar-hover 0.45s linear 0.2s forwards alternate; -webkit-animation: bar-hover 0.45s linear 0.2s forwards alternate; }
+/*.main .serverStatusBar:hover .bar_cont .chart_wrap {display: flex;  animation: bar-hover 0.45s linear 0.2s forwards alternate; -webkit-animation: bar-hover 0.45s linear 0.2s forwards alternate;}*/
+.main .serverStatusBar:hover .bar_cont .server_btn_wrap {display: block; pointer-events: visible;  animation: bar-hover 0.45s linear 0.2s forwards alternate; -webkit-animation: bar-hover 0.45s linear 0.2s forwards alternate;}
+.main .serverStatusBar:hover .server_alarm_wrap {width: auto; top: 16px; right: 32px;}
+.main .serverStatusBar:hover .server_alarm_wrap .server_alarm_icon {display: none;}
+.main .serverStatusBar:hover .server_alarm_wrap .switch_wrap {display: flex; animation: bar-hover 0.45s linear 0.2s forwards alternate; -webkit-animation: bar-hover 0.45s linear 0.2s forwards alternate;}
+
+@media (max-width:1500px) {
+    .main .serverStatusBar {top: 280px;}
+}
+@media (max-width:1200px) {
+    .main .serverStatusBar {
+        right: 35px;
+        top: 108px;
+    }
+    .main .serverStatusBar .bar_head h4 {font-size: 1.6rem;}
+    .main .serverStatusBar .bar_cont {width: auto;}
+    .main .serverStatusBar .bar_cont .server_list .server_list_item .status_icon_wrap .status_icon {width: 32px; height: 32px;}
+    .main .serverStatusBar .server_alarm_wrap {width: 32px; height: 32px; }
+
+    /* 호버시 */
+    .main .serverStatusBar:hover {flex-direction: column;}
+    .main .serverStatusBar:hover .bar_cont {width: 100%;}
+    .main .serverStatusBar:hover .bar_cont .server_list .server_list_item .status_icon_wrap .status_icon {width: 40px; height: 40px;}
+}
+@media (max-width:920px) {
+    .main .serverStatusBar .bar_head h4 {font-size: 1.6rem;}
+    .main .serverStatusBar .server_alarm_wrap .switch_wrap p {font-size: 1.5rem;}
+    .main .serverStatusBar .bar_cont .server_list .server_list_item .server_name {font-size: 1.8rem;}
+    .main .serverStatusBar .bar_cont .server_list .server_list_item .status {font-size: 1.8rem;}
+
+    .main .serverStatusBar {height: 252px;}
+}
+@media (max-width:640px) {
+    .main .serverStatusBar {height: 220px;}
+    .main .serverStatusBar .bar_cont .server_list .server_list_item .status_icon_wrap .status_icon {width: 24px; height: 24px;}
+    .main .serverStatusBar:hover {width: 400px;}
+    .main .serverStatusBar:hover .bar_cont .server_list .server_list_item .status_icon_wrap .status_icon {width: 32px; height: 32px;}
+
+    .main .serverStatusBar .bar_cont .chart_wrap {width: 360px; height: 300px;}
+}
+@media (max-width:550px) {
+    .main .serverStatusBar:hover .bar_cont .server_list .server_list_item .status_icon_wrap .status_icon {width: 40px; height: 40px;}
+}
+
+@media (max-width:480px) {
+    .main .serverStatusBar .bar_cont .server_list {gap: 8px; padding: 0;}
+    .main .serverStatusBar .bar_head h4 {font-size: 1.5rem;}
+    .main .serverStatusBar .bar_cont .chart_wrap {width: 240px; height: 220px;}
+    .main .serverStatusBar:hover {width: 280px;}
+    .main .serverStatusBar:hover .bar_head h4 {font-size: 1.8rem;}
+    .main_sub .cont table tr th {width: 78px;}
+    .main .serverStatusBar {height: 210px;}
+    .main .serverStatusBar .server_alarm_wrap {width: 24px; height: 24px;}
+    .main .serverStatusBar .bar_cont .server_list {gap: 12px;}
+}
+@media (max-width:390px) {
+    .main .serverStatusBar {right: 22px;}
+}

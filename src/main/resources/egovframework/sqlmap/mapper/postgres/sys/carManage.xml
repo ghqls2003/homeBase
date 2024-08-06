@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sys.carManage">
+	
+	<!-- 차량 그리드 목록 SQL -->
+	<sql id="carListSql">
+		with carList as (
+		select
+			vhcl_reg_no,
+			car.vin,
+			carmdl,
+			vhcl_nm,
+			mdlyr,
+			engine_fom,
+			TO_CHAR(TO_DATE(frst_reg_ymd,
+			'YYYYMMDD'),
+			'YYYY-MM-DD') as frst_reg_ymd,
+			TO_CHAR(TO_DATE(expry_ymd,
+			'YYYYMMDD') ,
+			'YYYY-MM-DD') as expry_ymd,
+			TO_CHAR(car.reg_dt,
+			'YYYY-MM-DD') as reg_dt,
+			use_yn,
+			ownr_nm,
+			crno,
+			fvrts.reg_yn
+		from
+			dqvs.dvs_rac_mt_car as car
+		left join (select vin
+					, mdfr_sn
+					, mdfcn_dt
+					, mdfcn_ip
+					, 'Y' as reg_yn 
+					from dqvs.dvs_rac_mt_fvrts 
+					where mdfr_sn = #{userSn}::numeric 
+					) as fvrts 
+		on car.vin = fvrts.vin),
+		<!--대여사업자 추출-->
+		filteredAgency as (
+			select
+				distinct on
+				(crno) bzmn_sn,
+				crno as agencyCrno,
+				bzmn_se_cd ,
+				brno ,
+				co_nm,
+				sgg_cd ,
+				reg_cmptnc_cd ,
+				ctpv_nm||' '||sgg_nm as sgg_nm
+			from
+				dqvs.dvs_rac_mt_agency
+				left join dqvs.dvs_cmm_mt_area
+				on sgg_cd = stdg_cd
+			where
+				bzmn_se_cd = '1'
+				and bzmn_sn like 'RCC' || '%' ),
+		<!--join 추출한 대여사업자 -->
+		joinAgency AS (
+			SELECT
+			 *	
+			FROM
+				carList
+			LEFT JOIN
+				filteredAgency
+				ON carList.crno = filteredAgency.agencyCrno
+		),
+		<!--join 결함정보 -->
+		joinDefect AS (
+		SELECT 
+			DISTINCT joinAgency.*,
+			CASE WHEN defect.vin IS NOT NULL THEN 'Y' ELSE 'N' END AS defect_yn,
+			defect.defects_cn,
+			prcs_stts_cd
+		FROM 
+			joinAgency
+		LEFT JOIN dqvs.dvs_rac_mt_defect AS defect ON
+			joinAgency.vin = defect.vin 
+		),
+		<!-- 조회조건 -->
+		searchParams AS (
+			SELECT * FROM joinDefect
+			WHERE 1 = 1
+			<!-- 지역 조건 사용 안하는 경우: 전체 자동차 번호 검색할 때, 사업자 권한 일 때-->
+			<if test='searchCol != "vhclRegNoFull" and not authrtCd.matches("S01|S02|S03")'>
+				<choose>
+				    <when test='searchChk == "jurisdiction" and regCmptncCd != "" and regCmptncCd != null' >
+				        AND reg_cmptnc_cd LIKE CONCAT(#{regCmptncCd}, '%')
+				    </when>
+	
+				    <when test='searchChk == "location" and regCmptncCd != "" and regCmptncCd != null'>
+				        AND sgg_cd LIKE CONCAT(#{regCmptncCd}, '%')
+				    </when>
+				</choose>
+			</if>
+			<choose>
+				<when test='searchCol == "vhclRegNo" and searchWrd != null and searchWrd != ""'>
+					and vhcl_reg_no like '%' || #{searchWrd} || '%'
+				</when>
+				<!-- G01,G02권한:자동차 전체번호 검색 : 계정 && 전체번호 && 검색어가 존재하면 -->
+				<when test='(authrtCd.equals("G01") or authrtCd.equals("G02")) and searchCol == "vhclRegNoFull" and searchWrd != null and searchWrd != ""'>
+					and vhcl_reg_no = #{searchWrd}
+				</when>
+				<!-- 법인번호 -->
+				<when test='searchCol == "crno" and searchWrd != null and searchWrd != ""'>
+					AND crno like '%' || REGEXP_REPLACE(#{searchWrd}, '[^0-9]', '') || '%'
+				</when>
+				<!-- 사업자번호 -->
+				<when test='searchCol == "brno" and searchWrd != null and searchWrd != ""'>
+					AND brno like '%' || REGEXP_REPLACE(#{searchWrd}, '[^0-9]', '') || '%'
+				</when>
+				<!-- 차대번호 -->
+				<when test='searchCol == "vin" and searchWrd != null and searchWrd != ""'>
+					and vin like '%' || #{searchWrd} || '%'
+				</when>
+				<!-- 차종 -->
+				<when test='searchCol == "carmdl" and searchWrd != null and searchWrd != ""'>
+					and carmdl like '%' || #{searchWrd} || '%'
+				</when>
+				<!-- 차량명 -->
+				<when test='searchCol == "vhclNm" and searchWrd != null and searchWrd != ""'>
+					and vhcl_nm like '%' || #{searchWrd} || '%'
+				</when>
+				<!-- 연식 -->
+				<when test='searchCol == "modelYear" and searchWrd != null and searchWrd != ""'>
+					and mdlyr like '%' || #{searchWrd} || '%'
+				</when>
+				<!-- 사용여부 -->
+				<when test='searchCol == "useYn" and searchYn != null and searchYn != ""'>
+					and use_yn = #{searchYn}
+				</when>
+				<!-- 결함여부 -->
+				<when test='searchCol == "defectYn" and searchYn != null and searchYn != ""'>
+					and defect_yn = #{searchYn}
+				</when>
+				
+				<otherwise>
+				</otherwise>
+			</choose>
+		),
+		<!-- 권한 -->
+		auth AS (
+			SELECT * FROM searchParams
+			WHERE 1 = 1
+			<choose>
+				<!-- M01 국토부, K01 공단, Z01 관리자, D01 개발자 -->
+				<when test='authrtCd.equals("M01") or authrtCd.equals("K01") or authrtCd.equals("Z01") or authrtCd.equals("D01")'>
+				</when>
+				<!-- G01 지자체, G02 대여사업조합-->
+			    <when test='authrtCd.equals("G01") or authrtCd.equals("G02")'>
+			    	<choose>
+			    		<when test='searchChk == "jurisdiction" and searchCol != "vhclRegNoFull"'>
+				            AND reg_cmptnc_cd LIKE CONCAT(#{regCmptncCd}, '%')
+				        </when>
+				        
+				        <when test='searchChk == "location" and searchCol != "vhclRegNoFull"'>
+				            AND sgg_cd LIKE CONCAT(#{regCmptncCd}, '%')
+				        </when>
+					</choose>
+			    </when>
+			    
+				<!--S01 S02 S03 사업자 -->
+				<when test='authrtCd.equals("S01") or authrtCd.equals("S02") or authrtCd.equals("S03")'> 
+					AND bzmn_sn = #{bzmnSn}
+				</when>
+				<!-- S04 플랫폼 : 미정-->
+				<when test='authrtCd.equals("S04")'> 
+					AND crno = 'xxx'
+				</when>
+				<!-- 권한이 없을 경우 -->
+				<otherwise>
+					AND crno = 'xxx' 
+				</otherwise>
+			</choose>
+	</sql>
+	
+	<!-- 차량 그리드 -->
+	<select id="carList" resultType="resultMap">
+	/* 차량 그리드 */
+		<if test='
+		authrtCd.equals("M01") or
+		authrtCd.equals("K01") or
+		authrtCd.equals("D01") or
+		authrtCd.equals("Z01") or
+		authrtCd.equals("G01") or
+		authrtCd.equals("G02") or
+		authrtCd.equals("S01") or
+		authrtCd.equals("S02") or
+		authrtCd.equals("S03") 
+		'>
+		
+		<include refid="carListSql" />
+		<!-- 순번 추가 -->
+		),
+		rowNum AS (
+			SELECT 
+			<if test="bookmarkOrder != '' and bookmarkOrder != null">
+				ROW_NUMBER() OVER(ORDER BY CASE WHEN reg_yn = 'Y' THEN 0 ELSE 1 END, vhcl_reg_no) AS rn
+			</if>
+			<if test="bookmarkOrder == '' or bookmarkOrder == null">
+				ROW_NUMBER() OVER(ORDER BY vhcl_reg_no) AS rn
+			</if>
+				, * 
+			FROM auth
+		),
+		<!-- 페이징 처리 -->
+		page AS (
+			SELECT * FROM rowNum
+			WHERE 1=1 
+			<if test="take != '' and take != null">
+				AND rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+			</if>
+			<if test="skip != '' and skip != null">
+				AND rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+			</if>
+		)
+		SELECT * FROM page
+		</if>
+	</select>
+	
+	<!-- 차량 엑셀  -->
+	<select id="excel" resultType="resultMap">
+	/* 차량 엑셀 */
+		<if test='
+		authrtCd.equals("M01") or
+		authrtCd.equals("K01") or
+		authrtCd.equals("D01") or
+		authrtCd.equals("Z01") or
+		authrtCd.equals("G01") or
+		authrtCd.equals("G02") or
+		authrtCd.equals("S01") or
+		authrtCd.equals("S02") or
+		authrtCd.equals("S03") 
+		'>
+		
+		<include refid="carListSql" />
+		<!-- 순번 추가 -->
+		),
+		rowNum AS (
+			SELECT 
+				<if test="bookmarkOrder != '' and bookmarkOrder != null">
+					ROW_NUMBER() OVER(ORDER BY CASE WHEN reg_yn = 'Y' THEN 0 ELSE 1 END, vhcl_reg_no) AS rn
+				</if>
+				<if test="bookmarkOrder == '' or bookmarkOrder == null">
+					ROW_NUMBER() OVER(ORDER BY vhcl_reg_no) AS rn
+				</if>
+				, auth.* 
+			FROM auth
+		),
+		last AS (
+			SELECT * FROM rowNum
+		)
+		SELECT * FROM last
+		</if>
+	</select>
+	
+	<select id="carListCnt" resultType="int">
+	/* 차량 그리드 건수 */
+		<if test='
+		authrtCd.equals("M01") or
+		authrtCd.equals("K01") or
+		authrtCd.equals("D01") or
+		authrtCd.equals("Z01") or
+		authrtCd.equals("G01") or
+		authrtCd.equals("G02") or
+		authrtCd.equals("S01") or
+		authrtCd.equals("S02") or
+		authrtCd.equals("S03") 
+		'>
+		<include refid="carListSql" />
+		)
+		SELECT COUNT(1) FROM auth
+		</if>
+	</select>
+	
+	<!-- 결함정보  -->
+	<select id="defectList" resultType="resultMap">
+		select * from(
+			select
+				row_number() over() as rn,
+				vin,
+				to_char(ocrn_dt, 'YYYY-MM-DD HH24:MI') as ocrn_dt,
+				CASE 
+			        WHEN defects_type_cd = '1' THEN '리콜'
+			        WHEN defects_type_cd = '2' THEN '무상수리'
+			        ELSE '기타'
+			    END AS defect_nm,
+				prcs_stts_cd
+			from dqvs.dvs_rac_mt_defect
+				where 1=1
+				<if test="vin != null and vin != ''">
+					and vin like '%' || rpad(#{vin}, 17) || '%'
+				</if>
+		) T
+		WHERE 1 = 1
+			<if test="take != '' and take != null">
+				AND T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+			</if>
+			<if test="skip != '' and skip != null">
+				AND T.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+			</if>
+		ORDER BY T.rn ASC
+	</select>
+
+	<select id="defectListCnt" resultType="int">
+		select count(*) from(
+			select
+				row_number() over() as rn,
+				vin,
+				ocrn_dt,
+				defects_type_cd,
+				prcs_stts_cd
+			from dqvs.dvs_rac_mt_defect
+				where 1=1
+				<if test="vin != null and vin != ''">
+					and vin like '%' || rpad(#{vin}, 17) || '%'
+				</if>
+		) T
+	</select>
+
+	
+
+	<!-- 차량 수정 -->
+	<update id="updateCar">
+		<if test='
+		authrtCd.equals("S01") or
+		authrtCd.equals("S02") or
+		authrtCd.equals("S03") 
+		'>
+			<!-- 
+		        <if test="vin != null and vin != ''">
+			        UPDATE dqvs.dvs_rac_mt_car
+					SET vhcl_reg_no=#{vhclRegNo}, carmdl=#{carmdl}, mdlyr=#{modelYear}, vhcl_nm=#{vhclNm}, bzmn_sn=#{bzmnSn}, crno=#{crno}, engine_fom=#{engineType}, use_yn=#{useYn}, sgg_cd=#{signguCd}, mdfr_sn=#{mdfrSn}::numeric, mdfcn_dt=now()::timestamp, mdfcn_ip=#{mdfcnIp}
+					WHERE vin = #{vin}
+				</if>
+			 -->
+			 <!-- 240124 차량 사용 여부만 수정 -->
+			 <if test="vin != null and vin != ''">
+		        UPDATE dqvs.dvs_rac_mt_car
+				SET use_yn=#{useYn}, mdfr_sn=#{mdfrSn}::numeric, mdfcn_dt=now()::timestamp, mdfcn_ip=#{mdfcnIp}
+				WHERE vin = #{vin}
+			</if>
+		</if>
+    </update>
+    
+	<select id="ctpvNm" resultType="map">
+	<!-- 시도 -->
+        SELECT DISTINCT
+		    SUBSTRING(stdg_cd, 1, 2) AS ctpv_cd, ctpv_nm
+		FROM
+		    dqvs.dvs_cmm_mt_area
+		where mtnabn_yn = 'Y'
+		<if test="ctpvCd != null and ctpvCd != ''">
+			and stdg_cd LIKE CONCAT(#{ctpvCd}, '%')
+		</if>
+		ORDER BY
+		    ctpv_cd
+    </select>
+    
+	<select id="sggNm" resultType="map">
+	<!-- 시군구 -->
+        select distinct
+			SUBSTRING(stdg_cd, 3, 3) AS sgg_cd, sgg_nm
+		from dqvs.dvs_cmm_mt_area
+		where mtnabn_yn = 'Y'
+			and sgg_nm != ''
+		<if test="ctpvCd != null and ctpvCd != ''">
+			and stdg_cd LIKE CONCAT(#{ctpvCd}, '%')
+		</if>
+		order by sgg_cd
+    </select>
+    
+    <!-- 시도 시군구 이름만 -->
+	<select id="ctpvSggNm" resultType="map">
+        SELECT ctpv_nm, sgg_nm
+		FROM dqvs.dvs_cmm_mt_area
+		where mtnabn_yn = 'Y'
+		<if test="sggCd != null and sggCd != ''">
+			and stdg_cd = #{sggCd}
+		</if>
+    </select>
+    
+    <!-- 이하 쿼리 현재 사용하지 않음:240502 -->
+    
+    <!-- 차량 등록 -->
+	<insert id="insertCar">
+		INSERT INTO dqvs.dvs_rac_mt_car
+		(vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, crno, engine_fom, use_yn, sgg_cd, rgtr_sn, reg_dt, reg_ip)
+		VALUES(#{vin}, #{vhclRegNo}, #{carmdl}, #{modelYear}, #{vhclNm}, #{bzmnSn}, #{crno}, #{engineType}, #{useYn}, #{signguCd}, #{rgtrSn}::numeric, now()::timestamp, #{regIp})
+	</insert>
+
+	<!-- 차량 일괄등록 -->
+	<insert id="insertExcelCar">
+		insert
+			into
+			dqvs.dvs_rac_mt_car
+				(vin,
+			vhcl_reg_no,
+			carmdl,
+			mdlyr,
+			vhcl_nm,
+			bzmn_sn,
+			crno,
+			engine_fom,
+			use_yn,
+			sgg_cd,
+			rmrk,
+			rgtr_sn,
+			reg_dt,
+			reg_ip)
+		values(#{vin},
+		#{vhclRegNo},
+		#{carmdl},
+		#{modelYear},
+		#{vhclNm},
+				(
+		select
+			bzmn_sn
+		from
+			dqvs.dvs_rac_mt_agency
+		where
+			brno = #{brno}
+			and co_nm = #{coNm}
+		limit 1),
+		#{crno},
+		#{engineType},
+		#{useYn},
+				(
+		select
+			sgg_cd
+		from
+			dqvs.dvs_rac_mt_agency
+		where
+			brno = #{brno}
+			and co_nm = #{coNm}
+		limit 1),
+		#{rmrk},
+		#{rgtrSn}::numeric,
+		now()::timestamp,
+		#{regIp})
+	</insert>
+    
+    <!-- 대여사업자 목록 조회 -->
+	<select id="selectCompanyList" resultType="map">
+	<if test='authrtCd.equals("Z01") or
+		authrtCd.equals("G01") or
+		authrtCd.equals("M01") or
+		authrtCd.equals("K01") or
+		authrtCd.equals("S01") or
+		authrtCd.equals("S02") '>
+		select * from(
+		select
+			row_number() over() as rn,
+			T2.*
+		from
+			(
+			select
+				a.brno,
+				a.up_brno,
+				a.bzmn_sn,
+				a.up_bzmn_sn,
+				a.co_nm,
+				a.road_nm_addr,
+				a.reg_cmptnc_cd,
+				a.bzmn_se_cd
+			from
+				(
+				select
+					drma.brno,
+					up_brno,
+					row_number() over (partition by drma.bzmn_sn
+				order by
+					mdfcn_dt desc) as rn,
+					drma.bzmn_sn,
+					b.bzmn_sn as up_bzmn_sn,
+					co_nm,
+					road_nm_addr,
+					reg_cmptnc_cd,
+					bzmn_se_cd
+				from dqvs.dvs_rac_mt_agency drma
+				left join (
+					select
+						bzmn_sn,
+						brno
+					from dqvs.dvs_rac_mt_agency)b on
+					drma.up_brno = b.brno
+				) a
+			where
+				rn = 1
+		union all
+			select
+				brno,
+				up_brno,
+				bzmn_sn,
+				bzmn_sn as up_bzmn_sn,
+				co_nm,
+				road_nm_addr,
+				reg_cmptnc_cd,
+				bzmn_se_cd
+			from dqvs.dvs_rac_mt_request )T2
+		where 1=1
+			<if test="regCmptncCd != null and regCmptncCd != ''">
+				and reg_cmptnc_cd = #{regCmptncCd}
+			</if>
+			<if test='bzmnSeCd != null and bzmnSeCd != ""'>
+				and bzmn_se_cd = #{bzmnSeCd}
+			</if>
+			<if test='coNm != null and coNm != ""'>
+				and co_nm like '%' || #{coNm} || '%'
+			</if>
+			<if test='brno != null and brno != ""'>
+				and brno like '%' || REGEXP_REPLACE(#{brno}, '\D', '', 'g') || '%'
+			</if>
+			) T
+		WHERE 1 = 1
+			<if test="take != '' and take != null">
+				AND T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+			</if>
+			<if test="skip != '' and skip != null">
+				AND T.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+			</if>
+		ORDER BY T.rn ASC
+		</if>
+	</select>
+
+	<select id="selectCompanyListCnt" resultType="int">
+	<if test='authrtCd.equals("Z01") or
+		authrtCd.equals("G01") or
+		authrtCd.equals("M01") or
+		authrtCd.equals("K01") or
+		authrtCd.equals("S01") or
+		authrtCd.equals("S02") '>
+		select count(*) from(
+		select
+			row_number() over() as rn,
+			T2.*
+		from
+			(
+			select
+				a.brno,
+				a.up_brno,
+				a.bzmn_sn,
+				a.up_bzmn_sn,
+				a.co_nm,
+				a.road_nm_addr,
+				a.reg_cmptnc_cd,
+				a.bzmn_se_cd
+			from
+				(
+				select
+					drma.brno,
+					up_brno,
+					row_number() over (partition by drma.bzmn_sn
+				order by
+					mdfcn_dt desc) as rn,
+					drma.bzmn_sn,
+					b.bzmn_sn as up_bzmn_sn,
+					co_nm,
+					road_nm_addr,
+					reg_cmptnc_cd,
+					bzmn_se_cd
+				from dqvs.dvs_rac_mt_agency drma
+				left join (
+					select
+						bzmn_sn,
+						brno
+					from dqvs.dvs_rac_mt_agency)b on
+					drma.up_brno = b.brno
+				) a
+			where
+				rn = 1
+		union all
+			select
+				brno,
+				up_brno,
+				bzmn_sn,
+				bzmn_sn as up_bzmn_sn,
+				co_nm,
+				road_nm_addr,
+				reg_cmptnc_cd,
+				bzmn_se_cd
+			from dqvs.dvs_rac_mt_request )T2
+			where 1=1
+			<if test="regCmptncCd != null and regCmptncCd != ''">
+				and reg_cmptnc_cd = #{regCmptncCd}
+			</if>
+			<if test='bzmnSeCd != null and bzmnSeCd != ""'>
+				and bzmn_se_cd = #{bzmnSeCd}
+			</if>
+			<if test='coNm != null and coNm != ""'>
+				and co_nm like '%' || #{coNm} || '%'
+			</if>
+			<if test='brno != null and brno != ""'>
+				and brno like '%' || REGEXP_REPLACE(#{brno}, '\D', '', 'g') || '%'
+			</if>
+			) T
+		</if>
+	</select>
+
+	<!-- 중복확인 -->
+	<select id="selectDuplicChk" resultType="int">
+		select count (*) from dqvs.dvs_rac_mt_car
+		where 1=1
+		<if test='vin != null and vin != ""'>
+			and vin = #{vin}
+		</if>
+		<if test='vhclRegNo != null and vhclRegNo != ""'>
+			and vhcl_reg_no = #{vhclRegNo}
+		</if>
+	</select>
+		<!-- 중복확인 -->
+	<select id="selectMatchChk" resultType="int">
+		select count(*) from dqvs.dvs_rac_mt_agency
+		where 1=1
+		<if test='brno != null and brno != ""'>
+			and brno = #{brno}
+		</if>
+		<if test='coNm != null and coNm != ""'>
+			and co_nm = #{coNm}
+		</if>
+	</select>
+	
+	
+	<insert id="insertBookmark" parameterType="paraMap">
+      /*즐겨찾기 등록*/
+		INSERT INTO dqvs.dvs_rac_mt_fvrts (
+			vin
+			, mdfr_sn
+			, mdfcn_dt
+			, mdfcn_ip
+		) VALUES (
+			#{vin}
+			, #{mdfr_sn}::numeric
+			, now()::timestamp
+			, #{mdfcn_ip}
+		)
+	</insert>
+	
+	<delete id="deleteBookmark" parameterType="paraMap">
+		<if test="vin != null and vin != ''">
+	      /*즐겨찾기 수정*/
+			DELETE
+			FROM dqvs.dvs_rac_mt_fvrts
+			WHERE 1=1 
+			AND vin = #{vin}
+			AND mdfr_sn = #{mdfr_sn}::numeric
+		</if>
+	</delete>
+	
+	
+</mapper>

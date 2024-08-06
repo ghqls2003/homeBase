@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:web="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="dqvs-pts" version="2.5">
+	<display-name>dqvs-pts</display-name>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath*:egovframework/spring/**/context-*.xml
+		</param-value>
+	</context-param>
+
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- WALoader 필터는 개인정보 접속기록 통합관리솔루션에서 사용 담당:정보보안처 강효중 -->
+	<!-- <filter> <filter-name>WALoader</filter-name> <filter-class>kr.co.weeds.wt.wal.servlet.LogRedirector</filter-class>
+		<init-param> <param-name>APP-SERVER-NAME-CODE</param-name> <param-value>web</param-value>
+		</init-param> </filter> -->
+	<!-- WALoader 필터맵핑은 개인정보 접속기록 통합관리솔루션에서 사용 담당:정보보안처 강효중 -->
+	<!-- <filter-mapping> <filter-name>WALoader</filter-name> <url-pattern>/*</url-pattern>
+		</filter-mapping> -->
+
+	<!-- tomcat sameorigin -->
+	<!-- <filter> <filter-name>httpHeaderSecurity</filter-name> <filter-class>org.apache.catalina.filters.HttpHeaderSecurityFilter</filter-class>
+		<init-param> <param-name>antiClickJackingOption</param-name> <param-value>SAMEORIGIN</param-value>
+		</init-param> </filter> <filter-mapping> <filter-name>httpHeaderSecurity</filter-name>
+		<url-pattern>/*</url-pattern> <dispatcher>REQUEST</dispatcher> </filter-mapping> -->
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<servlet>
+		<servlet-name>action</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/egovframework/springmvc/*.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>action</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>xssEscapeServletFilter</filter-name>
+		<filter-class>com.navercorp.lucy.security.xss.servletfilter.XssEscapeServletFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>xssEscapeServletFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<login-config>
+		<auth-method>BASIC</auth-method>
+	</login-config>
+
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>restricted methods</web-resource-name>
+			<url-pattern>/*</url-pattern>
+			<http-method>PUT</http-method>
+			<http-method>DELETE</http-method>
+			<http-method>HEAD</http-method>
+			<http-method>TRACE</http-method>
+			<http-method>OPTIONS</http-method>
+		</web-resource-collection>
+		<auth-constraint />
+	</security-constraint>
+
+	<error-page>
+		<error-code>400</error-code>
+		<location>/error.jsp</location>
+	</error-page>
+
+	<error-page>
+		<error-code>401</error-code>
+		<location>/error.jsp</location>
+	</error-page>
+
+	<error-page>
+		<error-code>403</error-code>
+		<location>/error.jsp</location>
+	</error-page>
+
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error.jsp</location>
+	</error-page>
+
+	<error-page>
+		<error-code>500</error-code>
+		<location>/error.jsp</location>
+	</error-page>
+
+	<error-page>
+		<exception-type>java.lang.Exception</exception-type>
+		<location>/error.jsp</location>
+	</error-page>
+
+	<!-- XecureKeyPad start  -->
+	<display-name>xecurekeypad</display-name>
+	  <listener>
+		<listener-class>com.softforum.xk.XKServletContextListner</listener-class>
+	  </listener>
+	<servlet>
+		<display-name>XKService</display-name>
+		<servlet-name>com.softforum.xk.servlet.XKService</servlet-name>
+		<servlet-class>com.softforum.xk.servlet.XKService</servlet-class>
+	</servlet>
+	<servlet>
+		<display-name>xkservice</display-name>
+		<servlet-name>xkservice</servlet-name>
+		<servlet-class>com.softforum.xk.servlet.XKService</servlet-class>
+	</servlet>
+	<servlet>
+		<display-name>xkscriptservice</display-name>
+		<servlet-name>com.softforum.xk.servlet.XKScriptService</servlet-name>
+		<servlet-class>com.softforum.xk.servlet.XKScriptService</servlet-class>
+	</servlet>
+	<servlet>
+		<display-name>xkunpack</display-name>
+		<servlet-name>com.softforum.xk.servlet.XKUnpack</servlet-name>
+		<servlet-class>com.softforum.xk.servlet.XKUnpack</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>com.softforum.xk.servlet.XKService</servlet-name>
+		<url-pattern>/XKService</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>xkservice</servlet-name>
+		<url-pattern>/xkservice</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>com.softforum.xk.servlet.XKScriptService</servlet-name>
+		<url-pattern>/xkscriptservice</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>com.softforum.xk.servlet.XKUnpack</servlet-name>
+		<url-pattern>/xkunpack</url-pattern>
+	</servlet-mapping>
+	<!-- XecureKeyPad END -->
+</web-app>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sys.inspectionHist">
+	
+	<sql id="InspectionHistInfoSql">
+		(
+		SELECT ROW_NUMBER() OVER(ORDER BY T1.co_nm DESC) rn
+		, T1.*
+		from(
+			select
+				inspctn.bzmn_sn
+				, inspctn.reg_cmptnc_cd
+				, inspctn.exmnr
+				, inspctn.exmnr2
+				, inspctn.exmnr3
+				, inspctn.jbgd
+				, inspctn.ogdp
+				, inspctn.telno
+				, inspctn.chck_artcl
+				, inspctn.etc_artcl
+				, inspctn.chck_cn
+				, inspctn.chck_plc
+				, inspctn.sign_yn
+				, inspctn.rslt
+				, inspctn.prcs_yn
+				, inspctn.fileatchsn
+				, agency.brno
+				, agency.crno
+				, agency.rprsv_nm
+				, agency.bzmn_se_cd
+				, agency.co_nm
+				, agency.road_nm_addr
+				, agency.bsn_stts_cd
+				, agency.bsn_stts_mdfcn_dt
+				, dqvs.pca_decrypt(agency.telno, '150') as agency_telno
+			from dqvs.dvs_spv_hs_inspctn inspctn
+			left join dqvs.dvs_rac_mt_agency agency on agency.bzmn_sn = inspctn.bzmn_sn
+			) as T1
+			WHERE 1 = 1
+			ORDER BY rn asc
+		)as T2
+	</sql>
+
+	<!-- 지도점검이력 그리드 -->
+	<select id="InspectionHistInfo" resultType="resultMap">
+		SELECT *
+    	FROM
+			<include refid="InspectionHistInfoSql" />
+		<if test="take != '' and take != null">
+			WHERE T2.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		</if>
+		<if test="skip != '' and skip != null">
+			AND T2.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+		</if>
+	</select>
+	
+	<select id="InspectionHistInfoCnt" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			<include refid="InspectionHistInfoSql" />
+	</select>
+	
+	
+	<insert id="insertInspectionHist">
+			INSERT INTO dqvs.dvs_spv_hs_inspctn
+				(bzmn_sn
+				, reg_cmptnc_cd
+				, exmnr
+				, exmnr2
+				, exmnr3
+				, jbgd
+				, ogdp
+				, telno
+				, chck_artcl
+				, etc_artcl
+				, chck_cn
+				, chck_plc
+				, sign_yn
+				, rslt
+				, prcs_yn
+				, fileatchsn
+				)
+			VALUES
+				(
+				#{vin},
+				#{vhclRegNo},
+				<if test="carmdl != '' and carmdl != null">
+				#{carmdl},
+				</if>
+				<if test="modelYear != '' and modelYear != null">
+				#{modelYear},
+				</if>
+				<if test="vhclNm != '' and vhclNm != null">
+				#{vhclNm},
+				</if>
+				<if test="bzmnSn != '' and bzmnSn != null">
+				#{bzmnSn},
+				</if>
+				<if test="engineType != '' and engineType != null">
+				#{engineType},
+				</if>
+				'Y',
+				<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
+				#{cmptncZoneCd},
+				</if>
+				#{rentBgngDt}::timestamp,
+				#{rentEndDt}::timestamp,
+				now(),
+				'2',
+				#{userSn}::numeric,
+				now()::timestamp,
+				<choose>
+					<when test="atchFileSn != '' and atchFileSn != null">
+						#{lcnsIdntfCd},
+						#{atchFileSn},
+					</when>
+					<otherwise>
+						#{lcnsIdntfCd},
+					</otherwise>
+				</choose>
+				#{IP}
+				)
+	</insert>
+	
+	
+	
+
+</mapper>

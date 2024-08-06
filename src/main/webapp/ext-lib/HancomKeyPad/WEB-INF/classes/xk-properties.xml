@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>xk.properties</comment>
+	<entry key="xk.license.path">/WEB-INF/HancomKeyPad/WEB-INF/license</entry>
+	<entry key="xk.wrapper.path">/WEB-INF/HancomKeyPad/libXKService.so</entry>
+	<entry key="xk.ca.certificate">/WEB-INF/cert/root_cert.der</entry>
+	<entry key="xk.server.certificate">/WEB-INF/cert/server_cert.der</entry>
+	<entry key="xk.server.key">/WEB-INF/cert/server_priv.key</entry>
+	<entry key="xk.server.keypasssword">1234</entry>
+	<entry key="xk.timestamp.interval">1000</entry>
+	<entry key="xk.clientdn.list">Client Cert 01</entry>
+	<entry key="xk.enc.algorithmflag">15</entry>
+	<entry key="xk.session.time">300</entry>
+	<entry key="xk.unpack.allow.ip"></entry>
+	<entry key="xk.use.index.encryption">false</entry>
+	<entry key="xk.use.securerandom">false</entry>
+<!--
+	<entry key="xk.use.cipher.mode">true</entry>
+-->
+</properties>

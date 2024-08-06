@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="cache-control" content="no-cache">
+
+<script type="text/javascript" src="../anyPinInterface.js"></script>
+
+<!-- XecureKeyPad Plugin -->
+<script type="text/javascript" src="../XecureKeypad/js/xkeypad_config.js"></script>
+<script type="text/javascript" src="../XecureKeypad/js/xkeypad_html5_pin.js"></script>
+
+<!-- Pattern UI -->
+<link href="../patternLock/patternLock.css"  rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../patternLock/patternLockjQuery-1.12.4.js"></script>
+<script type="text/javascript" src="../patternLock/patternLock_min.js"></script>
+<!--script type="text/javascript" src="../patternLock/patternLock_origin.js"></script>
+<script type="text/javascript" src="../patternLock/patternCrypto_min.js"></script>
+<script type="text/javascript" src="../patternLock/patternLock_anypin.js"></script-->
+
+<!-- FacePhi -->
+<script type="text/javascript" src="../FacePhi/FPhiUserControl/FPhiUserControl.js"></script>
+
+<style type="text/css">
+body,html {
+	margin-left: 3px; 
+}
+
+a:visited {
+	  text-decoration: none;
+}
+
+.hidden {
+	display: none;
+}
+
+.test			{border:1px dashed gray;}
+.test td		{font-size: 9pt;color: #333333;background: #EEEEEE;text-align: center;}
+</style>
+</head>
+
+
+<script type="text/javascript">
+function useNickname(element)
+{
+	AnyPin.mUseNickname = !AnyPin.mUseNickname;
+	checkNickname();
+}
+
+function enableSecureKey(element)
+{
+	if (element.id == "Enable_XecureKeyPad") {
+		AnyPin.mXecureKeyPadHTML5.enable = !AnyPin.mXecureKeyPadHTML5.enable;
+		AnyPin.mAllowNativeInput = !AnyPin.mAllowNativeInput;
+	}
+
+	checkSecureKey();
+}
+
+function enableLanguage(element)
+{
+	AnyPin.mLanguage = element.value;
+}
+
+function enablePin(element)
+{
+	var aType = document.getElementById("form_CommonSetting").type;
+
+	var aValue = "";
+	for (var i = 0; i < aType.length; i++)
+	{
+		if (aType[i].checked)
+		{
+			aValue += "," + aType[i].value;
+		}
+	}
+
+	AnyPin.mDialogPinType = aValue.substring(1, aValue.length);
+}
+
+
+function checkSecureKey()
+{
+	if (AnyPin.mAllowNativeInput)
+		AnyPin.mXecureKeyPadHTML5.enable = false;
+
+	document.getElementById("Enable_XecureKeyPad").value = AnyPin.mXecureKeyPadHTML5.enable;
+}
+
+function checkNickname()
+{
+	document.getElementById("Use_NickName").value = AnyPin.mUseNickname;
+}
+
+function init () {
+	checkSecureKey();
+	checkNickname();
+
+	var aSettingForm = document.getElementById("form_CommonSetting");
+	var aLanguage = aSettingForm.Language;
+	for (var i = 0; i < aLanguage.length; i++)
+	{
+		if (AnyPin.mLanguage == aLanguage[i].value)
+		{
+			aLanguage[i].checked = true;
+			break;
+		}
+	}
+
+	var aType = AnyPin.mDialogPinType.split(",");
+	for (var i = 0; i < aType.length; i++)
+	{
+		if (aType[i] == "PIN")
+			aSettingForm.type[0].checked = true;
+		if (aType[i] == "PATTERN")
+			aSettingForm.type[1].checked = true;
+		if (aType[i] == "FACEPHI")
+			aSettingForm.type[2].checked = true;
+	}
+}
+
+function aRequestCertRaFunc (callback, param) {
+	var ra_result_log = "";
+	ra_result_log = "id:" + param.id + "\n" + "deviceId:" + param.deviceId + "\n";
+
+	var req= new XMLHttpRequest ();
+	var url = AnyPin.mBasePath + "/../test/user_regist_anypin.jsp";
+	url += "?commandType=new";
+	url += "&user_policy_type=104";
+	url += "&targetRA=2048";
+	url += "&user_public_or_private=xecureca";
+	url += "&user_id=" + param.deviceId;
+	url += "&real_id=" + param.id;
+
+	req.open ("GET", url, false);
+	req.send (null);
+
+	var res = eval (req.responseText);
+
+	if (parseInt (res["code"]) == 0) {
+
+		var refNum = res["refcode"];
+		var authCode = res["authcode"];
+		var name = res["name"];
+		var ssn = res["ssn"];
+		var userid = res["userid"];
+		var realid = res["realid"];
+		var check_real_id = res["check_real_id"];
+		var cert_status = res["cert_status"];
+
+		ra_result_log += "[등록 결과]\n" + 
+			"refcode:" + refNum + "\n" +
+			"authcode:" + authCode + "\n" +
+			"name:" + name + "\n" +
+			"ssn:" + ssn + "\n" +
+			"userid(deviceId):" + userid + "\n" +
+			"realid(id):" + realid + "\n" +
+			"check_real_id(id):" + check_real_id + "\n" +
+			"cert_status:" + cert_status;
+
+		callback(refNum, authCode);
+	}
+	else
+	{
+		ra_result_log += "[등록 결과]\n" +
+			"code:" + res["code"] + "\n" +
+			"reason:" + res["reason"] + "\n" +
+			"moreInformation:" + res["moreinformation"] + "\n";
+
+	}
+}
+
+function generateRandom (min, max) {
+	var ranNum = Math.floor(Math.random()*(max-min+1)) + min;
+	return ranNum.toString();
+}
+
+function setButton (type) {
+	var id, div;
+
+	//init
+	document.getElementById ("form_ShowDialog").aResult.value = "";
+
+	//check element
+	div = document.getElementById("AnyPIN");
+
+	if (div == null) {
+		div = document.createElement('div');
+		div.id = "AnyPIN";
+		document.getElementById('AnyPINZone').appendChild(div);
+	}
+
+	// check id value
+	id = document.getElementById('form_CommonSetting').id.value;
+
+	// run functionn
+	switch (type) {
+		case 'regist':
+			goRegistStep(id);
+			break;
+		case 'login':
+			goLoginStep();
+			break;
+		case 'change':
+			goChangeStep();
+			break;
+		case 'delete':
+			goDeleteStep();
+			break;
+		default:
+			alert('not suppored dialog type');
+			break;
+	}
+}
+
+function goFail() {
+	location.href="login_fail.jsp";
+}
+
+function goAsset() {
+	location.href="asset_search.jsp";
+}
+
+function onSendToServer() {
+	var value = document.getElementById ("form_ShowDialog").aResult.value;
+	if (value.indexOf('3082') == -1) return;
+
+	var aRequest = new XMLHttpRequest ();
+	var aResponse = "";
+	var aURL = "";
+	var aMessage = "";
+
+	aURL = "./sign_result.jsp";
+	aRequest.open ("POST", aURL, false);
+	aRequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	aRequest.send ("SIGNED=" + encodeURIComponent(value));
+
+	try
+	{
+		aResponse = eval (aRequest.responseText);
+
+		// 43033, cert is not yet valid
+		if(parseInt (aResponse["code"]) == 43033)
+		{
+			document.form_ShowDialog.aButton1.value = "처리중..";
+			setTimeout(onSendToServer, 2000);
+		}
+		else if (parseInt (aResponse["code"]) == 0)
+		{
+			document.form_ShowDialog.aButton1.value = "서버에 확인";
+			aMessage += "서명 원문:\n" + aResponse["plain"] + "\n";
+			aMessage += "사용자 RDN:\n" + aResponse["subjectRDN"] + "\n";
+			aMessage += "사용자 인증서:\n" + aResponse["certificatePEM"] + "\n";
+
+			alert (aMessage);
+			document.getElementById ("form_ShowDialog").aResult.value = "";
+		}
+		else
+		{
+			document.form_ShowDialog.aButton1.value = "서버에 확인";
+			alert ("오류코드:" + aResponse["code"] + "\n" + "오류메시지:" + aResponse["reason"]);
+		}
+	} catch (evalException) {
+		alert ("Evaluate exception(" + evalException + "):\n" + aRequest.responseText);
+		return;
+	}
+}
+
+function goRegistStep(id) {
+	var regist_callback = function () {
+		var msg = '[result] OK\n' + '계속해서 발급하시겠습니까?';
+		if (confirm(msg)) {
+			AnyPin.mId = 'AnyPIN' + generateRandom(1, 100);
+			AnyPin.Dialog.show('regist', regist_callback, regist_err_callback);
+		} else {
+			var div = document.getElementById("AnyPIN");
+			div.parentNode.removeChild(div);
+		}
+	};
+
+	var regist_err_callback = function (result) {
+		if (result) alert(result.msg);
+	};
+
+	if (id)
+		AnyPin.mId = id;
+	else
+		AnyPin.mId = 'AnyPIN' + generateRandom(1, 100);
+
+	AnyPin.SetRequestCertRaFunc(aRequestCertRaFunc);
+	AnyPin.Dialog.show('regist', regist_callback, regist_err_callback);
+}
+
+function goLoginStep() {
+
+	var login_callback = function (aResult) {
+		document.getElementById ("form_ShowDialog").aResult.value = aResult;
+	};
+
+	var login_err_callback = function (result) {
+		alert(result);
+	};
+
+	var getPinIDList_err_callback = function (aResult) {
+		alert(aResult.msg);
+	};
+
+	var getPinIDList_callback = function (aResult) {
+		if (aResult > 0) {
+			AnyPin.Dialog.show('login', login_callback, login_err_callback);
+		} else {
+			alert('사용할 수 있는 PIN 정보가 없습니다');
+		}
+	};
+
+	AnyPin.InitAnyPin();
+	AnyPin.GetPinIDList("", 16, getPinIDList_callback, getPinIDList_err_callback);
+}
+
+function goChangeStep () {
+
+	var getPinIDList_err_callback = function (aResult) {
+		alert(aResult.msg);
+	};
+
+	var getPinIDList_callback = function (aResult) {
+		if (aResult > 0) {
+			AnyPin.Dialog.show('change');
+		} else {
+			alert('사용할 수 있는 PIN 정보가 없습니다');
+		}
+	};
+
+	AnyPin.InitAnyPin();
+	AnyPin.GetPinIDList("", 16, getPinIDList_callback, getPinIDList_err_callback);
+}
+
+function goDeleteStep () {
+
+	var getPinIDList_err_callback = function (aResult) {
+		alert(aResult.msg);
+	};
+
+	var getPinIDList_callback = function (aResult) {
+		if (aResult > 0) {
+			AnyPin.Dialog.show('delete');
+		} else {
+			alert('사용할 수 있는 PIN 정보가 없습니다');
+		}
+	};
+
+	AnyPin.InitAnyPin();
+	AnyPin.GetPinIDList("", 16, getPinIDList_callback, getPinIDList_err_callback);
+}
+
+</script>
+<body onload="init();">
+<h1>AnyPIN Dialog Test</h1>
+
+<!-- CENTER START -->
+<table width="350px" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td>
+		<form id="form_CommonSetting" name="form_CommonSetting">
+		<table class="test">
+			<tr>
+				<td width="694" colspan="2"><h4>공통 설정</h4></td>
+			</tr>
+			<tr>
+				<td width="208">Language</td>
+				<td width="486">
+					<input type="radio" class="inputcheck" name="Language" value="ko-KR" onClick="enableLanguage(this)"> ko-KR
+					<input type="radio" class="inputcheck" name="Language" value="en-US" onClick="enableLanguage(this)"> en-US
+				</td>
+			</tr>
+			<tr>
+				<td width="208">Pin type</td>
+				<td width="486">
+					<input type="checkbox" class="inputcheck" name="type" value="PIN" onClick="enablePin(this);"> 핀
+					<input type="checkbox" class="inputcheck" name="type" value="PATTERN" onClick="enablePin(this);"> 패턴
+					<input type="checkbox" class="inputcheck" name="type" value="FACEPHI" onClick="enablePin(this);"> 얼굴
+				</td>
+			</tr>
+			<tr>
+				<td>가상키패드(XecureKeypad)</td>
+				<td>
+					<input id="Enable_XecureKeyPad" type="button" style="width:100%" onclick="enableSecureKey(this);">
+				</td>
+			</tr>
+			<tr>
+				<td>Nickname 사용 여부</td>
+				<td>
+					<input id="Use_NickName" type="button" style="width:100%" onclick="useNickname(this);">
+				</td>
+			</tr>
+			<tr>
+				<td>등록 ID (facephi 용도)</td>
+				<td>
+					<input type="text" style="width:99%" name="id">
+				</td>
+			</tr>
+		</table>
+	</form>
+</table>
+<br/>
+
+<h3># Module UI</h3>
+<form id="form_ShowDialog" name="form_ShowDialog" method="post" action="#">
+<div class="hidden"><a href='login_fail.jsp' id="fail" onClick="goFail();"></a></div>
+<div class="hidden"><a href='asset_search.jsp' id="suc" onClick="goAsset();"></a></div>
+	<table>
+		<tr>
+			<td width="70"><b>select</b></td>
+			<td>
+				<a href="javascript:;" value="regist" onclick="setButton('regist');">regist</a>
+				|
+				<a href="javascript:;" value="login" onclick="setButton('login');">login</a>
+				|
+				<a href="javascript:;" value="change" onclick="setButton('change');">change</a>
+				|
+				<a href="javascript:;" value="delete" onclick="setButton('delete');">delete</a>
+			</td>
+		</tr>
+		<tr>
+			<td height="10"></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td height="260">output</td>
+			<td id="AnyPINZone" style="border:1px solid #ddd">
+				<!--AnyPIN UI Zone-->
+				<div id="AnyPIN"></div>
+			</td>
+		</tr>
+		<tr>
+			<td height="10"></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td height="20">result</td>
+			<td>
+				<textarea name="aResult" rows="7" cols="35"></textarea><p>
+				<input name="aButton2" type="button" value="Clear" onclick="document.form_ShowDialog.aResult.value=''; return false;"><p>
+				<input name="aButton1" type="button" value="서버에 확인" onclick="onSendToServer('confirm'); return false;">
+			</td>
+		</tr>
+	</table>
+</form>
+<br>
+</body>
+</html>

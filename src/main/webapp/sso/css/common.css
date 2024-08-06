@@ -1,0 +1,157 @@
+a.board_type01:link {
+	font-size:11px;
+	font-weight:bold;
+	color:#43566E;
+	text-decoration:none;
+}
+
+a.board_type01:visited {
+	font-size:11px;
+	font-weight:bold;
+	color:#43566E;
+	text-decoration:none;
+}
+
+a.board_type01:hover {
+	font-size:11px;
+	font-weight:bold;
+	color:#43566E;
+	text-decoration:none;
+}
+
+td.login_font{
+	font-size:12pt;
+	font-style:italic;
+}
+
+.title{
+	font-size:13pt;
+	font-family: "±¼¸²", "Arial";
+	color:#055592;
+}
+
+.bo_4depth{
+	white-space:nowrap;
+	font-size:16px;
+	color:#587192;
+	font-weight:bold;
+	border-bottom:2px solid #587192;
+	padding-bottom:3px;
+}
+
+.bo_navi{
+	width:100%;
+	text-align:right;
+	font-size:11px;
+	color:#8A8A8A;
+	font-weight:bold;
+	border-bottom:1px solid #ECECEC;
+	padding-bottom:3px;
+}
+
+.bo_navi_on{
+	font-size:11px;
+	color:#587192;
+}
+
+.dot_navi{margin-right:5px;vertical-align:middle;}
+
+.btn_txt{font-family:"Arial";color:#FFFFFF;background-color:#6C61E4;background-repeat: repeat-X; background-position: left top;font-weight:bold; padding:2,5,0,5}
+
+.btn_left{font-family:"Arial";width:3px;background-image: url(../../images/button/btn_left.gif);background-repeat: no-repeat; background-position: left;}
+
+.btn_right{font-family:"Arial";width:3px;background-image: url(../../images/button/btn_right.gif);background-repeat: no-repeat; background-position: right;}
+
+table.board_type01 {background:url('../../images/menu/board_type01_bg.gif') repeat-x;border-bottom:1px solid #E7E7E7;border-left:1px solid #E7E7E7;border-right:1px solid #E7E7E7;border-bottom:1px solid #E7E7E7;
+}
+
+table.board_type01 td{
+	font-size:11px;
+	font-weight:bold;
+	color:#43566E;
+}
+
+.board_type01_ti {
+	background:url('../../images/menu/board_type01_midbar.gif') no-repeat right top;
+}
+
+td.font_1{
+	font-size:18px;
+	font-weight:bold;
+	color:#43566E;
+}
+
+td.font_2{
+	font-size:14px;
+	font-weight:normal;
+	color:#090909;
+}
+
+.pl_5 {padding-left:5px;}
+.pl_10 {padding-left:10px;}
+
+.s_content_text {font-size: 9pt; color: #5E85A8; text-decoration: none; font-family:Dotum; font-weight:bold;}
+
+div.tb_title_center { 
+ FONT-SIZE: 11pt; COLOR: #000000;font-family:Dotum; HEIGHT: 26px; 
+ BACKGROUND-COLOR:#F4F4F4; Text-align: center ; vertical-align: middle; 
+ padding-top:3px; padding-left:3px; position:relative; float:left;
+ }
+ 
+ td.tb_title_center { 
+ FONT-SIZE: 10pt; COLOR: #000000;font-family:µ¸¿ò; color:#587192; font-weight:bold; HEIGHT: 26px; 
+ BACKGROUND-COLOR:#F4F4F4; Text-align: center ; vertical-align: middle; 
+ padding-top:3px; padding-left:3px; border:#BEBEBE 1px solid;
+ }
+ 
+ td.tb_title_text {
+ FONT-SIZE:10pt; font-family:µ¸¿ò; color:#587192; font-weight:bold;
+ }
+ 
+ td.tb_title_center2 { 
+ FONT-SIZE: 11pt; COLOR: #000000; font-family:µ¸¿ò; color:#587192; font-weight:bold; HEIGHT: 26px; 
+ Text-align: center ; vertical-align: middle; 
+ padding-top:3px; padding-left:3px; border:#BEBEBE 1px solid;
+ }
+ 
+ td.tb_title_left { 
+ FONT-SIZE: 10pt; font-family:µ¸¿ò; color:#587192; font-weight:bold; HEIGHT: 26px; 
+ BACKGROUND-COLOR:#F4F4F4; Text-align: left ; vertical-align: middle; 
+ padding-top:3px; padding-left:3px; border:#BEBEBE 1px solid;
+ }
+ 
+ td.tb_title_left2 { 
+ FONT-SIZE: 11pt; font-family:µ¸¿ò; color:#587192; font-weight:bold; HEIGHT: 26px; 
+ Text-align: left ; vertical-align: middle; 
+ padding-top:3px; padding-left:3px; border:#BEBEBE 1px solid;
+ }
+ 
+ input.tb_title_center { 
+ FONT-SIZE: 11pt; color:#587192; font-weight:bold; HEIGHT: 26px; 
+ Text-align: center ; vertical-align: middle; 
+ padding-top:3px; padding-left:3px; border:#BEBEBE 1px solid;
+ }
+ 
+ .td_input { FONT-SIZE: 10pt; font-family:µ¸¿ò; font-weight:bold; color:#585858 ; border:1px solid #C7C7C7; 
+ background:#FAFAFA; Text-align:left ; vertical-align: middle;
+ padding:3px 3px 0px 3px;
+ }
+ 
+ .tb_text_left {
+ FONT-SIZE: 9pt; COLOR: #58595B;font-family:Dotum; HEIGHT: 26px; 
+ BACKGROUND-COLOR:#ffffff; Text-align: left ; vertical-align: middle ; 
+ padding-left:3px; padding-right:3px;
+}
+
+.td_select { font-family:Dotum; font-size:9pt; color:#585858 ; border:1px solid #C7C7C7; 
+ background:#FAFAFA; Text-align:left ; 
+ padding-top:3px; padding-left:3px;
+ }
+ 
+ .round{
+ 	border:1px solid #C7C7C7;
+ }
+ 
+ .cpont{
+ 	FONT-SIZE: 12pt; font-family:µ¸¿ò; font-weight:bold; color:#585858 ;
+ }

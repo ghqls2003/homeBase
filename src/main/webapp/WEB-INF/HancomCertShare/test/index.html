@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>XecureCertShare Demo</title>
+
+<style type="text/css">
+
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="cache-control" content="no-cache">
+
+<script language='javascript' src='../xecure_cs.js'></script>
+
+<!-- XecureKeyPad -->
+<script type="text/javascript" src="/HancomKeyPad/js/xkeypad_config.js"></script>
+<script type="text/javascript" src="/HancomKeyPad/js/xkeypad_plugin.js"></script>
+<!-- XecureKeyPad -->
+
+<script>
+	var gEnableDownload = true;
+	var gInstallCheckCount = 0;	
+
+	function install_callback (aResult)
+	{
+		switch (aResult)
+		{
+			case "XecureCertShare_NEED_INSTALL" : 	// 설치되지 않은 상태 
+			case "XecureCertShare_NEED_UPDATE" :	// 낮은 버전이 설치된 상태
+				if (gEnableDownload == true)
+				{
+					// 플랫폼별 파일 다운로드 처리 필요. 
+					window.location = XecureCertShare.mPlatform.aInstallPath; 
+					alert ('프로그램 설치가 필요합니다.');
+					gEnableDownload = false;
+				}
+				
+				if (gInstallCheckCount >= 5) // InstallCheck 횟수 설정.
+				{
+					alert ('프로그램 설치 후 다시 접속해 주세요.');
+				}
+				else
+				{
+					// InstallCheck 재시도.
+					setTimeout (function () {
+						gInstallCheckCount++;
+						XecureCertShare_installCheck (install_callback);
+					}, 1000);
+				}
+				
+				break;
+		}
+	}
+
+	XecureCertShareStart (true); //XFree (인자값 IgnoreInstallPage)
+	XecureCertShare_installCheck (install_callback);
+		
+	function setErrorLogLevel()
+	{
+	        var aResult;
+
+	        aResult = XecureCertShare.XCSSetErrorLogLevel();
+
+	        alert("SetErrorLogLevel Result : [" + aResult + "]");
+	}	
+	
+	function init()
+	{
+		var ModeTag = document.getElementById("XCSMode");
+		if(XecureCertShare.mPluginMode == true)
+		{	
+			ModeTag.innerHTML = "Plugin";
+			document.getElementById("Enable_IncaNOSv10").disabled = true;
+			
+		}
+		else
+		{		
+			ModeTag.innerHTML = "xFree (Non-ActiveX)";
+			document.getElementById("Enable_KeyCrypt").disabled = true;
+		}
+		
+		document.getElementById("Enable_XecureKeypad").value = XecureCertShare.mXecureKeypadEnable;
+		document.getElementById("Enable_KeyCrypt").value = XecureCertShare.mKeyCryptEnable;
+		document.getElementById("Enable_IncaNOSv10").value = XecureCertShare.mIncaNOSv10Enable;
+		document.getElementById("Enable_kings").value = XecureCertShare.mKOSKeyEnable;
+
+		if(document.getElementById("Enable_IncaNOSv10").value == "true")
+			initIncaNOSv10 ();
+	}
+	
+	function setKeyboard(element)
+	{
+		if(element.id == "Enable_XecureKeypad")
+		{
+			XecureCertShare.mXecureKeypadEnable =! XecureCertShare.mXecureKeypadEnable;
+		}
+		else if(element.id == "Enable_KeyCrypt")
+		{
+			XecureCertShare.mKeyCryptEnable =! XecureCertShare.mKeyCryptEnable;
+		}
+		else if(element.id == "Enable_IncaNOSv10")
+		{
+			XecureCertShare.mIncaNOSv10Enable =! XecureCertShare.mIncaNOSv10Enable;
+		}
+		else if(element.id == "Enable_kings")
+		{
+			XecureCertShare.mKOSKeyEnable =! XecureCertShare.mKOSKeyEnable;
+		}
+		
+		document.getElementById("Enable_XecureKeypad").value = XecureCertShare.mXecureKeypadEnable;
+		document.getElementById("Enable_KeyCrypt").value = XecureCertShare.mKeyCryptEnable;
+		document.getElementById("Enable_IncaNOSv10").value = XecureCertShare.mIncaNOSv10Enable;
+		document.getElementById("Enable_kings").value = XecureCertShare.mKOSKeyEnable;
+
+		if(document.getElementById("Enable_IncaNOSv10").value == "true")
+			initIncaNOSv10 ();
+		
+	}
+	function setCodeType (type) // 1:authcode 2:qrcode
+	{
+		if(type == 2)
+			XecureCertShare.mXCSXFree.mUseQR = true;
+		else
+			XecureCertShare.mXCSXFree.mUseQR = false;
+	}
+</script>
+</head>
+
+<body onload="init();">
+<div id="box">
+	<div id="left">
+	</div>
+
+	<div id="main">
+		<h3> XCS Mode : <span id="XCSMode" style="color:blue;"> </span> </h3>
+			<form id="form_xcstest" name="form_xcstest">
+				<table class="test" style="border: 1px  dashed black; width: 550px;">
+					<tr>
+						<td colspan="3">
+						<b>키보드 보안 설정</b>
+						</td>
+					</tr>
+					<tr>
+						<td rowspan="4" style="width:100px">Keyboard</td>
+						<td>
+							XecureKeypad
+						</td>
+						<td>
+							<input id="Enable_XecureKeypad" type="button" class="inputbutton" style="height:auto;width:100px;" value="false"
+								onClick="setKeyboard(this);"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							inca KeyCrypt (only Plugin)
+						</td>
+						<td>
+							<input id="Enable_KeyCrypt" type="button" class="inputbutton" style="height:auto;width:100px;" value="false"
+								onClick="setKeyboard(this);"/>
+							<br>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							inca NOSv10
+						</td>
+						<td>
+							<input id="Enable_IncaNOSv10" type="button" class="inputbutton" style="height:auto;width:100px;" value="false"
+								onClick="setKeyboard(this);"/>
+							<br>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Kings 
+						</td>
+						<td>
+							<input id="Enable_kings" type="button" class="inputbutton" style="height:auto;width:100px;" value="false" onClick="setKeyboard(this);"/>
+							<br>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+						<b>CodeType</b>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+						<input id="Enable_authcode" type="radio" name="codetype" onClick="setCodeType(1);"> 인증코드방식 <br>
+						<input id="Enable_qrcode" type="radio" name="codetype" onClick="setCodeType(2);" checked > QR코드방식
+						</td>
+					</tr>
+				</table>				
+
+				
+				<p></p>
+				<table class="test" style="border: 1px  dashed black; width: 550px;">	
+					<tr>
+						<td colspan="2">
+						<b>XecureCertShare</b>
+						</td>
+					</tr>
+					<tr>
+						<td rowspan="2" style="width:100px">Run</td>
+						<td>
+							<input id="Button_XCSExport" type="button" class="inputbutton" style="width:400px;height:auto;" value="내보내기 (PC to SmartPhone)"
+								onClick="XecureCertShare.XCSExport();" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input id="Button_XCSImport" type="button" class="inputbutton" style="width:400px;height:auto;" value="가져오기 (SmartPhone to PC)"
+								onClick="XecureCertShare.XCSImport();" />	
+						</td>
+					</tr>
+				</table>
+			</form>
+		<br/>
+	</div>
+<!--		<input type="button" class="inputbutton" style="height:auto;width:500px;" value="SetErrorLogLevel (v1.0.0.4이상지원)" onClick="setErrorLogLevel();"/> -->
+	<div id="bottom">
+	</div>
+	
+	<div id="XCSExport_div"></div>
+
+</div>
+</body>
+
+</html>

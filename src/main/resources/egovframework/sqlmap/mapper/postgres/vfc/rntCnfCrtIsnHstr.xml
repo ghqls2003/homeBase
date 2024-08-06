@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vfc.rntCnfCrtIsnHstr">
+
+	<select id="selectrntCnfCrtIsnHstrList" resultType="resultMap">
+	<if test='authrtCd.equals("Z01") or
+		authrtCd.equals("G01") or
+		authrtCd.equals("M01") or
+		authrtCd.equals("K01") or
+		authrtCd.equals("S01") or
+		authrtCd.equals("S02")'>
+		select * from (
+			SELECT
+				row_number() over(order by conf.mdfcn_dt desc) as rn ,
+				conf.rent_no,
+				conf.cnfrmn_hstry_no,
+				conf.vhcl_reg_no,
+				conf.bzmn_sn,
+				to_char(conf.mdfcn_dt, 'YYYY-MM-DD HH24:MI') mdfcn_dt
+			FROM dqvs.dvs_dqv_hs_conf conf
+			left join dqvs.dvs_rac_mt_agency agency on
+				conf.bzmn_sn = agency.bzmn_sn
+			where 1=1
+			<if test="startDt != '' and startDt != null and endDt != '' and endDt != null">
+				and conf.mdfcn_dt <![CDATA[>=]]> to_date(#{startDt}, 'yyyy-mm-dd') and conf.mdfcn_dt <![CDATA[<=]]> to_date(#{endDt}, 'yyyy-mm-dd')+1
+			</if>
+			<if test="signguCd != '' and signguCd != null">
+				and conf.sgg_cd like '%' || #{signguCd} || '%'
+			</if>
+			<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
+				and agency.reg_cmptnc_cd like '%' || #{cmptncZoneCd} || '%'
+			</if>
+			) T
+		where 1=1
+		<if test="take != '' and take != null">
+			AND T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		</if>
+		<if test="skip != '' and skip != null">
+			AND T.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+		</if>
+	</if>
+	</select>
+
+   <select id="selectrntCnfCrtIsnHstrListCnt" resultType="int">
+	   <if test='authrtCd.equals("Z01") or
+			authrtCd.equals("G01") or
+			authrtCd.equals("M01") or
+			authrtCd.equals("K01") or
+			authrtCd.equals("S01") or
+			authrtCd.equals("S02")'>
+		   select count(*) from(
+		   		select * from (
+				SELECT
+					row_number() over() as rn ,
+					conf.rent_no,
+					conf.cnfrmn_hstry_no,
+					conf.vhcl_reg_no,
+					conf.bzmn_sn,
+					conf.mdfcn_dt
+				FROM dqvs.dvs_dqv_hs_conf conf
+				left join dqvs.dvs_rac_mt_agency agency on
+					conf.bzmn_sn = agency.bzmn_sn
+				<if test="startDt != '' and startDt != null and endDt != '' and endDt != null">
+					where conf.mdfcn_dt <![CDATA[>=]]> to_date(#{startDt}, 'yyyy-mm-dd') and conf.mdfcn_dt <![CDATA[<=]]> to_date(#{endDt}, 'yyyy-mm-dd')+1
+				</if>
+				<if test="signguCd != '' and signguCd != null">
+					and conf.sgg_cd like '%' || #{signguCd} || '%'
+				</if>
+				<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
+					and agency.reg_cmptnc_cd like '%' || #{cmptncZoneCd} || '%'
+				</if>
+				) T
+			where 1=1
+		   ) C
+	   </if>
+   </select>
+
+   <select id="selectReIssuedData" resultType="resultMap">
+		select
+		*
+		from
+			(
+			select
+				conf.vhcl_nm,
+				conf.rent_no,
+				conf.cnfrmn_hstry_no,
+				to_char(conf.rent_bgng_dt,
+				'YYYY-MM-DD HH24:MI') rent_bgng_dt,
+				to_char(conf.rent_end_dt,
+				'YYYY-MM-DD HH24:MI') rent_end_dt,
+				extract(day
+			from
+				(conf.rent_end_dt - conf.rent_bgng_dt)) || '일 ' ||
+				extract(hour
+			from
+				(conf.rent_end_dt - conf.rent_bgng_dt)) || ':' ||
+				LPAD(extract(minute
+			from
+				(conf.rent_end_dt - conf.rent_bgng_dt))::text,
+				2,
+				'0') as diff_dd_hh_mm,
+				conf.vhcl_reg_no,
+				conf.vin,
+				agency.co_nm,
+				coalesce(agency.lotno_addr,
+				agency.road_nm_addr) addr,
+				dqvs.pca_decrypt(agency.telno, '150'),
+				dqvs.pca_decrypt(conf.dln, '150')
+			from
+				dqvs.dvs_dqv_hs_conf conf
+			left join dqvs.dvs_rac_mt_agency agency on
+				conf.bzmn_sn = agency.bzmn_sn
+		) T
+		where
+			1 = 1
+		and T.rent_no = #{rentNo}
+		and T.cnfrmn_hstry_no = #{confCertHstryNo}
+	</select>
+
+	<select id="selectDetailConfInfo" resultType="resultMap">
+		select
+		*
+		from
+			(
+			select
+				conf.vhcl_nm,
+				conf.rent_no,
+				conf.cnfrmn_hstry_no,
+				to_char(conf.mdfcn_dt,'YYYY-MM-DD HH24:MI') mdfcn_dt,
+				to_char(conf.rent_bgng_dt,'YYYY-MM-DD HH24:MI') rent_bgng_dt,
+				to_char(conf.rent_end_dt,'YYYYY-MM-DD HH24:MI') rent_end_dt,
+				conf.vhcl_reg_no,
+				conf.vin,
+				agency.co_nm,
+				coalesce(agency.lotno_addr,agency.road_nm_addr) addr,
+				dqvs.pca_decrypt(agency.telno, '150'),
+				conf.use_yn,
+				dqvs.pca_decrypt(conf.dln, '150'),
+				CASE rent.rent_stts_cd
+		           WHEN '1' THEN '미확정'
+		           WHEN '2' THEN '대여확정'
+		           WHEN '9' THEN '대여취소'
+		           ELSE rent.rent_stts_cd
+	       		END AS rent_stts_nm
+			from
+				dqvs.dvs_dqv_hs_conf conf
+			left join dqvs.dvs_rac_mt_agency agency on
+				conf.bzmn_sn = agency.bzmn_sn
+			left join dqvs.dvs_dqv_mt_rent rent on
+				conf.rent_no = rent.rent_no
+		) T
+		where
+			1 = 1
+		and T.rent_no = #{rentNo}
+		and T.cnfrmn_hstry_no = #{confCertHstryNo}
+	</select>
+
+	<insert id="insertConfData">
+		insert
+			into
+			dqvs.dvs_dqv_hs_conf
+					(rent_no,
+			cnfrmn_hstry_no,
+			vin,
+			vhcl_reg_no,
+			carmdl,
+			mdlyr,
+			vhcl_nm,
+			bzmn_sn,
+			engine_fom,
+			use_yn,
+			sgg_cd,
+			dln,
+			vrfc_hstry_sn,
+			rent_bgng_dt,
+			rent_end_dt,
+			rgtr_sn,
+			reg_dt,
+			reg_ip,
+			rent_prcs_dt,
+			mdfr_sn,
+			mdfcn_dt,
+			mdfcn_ip)
+					select
+						rent_no,
+			(
+			select
+				(coalesce(count(cnfrmn_hstry_no),
+				0) + 1)::varchar as cnfrmn_hstry_no
+			from
+				dqvs.dvs_dqv_hs_conf
+			where
+				rent_no = #{rentNo}) cnfrmn_hstry_no ,
+			vin,
+			vhcl_reg_no,
+			carmdl,
+			mdlyr,
+			vhcl_nm,
+			bzmn_sn,
+			engine_fom,
+			use_yn,
+			sgg_cd,
+			dln,
+			vrfc_hstry_sn,
+			rent_bgng_dt,
+			rent_end_dt,
+			rgtr_sn,
+			reg_dt,
+			reg_ip,
+			rent_prcs_dt,
+			#{userSn}::numeric,
+			now()::timestamp,
+			#{clientIP}
+		from
+			dqvs.dvs_dqv_hs_conf
+		where
+			cnfrmn_hstry_no = #{confCertHstryNo}
+			and rent_no = #{rentNo}
+	</insert>
+
+</mapper>

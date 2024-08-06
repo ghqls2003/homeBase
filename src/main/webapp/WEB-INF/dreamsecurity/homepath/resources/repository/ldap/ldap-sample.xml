@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<queryMap id="sample">
+	
+	<select id="getData" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>ou=applications,ou=pmi,ou=#siteName#,o=Government Of Korea,C=KR</base>
+		<filter>(&amp;(objectclass=eamappl)(cn=#cn#*))</filter>
+		<attributes>
+			<attribute alias="applicationCode">cn</attribute>
+			<attribute alias="applicationName">eamName</attribute>
+		</attributes>
+		<search-scope>ONE</search-scope>
+		<sort>
+			<attribute ascending="true">applicationCode</attribute>
+			<attribute>applicationName</attribute>
+		</sort>
+	</select>
+	
+	<!-- search-scope의 값은 BASE/ONE/SUB 중에 하나. base만 존재하고 filter에 값이 없으면 read 한다. -->
+	<select id="getData2" parameterClass="java.util.HashMap" resultClass="test.ResultBean">
+		<base>ou=applications,ou=pmi,ou=서울특별시,o=Government of Korea,c=KR</base>
+		<filter>(&amp;(objectclass=eamappl)(cn=#cn#))</filter>
+		<attributes>
+			<attribute>cn</attribute>
+			<attribute>eamName</attribute>
+		</attributes>
+		<search-scope>ONE</search-scope>
+	</select>
+
+	<select id="getInsertData" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>uid=#uid#,ou=people,ou=#siteName#,o=Government Of Korea,C=KR</base>
+		<search-scope>BASE</search-scope>
+	</select>
+	
+	<!-- objectclass는 필수임. 그 외 attribute에 정의된 값들이 parameterClass에 존재하여야 함. -->
+	<insert id="addData" parameterClass="java.util.HashMap">
+		<base>uid=#uid#,ou=people,ou=#siteName#,o=Government Of Korea,C=KR</base>
+		<attributes>
+			<attribute alias="PrimaryKey">objectclass</attribute>
+			<attribute alias="DisplayName">displayName</attribute>
+			<attribute alias="FullName">orgFullName</attribute>
+			<attribute alias="OrganizationUnit">ou</attribute>
+			<attribute alias="OrganizationUnitCode">ouCode</attribute>
+			<attribute alias="ParentOrganizationUnitCode">parentOUCode</attribute>
+			<attribute alias="ResidentNo">resiNumber</attribute>
+			<attribute alias="TopOrganizationUnitCode">topOUCode</attribute>
+			<attribute alias="UserFullName">userFullName</attribute>
+		</attributes>
+	</insert>
+	
+	<!-- attribute의 action은 ADD/REPLACE/DELETE 중 하나 -->
+	<update id="modifyData" parameterClass="java.util.HashMap">
+		<base>uid=#uid#,ou=people,ou=#siteName#,o=Government Of Korea,C=KR</base>
+		<attributes>
+			<attribute action="DELETE">status</attribute>
+			<attribute action="REPLACE">userFullName</attribute>
+		</attributes>
+	</update>
+	
+	<!-- attribute의 action은 ADD/REPLACE/DELETE 중 하나 -->
+	<update id="modifyData2" parameterClass="java.util.HashMap">
+		<base>uid=#uid#,ou=people,ou=#siteName#,o=Government Of Korea,C=KR</base>
+		<attributes>
+			<attribute action="REPLACE">status</attribute>
+		</attributes>
+	</update>
+	
+	<!-- attribute의 action은 ADD/REPLACE/DELETE 중 하나 -->
+	<update id="modifyData3" parameterClass="java.util.HashMap">
+		<base>uid=#uid#,ou=people,ou=#siteName#,o=Government Of Korea,C=KR</base>
+		<attributes>
+			<attribute action="DELETE">status</attribute>
+		</attributes>
+	</update>
+	
+	<!-- Entry를 삭제할 때 사용. cascade 가 true인 경우 recursive로 하위 데이터까지 모두 지운다. -->
+	<delete id="removeData" parameterClass="java.util.HashMap">
+		<base>uid=#uid#,ou=people,ou=#siteName#,o=Government Of Korea,C=KR</base>
+		<cascade>false</cascade>
+	</delete>
+	
+</queryMap>

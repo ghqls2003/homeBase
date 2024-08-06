@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mm.apiAuthKey">
+
+
+	<!-- 인증키현황 리스트 -->
+	<select id="listApiAuthKey" parameterType="paraMap" resultType="resultMap">
+	select
+		t2.*
+	from(		
+		SELECT 
+			t1.*,
+			agency.co_nm,
+			row_number() over(	order by T1.issu_dt_org desc) sn
+				FROM
+					(
+					SELECT 
+						CASE T.stts_cd WHEN '1' THEN '신청중' WHEN '2' THEN '활용중' WHEN '3' THEN '반려' WHEN '4' THEN '중지'
+				        				 ELSE '기타' END status_description
+				        , T.*updateSttCd
+					FROM
+				    	(
+				        SELECT TO_CHAR(damk.issu_dt, 'YYYY-MM-DD') issu_dt
+				        	, damk.issu_dt issu_dt_org
+				        	, damk.user_sn
+				        	,case
+								when dcms.user_nm is not null then
+									concat(left(dcms.user_nm, 1), repeat('*', length(dcms.user_nm) - 2), right(dcms.user_nm, 1))
+								when dcms.user_nm is not null then
+									concat(left(dcms.user_nm, 1), repeat('*', length(dcms.user_nm) - 2), right(dcms.user_nm, 1))
+								else null
+							end as rqstr_nm
+				        	, dcms.user_id
+				        	, damk.cert_key
+<!-- 				        	, damk.oper_se_cd -->
+				        	, damk.secret_key
+				        	, damk.stts_cd
+				        	, dcmu.ogdp_nm
+				        	, dcmu.bzmn_sn
+						FROM
+				        	dqvs.dvs_api_mt_key damk
+				        JOIN dqvs.dvs_cmm_mt_sso dcms ON dcms.user_sn = damk.user_sn
+				        join dqvs.dvs_cmm_mt_user dcmu on dcmu.user_sn = damk.user_sn
+				        WHERE 1=1
+					<if test="searchCondition == 'userNm' and searchText != ''">
+						and LOWER(dcms.user_nm) like '%' || LOWER(#{searchText}) || '%'
+				    </if>
+					<if test="searchCondition == 'userId' and searchText != ''">
+						and LOWER(dcms.user_id) like '%' || LOWER(#{searchText}) || '%'
+				    </if>
+				        <if test="authrtCd != 'Z01' and authrtCd != 'K01' and authrtCd != 'D01'">
+				        	AND damk.user_sn = #{userSn}::numeric
+				        </if>
+				        <if test="authrtCd == 'Z01' or authrtCd == 'K01' or authrtCd == 'D01'">
+				        	AND	damk.issu_dt BETWEEN TO_DATE(#{startPicker02}, 'yyyy-mm-dd') AND TO_DATE(#{endPicker02}, 'yyyy-mm-dd')+1
+				        </if>
+				        <if test="sttsCd != null and sttsCd != ''">
+				        	AND damk.stts_cd = #{sttsCd}
+				        </if>
+						) AS T
+					) AS t1
+					left JOIN dqvs.dvs_rac_mt_agency agency ON t1.bzmn_sn = agency.bzmn_sn
+					where 1=1 
+					<if test="searchCondition == 'companyNm' and searchText != '' ">
+				        AND agency.co_nm  like '%' || LOWER(#{searchText}) || '%'
+				    </if>
+				    	)t2
+				    	where 1=1
+					<if test="take != '' and take != null">
+				        and t2.sn <![CDATA[<=]]> (#{page} * #{take})
+				    </if>
+				    <if test="skip != '' and skip != null">
+				        AND t2.sn <![CDATA[>]]> #{skip}
+		    		</if>
+	    		order by t2.sn
+   </select>
+   		
+   <select id="listApiAuthKeyCnt" resultType="int">
+    select
+		count(t2.*)
+	from(		
+		SELECT 
+			t1.*,
+			agency.co_nm,
+			row_number() over(	order by T1.issu_dt_org desc) sn
+				FROM
+					(
+					SELECT 
+						CASE T.stts_cd WHEN '1' THEN '신청중' WHEN '2' THEN '활용중' WHEN '3' THEN '반려' WHEN '4' THEN '중지'
+				        				 ELSE '기타' END status_description
+				        , T.*updateSttCd
+					FROM
+				    	(
+				        SELECT TO_CHAR(damk.issu_dt, 'YYYY-MM-DD') issu_dt
+				        	, damk.issu_dt issu_dt_org
+				        	, damk.user_sn
+				        	, dcms.user_nm
+				        	, dcms.user_id
+				        	, damk.cert_key
+				        	, damk.secret_key
+				        	, damk.stts_cd
+				        	, dcmu.ogdp_nm
+				        	, dcmu.bzmn_sn
+						FROM
+				        	dqvs.dvs_api_mt_key damk
+				        JOIN dqvs.dvs_cmm_mt_sso dcms ON dcms.user_sn = damk.user_sn
+				        join dqvs.dvs_cmm_mt_user dcmu on dcmu.user_sn = damk.user_sn
+				        WHERE 1=1
+				        <if test="authrtCd == 'Z01' or authrtCd == 'K01' or authrtCd == 'D01'">
+					      	AND	damk.issu_dt BETWEEN TO_DATE(#{startPicker02}, 'yyyy-mm-dd') AND TO_DATE(#{endPicker02}, 'yyyy-mm-dd')+1
+					    </if>
+						<if test="searchCondition == 'userNm' and searchText != ''">
+							and LOWER(dcms.user_nm) like '%' || LOWER(#{searchText}) || '%'
+					    </if>
+						<if test="searchCondition == 'userId' and searchText != ''">
+							and LOWER(dcms.user_id) like '%' || LOWER(#{searchText}) || '%'
+					    </if>
+				        <if test="authrtCd != 'Z01' and authrtCd != 'K01' and authrtCd != 'D01'">
+				        	AND damk.user_sn = #{userSn}::numeric
+				        </if>
+				        <if test="sttsCd != null and sttsCd != ''">
+				        	AND damk.stts_cd = #{sttsCd}
+				        </if>
+						) AS T
+					) AS t1
+					left JOIN dqvs.dvs_rac_mt_agency agency ON t1.bzmn_sn = agency.bzmn_sn
+					where 1=1 
+					<if test="searchCondition == 'companyNm' and searchText != '' ">
+				        AND agency.co_nm  like '%' || LOWER(#{searchText}) || '%'
+				    </if>
+				    	)t2
+    </select>
+    
+   <select id="checksttsCnt" resultType="int">
+    	select count(*) from (
+			select
+				api_sn
+			from
+				dqvs.dvs_api_mt_info
+			group by api_sn
+		) a
+    </select>
+   <select id="checkapiCnt" resultType="int">
+    	select count(*) from (
+			select api_sn 
+			from dqvs.dvs_api_mt_stts
+				where 
+				user_sn = #{userSn}::NUMERIC
+			group by api_sn
+		) a
+    </select>
+
+	<select id="checkstts" parameterType="paraMap" resultType="resultMap">
+			select
+				api_sn
+			from
+				dqvs.dvs_api_mt_info
+			group by api_sn
+   </select>
+   		
+<!--    <select id="selectcheckstts2" parameterType="paraMap" resultType="resultMap"> -->
+<!-- 			select api_sn  -->
+<!-- 			from dqvs.dvs_api_mt_stts -->
+<!-- 				where user_sn = #{userSn}::NUMERIC -->
+<!-- 			group by api_sn -->
+<!--     </select> -->
+    
+    <!-- 인증키 승인버튼 클릭 -->
+    <update id="updateapproveBtn">
+    /* 승인버튼 */
+     	UPDATE dqvs.dvs_api_mt_key
+		SET stts_cd = '2'
+		WHERE 
+			<if test="userSn != null and userSn != ''">
+				user_sn = #{userSn}::NUMERIC
+				AND cert_key = #{cert}
+<!-- 				and oper_se_cd = '1' -->
+			</if>
+     </update> 
+    <update id="updateapproveApiList">
+    /* api목록 승인 */
+     	UPDATE dqvs.dvs_api_mt_stts
+		SET stts_cd = 2
+			, expry_ymd = TO_CHAR(NOW()+ INTERVAL '5 years', 'YYYYMMDD')
+			, aprv_dt = NOW()
+			, autzr_sn = #{autzr}::NUMERIC
+		WHERE 
+			<if test="userSn != null and userSn != ''">
+				user_sn = #{userSn}::NUMERIC
+			</if>
+
+     </update> 
+    
+    <!-- 인증키 반려버튼 클릭 -->
+    <update id="updaterefuseBtn">
+    /* 반려버튼 */
+     	UPDATE dqvs.dvs_api_mt_key
+		SET stts_cd = '3'
+		WHERE
+			<if test="userSn != null and userSn != ''">
+				 user_sn = #{userSn}::NUMERIC
+				 AND cert_key = #{cert}
+<!-- 				 and oper_se_cd = '1' -->
+			</if>
+		
+
+     </update> 
+    <update id="updaterefuseApiList">
+    /* api목록 반려 */
+     	UPDATE dqvs.dvs_api_mt_stts
+		SET stts_cd = 3
+			, rjct_rsn = '기타'
+			, rjct_user_sn = #{autzr}::NUMERIC
+			, rjct_dt = NOW()
+		WHERE 
+			<if test="userSn != null and userSn != ''">
+				user_sn = #{userSn}::NUMERIC
+				AND stts_cd = '1'
+			</if>
+
+     </update> 
+     
+    <update id="updatestopUseBtn">
+    /* 중지버튼 */
+     	UPDATE dqvs.dvs_api_mt_key
+		SET stts_cd = '4'
+		WHERE 
+			<if test="userSn != null and userSn != ''">
+				user_sn = #{userSn}::NUMERIC
+				AND cert_key = #{cert}
+<!-- 				and oper_se_cd = '1' -->
+			</if>
+     </update> 
+    <update id="updatestopUseList">
+    /* api목록 중지 */
+     	UPDATE dqvs.dvs_api_mt_stts
+		SET stts_cd = 4
+			, rjct_rsn = '기타'
+			, rjct_user_sn = #{autzr}::NUMERIC
+			, rjct_dt = NOW()
+		WHERE 
+			<if test="userSn != null and userSn != ''">
+				user_sn = #{userSn}::NUMERIC
+				AND stts_cd = '2'
+			</if>
+
+     </update> 
+    <update id="updateReUseBtn">
+    /* 중지버튼 */
+     	UPDATE dqvs.dvs_api_mt_key
+		SET stts_cd = '2'
+		WHERE 
+			<if test="userSn != null and userSn != ''">
+				user_sn = #{userSn}::NUMERIC
+				AND cert_key = #{cert}
+<!-- 				and oper_se_cd = '1' -->
+			</if>
+
+     </update> 
+    <update id="updateReUseList">
+    /* api목록 중지 */
+     	UPDATE dqvs.dvs_api_mt_stts
+		SET 
+			  stts_cd = 2
+			, expry_ymd = TO_CHAR(NOW()+ INTERVAL '2 years', 'YYYYMMDD')
+			, aprv_dt = NOW()
+			, autzr_sn = #{autzr}::NUMERIC
+		WHERE
+			<if test="userSn != null and userSn != ''">
+				 user_sn = #{userSn}::NUMERIC
+			</if>
+<!-- 			AND stts_cd = '2' -->
+     </update> 
+    
+    
+    <select id="sttsDrop" parameterType="paraMap" resultType="resultMap">
+    /* 상태 드롭다운 */
+    	SELECT cd.cd
+			, cd.cd_nm
+		FROM
+			dqvs.dvs_cmm_mt_code cd
+		WHERE cd_group = 'api_stts_cd'
+    </select>
+    		
+    <!-- 재발급 시, 기존 API -->
+    <update id="updateSttCd">
+     	UPDATE
+			dqvs.dvs_api_mt_key mstr_key
+		SET
+			stts_cd = '4',
+			cert_token = null,
+			token_issu_dt = null
+		WHERE
+		    <if test="userSn != null and userSn != ''">
+				mstr_key.user_sn = #{userSn}::NUMERIC
+<!-- 				and oper_se_cd = '1' -->
+       		</if>
+     </update> 
+     
+     <!-- 사용 -->
+     <insert id="insertApiAuthKey"  parameterType="paraMap">
+	   			insert into
+					dqvs.dvs_api_mt_key
+				(
+					user_sn,
+					key_sn,
+					cert_key,
+					secret_key,
+					stts_cd,
+					issu_dt,
+					cert_token,	
+					token_issu_dt
+<!-- 					,oper_se_cd -->
+					)
+				values(
+					#{userSn}::NUMERIC,
+					(SELECT COALESCE(MAX(key_sn), 0)+1 FROM dqvs.dvs_api_mt_key),
+					#{certKey},
+					#{secretKey},
+					'1',
+					now(),
+					null,
+					null
+<!-- 					'1' -->
+				);
+    </insert>
+     <insert id="insertApiTestKey"  parameterType="paraMap">
+	   			insert into
+					dqvs.dvs_api_mt_key
+				(
+					user_sn,
+					key_sn,
+					cert_key,
+					secret_key,
+					stts_cd,
+					issu_dt,
+					cert_token,	
+					token_issu_dt
+<!-- 					,oper_se_cd -->
+					)
+				values(
+					#{userSn}::NUMERIC,
+					(SELECT COALESCE(MAX(key_sn), 0)+1 FROM dqvs.dvs_api_mt_key),
+					#{certKey},
+					#{secretKey},
+					'2',
+					now(),
+					null,
+					null
+<!-- 					'0' -->
+				);
+    </insert>
+     <insert id="insertReApi"  parameterType="paraMap">
+	   			insert into
+					dqvs.dvs_api_mt_key
+				(
+					user_sn,
+					key_sn,
+					cert_key,
+					secret_key,
+					stts_cd,
+					issu_dt,
+					cert_token,	
+					token_issu_dt
+					)
+				values(
+					#{userSn}::NUMERIC,
+					(SELECT COALESCE(MAX(key_sn), 0)+1 FROM dqvs.dvs_api_mt_key),
+					#{certKey},
+					#{secretKey},
+					'2',
+					now(),
+					null,
+					null
+				);
+    </insert>
+     <insert id="insertReApiAuthKey"  parameterType="paraMap">
+	   			insert into
+					dqvs.dvs_api_mt_key
+				(
+					user_sn,
+					key_sn,
+					cert_key,
+					secret_key,
+					stts_cd,
+					issu_dt,
+					cert_token,	
+					token_issu_dt
+					)
+				values(
+					#{userSn}::NUMERIC,
+					(SELECT COALESCE(MAX(key_sn), 0)+1 FROM dqvs.dvs_api_mt_key),
+					#{certKey},
+					#{secretKey},
+					'2',
+					now(),
+					null,
+					null
+				);
+    </insert>
+    
+    <!-- 사용 -->
+     <insert id="insertApiNum"  parameterType="paraMap">
+        INSERT INTO dqvs.dvs_api_mt_stts (
+            user_sn,
+            api_sn,
+            utztn_sn,
+            stts_cd,
+            expry_ymd,
+            dmnd_dt,
+            aprv_dt,
+            autzr_sn,
+            rjct_rsn,
+            rjct_user_sn,
+            rjct_dt
+        ) VALUES (
+           #{userSn}::NUMERIC,
+           #{apiSn}::NUMERIC,
+            '1',
+            '1',
+            null,
+            NOW(),
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+
+    </insert>
+
+    <!-- API목록 전부 update(재발급) -->
+    <update id="updateorgList">
+    	UPDATE dqvs.dvs_api_mt_stts
+    	SET stts_cd = '2'
+    		, aprv_dt = now()
+    	WHERE 
+    		<if test="userSn != null and userSn != ''">
+    			user_sn = #{userSn}::NUMERIC
+       		</if>
+<!--     		AND stts_cd = '1' -->
+    </update>
+    
+    <update id="updateReStts">
+    	UPDATE dqvs.dvs_api_mt_stts
+    	SET stts_cd = '1'
+    		, expry_ymd = NULL
+    		, aprv_dt = NULL
+    		, autzr_sn = NULL
+    	WHERE 
+    		<if test="userSn != null and userSn != ''">
+    			user_sn = #{userSn}::NUMERIC
+       		</if>
+<!--     		AND stts_cd = '1' -->
+    </update>
+    <update id="updateextendAPi">
+			UPDATE dqvs.dvs_api_mt_stts
+		SET expry_ymd = 
+			CASE
+		      WHEN expry_ymd IS NULL THEN TO_CHAR((CURRENT_DATE + INTERVAL '2 year' + INTERVAL '1 year'), 'YYYYMMDD')
+		      ELSE TO_CHAR((TO_DATE(expry_ymd, 'YYYYMMDD') + INTERVAL '2 year'), 'YYYYMMDD')
+		    END
+		WHERE
+		    <if test="userSn != null and userSn != ''">
+			    user_sn = #{userSn}::numeric
+       		</if>
+    </update>
+    
+        <select id="apiSttsViewCnt" resultType="int">
+		select
+				count(*)
+			from
+				(	
+				SELECT
+				    CASE
+				        WHEN T.stts_cd = '1' THEN '신청'
+				        WHEN T.stts_cd = '2' THEN '활용'
+				        WHEN T.stts_cd = '3' THEN '반려'
+				        WHEN T.stts_cd = '4' THEN '중지'
+				        ELSE '기타'
+				    END AS stts,
+				    COUNT(*) AS count
+				FROM (
+				    SELECT
+				        damk.stts_cd
+				    FROM
+				        dqvs.dvs_api_mt_key damk
+				    JOIN
+				        dqvs.dvs_cmm_mt_sso dcms ON dcms.user_sn = damk.user_sn
+				    JOIN
+				        dqvs.dvs_cmm_mt_user dcmu ON dcmu.user_sn = damk.user_sn
+				    LEFT JOIN
+				        dqvs.dvs_rac_mt_agency agency ON dcmu.bzmn_sn = agency.bzmn_sn
+				    WHERE 1=1
+				        <if test="searchCondition == 'userNm' and searchText != ''">
+				            AND LOWER(dcms.user_nm) LIKE '%' || LOWER(#{searchText}) || '%'
+				        </if>
+				        <if test="searchCondition == 'userId' and searchText != ''">
+				            AND LOWER(dcms.user_id) LIKE '%' || LOWER(#{searchText}) || '%'
+				        </if>
+				        <if test="authrtCd != 'Z01' and authrtCd != 'K01' and authrtCd != 'D01'">
+				            AND damk.user_sn = #{userSn}::numeric
+				        </if>
+				        <if test="authrtCd == 'Z01' or authrtCd == 'K01' or authrtCd == 'D01'">
+				            AND damk.issu_dt BETWEEN TO_DATE(#{startPicker02}, 'yyyy-mm-dd') AND TO_DATE(#{endPicker02}, 'yyyy-mm-dd') + 1
+				        </if>
+				        <if test="sttsCd != null and sttsCd != ''">
+				            AND damk.stts_cd = #{sttsCd}
+				        </if>
+				        <if test="searchCondition == 'companyNm' and searchText != ''">
+				            AND agency.co_nm LIKE '%' || LOWER(#{searchText}) || '%'
+				        </if>
+				) AS T
+				GROUP BY
+				    CASE
+				        WHEN T.stts_cd = '1' THEN '신청'
+				        WHEN T.stts_cd = '2' THEN '활용'
+				        WHEN T.stts_cd = '3' THEN '반려'
+				        WHEN T.stts_cd = '4' THEN '중지'
+				        ELSE '기타'
+				    END
+		    ) a
+    </select>	
+	<select id= "apiSttsView" parameterType="paraMap" resultType="resultMap">
+
+		SELECT
+		    CASE
+		        WHEN T.stts_cd = '1' THEN '신청'
+		        WHEN T.stts_cd = '2' THEN '활용'
+		        WHEN T.stts_cd = '3' THEN '반려'
+		        WHEN T.stts_cd = '4' THEN '중지'
+		        ELSE '기타'
+		    END AS stts,
+		    COUNT(*) AS count
+		FROM (
+		    SELECT
+		        damk.stts_cd
+		    FROM
+		        dqvs.dvs_api_mt_key damk
+		    JOIN
+		        dqvs.dvs_cmm_mt_sso dcms ON dcms.user_sn = damk.user_sn
+		    JOIN
+		        dqvs.dvs_cmm_mt_user dcmu ON dcmu.user_sn = damk.user_sn
+		    LEFT JOIN
+		        dqvs.dvs_rac_mt_agency agency ON dcmu.bzmn_sn = agency.bzmn_sn
+		    WHERE 1=1
+		        <if test="searchCondition == 'userNm' and searchText != ''">
+		            AND LOWER(dcms.user_nm) LIKE '%' || LOWER(#{searchText}) || '%'
+		        </if>
+		        <if test="searchCondition == 'userId' and searchText != ''">
+		            AND LOWER(dcms.user_id) LIKE '%' || LOWER(#{searchText}) || '%'
+		        </if>
+		        <if test="authrtCd != 'Z01' and authrtCd != 'K01' and authrtCd != 'D01'">
+		            AND damk.user_sn = #{userSn}::numeric
+		        </if>
+		        <if test="authrtCd == 'Z01' or authrtCd == 'K01' or authrtCd == 'D01'">
+		            AND damk.issu_dt BETWEEN TO_DATE(#{startPicker02}, 'yyyy-mm-dd') AND TO_DATE(#{endPicker02}, 'yyyy-mm-dd') + 1
+		        </if>
+		        <if test="sttsCd != null and sttsCd != ''">
+		            AND damk.stts_cd = #{sttsCd}
+		        </if>
+		        <if test="searchCondition == 'companyNm' and searchText != ''">
+		            AND agency.co_nm LIKE '%' || LOWER(#{searchText}) || '%'
+		        </if>
+		) AS T
+		GROUP BY
+		    CASE
+		        WHEN T.stts_cd = '1' THEN '신청'
+		        WHEN T.stts_cd = '2' THEN '활용'
+		        WHEN T.stts_cd = '3' THEN '반려'
+		        WHEN T.stts_cd = '4' THEN '중지'
+		        ELSE '기타'
+		    END
+	</select>
+    
+</mapper>

@@ -1,0 +1,625 @@
+@charset "utf-8";
+
+/* common css */
+.xcs_common{background:0;background-color:transparent;background-image:none;background-position:0;background-repeat:repeat;background-size:auto;box-shadow:none;box-sizing:border-box;clear:none;color:inherit;empty-cells:show;float:none;font:normal;font-family:inherit;font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;height:auto;left:auto;letter-spacing:normal;line-height:normal;list-style:none;list-style-image:none;list-style-position:none;list-style-type:none;margin:0;max-height:none;max-width:none;min-height:0;min-width:0;opacity:1;overflow:visible;padding:0;table-layout:auto;text-align:left;text-decoration:none;text-decoration-color:inherit;text-decoration-line:none;text-decoration-style:solid;text-shadow:none;vertical-align:middle;visibility:inherit;white-space:normal;widows:0;width:auto;word-spacing:normal;z-index:auto;position:static;cursor:auto}
+.xcs_cert_wide,.xcs_cert_pop,.xcs_cert_mini{display:block;visibility:visible;overflow:visible;height:auto;background-color:#fff;color:#000;font-weight:normal;line-height:normal;background-image:none;cursor:auto}
+.xcs_cert_mini{width:600px;border:0} /* 미니UI */
+.xcs_cert_pop{position:absolute;top:0;left:0;border-style:solid} /* 팝업UI */
+.xcs_cert_wide{border-style:solid} /* 바닥UI */
+.xcs_common div,.xcs_common a,.xcs_common span,.xcs_common table,.xcs_common tr,.xcs_common th,.xcs_common td,.xcs_common ul,.xcs_common ol,.xcs_common li,.xcs_common dl,.xcs_common dt,.xcs_common dd,.xcs_common form,.xcs_common button,.xcs_common fieldset,.xcs_common legend,.xcs_common select,.xcs_common textarea,.xcs_common p,.xcs_common label,.xcs_common input,.xcs_common h1,.xcs_common h2,.xcs_common h3,.xcs_common h4,.xcs_common h5,.xcs_common h6,.xcs_common blockquote{margin:0;padding:0;font-family:'Malgun Gothic',Dotum,Helvetica,AppleGothic,Sans-serif;font-size:12px;color:#000;background:0;background-color:transparent;background-image:none;background-position:0;background-repeat:repeat;background-size:auto;box-shadow:none;clear:none;empty-cells:show;float:none;font:normal;font-style:normal;font-variant:normal;font-weight:normal;height:auto;left:auto;letter-spacing:normal;line-height:normal;list-style:none;list-style-image:none;list-style-position:none;list-style-type:none;margin:0;opacity:1;overflow:visible;padding:0;table-layout:auto;text-align:left;text-decoration:none;text-decoration-color:inherit;text-decoration-line:none;text-decoration-style:solid;text-shadow:none;vertical-align:middle;visibility:inherit;white-space:normal;widows:0;width:auto;word-spacing:normal;z-index:auto;position:static;cursor:auto}
+
+/* default setting */
+.xcs_common img,.xcs_common fieldset{border:0}
+.xcs_common form,.xcs_common fieldset,.xcs_common legend,.xcs_common input,.xcs_common button,.xcs_common textarea,.xcs_common select{color:#000;font-size:12px}
+.xcs_common button::-moz-focus-inner{padding:0;border:0}
+.xcs_common ul,.xcs_common ol{list-style:none}
+.xcs_common table{border-collapse:collapse}
+.xcs_common label{cursor:default}
+.xcs_common input,.xcs_common textarea{display:inline-block;font-size:13px;vertical-align:middle}
+.xcs_common textarea{resize:none}
+.xcs_common address,.xcs_common em{font-style:normal}
+.xcs_common fieldset,.xcs_common img{border:0}
+.xcs_common em{font-style:normal}
+.xcs_common h3{top:0}
+.xcs_common button{cursor:pointer}
+.xcs_common button[disabled]{color:#555}
+.xcs_common a{text-decoration:none;cursor:pointer}
+.xcs_common table{border-collapse:collapse}
+.xcs_common th,.xcs_common td{padding:0;vertical-align:middle;text-align:left;font-weight:normal}
+.xcs_common input[type="text"],.xcs_common input[type="password"],.xcs_common input[type="email"],.xcs_common input[type="search"],.xcs_common input[type="image"],.xcs_common input[type="button"],.xcs_common textarea{border:1px solid #999;background:#fff;-webkit-appearance:none;border-radius:0}
+.xcs_common input[type="checkbox"]:checked{background-color:#fff;-webkit-appearance:checkbox}
+.xcs_common input[type="text"],.xcs_common input[type="password"]{height:18px;position:relative;margin:1px 2px 0;padding:2px 3px 3px;border:1px solid #777;background:#fff;color:#000}
+.xcs_common .lt-css3 input[type="text"],.xcs_common input[type="password"]{padding:1px 3px 4px}
+.xcs_common input[type="text"]:focus,.xcs_common input[type="password"]:focus,.xcs_common textarea:focus{border:1px solid #009ae6;outline-width:0} 
+.xcs_common input[disabled="disabled"]{background:#f0f0f0;border:1px solid #f0f0f0;color:#555}
+.xcs_common input[readonly="readonly"]{background:#f0f0f0;border:1px solid #777;color:#555}
+.xcs_common .disabled{background:#f0f0f0;border:1px solid #f0f0f0;color:#555}
+.xcs_common input.error-input{background:#fff;border:1px solid #ff4b2a;color:#000}
+.xcs_common .form-error{display:block;background:url(../img/common/etc/ico_form_error.gif) no-repeat left 5px;padding:0 0 0 23px;color:#ff4b2a;vertical-align:top}
+.xcs_common input[type="checkbox"],.xcs_common input[type="radio"]{width:13px;height:13px;margin:0;padding:0;vertical-align:middle;line-height:27px}
+.xcs_common select{position:relative;height:25px;vertical-align:middle;border:1px solid #777;padding:2px 2px 2px 0;margin:-1px 0 0 2px}
+.xcs_common .ie7 select{line-height:1.65;font-family:'돋움',dotum;padding:4px 4px 5px 0}
+
+/* Layout */
+.xcs_common .xcs_mbottom img{height:auto;margin-right:5px;vertical-align:middle}
+.xcs_common .hidden{overflow:hidden;position:absolute;top:-9999px;left:-9999px;width:0;height:0;font-size:0;line-height:0;text-indent:-9999px}
+.xcs_common .w100{width:100px}
+.xcs_common div.xcs-w300-body{width:300px}
+.xcs_common div.xcs-w400-body{width:400px}
+.xcs_common div.xcs-w410-body{width:410px}
+.xcs_common div.xcs-w420-body{width:420px}
+.xcs_common div.xcs-w500-body{width:500px}
+.xcs_common div.xcs-w530-body{width:530px}
+.xcs_common div.xcs-w730-body{width:730px}
+.xcs_common div.xcs-w946-body{width:946px}
+.xcs_common .xcs-font10{font-size:10px}
+.xcs_common .xcs-degap{margin:10px 10px 20px}
+.xcs_common .xcs-mr5{margin-right:15px}
+.xcs_common .xcs-fontb{font-weight:bold}
+.xcs_common .xcs_mbottom{margin:0 0 10px;text-align:left}
+.xcs_common .xcs-legend{display:block;*display:inline-block;margin:0 0 0 5px;background-color:#fff;font-weight:normal;text-align:left}
+.xcs_common caption{visibility:hidden;width:0;height:0;line-height:0}
+.xcs_common .xcs-h140{height:140px}
+.xcs_common .xcs-str-pd0{padding:0}
+.xcs_common .brt-color-none{border-top-color:transparent}
+.xcs_common .xcs-wrd-normal{word-wrap:normal}
+.xcs_common .xcs-ovf-yscroll{oveflow:hidden;overflow-y:scroll}
+.xcs_common .xcs-ovf-yscroll-none{overflow-y:hidden}
+
+/* common title */
+.xcs_common .xcs-title2{_width:452px}
+.xcs_common .title h3,.xcs_common .xcs-title h3{height:40px;padding:0 0 0 15px;font-size:18px;line-height:40px;letter-spacing:-2px;font-weight:bold;cursor:move}
+.xcs_common .xcs-title h3{font-weight:bold}
+.xcs_common .xcs-title-mini{top:0;left:0;width:100%;height:30px;margin-bottom:-15px;border-radius:0;background:none}
+.xcs_common .xcs-title-mini h3{font-size:20px;height:31px;color:#000;background:none;line-height:27px;vertical-align:middle;letter-spacing:-2px}
+
+/* banner */
+.xcs_common #xcs_header .banner{width:410px;height:66px} /* 이미지크기에 따라 같이 변경해야함. */
+
+
+/* common description */
+.xcs_common .xcs-step-info {font-size:13px;font-weight:bold;color:#2b2b2b;padding:10px 0 0 0;}
+.xcs_common .xcs-step-info-detail {font-size:9px;padding-left:10px;}
+.xcs_common .xcs-step-info-detail .third {}
+
+/* contents body */
+.xcs_common .xcs-body{margin:0 20px 20px 20px;padding-top:15px}
+.xcs_common .blank0,.xcs_common .xcs-blank0{overflow:hidden;position:absolute;top:-9999px;left:-9999px;width:0;height:0;font-size:0;line-height:0;text-indent:-9999px}
+.xcs_common .blank10,.xcs_common .xcs-blank10{height:10px;margin:0}
+.xcs_common .blank15,.xcs_common .xcs-blank15{height:15px;margin:0}
+
+/* button */
+.xcs_common .xcs-buttons-layout,.xcs_common .xcs-buttons-layout2,.xcs_common .xcs-buttons-layout4{display:block;margin:15px 0;text-align:center}
+.xcs_common .xcs-buttons-layout2{text-align:right}
+.xcs_common .xcs-buttons-layout3{text-align:left}
+.xcs_common .xcs-buttons-layout4{margin:0;text-align:right}
+.xcs_common .xcs-buttons-layout button,.xcs_common .xcs-buttons-layout2 button,.xcs_common .xcs-buttons-layout3 button,.xcs_common .xcs-buttons-layout4 button{height:25px;margin:0 5px;padding:0 13px;*padding:0 10px;_padding:0 10px;border:1px solid gray;border-radius:2px;background-color:#EFEFEF;background-image:url(../img/btn_bg.png);text-align:center;vertical-align:top}
+.xcs_common .xcs-buttons-layout .view,.xcs_common .xcs-buttons-layout2 .view,.xcs_common .xcs-buttons-layout3 .view,.xcs_common .xcs-buttons-layout4 .view{margin:5px;padding:0 13px;border:1px solid #c7c7c7;border-radius:4px;-webkit-border-radius:4px}
+.xcs_common .xcs-button-disabled{color:gray}
+.xcs_common .xcs-box-layout{position:relative;padding-top:7px}
+.xcs_common .xcs-box-border{display:block;padding:0px;border:1px solid #c7c7c7}
+
+/* tab */
+.xcs_common div.xcs-tab-view{display:block;clear:both;padding:15px;border:2px solid #6C9CDA;border-radius:0 8px 8px 8px;background-color:#fff;text-align:left;zoom:1}
+.xcs_common div.xcs-tab-list ul{float:left;position:relative;margin:0;padding:0;color:#666;text-align:left}
+.xcs_common div.xcs-tab-list ul li{display:inline-block;*display:inline;margin:0;border:1px solid #999;border-bottom:0;border-radius:6px 6px 0 0;background:#f9f9f9;list-style-type:none;*zoom:1}
+.xcs_common div.xcs-tab-list ul li a{display:block;padding:6px 10px 2px;font-weight:normal;color:#000;list-style:none;white-space:nowrap}
+.xcs_common div.xcs-tab-list .selected a{border-top:1px solid #6c9cda;border-right:1px solid #6c9cda;background-color:#6C9CDA;font-weight:bold;color:#FFF;list-style:none}
+.xcs_common div.xcs-tab-list .tmenu{width:46px}
+.xcs_common div.xcs-tab-list .tmenu2{width:98px}
+.xcs_common div.xcs-tab-list .tmenu3{width:138px}
+.xcs_common div.xcs-tab-list .tmenu4{width:98px}
+.xcs_common div.xcs-tab-list .tmenu5{width:48px}
+.xcs_common div.xcs-tab-list .tmenu6{width:60px}
+
+/* label */
+.xcs_common .xcs-for-password{display:inline-block;margin:0;font-weight:bold;color:#000;vertical-align:top}
+
+/* input */
+.xcs_common .xcs-password{overflow:hidden;margin:0 5px;padding:0 0 0 5px;border:1px solid;font-size:12px;vertical-align:middle}
+.xcs_common .xcs-checkbox{margin:0 5px 0 0}
+
+/* fieldset */
+.xcs_common .xcs-location-item{display:block;margin:0;padding:0px;border:0px;}
+.xcs_common .xcs-location-item button{display:inline-block;*display:block;width:205px;height:50px;padding-left:40px;border:2px solid #fff;border-radius:2px 2px 0px 0px;background:#fff}
+.xcs_common fieldset.manager{display:inline-block;*display:inline;width:207px;height:125px;margin:10px 2px 0;padding:2px 0;border:1px solid #949494;text-align:center;*zoom:1}
+.xcs_common fieldset.manager .xcs-legend{margin:0 0 0 10px}
+.xcs_common .importexport{display:block;overflow:hidden;margin-top:15px;padding:0 10px 10px;border:1px solid #949494}
+.xcs_common .importexport div{margin:8px 0 3px}
+.xcs_common .p10x10-gray1{display:block;overflow:hidden;padding:10px;border:1px solid #949494;text-align:left}
+.xcs_common .p10x10-gray1 .group{margin-top:3px}
+.xcs_common .p10x10-gray1 input{width:13px;height:13px;vertical-align:middle}
+.xcs_common .p10x10-gray1 label{vertical-align:middle}
+.xcs_common .xcs-sl-pkcs{margin:12px}
+.xcs_common .xcs-cert-position,.xcs_common .xcs-cert-position2{margin:0px;margin-top:10px;table-layout:fixed;zoom:1}
+.xcs_common .xcs-cert-position2{width:410px;margin:7px 7px 5px}
+.xcs_common .xcs-cert-position td,.xcs_common .xcs-cert-position2 td{width:20%}
+.xcs_common .xcs-cert-position span,.xcs_common .xcs-cert-position2 span{display:block;background-repeat:no-repeat;cursor:pointer}
+.xcs_common .xcs-cert-position .xcs-rbg-text,.xcs_common .xcs-cert-position2 .xcs-rbg-text{display:block;height:22px;verfloat:left;margin-top:10px;text-align:left;background:none;cursor:pointer}
+.xcs_common .mngr-btn-text{display:inline-block;margin:2px 0 0;text-align:center}
+.xcs_common .mngr-btn-img{display:inline-block;height:16px;margin:0 0 0 15px;background-repeat:no-repeat}
+
+/* radio button group */
+.xcs_common .xcs-location-item .xcs-rbg-normal{background:#fff;border-color:#fff}
+.xcs_common .xcs-location-item .xcs-rbg-hover,.xcs_common .xcs-location-item .xcs-rbg-pressed{background:#eee;border:1px solid #777;border-bottom:0px;}
+.xcs_common .xcs-location-item .xcs-rbg-disabled{border:2px solid #FFF;background-color:#fff;background-image:none}
+.xcs_common .exclamation{display:inline-block;width:16px;height:16px;margin:4px 0 0;background-image:url(../img/bu.png);background-repeat:no-repeat}
+
+/* password field */
+.xcs_common .xcs-password-field,.xcs_common .xcs-password-field2{margin:8px 0 0}
+.xcs_common .xcs-password-field2{text-align:center}
+.xcs_common .xcs-password-field label,.xcs_common .xcs-password-field2 label{display:inline-block;min-width:100px;_width:100px;margin:0 10px 0 0;text-align:right}
+.xcs_common .xcs-password-field2 label{width:145px}
+.xcs_common .xcs-password-field .xcs-input-pwd,.xcs_common .xcs-password-field2 .xcs-input-pwd{width:154px}
+.xcs_common .xcs-password-field2 .xcs-input-pwd{width:249px !Important}
+.xcs_common .xcs-password-field3 .xcs-input-pwd{width:190px !Important}
+
+.xcs_common .authcode_qr_div {text-align:center;margin-top:15px;}
+.xcs_common .authcode_qr_div .authcode_qr_in_div {display:inline-block;width:150px;height:150px;border:1px solid lightgray;padding:5px;}
+.xcs_common .authcode_qr_div .qr_ing_txt {padding-top:60px;text-align:center;}
+
+.xcs_common .authcode_qr_div .authcode_qr_in_div .authcode_qr_img_div {padding-top:5px;padding-left:5px;}
+.xcs_common .authcode_qr_div .authcode_qr_in_div .authcode_qr_img_div .xcs-qrcode {text-align:center; padding:0;}
+.xcs_common .authcode_qr_txt_div .xcs-qrcode-txt {text-align:center;padding-top:10px;font-size:20px;color:#000;}
+.xcs_common .authcode_qr_txt_div .xcs-qrcode-txt label{font-weight:bold;font-size:15px;}
+
+.xcs_common .qr_quide_txt {margin-top:20px;padding:5px;}
+
+/* cert manager */
+.xcs_common .xcs-group-btn-layout{display:block;height:132px; text-align:left}
+.xcs_common .xcs-group-btn-layout button{width:75px;height:25px;border:1px solid gray;border-radius:6px;background-color:#efefef;background-image:url(../img/btn_bg.png);text-align:center;vertical-align:top;cursor:pointer}
+.xcs_common .xcs-group-btn-layout span{display:inline-block;margin:0 5px;background-repeat:no-repeat;vertical-align:middle;cursor:pointer}
+.xcs_common span.xcs-group-btn-desc{display:inline-block;height:12px;margin:10px 5px;text-align:left;vertical-align:top;*zoom:1}
+.xcs_common .xcs-group-btn-layout .xcs-size150{width:150px;margin:8px 0 0;padding:1px 0 1px 7px;background-repeat:no-repeat;background-position:10% 50%;text-align:left}
+.xcs_common .xcs-group-btn-layout .xcs-size180{width:180px;margin:8px 0 0;padding:1px 0 1px 5px;background-repeat:no-repeat;background-position:10% 50%;text-align:left}
+
+/* table view */
+.xcs_common .xcs-tableview{overflow-x:hidden;overflow-y:auto;position:relative;width:100%;_width:423px;height:160px;margin:0px 0 5px;border:1px solid #949494}
+.xcs_common .xcs-tableview table{width:100%;margin:0;border-width:0;table-layout:fixed}
+.xcs_common .xcs-tableview caption{visibility:hidden;width:0;height:0;line-height:0}
+.xcs_common .xcs-tableview thead{border:0;border-bottom:1px solid #c7c7c7;background:#f5f5f5;background-image:url(../img/btn_bg.png);font-weight:bold}
+.xcs_common .xcs-tableview th{position:static;padding:5px 0;background-color:#f5f5f5;font-weight:bold;text-align:center;white-space:nowrap;text-overflow:ellipsis;cursor:default}
+.xcs_common .xcs-tableview th .wide-cert-table-resizearea{position:relative;zoom:1;text-align:center;font-weight:bold}
+.xcs_common .xcs-tableview .xcs-mcert{width:82px}
+.xcs_common .xcs-tableview .xcs-mcert2{width:164px}
+.xcs_common .xcs-tableview .xcs-mcert3{width:82px}
+.xcs_common .xcs-tableview .xcs-mcert4{width:82px}
+.xcs_common .xcs-tableview tbody tr{border-bottom:1px solid #e3e3e3}
+.xcs_common .xcs-tableview td{padding:0 5px;border:1px solid #eee;border-width:0 1px 1px 0;word-wrap:normal}
+.xcs_common .xcs-tableview-cell{overflow:hidden;width:100%;max-width:100%;margin:0;padding:1px 0;text-align:left;white-space:nowrap;text-overflow:ellipsis;cursor:pointer;word-wrap:normal}
+.xcs_common .xcs-tableview-cell img{vertical-align:middle}
+.xcs_common .xcs-tableview-selected-row td{background-color:#6c9cda;color:#fff;cursor:pointer}
+.xcs_common .xcs-tableview-selected-row .xcs-tableview-cell{color:#fff}
+.xcs_common .xcs-tableview-unselected-row{background-color:transparent;color:#000;cursor:pointer}
+.xcs_common .xcs-tableview-resizer{position:absolute;top:-5px;left:100%;width:6px;height:27px;margin-left:-3px;*margin-left:4px;cursor:w-resize}
+.xcs_common .xcs-tableview-button{width:15px}
+.xcs_common .xcs-tableview-viewbutton{width:70px;height:24px;margin:0 2px;border:1px solid #c7c7c7;border-radius:4px;background-color:#FFF;font-size:11px;text-align:center;cursor:pointer}
+
+
+
+/* certselect */
+.xcs_common .xcs-widget-sec{position:relative;width:100%;height:0px}
+.xcs_common .xcs-widget-sec .fb{display:inline-block;color:#000;font-weight:bold}
+.xcs_common .xcs-widget-sec .fc{color:#000}
+.xcs_common .exclamation-image{display:inline-block;margin:4px 0 0 0;width:16px;height:16px;background:url(../img/bu.png) no-repeat}
+.xcs_common .xcs-cert-passwd{padding-left:10px}
+.xcs_common .xcs-cert-passwd span{display:block;padding:10px 0 2px}
+.xcs_common .xcs-passwd-field{width:100%;height:26px;padding:2px 0 0;color:#986e3b}
+.xcs_common .xcs-passwd-field .xcs-tit-pw{display:inline-block;font-weight:bold;color:#000;margin:0;padding-top:15px;vertical-align:top;cursor:default;width:85px;text-align:left;padding-left:10px;}
+.xcs_common .xcs-passwd-field .xcs-pw-box{width:285px;height:18px;margin-top:10px;margin-left:4px;padding-left:4px;border:1px solid #000;vertical-align:middle;color:#000}
+.xcs_common .xcs-passwd-field .xcs-tit-auth{display:inline-block;font-weight:bold;color:#000;margin:0;padding-top:4px;vertical-align:top;cursor:default}
+.xcs_common .xcs-passwd-field .xcs-auth-box{width:50px;height:18px;margin-left:4px;padding-left:4px;border:1px solid #000;vertical-align:middle;color:#000}
+.xcs_common .xcs-passwd-field img{margin-right:5px;margin-top:7px;vertical-align:middle}
+.xcs_common .xcs-passwd-field span{display:inline-block;padding:0;vertical-align:middle}
+.xcs_common .xcs-passwd-guide{width:100%;height:26px;padding:15px 10px 0;color:#986e3b}
+.xcs_common .xcs-passwd-guide img{margin-left:2px;margin-right:5px;vertical-align:middle}
+.xcs_common .xcs-passwd-guide span{display:inline-block;padding:0;font-size:12px;vertical-align:middle;color:#dd4e00}
+
+.xcs_common .xcs-expire-alert{display:none;width:245px;position:absolute;padding:7px;border:1px solid gray;border-radius:6px;background:#FFF;text-align:left;-webkit-border-radius:6px;box-shadow:3px 3px 10px gray;-webkit-box-shadow:3px 3px 10px gray}
+.xcs_common .xcs-expire-icon{display:block;position:absolute;top:0;left:0;margin:0;padding:10px}
+.xcs_common .xcs-expire-message{display:block;margin-left:28px;font-weight:bold}
+.xcs_common .xcs-renew-message{display:block;margin-left:28px}
+.xcs_common .xcs-expire-arrow{position:absolute;top:-19px;left:30px;width:0;height:0;border:10px solid;border-color:transparent transparent #FFF}
+.xcs_common .xcs-expire-arrow-border{position:absolute;top:-20px;left:30px;width:0;height:0;border:10px solid;border-color:transparent transparent #c7c7c7}
+.xcs_common #xcs_header{text-align:center}
+
+/* fileselect */
+.xcs_common .xcs-medialist{display:inline-block;*float:left;overflow-x:scroll;overflow-y:auto;width:160px;height:250px;border:1px solid #949494;background-color:#fff;margin:14px 14px 14px 0px;cursor:auto}
+.xcs_common .xcs-medialist table{width:100%}
+.xcs_common .xcs-medialist td{overflow:hidden;padding:2px 3px 1px;text-overflow:ellipsis;white-space:nowrap}
+.xcs_common .xcs-medialist td a,.xcs_common .xcs-filelist td a{display:block}
+.xcs_common .xcs-medialist td span,.xcs_common .xcs-filelist td span{display:inline-block;width:16px;height:16px;margin:0 4px}
+.xcs_common .xcs-filelist{display:inline-block;overflow-x:scroll;overflow-y:auto;_float:left;width:512px;height:250px;border:1px solid #949494;background-color:#fff;margin:14px 0px;cursor:auto}
+.xcs_common .xcs-filelist table{width:100%;table-layout:fixed}
+.xcs_common .xcs-filelist td{overflow:hidden;padding:2px 10px 1px 3px;white-space:nowrap;cursor:default}
+.xcs_common .xcs-tab-list .selected{background-color:#3875D7;color:#fff}
+.xcs_common .media-list-image{display:inlinewidth:16px;height:16px;vertical-align:middle;margin-right:4px}
+.xcs_common .file-list-image{display:inline;width:16px;height:16px;vertical-align:middle}
+.xcs_common .file-list-cell{overflow:hidden;padding:2px 3px 1px 3px;border:0;white-space:nowrap;padding-right:10px;cursor:default}
+.xcs_common .file-url,.xcs_common .filename-url{text-align:right}
+.xcs_common .file-url .btn-folder{width:80px;height:25px;margin-right:14px;border:1px solid gray;border-radius:6px;background-color:#EFEFEF;background-image:url(../img/btn_bg.png);text-align:center;vertical-align:top}
+.xcs_common .file-url .txt-url{width:516px;height:24px;padding:0 5px;background:#f0f0f0;cursor:auto;line-height:24px}
+.xcs_common .filename-url .txt-nurl{width:516px;height:24px;margin-left:4px;padding:0 0 0 2px;border:1px solid #c9c9c9;background:#f0f0f0;line-height:22px;vertical-align:middle}
+
+/* viewverify */
+.xcs_common .xcs-cert-infos{width:420px}
+.xcs_common .xcs-cert-infos table{overflow-x:hidden;font-size:11px;table-layout:fixed}
+.xcs_common .xcs-cert-infos th.filed-value{width:100px;text-align:center}
+.xcs_common .xcs-cert-infos th.value-end{width:296px;text-align:center}
+.xcs_common .xcs-cert-infos img{margin-right:5px}
+.xcs_common .xcs-cert-infos button{width:100px}
+.xcs_common .xcs-textview{overflow:auto;width:400px;height:323px;margin:0 0 10px;padding:5px 7px 5px 7px;background-color:#fff;border:1px solid #6C9CDA;resize:none;box-sizing:content-box}
+.xcs_common .xcs-textview2{overflow:auto;width:404px;height:63px;margin:0 0 3px;padding:5px 7px 5px 7px;background-color:#fff;border:1px solid #6C9CDA;resize:none;box-sizing:content-box}
+
+/* savelog */
+.xcs_common .xcs-slsave{margin:6px 0 0 0}
+.xcs_common .xcs-slremovable{margin:6px 0 0 0}
+.xcs_common .xcs-slselect-cert{width:180px;margin:6px 0px 10px 0}
+
+/* changepasswd */
+.xcs_common .xcs-ch-title{margin:0 10px 0 0}
+.xcs_common .xcs-ch-title table{width:370px}
+.xcs_common .xcs-ch-title .timg{margin:7px 8px 0 0}
+.xcs_common .xcs-ch-section{width:100%}
+.xcs_common .xcs-ch-section .xcs-input-pwd{overflow:hidden;width:170px;height:24px;line-height:24px;padding:0 4px;margin:0 5px}
+.xcs_common .xcs-widget-sec2{position:relative;width:100%;height:0px}
+.xcs_common .xcs-widget-sec2.fb{display:inline-block;color:#000;font-weight:bold}
+.xcs_common .xcs-widget-sec2.fc{color:#000}
+.xcs_common .xcs-widget-sec2 .xcs-expire-alert{display:none;width:195px;position:absolute;padding:7px;border:1px solid gray;border-radius:6px;background:#FFF;text-align:left;-webkit-border-radius:6px;box-shadow:3px 3px 10px gray;-webkit-box-shadow:3px 3px 10px gray}
+
+/* commondialog */
+.xcs_common .xcs-dialog-sec{width:100%;margin:0px 0px 20px;text-align:center;word-wrap:break-word}
+
+/* confimwindow */
+.xcs_common .xcs-confim-area{overflow:hidden;width:338px;height:380px;padding:10px}
+
+/* export */
+.xcs_common .xcs-export-area{width:100%;height:235px}
+.xcs_common .xcs-export-sec .xcs-box-layout{margin:0 0 10px}
+.xcs_common .xcs-export-sec .xcs-box-border{border:0}
+.xcs_common .xcs-export-sec .xcs-box-border span{padding-left:3px;padding-bottom:5px}
+.xcs_common .xcs-export-sec2 .xcs-box-layout{margin:0 0 20px}
+.xcs_common .xcs-export-sec2 .xcs-box-border{border:0}
+.xcs_common .xcs-export-sec2 .xcs-box-border span{padding-left:3px;padding-bottom:5px}
+.xcs_common .xcs-export-sec2 .filename{margin-bottom:5px}
+.xcs_common .xcs-export-sec2 .find-btn{display:inline-block;width:80px;vertical-align:middle}
+.xcs_common .xcs-export-sec2 .xcs-input-find{display:inline-block;overflow:hidden;width:240px;height:22px;margin:3px 0 0 6px;line-height:22px;vertcial-align:middle}
+.xcs_common .xcs-ex-passwd .xcs-passwd-group{margin:3px 0 10px}
+.xcs_common .xcs-ex-passwd .xcs-passwd-group .input-passwd{width:245px}
+.xcs_common .xcs-ex-passwd .xcs-passwd-group .input-mouse{margin:0 4px 0 0}
+.xcs_common .xcs-passwd-group .pw-txt{display:block;margin:0 0 7px}
+.xcs_common .xcs-passwd-group .input-passwd{overflow:hidden;width:370px;height:24px;margin:0 5px 0 0;padding:0 4px;line-height: 24px}
+.xcs_common .xcs-export-area .xcs-expire-alert{display:none;width:180px}
+.xcs_common .xcs-export-area .xcs-input-find{width:260px}
+.xcs_common .xcs-btn-find{width:68px;height:25px;margin:0 5px;border:1px solid gray;border-radius:6px;background-color:#EFEFEF;background-image:url(../img/btn_bg.png);text-align:center;vertical-align:middle}
+
+/* xcs export */
+.xcs_common .xcs-xcsexport-area{width:100%;height:335px}
+.xcs_common .xcs-xcsexport-sec .xcs-box-layout{margin:0 0 10px}
+.xcs_common .xcs-xcsexport-sec .xcs-box-border{border:0}
+.xcs_common .xcs-xcsexport-sec .xcs-box-border span{padding-left:0px}
+
+
+.xcs_common .xcs-ex-passwd .xcs-passwd-group{margin:3px 0 10px}
+.xcs_common .xcs-passwd-group .xcs-pw-txt{display:block;font-weight:bold;margin:0 0 7px}
+.xcs_common .xcs-passwd-group .xcs-input-passwd{overflow:hidden;width:250px;height:23px;margin:0 5px 0 0;padding:0 4px;line-height: 24px}
+
+/* xcs import */
+.xcs_common .xcs-xcsimport-area{width:100%;height:335px}
+.xcs_common .xcs-xcsimport-sec .xcs-box-layout{margin:0 0 10px}
+.xcs_common .xcs-xcsimport-sec .xcs-box-border{border:0}
+.xcs_common .xcs-xcsimport-sec .xcs-box-border span{padding-left:0px}
+
+.xcs_common .xcs-group-gray1{display:block;overflow:hidden;padding:10px;border:1px solid #949494;text-align:left;margin:10px}
+
+
+/* hmsselect */
+.xcs_common .description-layout{height:16px;margin:10px 0 0 0;padding:2px 0 0 0;background-color:#ccc;text-align:center}
+
+/* import */
+.xcs_common .xcs-import-area{height:235px}
+.xcs_common .xcs-import-area .xcs-select-sert{margin:15px 0}
+.xcs_common .xcs-import-area .xcs-tit-import{margin:0 0 3px;font-weight:bold}
+.xcs_common .xcs-import-area .xcs-input-imfile,.xcs_common .xcs-import-area .xcs-input-imfile2{overflow:hidden;width:350px;_height:24px;margin:0 0 5px;line-height:24px;background:#fff;_border:1px solid #777}
+.xcs_common .xcs-import-area .xcs-input-imfile2{width:210px;margin:0 5px 0 0}
+.xcs_common .xcs-import-area .xcs-import-passwd{margin:15px 0 0 0}
+
+/* inputpasswd */
+.xcs_common .xcs-inpwd-sec .xcs-input-name{margin:0 10px 0 0}
+.xcs_common .xcs-inpwd-sec .xcs-input-pwd{overflow:hidden;width:165px;height:24px;margin:0 5px;padding:0 4px;line-height:24px}
+
+/* iccard */
+.xcs_common .xcs-inpwd-sec2{position:relative;padding:20px}
+.xcs_common .xcs-inpwd-sec2 .xcs-input-name{margin:0 10px 0 0}
+.xcs_common .xcs-inpwd-sec2 .xcs-input-pwd{overflow:hidden;width:165px;height:24px;margin:13px 5px 0 0;padding:0 4px;line-height:24px}
+.xcs_common .xcs-inpwd-sec2 .xcs-buttons-layout{margin:10px 0px 0px 0px}
+
+/* iccardlist */
+.xcs_common .xcs-iccardlist{margin:10px}
+.xcs_common .xcs-iccardlist .xcs-tableview{_width:300px;height:125px}
+
+/* scpselect */
+.xcs_common .xcs-scpselect{margin:10px}
+.xcs_common .xcs-scpselect .xcs-tableview{_width:420px;height:170px}
+
+/* rootverify */
+.xcs_common .xcs-boxtitle{margin:10px 0 0 0;font-size:11px;font-weight:bold;color:#606060}
+.xcs_common .xcs-content-box2{display:none;margin:0 0 8px;padding:5px 0px 3px 5px;border:1px solid #a0a0a0;border-radius:5px;text-align:center}
+.xcs_common .xcs-verify-input{width:100%;margin:0 0 5px}
+.xcs_common .xcs-verify-info{margin:10px 0 15px 0;text-align:left}
+.xcs_common .xcs-verify-info .info{margin-bottom:8px;font-weight:bold;text-decoration:underline}
+
+/* savepasswd */
+.xcs_common .xcs-savepwd-sec .xcs-input-pwd{overflow:hidden;width:154px;height:24px;margin:0 5px;padding:0 4px;line-height:24px}
+.xcs_common .xcs-txt-message{padding:0 14px 10px;line-height:18px}
+
+/* usernotify */
+.xcs_common .xcs-usernoti-box{width:344px;height:288px;padding:5px;border:1px solid #949494}
+
+/* verifyhsm */
+.xcs_common .xcs-verrify-sec .xcs-input-pwd{overflow:hidden;width:240px;height:24px;margin:0 5px;padding:0 4px;line-height:24px}
+
+/* verifyvid */
+.xcs_common .xcs-veriid-sec .xcs-input-pwd{overflow:hidden;width:330px;height:24px;margin:5px 5px 5px 0;padding:0 4px;line-height:24px}
+
+/* guidewindow */
+.xcs_common .xcs-guidewindow{text-align:center;margin-top:10px}
+
+/* certselectwide */
+.xcs_common .xcs-title-wide{height:55px;background:#fff;color:#20509f}
+.xcs_common .xcs-title-wide h3{height:55px;font-size:20px;line-height:55px;color:#20509f;letter-spacing:-2px}
+.xcs_common .xcs-location-wideitem{width:946px}
+.xcs_common .xcs-location-wideitem span{display:inline-block;height:34px;background-repeat:no-repeat;vertical-align:middle;cursor:pointer}
+.xcs_common .xcs-location-wideitem .xcs-rbg-text{display:inline-block;height:auto;margin:2px 0 0;padding:0 0 0 20px;vertical-align:middle;background:none}
+.xcs_common .xcs-location-wideitem td{width:20%;height:45px}
+.xcs_common .xcs-location-wideitem button{display:block;position:relative;width:191px;height:45px;margin:0 -1px;border:1px solid #c7c7c7;border-bottom:1px solid #346ad5;border-radius:4px 4px 0 0;background:#fff;color:#000;white-space:nowrap;-webkit-border-radius:4px 4px 0 0;z-index:10}
+.xcs_common .xcs-wide-rbg{text-align:center}
+.xcs_common .xcs-wide-rbg:hover{color:#0078d4}
+.xcs_common .xcs-location-wideitem .wide-xcs-rbg-pressed{zoom:1;padding:0 0 1px;border:1px solid #346ad5;border-bottom:0;z-index:20;color:#0078d4;text-align:center}
+.xcs_common .xcs-wide-body{margin:0 -1px;*margin:0 0 0 -1px;padding:20px 0;border:1px solid #346ad5;border-top:transparent}
+.xcs_common .wide-cert-table-outline{overflow-x:hidden;overflow-y:auto;height:126px;margin:0 20px 0 20px;border-bottom:1px solid #c7c7c7;zoom:1}
+.xcs_common .wide-cert-table-outline table.wide-cert-table{width:100%;margin-right:-1px;border-top:1px solid #000;table-layout:fixed}
+.xcs_common .xcs-wide-body .wide-cert-table-outline table.wide-cert-table thead{background:#e9e9e9}
+.xcs_common .xcs-wide-body .wide-cert-table-outline table.wide-cert-table th{width:25%;border-right:1px solid #e9e9e9;background-color:#efefef}
+.xcs_common .xcs-wide-body .wide-cert-table-outline table.wide-cert-table th div{height:30px;line-height:30px;font-weight:bold;text-align:center;vertical-align:middle}
+.xcs_common .xcs-wide-body .wide-cert-table-outline table.wide-cert-table th .wide-cert-table-resizearea{position:relative;zoom:1}
+.xcs_common .button-on-table{width:70px;height:24px;margin-right:10px;border:1px solid #c7c7c7;font-size:11px;background-image:url(../img/btn_bg.png);background-color:transparent;border-radius:4px;text-align:center}
+.xcs_common .button-on-table:hover{color:#0078d4}
+.xcs_common .xcs-password-field-wide{height:45px;margin:0 20px;padding:0 0 0 10px;border:1px solid #c7c7c7}
+.xcs_common .xcs-password-field-wide table{width:100%;height:100%}
+.xcs_common .xcs-password-field-wide img{vertical-align:middle}
+.xcs_common .xcs-password-field-wide .xcs-password-input-wide{width:269px;height:24px;line-height:24px;padding:0 0 0 5px;margin:0 5px;vertical-align:middle;overflow:hidden;border:1px solid #0078d4;font-size:12px;font-family:Dotum,Helvetica,AppleGothic,Sans-serif;color:#000}
+.xcs_common .xcs-password-field-wide .xcs-password-label-wide{color:#0078D4;font-weight:bold;font-size:16px}
+.xcs_common .xcs-password-field-wide .xcs-password-text-wide{display:inline;color:#986e3b}
+
+ /* Conetxt Menu */
+.xcs_common .context-menu-item-focused{background:#6C9CDA;color:#FFF}
+.xcs_common .context-menu-item-unfocused{background:transparent;color:#000}
+.xcs_common .xcs-content-box{margin-top:10px;border:1px solid #949494}
+.xcs_common .xcs-content-box table{width:100%}
+.xcs_common .xcs-content-box td{vertical-align:top}
+.xcs_common .xcs-content-box button{width:90px;height:25px;margin:5px;border:1px solid #c7c7c7;border-radius:6px;background-image:url(../img/btn_bg.png);text-align:center;vertical-align:top}
+.xcs_common .xcs-content-box .cert-buttons{width:100px}
+.xcs_common .xcs-ico-save,.xcs_common .xcs-ico-del,.xcs_common .xcs-ico-pfx16,.xcs_common .xcs-ico-prop,.xcs_common .xcs-ico-secure05,.xcs_common .xcs-ico-misc25,.xcs_common .xcs-ico-install{width:16px;height:16px;cursor:pointer}
+
+/* TabView */
+.xcs_common .layout-tab-content{display:block;clear:both;margin-bottom:10px;padding:20px 0px;border:2px solid #6C9CDA;border-radius:0px 12px 12px;-moz-border-radius:0px 12px 12px;background-color:#fff;text-align:center}
+.xcs_common ul.tabnav{float:left;position:relative;margin:10px 0 0;padding:0;color:#666;cursor:pointer;text-align:left}
+.xcs_common ul.tabnav li{display:inline-block;*display:inline;margin:0px;padding:6px 10px 2px;border-bottom-width:0px;border-radius:6px 6px 0px 0px;-moz-border-radius:6px 6px 0px 0px;list-style:none;*zoom:1}
+.xcs_common .tabnav-unselected{margin:0;border:1px solid #999;border-bottom-width:0;background-color:#f9f9f9;list-style:none;font-weight:normal;color:#000}
+.xcs_common .xcs-tab-list ul li.tabnav-selected{margin:0;border:1px solid #6c9cda;border-bottom-width:0;background-color:#6c9cda;color:#fff;list-style:none}
+.xcs_common .xcs-tab-list ul li.tabnav-selected a{color:#fff}
+.xcs_common .tabcontent-unselected{display:none}
+.xcs_common .tabcontent-selected{display:inline-block;*display:inline;text-align:center;*zoom:1}
+.xcs_common .tabcontent-selected .xcs-tableview{height:300px;margin:10px 0 18px}
+
+.xcs_common .xcs-td-style-case1{height:30px;padding:0;border-bottom:1px solid #e3e3e3;border-right:1px solid #e3e3e3;border-top-color:transparent;word-wrap:normal}
+.xcs_common .xcs-td-style-case2{padding:0;border-bottom:1px solid #e3e3e3;border-right:1px solid #e3e3e3;border-top-color:transparent;word-wrap:normal}
+.xcs_common .xcs-td-style-case3{padding:0;border-bottom:1px solid #e3e3e3;border-top-color:transparent;word-wrap:normal}
+.xcs_common .context-menu-item-focused{background-color:#6c9cda;color:#fff}
+.xcs_common .context-menu-item-unfocused{background-color:transparent;color:#000}
+.xcs_common .context-menu-layout{position:absolute;*display:block;min-width:200px;background:#fff;font-size:16px;cursor:default;box-shadow:10px 12px 35px gray;-moz-box-shadow:10px 12px 35px gray;-webkit-box-shadow:10px 12px 35px gray}
+.xcs_common .ul-list-type1{margin:0;padding:3px;list-style:none}
+.xcs_common .ul-list-type1 li{display:block;padding:3px 10px;font-weight:bold;font-size:15px;text-decoration:none;white-space:nowrap}
+.xcs_common .info-type1{display:block;margin:7px 0 0;font-weight:bold;font-size:11px}
+
+.xcs_common .frame-type1{width:401px;height:160px;padding:4px;border:1px solid gray;background:#fff}
+.xcs_common .certselect_input_type1{height:18px;padding:5px 0 0 5px}
+.xcs_common .xcs-td-style-case1 .xcs-tableview-cell,.xcs_common .xcs-td-style-case2 .xcs-tableview-cell,.xcs_common .xcs-td-style-case3 .xcs-tableview-cell{text-align:center}
+.xcs_common .xcs-td-style-case3 .xcs-tableview-cell button{width:74px;height:25px;margin:0 0 0 5px;color:#000;border:1px solid gray;border-radius:4px;-moz-border-radius:2px;font-size:12px;text-align:center}
+.xcs_common .xcs-td-style-case3 .xcs-tableview-cell button:hover{color:#0078d4}
+.xcs_common .xcs-td-style-case3 .xcs-tableview-cell button:first-child{margin:0}
+
+.xcs_common .xcs_expire_alert{position:absolute;top:0;left:0;z-index:200;padding:10px;background:#fff;border:1px solid gray}
+.xcs_common .xcs-table-mini{overflow-y:auto;width:auto;height:140px;margin:10px 0 15px;border:1px solid #949494}
+.xcs_common .xcs-table-mini table{width:100%;margin:0;border:0;table-layout:fixed}
+.xcs_common .xcs-table-mini table thead{border-bottom:1px solid #c7c7c7;background:#f5f5f5 url(../img/btn_bg.png)}
+.xcs_common .xcs-table-mini table th.xcs-mcert,.xcs_common .xcs-table-mini table th.xcs-mcert2,.xcs_common .xcs-table-mini table th.xcs-mcert3,.xcs_common .xcs-table-mini table th.xcs-mcert4{position:static;width:82px;padding:5px 0;background:#f5f5f5;font-weight:bold;text-align:center;white-space:nowrap;text-overflow:eliipsis;cursor:default}
+.xcs_common .xcs-table-mini table th.xcs-mcert2{width:164px}
+.xcs_common .xcs-table-mini table td .xcs-tableview-cell{text-align:center !Important}
+.xcs_common div.xcs-complete-page{position:relative}
+.xcs_common p.xcs-txt-notice{position:absolute;top:100px;left:150px;width:215px}
+
+/* guidewindow */
+.xcs_common .xcs-guidewindow{text-align:center;margin-top:10px}
+
+/* Bug & IE6 */
+.xcs_common iframe.not{position:absolute;top:0;left:0;background:transparent;z-index:-1;width:900px;height:900px;filter:alpha(opacity=0);opacity:0}
+.xcs_common button[disabled="disabled"]{background:none;color:gray;cursor:default}
+.xcs_common .xcs-group-btn-layout button.xcs-size180[disabled="disabled"] span{color:gray;cursor:default}
+
+/* design modify - img */
+/* 타이틀 영역 */
+/*.xcs_common .title,.xcs_common .xcs-title{top:0;left:0;width:100%;height:45px;border-radius:0;background:url(../img/btn_background.gif) repeat-x;cursor:move} */
+.xcs_common .title,.xcs_common .xcs-title{}
+.xcs_common .title h3,.xcs_common .xcs-title h3{color:#777}
+
+/* 배너 */
+.xcs_common #xcs_header .banner{width:410px;height:66px} /* 이미지크기에 따라 같이 변경해야함. */
+
+/* 인증서 위치내부 이미지 */
+/* 공통 */
+.xcs_common .xcs-cert-position span,.xcs_common .xcs-cert-position2 span{height:32px}
+/* 활성화 */
+.xcs_common .xcs-ico-hdd{width:32px;float:left;margin-right:10px;background-image:url(../img/icon_hdd.png);_background:none;_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../XecureWeb/img/icon_hdd.png', sizingMethod='crop')}
+.xcs_common .xcs-ico-removable{width:32px;float:left;margin-right:10px;background-image:url(../img/icon_removable.png);_background:none;_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../XecureWeb/img/icon_removable.png', sizingMethod='crop')}
+/* 비활성화 */
+.xcs_common .xcs-ico-hdd-disabled{width:32px;float:left;margin-right:10px;background-image:url(../img/icon_hdd_disabled.png);_background:none;_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../XecureWeb/img/icon_hdd_disabled.png', sizingMethod='crop')}
+.xcs_common .xcs-ico-removable-disabled{width:32px;float:left;margin-right:10px;background-image:url(../img/icon_removable_disabled.png);_background:none;_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../XecureWeb/img/icon_removable_disabled.png', sizingMethod='crop')}
+
+/* design modify - border */
+.xcs_cert_pop{border-width:1px 1px 5px 1px;border-color:#777;box-shadow:10px 12px 45px gray;-webkit-box-shadow:10px 12px 45px gray} /* 팝업UI */
+.xcs_cert_wide{border-width:0 0 5px 0;border-color:#777} /* 바닥UI */
+
+.xcs_common .context-menu-layout{border-width:2px;border-style:solid;border-color:#20509f}
+
+
+/* wide css */
+
+/* reset */
+.xcs_wide div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,form,fieldset,legend,textarea,p,th,td,input,select,textarea,button{margin:0;padding:0}
+.xcs_wide fieldset,img{border:0 none;vertical-align:top}
+.xcs_wide dl,ul,ol,menu,li{list-style:none}
+.xcs_wide button{overflow:visible;border:0 none;background-color:transparent;cursor:pointer}
+.xcs_wide button::-moz-focus-inner{padding:0;border:0}
+.xcs_wide address,caption,em{font-style:normal}
+.xcs_wide a{color:#000;text-decoration:none;cursor:pointer}
+.xcs_wide table{border-collapse:collapse;border-spacing:0}
+.xcs_wide th,td{padding:0}
+.xcs_wide hr{display:none}
+
+/* common*/
+.xcs_wide .blind,legend{overflow:hidden;position:absolute;top:0;left:0;width:1px;height:1px;font-size:0;line-height:100px;white-space:nowrap}
+.xcs_wide .sp,.spm,.pm_spm,.spc,.cert_bx .info .num{display:block;overflow:hidden;font-size:0;line-height:200px;white-space:nowrap}
+.xcs_wide .sp,.inpchk,.inprdo,.tb_more .bn_more:before,.tb_more .bn_more:after{background:url(../img/p_sp_cer.png) no-repeat}
+.xcs_wide .spc,.tab a{background:url(../img/p_sp_cer.png) no-repeat}
+.xcs_wide .imp_cmt{position:absolute;top:170px;left:10%;bottom:0;padding-top:0px;width:600px;height:180px;background:url(../img/pcimport.png) no-repeat;}
+.xcs_wide .exp_cmt{position:absolute;top:350px;left:10px;margin-bottom:0px;padding-top:0px;width:275px;height:170px;background:url(../img/pcexport.png) no-repeat;}
+
+
+
+.xcs_wide .inp_cer,.inp_cer2,.inp_rdo{overflow:hidden;}
+/*border-top:1px solid #dad8d3;border-bottom:1px solid #dad8d3*/
+.xcs_wide .inp_cer{height:67px;padding:28px 0 0}
+.xcs_wide .inp_cer li{float:left;margin-left:4px}
+.xcs_wide .inp_cer li:first-child{margin-left:0}
+.xcs_wide .inp_cer .inptx{width:66px}
+.xcs_wide .inp_cer .inptx input{text-align:center}
+.xcs_wide .inp_rdo{height:79px;padding-top:16px}
+.xcs_wide .inp_rdo li{float:left;height:61px}
+.xcs_wide .inp_rdo .inprdo{float:left;margin:25px 20px 0 11px}
+.xcs_wide .inp_rdo label{float:left;height:51px}
+.xcs_wide .inp_rdo label strong,.inp_rdo label span{float:left}
+.xcs_wide .inp_rdo .r1{width:32px;height:32px;margin:18px 20px 0 0;background-position:-170px -100px}
+.xcs_wide .inp_rdo .r2{width:32px;height:32px;margin:20px 12px 0 0;background-position:-233px -100px}
+.xcs_wide .inp_rdo .tx{margin-top:25px;font-size:14px;color:#585858;letter-spacing:-1px}
+.xcs_wide .inp_rdo .select{width:190px;margin:24px 0 0 15px}
+.xcs_wide .inp_rdo .select select{width:100%;height:20px}
+.xcs_wide .inp_rdo .s1{width:241px}
+.xcs_wide .inp_rdo .s2{width:434px;border-left:1px solid #dad8d3}
+.xcs_wide .inp_rdo .s2 .inprdo{margin-left:19px}
+
+
+.xcs_wide .sub_content{width:1000px;margin:0 auto}
+.xcs_wide .sub_content .sub_tt{padding:48px 0 17px;color:#1d1d1d;font-size:24px;font-weight:bold;letter-spacing:-1px}
+.xcs_wide .sub_content .bnarea{margin-top:40px}
+.xcs_wide .sub_content .bnarea a{display:inline-block;width:254px;height:77px;font-weight:bold;font-size:24px;color:#fff;letter-spacing:-1px;line-height:90px;text-align:center;white-space:normal}
+.xcs_wide .sub_content .bnarea .bn_def{background-position:-525px -83px}
+.xcs_wide .sub_content .bnarea .bn_def2{background-position:-525px -161px}
+.xcs_wide .sub_content .tb{margin-top:49px}
+
+
+.xcs_wide .exp {height:570px}
+.xcs_wide .imp {height:400px}
+.xcs_wide .cerbx{position:relative;border-top:1px solid #dfdfdf;border-bottom:1px solid #dfdfdf;}
+.xcs_wide .cerbx ol{padding:32px 0 56px}
+.xcs_wide .cerbx li{border-left:1px solid #eee}
+.xcs_wide .cerbx li:first-child{border-left:0}
+.xcs_wide .cerbx li li{border-left:0}
+.xcs_wide .cerbx .stt{font-size:20px;color:#1d1d1d;letter-spacing:-1px;text-align:center;padding-top:10px;}
+.xcs_wide .cerbx .tip{position:relative;padding:11px 0 8px;font-family:'돋움',dotum,sans-serif;letter-spacing:-1px;font-size:11px;color:#848484}
+.xcs_wide .cerbx .tip .ct{display:block;position:relative;height:13px;padding-left:10px}
+.xcs_wide .cerbx .tip .spc{position:absolute;top:3px;left:0;width:5px;height:5px;background-position:-285px -133px}
+.xcs_wide .cerbx .tab{width:100%;zoom:1}
+.xcs_wide .cerbx .tab:after{display:block;clear:both;content:''}
+.xcs_wide .cerbx .tab li{float:left;position:relative;width:325px}
+.xcs_wide .cerbx .tab .spc{display:block;height:41px;background-position:-525px -41px;font-weight:bold;font-size:15px;color:#aaa;line-height:41px;text-align:center}
+.xcs_wide .cerbx .tab .drvlist{display:none;position:absolute;top:40px;left:0;padding:2px;width:318px;background:#fff;border:2px solid #009ae6}
+.xcs_wide .cerbx .tab .drvlist li{float:none;width:92%;height:25px;cursor:pointer;display:block}
+.xcs_wide .cerbx .tab .drvlist li:hover {background:#e1e1e1;}
+.xcs_wide .cerbx .tab .drvlist li a{display:block;padding:0 0 0 7px;height:25px;font-size:14px;line-height:25px;color:#000;text-align:left}
+.xcs_wide .cerbx .tab .drvlist li a:hover{background:#e1e1e1}
+.xcs_wide .cerbx .tab .drvlist .item{display:block;padding:0px 7px 0px 7px;height:25px;font-size:14px;line-height:25px;color:#000;text-align:left;overflow:hidden;text-overflow:ellipsis;}
+.xcs_wide .cerbx .tab .selected .spc{background-position:-525px 0px;color:#585858}
+.xcs_wide .cerbx .tab .selected .drvlist{display:block}
+.xcs_wide .cerbx .alert{position:relative;height:12px;padding-left:18px;font-size:11px;color:#e65700;letter-spacing:-1px}
+.xcs_wide .cerbx .alert .spc{position:absolute;top:0;left:0;width:12px;height:12px;background-position:-271px -133px}
+.xcs_wide .cerbx .large {height:530px;}
+.xcs_wide .cerbx .small {height:350px;}
+.xcs_wide .cerbx .cho,.cerbx .inp,.cerbx .pas,.cerbx .sav{float:left;position:relative;}
+.xcs_wide .cerbx .cho{width:700px;}
+.xcs_wide .cerbx .cho .section{padding:0 27px 0 21px}
+.xcs_wide .cerbx .cho .alert{position:absolute;left:21px;}
+.xcs_wide .cerbx .inp{width:282px;}
+.xcs_wide .cerbx .inp .section{padding:0 20px}
+.xcs_wide .cerbx .inp .pic{position:absolute;left:50%;top:170px;bottom:0;width:168px;height:176px;margin-left:-84px;margin-bottom:180px;background-position:0 0px}
+.xcs_wide .cerbx .pas{width:270px}
+.xcs_wide .cerbx .pas .section{padding:0 20px}
+.xcs_wide .cerbx .pas .pic{position:absolute;left:50%;bottom:0;width:176px;height:98px;margin-left:-88px;background-position:-170px 0px}
+.xcs_wide .cerbx .sav{width:717px}
+.xcs_wide .cerbx .sav .section{padding:0 20px 0 21px}
+.xcs_wide .cerbx .sav .tip{text-align:center}
+.xcs_wide .cerbx .sav .tip .ct{display:inline-block}
+.xcs_wide .cerbx .sav .pic{position:absolute;left:50%;bottom:0;width:176px;height:98px;margin-left:-88px;background-position:-348px 0px}
+.xcs_wide .cerbx .inptx{display:block;height:29px;padding:9px 5px 0;border:1px solid #dad8d3}
+.xcs_wide .cerbx .inptx input{width:100%;border:0}
+.xcs_wide .cerbx .inptx.onfocus{border-color:#009ae6}
+.xcs_wide .cerbx .arr{position:absolute;bottom:-10px;left:50%;width:17px;height:11px;margin-left:-8px;background-position:-233px -133px}
+.xcs_wide .cerbx .inpchk{display:inline-block;width:18px;height:18px;background-position:-345px -133px}
+.xcs_wide .cerbx .inpchk.checked{background-position:-367px -133px}
+.xcs_wide .cerbx .inprdo{display:inline-block;width:16px;height:16px;background-position:-305px -133px}
+.xcs_wide .cerbx .inprdo.checked{background-position:-325px -133px}
+.xcs_wide .cerbx .inpchk input,.cerbx .inprdo input{position:relative;z-index:-1;width:13px;height:13px;vertical-align:top}
+.xcs_wide .bnarea{margin-top:40px;text-align:center}
+.xcs_wide .bnarea .bn_more{display:inline-block;width:338px;height:90px;background-position:0 -166px;font-weight:bold;font-size:24px;color:#fff;line-height:90px}
+.xcs_wide .tb_cer{margin-top:8px;height:193px;overflow-y:auto;border-top:1px solid #848484;border-bottom:1px solid #848484}
+.xcs_wide .tb_cer table{width:100%;table-layout:fixed;overflow-x:hidden;overflow-y:auto;}
+.xcs_wide .tb_cer table thead th{height:31px;border-bottom:1px solid #d4d4d4;background:#f7f7f7;font-family:'돋움',dotum,sans-serif;font-size:12px;color:#585858;letter-spacing:-1px;text-align:center}
+.xcs_wide .tb_cer table thead th strong{display:block;font-weight:normal}
+.xcs_wide .tb_cer table tbody {cursor:default}
+.xcs_wide .tb_cer table tbody td{height:30px;overflow:hidden;width:100%;max-width:100%;height:31px;border-top:1px solid #e3e3e3;font-family:'돋움',Dotum;font-size:12px;color:#585858;text-align:center;text-overflow:ellipsis;}
+.xcs_wide .tb_cer table tbody td .date{font-family:tahoma;font-size:11px;width:100%;white-space:nowrap;overflow:hidden;}
+.xcs_wide .tb_cer table tbody td .in{display:block;padding-left:5px;text-align:left;width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.xcs_wide .tb_cer table tbody td .in img{position:relative;top:-1px;vertical-align:middle}
+.xcs_wide .tb_cer table tbody td .in span{display:inline-block;vertical-align:middle}
+.xcs_wide .tb_cer table tbody tr:first-child td{border-top:0}
+.xcs_wide .tb_cer table tbody .selected td{background:#639ec0;border-left:1px solid #82b1cd;color:#fff}
+.xcs_wide .tb_cer table tbody .selected td:first-child{border-left:0}
+.xcs_wide .tb_cer table tbody .unselected td{background:#fff;color:#585858}
+.xcs_wide .tb_cer table tbody .unselected td:first-child{border-left:0}
+.xcs_wide .tb_cer table tfoot th,.tb_cer table tfoot td{height:50px;border-top:1px solid #727272;border-bottom:1px solid #d4d4d4}
+.xcs_wide .tb_cer table tfoot th{font-size:13px;text-align:center}
+.xcs_wide .tb_cer table tfoot .inptx{width:152px}
+.xcs_wide .tb_cer table tfoot .inpchk{float:left;margin:0 5px 0 6px}
+.xcs_wide .tb_cer table tfoot .inplb{float:left;height:14px;padding-top:4px;font-family:'돋움',dotum;font-size:11px;color:#848484;letter-spacing:-1px}
+.xcs_wide .tb_pwd{margin-top:8px;border:0px;height:82px;overflow-y:auto;}
+.xcs_wide .tb_pwd table th{font-size:12px;width:75px;}
+.xcs_wide .tb_pwd table tfoot .inptx{width:152px;}
+.xcs_wide .tb_pwd .alert{position:relative;height:12px;padding-left:18px;padding-top:5px;font-size:11px;color:#e65700;letter-spacing:-1px}
+.xcs_wide .tb_pwd .alert .spc{position:absolute;top:5px;left:0;width:12px;height:12px;background-position:-271px -133px}
+.xcs_wide .inp_cer2{height:50px;padding:3px 0}
+.xcs_wide .inp_cer2 li{overflow:hidden;padding:2px 0}
+.xcs_wide .inp_cer2 li label{float:left;width:74px;height:42px;font-size:13px;color:#585858;letter-spacing:-1px;line-height:44px}
+.xcs_wide .inp_cer2 li .inptx{float:left;position:relative;width:124px;padding-left:25px;margin-right:25px;}
+.xcs_wide .inp_cer2 li .spc{position:absolute;top:8px;left:3px;width:17px;height:21px;background-position:-252px -133px}
+
+.xcs_wide .authcode_qr_div {text-align:center;margin-top:15px;}
+.xcs_wide .authcode_qr_div .authcode_qr_in_div {display:inline-block;width:150px;height:150px;border:1px solid lightgray;padding:5px;}
+.xcs_wide .authcode_qr_div .qr_ing_txt {padding-top:60px;text-align:center;font-size:10px;}
+
+.xcs_wide .authcode_qr_div .authcode_qr_in_div .authcode_qr_img_div {padding-top:5px;padding-left:5px;}
+.xcs_wide .authcode_qr_div .authcode_qr_in_div .authcode_qr_img_div .xcs-qrcode {text-align:center; padding:0;}
+.xcs_wide .authcode_qr_txt_div .xcs-qrcode-txt {text-align:center;padding-top:10px;font-size:20px;color:#000;}
+.xcs_wide .authcode_qr_txt_div .xcs-qrcode-txt label{font-weight:bold;font-size:15px;}
+
+.xcs_wide .xcs_imp_comment{position:absolute;background-image:url(../img/pcimport.png);}

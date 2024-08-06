@@ -1,0 +1,37 @@
+/* 파일등록팝업 */
+.sub03 .popup.file_register_popup .box{height: 300px;width: 800px;}
+.sub03 .popup.file_register_popup .info_wr{height: 250px;margin-right: 12px;}
+.sub03 .popup.file_register_popup .k-picker-solid{width: 100% !important;border-radius: 8px;}
+.sub03 .popup.file_register_popup h3{text-align: center; margin-bottom:30px;}
+
+
+.a-flex {
+	  display: flex;
+	  flex-direction: row;
+	  align-items: stretch;
+	  width:100%;
+	   
+}
+.aaa{width:10%; box-sizing: border-box; display: flex;}
+.aaaa{width:90%;}
+.b-flex{display: flex;
+	  flex-direction: row;
+	  align-items: stretch;
+	  width:100%;
+	  align-items: flex-start;}
+	  
+	  
+@media (max-width: 950px) {
+ .b-flex {
+     flex-direction: column;
+ }
+}
+
+.bbb{margin-right: 48px;}
+
+.aaa th{text-align: center !important;}
+
+.inspector {border: 1px solid black; }
+.inspector tr{background-color: lightgray; border: 1px solid black; }
+.inspector th{border: 1px solid black; }
+.inspector td{background-color: white; border: 1px solid black; }

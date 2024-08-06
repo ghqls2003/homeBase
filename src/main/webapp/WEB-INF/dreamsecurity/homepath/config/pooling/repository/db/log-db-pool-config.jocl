@@ -1,0 +1,56 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<!--<object class="org.apache.commons.dbcp.PoolableConnectionFactory" xmlns="http://apache.org/xml/xmlns/jakarta/commons/jocl">-->
+<object class="com.biz.app.common.pooling.repository.impl.BizDBConnectionFactory" xmlns="http://apache.org/xml/xmlns/jakarta/commons/jocl">
+<!--
+	<object class="org.apache.commons.dbcp.DriverConnectionFactory">
+		<object class="oracle.jdbc.driver.OracleDriver"/>
+		<string value="jdbc:oracle:thin:@localhost:1521:XE"/>
+		<object class="java.util.Properties" null="true"/>
+	</object>
+-->
+	<object class="org.apache.commons.dbcp.DriverManagerConnectionFactory">
+		<string value="jdbc:oracle:thin:TEST/TEST@localhost:1521:XE"/>
+      	<object class="java.util.Properties" null="true"/>
+	</object>
+
+<!--
+	<object class="org.apache.commons.pool.impl.GenericObjectPool">
+-->
+	<object class="com.biz.app.common.pooling.repository.impl.BizRepositoryPoolImpl">
+		<object class="org.apache.commons.pool.PoolableObjectFactory" null="true"/>		<!-- factory : -->
+		<int value="10"/>			<!-- maxActive : 최대개수 -->
+		<byte value="1"/>			<!-- whenExhaustedAction : 0 - Exception 발생, 1 - 가용 Connection 없을 시 대기, 2 - 신규 생성 -->
+		<long value="2000"/>		<!-- maxWait : 최대 대기 시간 -->
+		<int value="10"/>			<!-- maxIdle : Spare Connection 개수 -->
+		<int value="10"/>			<!-- minIdel : -->
+		<boolean value="false"/>		<!-- testOnBorrow : Borrow시 Test -->
+		<boolean value="false"/>		<!-- testOnReturn : Return시 Test -->
+		<long value="36000000"/>		<!-- timeBetweenEvictionRunsMillis : 비활성화 객체 추출 쓰레드의 실행 주기 -->
+		<int value="3"/>			<!-- numTestsPerEvictionRun : 조사할 비활성화 객체 수 -->
+		<long value="50000"/>		<!-- minEvictableIdleTimeMillis : 객체의 비활성화된 시간이 지정한 시간을 초과한 경우에만 풀에서 추출 -->
+		<boolean value="true"/>		<!-- testWhileIdle : 비활성화 객체를 조사할때 유효성 검사를 할지 여부 -->
+		<long value="5000"/>		<!-- softMinEvictableIdleTimeMillis : -->
+		<boolean value="true"/>		<!-- lifo : Last In First Out -->
+	</object>
+	<object class="org.apache.commons.pool.impl.GenericKeyedObjectPoolFactory" null="true"/>
+	<string value="SELECT COUNT(*) FROM DUAL"/>		<!-- 유효성 Query -->
+	<boolean value="false"/>	<!-- Read Only -->
+	<boolean value="true"/>		<!-- Auto Commit -->
+	<int value="-1"/>			<!-- Transaction Isolation -->
+</object>
+

@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>XCrypto</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="cache-control" content="no-cache">
+
+<script type="text/javascript" src="../AnyPin/ext/promise-6.1.0.js"></script>
+<script type="text/javascript" src="../AnyPin/ext/webcrypto-shim.min.js"></script>
+<script type="text/javascript" src="../AnyPin/lib/xcryptoCore_min.js"></script>
+<script type="text/javascript" src="../AnyPin/lib/xcrypto_min.js"></script>
+
+<script type="text/javascript">
+
+// yessign
+//var aRaType = "yessign";
+//var aRaPage = "./user_regist_yessign.jsp";
+
+// xecureca
+var aRaType = "xecureca";
+var aRaPage = "./user_regist_anypin.jsp";
+
+function init()
+{
+	// CMP
+	/*
+	var aWebCMPIP = window.location.protocol + "//" + window.location.hostname;
+	var aWebCMPPort = window.location.protocol.indexOf("https") !== -1 ? "7072" : "7071";
+	var aWebCMPURL = aWebCMPIP + ":" + aWebCMPPort + "/XFS/yessign/processCmp";
+	*/
+	var aWebCMPURL = "https://demo.hancomwith.com:8091/XFS/xecureca/processCmp";
+	
+	document.form_apnRegistPin.webCMPURL.value = aWebCMPURL;
+	document.form_apnAuthSession.webCMPURL.value = aWebCMPURL;
+	
+	// yessign
+	//document.form_apnRegistPin.caType.value = "11";
+	//document.form_apnAuthSession.caType.value = "11";
+	
+	// xecureca
+	document.form_apnRegistPin.caType.value = "101";
+	document.form_apnAuthSession.caType.value = "101";
+	
+	// apnInitialize
+	var aServiceUrl = "https://demo.hancomwith.com:7080/anypin/api";
+	var aServiceKey = "5";
+	var aWebWorkerNum = "0";
+	var aWebWorkerScript = "../AnyPin/lib/worker.min.js";
+	var aLicense = "30820695020101310b300906052b0e03021a0500307306092a864886f70d010701a0660464313a7265617665722e736f6674666f72756d2e636f6d3a616e797369676e6c6974652c616e7970696e2c616e7970696e5f736572766572636572743d36333234646539633935366131643238353663346630343363353261363437356464653864353866a0820467308204633082034ba003020102020107300d06092a864886f70d01010505003077310b3009060355040613024b52311e301c060355040a1315536f6674666f72756d20436f72706f726174696f6e3121301f06035504031318536f6674666f72756d20526f6f7420417574686f726974793125302306092a864886f70d010901161663616d617374657240736f6674666f72756d2e636f6d301e170d3034303431393030303030305a170d3333303131333030303030305a308192310b3009060355040613024b52311e301c060355040a1315536f6674666f72756d20436f72706f726174696f6e311e301c060355040b1315536563757269747920524e44204469766973696f6e311c301a06035504031313536f6674666f72756d205075626c69632043413125302306092a864886f70d010901161663616d617374657240736f6674666f72756d2e636f6d30820121300d06092a864886f70d01010105000382010e00308201090282010043340b4e1f2f30d6634c818e9fa4b35c199e0628503dbe0d1f5ad2c05890a918408dc330c991083bc7cdfc50021303c04afab4cb522d22fced11d1be6559835f1f000d466120cff97a2a80e4fdf972ac127f9bb8e8ddb84974323e4cb822c5f15b22f82da3de6ef61a0b6798ca49a85af3d8f8298912b4d26411e2e1635c081a3306931716c5e56b279c4d36068a4b645c10aa582693086e14132ba67fb03526312790261f9c641993e2ffc3fd9e8df3efebfddecd722e874d6366ad1252ac0d8bddb5674533cc2717a7342e5cfb18f8a301e7196ca33d6c3bb7e1f1e4bee34f5358af6ae0fd52a9fc3bdd4925f5eab7db6628e24738f6c882bb0aaa0e10afbf0203010001a381de3081db301f0603551d2304183016801409b5e27e7d2ac24a8f56bb67accebb93f5318fd3301d0603551d0e041604142e49ab278ae8c8af977537de8b74bb240e0d275f300e0603551d0f0101ff04040302010630120603551d130101ff040830060101ff02010030750603551d1f046e306c306aa068a06686646c6461703a2f2f6c6461702e736f6674666f72756d2e636f6d3a3338392f434e3d58656375726543524c505542432c4f553d536563757269747920524e44204469766973696f6e2c4f3d536f6674666f72756d20436f72706f726174696f6e2c433d4b52300d06092a864886f70d010105050003820101003ce700a0492b225b1665d9c73d84c34f7a5faad7b397ed49231f030e4e0e91953a607bd9006425373d490ef3ba1cf47810ca8c22fabe0c609f93823efdede64744458e910267f9f857c907318e286da6c131c9dd5fada43fd8cfdf6bd1b1b239338cea83eb6b6893b88fbcfd8e86a677b7270ad96be5a82b40569efc2dda6df4bcd642d067183186d6cace6c8f73b80f30b57acb3bcd5cbbc51307922d5edb38cb0d90c3917a8e37534183ba10f403c1c034287f39442df795050f39d78ddad97da8a43f02d7641549af9b5d68908e49faa8a1597cfed4a43baadd42c8fe4fd44c96d314df56147b8a7fa6ba65ffdee9ed3a5da52ef9ac7f9ca5afb633e1ccdf318201a13082019d020101307c3077310b3009060355040613024b52311e301c060355040a1315536f6674666f72756d20436f72706f726174696f6e3121301f06035504031318536f6674666f72756d20526f6f7420417574686f726974793125302306092a864886f70d010901161663616d617374657240736f6674666f72756d2e636f6d020107300706052b0e03021a300d06092a864886f70d0101050500048201001b0e5603c836213d701e48542e7a22cc34e59307567a36ed431bc5243c730e7933abead2e5768a3eb19e9bc177afa71738a3480a0fe6527a9e70d7da1066cce2be97af602f7c909498a0ac83094b2461bf3f6d2419d3d699de20c0376182d44548486f6ea3522c7ab5200bc9dd9c70385052e5c83ac4f052ad5206140cf275029d1b21b7e8bd4d220b7996473b5e9893497197a1054e1d8888323bd20de21825e852bc452deb6911157a501d0e303e3ba8b87f47a565983568a3fde83ddc2d3174e16c4cfa53172cd8b4541c36a3dfbdbb9731e880e30dc3b5722904896670d26041ff2054f72934a4376d7339880054fd0540c1d92cef6ae36e21ddfc0cbedf";
+	
+	document.form_apnInitialize.serviceUrl.value = aServiceUrl;
+	document.form_apnInitialize.serviceKey.value = aServiceKey;
+	document.form_apnInitialize.webWorkerNum.value = aWebWorkerNum;
+	document.form_apnInitialize.webWorkerScript.value = aWebWorkerScript;
+	document.form_setLicense.license.value = aLicense;
+	
+	XCrypto.apnInitialize(aServiceUrl, aServiceKey, 0, aWebWorkerNum, aWebWorkerScript, 1);
+	XCrypto.setLicense(aLicense);
+	
+	document.form_apnGetPinIDList.delimiter1.value = "$";
+	document.form_apnGetPinIDList.delimiter2.value = "|";
+	
+	numbering();
+}
+
+function numbering()
+{
+	var aElements = document.getElementsByTagName('h3');
+
+	for (i = 0 ; i < aElements.length ; i++)
+	{
+		aElements[i].innerHTML = (i + 1) + ". " + aElements[i].innerHTML;
+		aElements.id = "elem" + (i + 1);
+	}
+}
+
+function sumCheckbox(aCheckbox)
+{
+	var aIter;
+	var aTotal = 0;
+
+	for(aIter = 0;aIter < aCheckbox.length;aIter++)
+	{
+		if(aCheckbox[aIter].checked)
+			aTotal += parseInt(aCheckbox[aIter].value);
+	}
+	return aTotal;
+}
+
+function getRadio(aRadio)
+{
+	var aIter;
+
+	for (aIter = 0;aIter < aRadio.length;aIter++)
+	{
+		if (aRadio[aIter].checked)
+			return aRadio[aIter].value;
+	}
+	return "";
+}
+
+function getPassword(obj)
+{
+	XCrypto.setSecureInput("0");
+	if(obj.value.length > 0)
+		return "0$" + obj.value;
+	else
+		return "";
+}
+</script>
+</head>
+<body onload="init();">
+
+<h1>XCrypto AnyPIN Test</h1>
+
+<hr>
+
+<!--*************************************************************************-->
+<h3>isMobilePlatform</h3>
+
+<script type="text/javascript">
+function isMobilePlatform()
+{
+	var form = document.form_isMobilePlatform;
+	var output = form.output;
+	
+	var result = XCrypto.isMobilePlatform();
+	output.value = result;
+}
+</script>
+
+<form id="form_isMobilePlatform" name="form_isMobilePlatform" action="#">
+	<table>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="isMobilePlatform" onclick="isMobilePlatform()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>getDeviceInfo</h3>
+
+<script type="text/javascript">
+function getDeviceInfo()
+{
+	var form = document.form_getDeviceInfo;
+	var output = form.output;
+	
+	var callback = function() {
+		output.value = "ok";
+	}
+	
+	XCrypto.getDeviceInfo(callback);
+}
+</script>
+
+<form id="form_getDeviceInfo" name="form_getDeviceInfo" action="#">
+	<table>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="getDeviceInfo" onclick="getDeviceInfo()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>setError</h3>
+
+<script type="text/javascript">
+function setError()
+{
+	var form = document.form_setError;
+	var code = form.code.value;
+	var output = form.output;
+	
+	var callback = function() {
+		output.value = "ok";
+	}
+	
+	XCrypto.setError(code, callback);
+}
+</script>
+
+<form id="form_setError" name="form_setError" action="#">
+	<table>
+		<tr>
+			<td>code</td>
+			<td><input type="text" name="code" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="setError" onclick="setError()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>resetError</h3>
+
+<script type="text/javascript">
+function resetError()
+{
+	var form = document.form_resetError;
+	var output = form.output;
+	
+	var callback = function() {
+		output.value = "ok";
+	}
+	
+	XCrypto.resetError(callback);
+}
+</script>
+
+<form id="form_resetError" name="form_resetError" action="#">
+	<table>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="resetError" onclick="resetError()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>getError</h3>
+
+<script type="text/javascript">
+function getError()
+{
+	var form = document.form_getError;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = "code:" + result.code + "\r\n";
+		output.value += "msg_koKR:" + result.msg_koKR + "\r\n";
+		output.value += "msg_enUS:" + result.msg_enUS + "\r\n";
+		output.value += "internal:" + result.internal;
+	}
+	
+	XCrypto.getError(callback);
+}
+</script>
+
+<form id="form_getError" name="form_getError" action="#">
+	<table>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="getError" onclick="getError()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="6"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>setLanguage</h3>
+
+<script type="text/javascript">
+function setLanguage()
+{
+	var form = document.form_setLanguage;
+	var language = getRadio(form.language);
+	var output = form.output;
+	
+	var callback = function() {
+		output.value = "ok";
+	}
+	
+	XCrypto.setLanguage(language, callback);
+}
+</script>
+
+<form id="form_setLanguage" name="form_setLanguage" action="#">
+	<table>
+		<tr>
+			<td>language</td>
+			<td>
+				<input type="radio" name="language" value="ko-KR" checked/> ko-KR<br>
+				<input type="radio" name="language" value="en-US"/> en-US
+			</td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="setLanguage" onclick="setLanguage()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>setCharset</h3>
+
+<script type="text/javascript">
+function setCharset()
+{
+	var form = document.form_setCharset;
+	var charset = getRadio(form.charset);
+	var output = form.output;
+	
+	var callback = function() {
+		output.value = "ok";
+	}
+	
+	XCrypto.setCharset(charset, callback);
+}
+</script>
+
+<form id="form_setCharset" name="form_setCharset" action="#">
+	<table>
+		<tr>
+			<td>charset</td>
+			<td>
+				<input type="radio" name="charset" value="utf-8" checked/> utf-8<br>
+				<input type="radio" name="charset" value="euc-kr"/> euc-kr
+			</td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="setCharset" onclick="setCharset()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>setLicense</h3>
+
+<script type="text/javascript">
+function setLicense()
+{
+	var form = document.form_setLicense;
+	var license = form.license.value;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = result;
+		if(result != 0) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.setLicense(license, callback);
+}
+</script>
+
+<h4>테스트 데이타</h4>
+<form id="form_setLicense_data" name="form_setLicense_data" action="#">
+<ul>
+	<li>서버 인증서 : cn=anypin.hsecure.co.kr()00900491803090908350,ou=SOFTFORUM,ou=personal4IB,o=yessign,c=kr</li>
+	<li><input type="radio" name="license" value="1" onclick="form_setLicense.license.value = this.form.license_1.value" checked/>
+		reaver.softforum.com<br>
+		anysignlite,anypin,anypin_servercert=6324de9c956a1d2856c4f043c52a6475dde8d58f<br>
+		<textarea name="license_1" cols="80" rows="4">30820695020101310b300906052b0e03021a0500307306092a864886f70d010701a0660464313a7265617665722e736f6674666f72756d2e636f6d3a616e797369676e6c6974652c616e7970696e2c616e7970696e5f736572766572636572743d36333234646539633935366131643238353663346630343363353261363437356464653864353866a0820467308204633082034ba003020102020107300d06092a864886f70d01010505003077310b3009060355040613024b52311e301c060355040a1315536f6674666f72756d20436f72706f726174696f6e3121301f06035504031318536f6674666f72756d20526f6f7420417574686f726974793125302306092a864886f70d010901161663616d617374657240736f6674666f72756d2e636f6d301e170d3034303431393030303030305a170d3333303131333030303030305a308192310b3009060355040613024b52311e301c060355040a1315536f6674666f72756d20436f72706f726174696f6e311e301c060355040b1315536563757269747920524e44204469766973696f6e311c301a06035504031313536f6674666f72756d205075626c69632043413125302306092a864886f70d010901161663616d617374657240736f6674666f72756d2e636f6d30820121300d06092a864886f70d01010105000382010e00308201090282010043340b4e1f2f30d6634c818e9fa4b35c199e0628503dbe0d1f5ad2c05890a918408dc330c991083bc7cdfc50021303c04afab4cb522d22fced11d1be6559835f1f000d466120cff97a2a80e4fdf972ac127f9bb8e8ddb84974323e4cb822c5f15b22f82da3de6ef61a0b6798ca49a85af3d8f8298912b4d26411e2e1635c081a3306931716c5e56b279c4d36068a4b645c10aa582693086e14132ba67fb03526312790261f9c641993e2ffc3fd9e8df3efebfddecd722e874d6366ad1252ac0d8bddb5674533cc2717a7342e5cfb18f8a301e7196ca33d6c3bb7e1f1e4bee34f5358af6ae0fd52a9fc3bdd4925f5eab7db6628e24738f6c882bb0aaa0e10afbf0203010001a381de3081db301f0603551d2304183016801409b5e27e7d2ac24a8f56bb67accebb93f5318fd3301d0603551d0e041604142e49ab278ae8c8af977537de8b74bb240e0d275f300e0603551d0f0101ff04040302010630120603551d130101ff040830060101ff02010030750603551d1f046e306c306aa068a06686646c6461703a2f2f6c6461702e736f6674666f72756d2e636f6d3a3338392f434e3d58656375726543524c505542432c4f553d536563757269747920524e44204469766973696f6e2c4f3d536f6674666f72756d20436f72706f726174696f6e2c433d4b52300d06092a864886f70d010105050003820101003ce700a0492b225b1665d9c73d84c34f7a5faad7b397ed49231f030e4e0e91953a607bd9006425373d490ef3ba1cf47810ca8c22fabe0c609f93823efdede64744458e910267f9f857c907318e286da6c131c9dd5fada43fd8cfdf6bd1b1b239338cea83eb6b6893b88fbcfd8e86a677b7270ad96be5a82b40569efc2dda6df4bcd642d067183186d6cace6c8f73b80f30b57acb3bcd5cbbc51307922d5edb38cb0d90c3917a8e37534183ba10f403c1c034287f39442df795050f39d78ddad97da8a43f02d7641549af9b5d68908e49faa8a1597cfed4a43baadd42c8fe4fd44c96d314df56147b8a7fa6ba65ffdee9ed3a5da52ef9ac7f9ca5afb633e1ccdf318201a13082019d020101307c3077310b3009060355040613024b52311e301c060355040a1315536f6674666f72756d20436f72706f726174696f6e3121301f06035504031318536f6674666f72756d20526f6f7420417574686f726974793125302306092a864886f70d010901161663616d617374657240736f6674666f72756d2e636f6d020107300706052b0e03021a300d06092a864886f70d0101050500048201001b0e5603c836213d701e48542e7a22cc34e59307567a36ed431bc5243c730e7933abead2e5768a3eb19e9bc177afa71738a3480a0fe6527a9e70d7da1066cce2be97af602f7c909498a0ac83094b2461bf3f6d2419d3d699de20c0376182d44548486f6ea3522c7ab5200bc9dd9c70385052e5c83ac4f052ad5206140cf275029d1b21b7e8bd4d220b7996473b5e9893497197a1054e1d8888323bd20de21825e852bc452deb6911157a501d0e303e3ba8b87f47a565983568a3fde83ddc2d3174e16c4cfa53172cd8b4541c36a3dfbdbb9731e880e30dc3b5722904896670d26041ff2054f72934a4376d7339880054fd0540c1d92cef6ae36e21ddfc0cbedf</textarea>
+	</li>
+	<li><input type="radio" name="license" value="2" onclick="form_setLicense.license.value = this.form.license_2.value" />
+		reaver.softforum.com<br>
+		anysignlite=desktop,anypin=desktop,anypin_servercert=6324de9c956a1d2856c4f043c52a6475dde8d58f<br>
+		<textarea name="license_2" cols="80" rows="4">308206a6020101310b300906052b0e03021a050030818306092a864886f70d010701a0760474313a7265617665722e736f6674666f72756d2e636f6d3a616e797369676e6c6974653d6465736b746f702c616e7970696e3d6465736b746f702c616e7970696e5f736572766572636572743d36333234646539633935366131643238353663346630343363353261363437356464653864353866a0820467308204633082034ba003020102020107300d06092a864886f70d01010505003077310b3009060355040613024b52311e301c060355040a1315536f6674666f72756d20436f72706f726174696f6e3121301f06035504031318536f6674666f72756d20526f6f7420417574686f726974793125302306092a864886f70d010901161663616d617374657240736f6674666f72756d2e636f6d301e170d3034303431393030303030305a170d3333303131333030303030305a308192310b3009060355040613024b52311e301c060355040a1315536f6674666f72756d20436f72706f726174696f6e311e301c060355040b1315536563757269747920524e44204469766973696f6e311c301a06035504031313536f6674666f72756d205075626c69632043413125302306092a864886f70d010901161663616d617374657240736f6674666f72756d2e636f6d30820121300d06092a864886f70d01010105000382010e00308201090282010043340b4e1f2f30d6634c818e9fa4b35c199e0628503dbe0d1f5ad2c05890a918408dc330c991083bc7cdfc50021303c04afab4cb522d22fced11d1be6559835f1f000d466120cff97a2a80e4fdf972ac127f9bb8e8ddb84974323e4cb822c5f15b22f82da3de6ef61a0b6798ca49a85af3d8f8298912b4d26411e2e1635c081a3306931716c5e56b279c4d36068a4b645c10aa582693086e14132ba67fb03526312790261f9c641993e2ffc3fd9e8df3efebfddecd722e874d6366ad1252ac0d8bddb5674533cc2717a7342e5cfb18f8a301e7196ca33d6c3bb7e1f1e4bee34f5358af6ae0fd52a9fc3bdd4925f5eab7db6628e24738f6c882bb0aaa0e10afbf0203010001a381de3081db301f0603551d2304183016801409b5e27e7d2ac24a8f56bb67accebb93f5318fd3301d0603551d0e041604142e49ab278ae8c8af977537de8b74bb240e0d275f300e0603551d0f0101ff04040302010630120603551d130101ff040830060101ff02010030750603551d1f046e306c306aa068a06686646c6461703a2f2f6c6461702e736f6674666f72756d2e636f6d3a3338392f434e3d58656375726543524c505542432c4f553d536563757269747920524e44204469766973696f6e2c4f3d536f6674666f72756d20436f72706f726174696f6e2c433d4b52300d06092a864886f70d010105050003820101003ce700a0492b225b1665d9c73d84c34f7a5faad7b397ed49231f030e4e0e91953a607bd9006425373d490ef3ba1cf47810ca8c22fabe0c609f93823efdede64744458e910267f9f857c907318e286da6c131c9dd5fada43fd8cfdf6bd1b1b239338cea83eb6b6893b88fbcfd8e86a677b7270ad96be5a82b40569efc2dda6df4bcd642d067183186d6cace6c8f73b80f30b57acb3bcd5cbbc51307922d5edb38cb0d90c3917a8e37534183ba10f403c1c034287f39442df795050f39d78ddad97da8a43f02d7641549af9b5d68908e49faa8a1597cfed4a43baadd42c8fe4fd44c96d314df56147b8a7fa6ba65ffdee9ed3a5da52ef9ac7f9ca5afb633e1ccdf318201a13082019d020101307c3077310b3009060355040613024b52311e301c060355040a1315536f6674666f72756d20436f72706f726174696f6e3121301f06035504031318536f6674666f72756d20526f6f7420417574686f726974793125302306092a864886f70d010901161663616d617374657240736f6674666f72756d2e636f6d020107300706052b0e03021a300d06092a864886f70d01010505000482010006133af45ca379ddca7cd8c3787a12b339087b5dcc94951dbd283c4d143ddd6ce3f42fba5c4fd8deeba485339a963a62697b7db9d57a38585d527bc48d68ce784e774e4625cb383112ca1f1cb5437a142221be564d6477bf7cbbbde6094bd2123bf8727318d51a7a8772fbe02a9c8374599976ed1cc5ce134950ec17d17df1a6e9fc88230f18d5f77dad5e2c269ff2c1b2db8ed20c049503bf761bf156b0758b52f3bc2670e83b28b3ddd6d1943cad5cf4afeedbe66370382f13aac0807ebe8f9702c2a55e5138c864b49fbaf9fc15144546966cdfa7929ddbf7345c1abe61fb985fe5094ea95bc16564008123f89b212748b76b1c7f958b73af559dcc5e334c</textarea>
+	</li>
+	<li><input type="radio" name="license" value="3" onclick="form_setLicense.license.value = this.form.license_3.value" />
+		reaver.softforum.com<br>
+		anysignlite=mobile,anypin=mobile,anypin_servercert=6324de9c956a1d2856c4f043c52a6475dde8d58f<br>
+		<textarea name="license_3" cols="80" rows="4">308206a4020101310b300906052b0e03021a050030818106092a864886f70d010701a0740472313a7265617665722e736f6674666f72756d2e636f6d3a616e797369676e6c6974653d6d6f62696c652c616e7970696e3d6d6f62696c652c616e7970696e5f736572766572636572743d36333234646539633935366131643238353663346630343363353261363437356464653864353866a0820467308204633082034ba003020102020107300d06092a864886f70d01010505003077310b3009060355040613024b52311e301c060355040a1315536f6674666f72756d20436f72706f726174696f6e3121301f06035504031318536f6674666f72756d20526f6f7420417574686f726974793125302306092a864886f70d010901161663616d617374657240736f6674666f72756d2e636f6d301e170d3034303431393030303030305a170d3333303131333030303030305a308192310b3009060355040613024b52311e301c060355040a1315536f6674666f72756d20436f72706f726174696f6e311e301c060355040b1315536563757269747920524e44204469766973696f6e311c301a06035504031313536f6674666f72756d205075626c69632043413125302306092a864886f70d010901161663616d617374657240736f6674666f72756d2e636f6d30820121300d06092a864886f70d01010105000382010e00308201090282010043340b4e1f2f30d6634c818e9fa4b35c199e0628503dbe0d1f5ad2c05890a918408dc330c991083bc7cdfc50021303c04afab4cb522d22fced11d1be6559835f1f000d466120cff97a2a80e4fdf972ac127f9bb8e8ddb84974323e4cb822c5f15b22f82da3de6ef61a0b6798ca49a85af3d8f8298912b4d26411e2e1635c081a3306931716c5e56b279c4d36068a4b645c10aa582693086e14132ba67fb03526312790261f9c641993e2ffc3fd9e8df3efebfddecd722e874d6366ad1252ac0d8bddb5674533cc2717a7342e5cfb18f8a301e7196ca33d6c3bb7e1f1e4bee34f5358af6ae0fd52a9fc3bdd4925f5eab7db6628e24738f6c882bb0aaa0e10afbf0203010001a381de3081db301f0603551d2304183016801409b5e27e7d2ac24a8f56bb67accebb93f5318fd3301d0603551d0e041604142e49ab278ae8c8af977537de8b74bb240e0d275f300e0603551d0f0101ff04040302010630120603551d130101ff040830060101ff02010030750603551d1f046e306c306aa068a06686646c6461703a2f2f6c6461702e736f6674666f72756d2e636f6d3a3338392f434e3d58656375726543524c505542432c4f553d536563757269747920524e44204469766973696f6e2c4f3d536f6674666f72756d20436f72706f726174696f6e2c433d4b52300d06092a864886f70d010105050003820101003ce700a0492b225b1665d9c73d84c34f7a5faad7b397ed49231f030e4e0e91953a607bd9006425373d490ef3ba1cf47810ca8c22fabe0c609f93823efdede64744458e910267f9f857c907318e286da6c131c9dd5fada43fd8cfdf6bd1b1b239338cea83eb6b6893b88fbcfd8e86a677b7270ad96be5a82b40569efc2dda6df4bcd642d067183186d6cace6c8f73b80f30b57acb3bcd5cbbc51307922d5edb38cb0d90c3917a8e37534183ba10f403c1c034287f39442df795050f39d78ddad97da8a43f02d7641549af9b5d68908e49faa8a1597cfed4a43baadd42c8fe4fd44c96d314df56147b8a7fa6ba65ffdee9ed3a5da52ef9ac7f9ca5afb633e1ccdf318201a13082019d020101307c3077310b3009060355040613024b52311e301c060355040a1315536f6674666f72756d20436f72706f726174696f6e3121301f06035504031318536f6674666f72756d20526f6f7420417574686f726974793125302306092a864886f70d010901161663616d617374657240736f6674666f72756d2e636f6d020107300706052b0e03021a300d06092a864886f70d0101050500048201002c9829f6fbb876c423116bfe5a13dc0233da8d0251e49393141bcd84fd54c48e2b57347623c55b150295573eb6eeee4c3409bbb8ccf2812c466cae9638e20661aa06069f7d200fab64862af92ade44ed50f4a175b058ac36b286e8eb719052fa61935aac979f12f86d0cf84a377323721705c72a478c2253ebed06dc86b79f1cbabf4df1e95b5bf6c808faa39b1230a7ee6ac6b9a78ad31b27b4bb8ae7b09a25b9948df97641e61f5c7f258b94853bb8ac03689900034ab541b081d9c0494183da6d411797bdcf63f0e588cee2d16623ff7a787c97cde52f582898b7b1b8f08fa660d256b1f7c5cbd2b5179f4a8afab9adac690535ed9b7b1893762a959bbcfd</textarea>
+	</li>
+</ul>
+</form>
+
+<form id="form_setLicense" name="form_setLicense" action="#">
+	<table>
+		<tr>
+			<td>license</td>
+			<td><textarea name="license" cols="80" rows="4"></textarea></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="setLicense" onclick="setLicense()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>setProperty</h3>
+
+<script type="text/javascript">
+function setProperty()
+{
+	var form = document.form_setProperty;
+	var language = getRadio(form.language);
+	var charset = getRadio(form.charset);
+	var license = form.license.value;
+	var output = form.output;
+	
+	var callback = function() {
+		output.value = "ok";
+	}
+	
+	XCrypto.setProperty(language, charset, license, callback);
+}
+</script>
+
+<form id="form_setProperty" name="form_setProperty" action="#">
+	<table>
+		<tr>
+			<td>language</td>
+			<td>
+				<input type="radio" name="language" value="ko-KR" checked/> ko-KR<br>
+				<input type="radio" name="language" value="en-US"/> en-US
+			</td>
+		</tr>
+		<tr>
+			<td>charset</td>
+			<td>
+				<input type="radio" name="charset" value="utf-8" checked/> utf-8<br>
+				<input type="radio" name="charset" value="euc-kr"/> euc-kr
+			</td>
+		</tr>
+		<tr>
+			<td>license</td>
+			<td><textarea name="license" cols="80" rows="4"></textarea></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="setProperty" onclick="setProperty()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>setSecureInput</h3>
+
+<script type="text/javascript">
+function setSecureInput()
+{
+	var form = document.form_setSecureInput;
+	var input = form.input.value;
+	var output = form.output;
+	
+	var callback = function() {
+		output.value = "ok";
+	}
+	
+	XCrypto.setSecureInput(input, callback);
+}
+</script>
+
+<form id="form_setSecureInput" name="form_setSecureInput" action="#">
+	<table>
+		<tr>
+			<td>input</td>
+			<td><input type="text" name="input" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="setSecureInput" onclick="setSecureInput()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>getSecureInput</h3>
+
+<script type="text/javascript">
+function getSecureInput()
+{
+	var form = document.form_getSecureInput;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = result;
+	}
+	
+	XCrypto.getSecureInput(callback);
+}
+</script>
+
+<form id="form_getSecureInput" name="form_getSecureInput" action="#">
+	<table>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="getSecureInput" onclick="getSecureInput()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnInitialize</h3>
+
+<script type="text/javascript">
+function apnInitialize()
+{
+	var form = document.form_apnInitialize;
+	var serviceUrl = form.serviceUrl.value;
+	var serviceKey = form.serviceKey.value;
+	var webWorkerNum = form.webWorkerNum.value;
+	var webWorkerScript = form.webWorkerScript.value;
+	var serviceMode = form.serviceMode.value;
+
+	if( typeof serviceMode === "undefined" )
+	{
+		if (form.serviceMode[0].checked == true)
+			serviceMode = form.serviceMode[0].value;
+		else if (form.serviceMode[1].checked == true)
+			serviceMode = form.serviceMode[1].value;
+		else if (form.serviceMode[2].checked == true)
+			serviceMode = form.serviceMode[2].value;
+	}
+
+	var asyncOption = sumCheckbox(form.asyncOption);
+	var output = form.output;
+	
+	XCrypto.apnInitialize(serviceUrl, serviceKey, serviceMode, webWorkerNum, webWorkerScript, asyncOption);
+	output.value = "ok";
+}
+</script>
+
+<form id="form_apnInitialize" name="form_apnInitialize" action="#">
+	<table>
+		<tr>
+			<td>serviceUrl</td>
+			<td><input type="text" name="serviceUrl" size="80"/></td>
+		</tr>
+		<tr>
+			<td>serviceKey</td>
+			<td><input type="text" name="serviceKey" size="80"/></td>
+		</tr>
+		<tr>
+			<td>webWorkerNum</td>
+			<td><input type="text" name="webWorkerNum" size="80"/></td>
+		</tr>
+		<tr>
+			<td>webWorkerScript</td>
+			<td><input type="text" name="webWorkerScript" size="80"/></td>
+		</tr>
+		<tr>
+			<td>serviceMode</td>
+			<td>
+				<input type="radio" name="serviceMode" value="0" checked/> 0 : PKI<br>
+				<input type="radio" name="serviceMode" value="1"/> 1 : PIN<br>
+				<input type="radio" name="serviceMode" value="2"/> 2 : CERT<br>
+			</td>
+		</tr>
+		<tr>
+			<td>asyncOption</td>
+			<td>
+				<input type="radio" name="asyncOption" value="0"/> 0 : 동기 방식<br>
+				<input type="radio" name="asyncOption" value="1" checked/> 1 : 비동기<br>
+				<input type="radio" name="asyncOption" value="2"/> 2 : 자동
+			</td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnInitialize" onclick="apnInitialize()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnGetPinIDList</h3>
+
+<script type="text/javascript">
+function apnGetPinIDList()
+{
+	var form = document.form_apnGetPinIDList;
+	var option = sumCheckbox(form.option);
+	var delimiter1 = form.delimiter1.value;
+	var delimiter2 = form.delimiter2.value;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = result;
+		if(!result) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnGetPinIDList(option, delimiter1, delimiter2, callback);
+}
+</script>
+
+<form id="form_apnGetPinIDList" name="form_apnGetPinIDList" action="#">
+	<table>
+		<tr>
+			<td>option</td>
+			<td>
+				<input type="checkbox" name="option" value="0" checked disabled="true"/> 0 : default - ID<br>
+				<input type="checkbox" name="option" value="1"/> 0x01 : Nickname<br>
+				<input type="checkbox" name="option" value="2"/> 0x02 : Input Type<br>
+				<input type="checkbox" name="option" value="4"/> 0x04 : Last Time
+			</td>
+		</tr>
+		<tr>
+			<td>delimiter1</td>
+			<td><input type="text" name="delimiter1" size="80"/></td>
+		</tr>
+		<tr>
+			<td>delimiter2</td>
+			<td><input type="text" name="delimiter2" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnGetPinIDList" onclick="apnGetPinIDList()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnUpdatePinLastTime</h3>
+
+<script type="text/javascript">
+function apnUpdatePinLastTime()
+{
+	var form = document.form_apnUpdatePinLastTime;
+	var userid = form.userid.value;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = result;
+		if(result == -1) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnUpdatePinLastTime(userid, callback);
+}
+</script>
+
+<form id="form_apnUpdatePinLastTime" name="form_apnUpdatePinLastTime" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnUpdatePinLastTime" onclick="apnUpdatePinLastTime()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnCheckPin</h3>
+
+<script type="text/javascript">
+function apnCheckPin()
+{
+	var form = document.form_apnCheckPin;
+	var pin1 = form.pin1.value;
+	var pin2 = form.pin2.value;
+	var minLen = form.minLen.value;
+	var maxLen = form.maxLen.value;
+	var option = sumCheckbox(form.option);
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = result;
+		if(result == -1) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnCheckPin(pin1, pin2, minLen, maxLen, option, callback);
+}
+</script>
+
+<form id="form_apnCheckPin" name="form_apnCheckPin" action="#">
+	<table>
+		<tr>
+			<td>pin1</td>
+			<td><input type="text" name="pin1" size="80"/></td>
+		</tr>
+		<tr>
+			<td>pin2</td>
+			<td><input type="text" name="pin2" size="80"/></td>
+		</tr>
+		<tr>
+			<td>minLen</td>
+			<td><input type="text" name="minLen" size="80"/></td>
+		</tr>
+		<tr>
+			<td>maxLen</td>
+			<td><input type="text" name="maxLen" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td>
+				<input type="checkbox" name="option" value="0" checked disabled="true"/> 0 : default - 숫자만, 패턴검사(3자리 이상 동일한 숫자, 연속 숫자)<br>
+				<input type="checkbox" name="option" value="1"/> 1 : 두 입력값이 동일한지 검사<br>
+				<input type="checkbox" name="option" value="2"/> 2 : 두 입력값이 동일하지 않은지 검사 (기존 핀, 변경할 핀 확인)
+			</td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnCheckPin" onclick="apnCheckPin()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnInitPin</h3>
+
+<script type="text/javascript">
+function apnInitPin()
+{
+	var form = document.form_apnInitPin;
+	var userid = form.userid.value;
+	var option = form.option.value;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = result;
+		if(!result) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnInitPin(userid, option, callback);
+}
+</script>
+
+<form id="form_apnInitPin" name="form_apnInitPin" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnInitPin" onclick="apnInitPin()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnInitRegist</h3>
+
+<script type="text/javascript">
+function apnInitRegist()
+{
+	var form = document.form_apnInitRegist;
+	var userid = form.userid.value;
+	var option = form.option.value;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = result;
+		if(!result) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnInitRegist(userid, option, callback);
+}
+</script>
+
+<form id="form_apnInitRegist" name="form_apnInitRegist" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnInitRegist" onclick="apnInitRegist()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnRegistPin</h3>
+
+<script type="text/javascript">
+var time2;
+function raFunc(callback, param)
+{
+	var form = document.form_apnRegistPin;
+	var ra_result = form.ra_result;
+	
+	ra_result.value = "id:" + param.id + "\n" + "deviceId:" + param.deviceId + "\n";
+	
+	var req= new XMLHttpRequest ();
+	var url = aRaPage;
+	url += "?commandType=new";
+	url += "&user_policy_type=104";
+	url += "&targetRA=2048";
+	url += "&user_public_or_private=" + aRaType;
+	url += "&user_id=" + param.deviceId;
+	url += "&real_id=" + param.id;
+	
+	req.open ("GET", url, false);
+	req.send (null);
+	
+	var res = eval (req.responseText);
+	
+	if (parseInt (res["code"]) == 0) {
+		
+		var refNum = res["refcode"];
+		var authCode = res["authcode"];
+		var name = res["name"];
+		var ssn = res["ssn"];
+		var userid = res["userid"];
+		var realid = res["realid"];
+		var check_real_id = res["check_real_id"];
+		var cert_status = res["cert_status"];
+		
+		ra_result.value += "[등록 결과]\n" + 
+			"refcode:" + refNum + "\n" +
+			"authcode:" + authCode + "\n" +
+			"name:" + name + "\n" +
+			"ssn:" + ssn + "\n" +
+			"userid(deviceId):" + userid + "\n" +
+			"realid(id):" + realid + "\n" +
+			"check_real_id(id):" + check_real_id + "\n" +
+			"cert_status:" + cert_status;
+		
+		time2 = new Date();
+		callback(refNum, authCode);
+	} else {
+		ra_result.value += "[등록 결과]\n" +
+			"code:" + res["code"] + "\n" +
+			"reason:" + res["reason"] + "\n" +
+			"moreInformation:" + res["moreinformation"] + "\n";
+	}
+}
+
+function apnRegistPin()
+{
+	var form = document.form_apnRegistPin;
+	var userid = form.userid.value;
+	var pin = form.pin.value;
+	var nickname = form.nickname.value;
+	var description = form.description.value;
+	var raCallback = raFunc;
+	var caType = form.caType.value;
+	var webCMPURL = form.webCMPURL.value;
+	var option = sumCheckbox(form.option);
+	var output = form.output;
+	
+	var time1 = new Date();
+	var callback = function(result) {
+		var time3 = new Date();
+		var time_ra = new Date(time2 - time1);
+		var time_result = new Date(time3 - time1);
+		
+		output.value = "RA 등록 시간: " + time_ra.getMinutes() + " 분 " + time_ra.getSeconds() + " 초\r\n"
+		output.value += "최종 등록 시간: " + time_result.getMinutes() + " 분 " + time_result.getSeconds() + " 초\r\n"
+		output.value += result;
+		
+		if(result != 0) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnRegistPin(userid, nickname, description, pin, raCallback, caType, webCMPURL, option, callback);
+}
+</script>
+
+<form id="form_apnRegistPin" name="form_apnRegistPin" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>pin</td>
+			<td><input type="text" name="pin" size="80"/></td>
+		</tr>
+		<tr>
+			<td>nickname</td>
+			<td><input type="text" name="nickname" size="80"/></td>
+		</tr>
+		<tr>
+			<td>description</td>
+			<td><input type="text" name="description" size="80"/></td>
+		</tr>
+		<tr>
+			<td>raCallback</td>
+			<td><input type="text" name="raCallback" size="80" disabled="true" value="function"/></td>
+		</tr>
+		<tr>
+			<td>caType</td>
+			<td><input type="text" name="caType" size="80"/></td>
+		</tr>
+		<tr>
+			<td>webCMPURL</td>
+			<td><input type="text" name="webCMPURL" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td>
+				<input type="checkbox" name="option" value="0" checked disabled="true"/> 0 : 기본값<br>
+				<input type="checkbox" name="option" value="1"/> 0x01 : nickname 서버로 전송<br>
+				<input type="checkbox" name="option" value="2"/> 0x02 : description 서버로 전송<br>
+				<input type="checkbox" name="option" value="4"/> 0x04 : 사용자 기기정보(getDeviceInfo) 서버로 전송<br>
+			</td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnRegistPin" onclick="apnRegistPin()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>ra_result</td>
+			<td><textarea name="ra_result" cols="80" style="height:220px"></textarea></td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="4"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnInitSession</h3>
+
+<script type="text/javascript">
+function apnInitSession()
+{
+	var form = document.form_apnInitSession;
+	var userid = form.userid.value;
+	var option = form.option.value;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = result;
+		if(!result) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnInitSession(userid, option, callback);
+}
+</script>
+
+<form id="form_apnInitSession" name="form_apnInitSession" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnInitSession" onclick="apnInitSession()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnSetNoDueDay</h3>
+
+<script type="text/javascript">
+function apnSetNoDueDay()
+{
+	var form = document.form_apnSetNoDueDay;
+	var userid = form.userid.value;
+	var time = form.time.value;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = result;
+		if(result != 0) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnSetNoDueDay(userid, time, callback);
+}
+</script>
+
+<form id="form_apnSetNoDueDay" name="form_apnSetNoDueDay" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>time</td>
+			<td>입력 포맷 : new Date().getTime() + (1000 * 60 * 60 * 24 * 날짜)<br>
+				날짜 입력 <input type="text" name="day" size="10"/>
+				<input type="button" value="자동 계산" onclick="this.form.time.value = new Date().getTime() + (1000 * 60 * 60 * 24 * this.form.day.value)"/>
+				<br>
+				<input type="text" name="time" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnSetNoDueDay" onclick="apnSetNoDueDay()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnAuthSession</h3>
+
+<script type="text/javascript">
+function renewFunc(callback)
+{
+	callback(0);
+}
+
+function apnAuthSession()
+{
+	var form = document.form_apnAuthSession;
+	var userid = form.userid.value;
+	var pin = form.pin.value;
+	var seqnum = form.seqnum.value;
+	var raCallback = renewFunc;
+	var caType = form.caType.value;
+	var webCMPURL = form.webCMPURL.value;
+	var option = sumCheckbox(form.option);
+	var output = form.output;
+	
+	var time1 = new Date();
+	var callback = function(result) {
+		var time2 = new Date();
+		var time_result = new Date(time2 - time1);
+		
+		output.value = "응답 시간: " + time_result.getMinutes() + " 분 " + time_result.getSeconds() + " 초\r\n"
+		output.value += result;
+		output.value += "\r\n";
+		output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+	}
+	
+	XCrypto.apnAuthSession(userid, pin, seqnum, raCallback, caType, webCMPURL, option, callback);
+}
+</script>
+
+<form id="form_apnAuthSession" name="form_apnAuthSession" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>pin</td>
+			<td><input type="text" name="pin" size="80"/></td>
+		</tr>
+		<tr>
+			<td>seqnum</td>
+			<td><input type="text" name="seqnum" size="80"/><br>* PKI 미연동 방식에서 apnSignPin 호출 시만 사용</td>
+		</tr>
+		<tr>
+			<td>raCallback</td>
+			<td><input type="text" name="raCallback" size="80" disabled="true" value="function"/></td>
+		</tr>
+		<tr>
+			<td>caType</td>
+			<td><input type="text" name="caType" size="80"/></td>
+		</tr>
+		<tr>
+			<td>webCMPURL</td>
+			<td><input type="text" name="webCMPURL" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td>
+				<input type="checkbox" name="option" value="0" checked disabled="true"/> 0 : 기본값<br>
+				<input type="checkbox" name="option" value="1"/> 0x01 : apnSignPin 호출 시 설정<br>
+				<input type="checkbox" name="option" value="2"/> 0x02 : 매번 인증서 갱신<br>
+			</td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnAuthSession" onclick="apnAuthSession()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="3"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnEndSession</h3>
+
+<script type="text/javascript">
+function apnEndSession()
+{
+	var form = document.form_apnEndSession;
+	var userid = form.userid.value;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = result;
+		if(result != 0) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	XCrypto.apnEndSession(userid, callback);
+}
+</script>
+
+<form id="form_apnEndSession" name="form_apnEndSession" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnEndSession" onclick="apnEndSession()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnSignPin</h3>
+
+<script type="text/javascript">
+function apnSignPin()
+{
+	var form = document.form_apnSignPin;
+	var userid = form.userid.value;
+	var pin = form.pin.value;
+	var plain = form.plain.value;
+	var option = sumCheckbox(form.option);
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = result;
+		if(!result) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnSignPin(userid, pin, plain, option, callback);
+}
+</script>
+
+<form id="form_apnSignPin" name="form_apnSignPin" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>pin</td>
+			<td><input type="text" name="pin" size="80"/><br>* PKI 방식만 사용</td>
+		</tr>
+		<tr>
+			<td>plain</td>
+			<td><input type="text" name="plain" size="80"/><br>* PKI 방식만 사용</td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td>
+				<input type="checkbox" name="option" value="0" checked disabled="true"/> 0x00000000 : 기본값<br>
+				<input type="checkbox" name="option" value="256"/> 0x00000100 : 출력 값을 Base64로<br>
+				<input type="checkbox" name="option" value="512"/> 0x00000200 : 서명 시간 추가 (SignedAttributes)<br>
+				<input type="checkbox" name="option" value="4096"/> 0x00001000 : 분리 서명 (No Content)<br>
+				<input type="checkbox" name="option" value="65536"/> 0x00010000 : No CMS<br>
+				<input type="checkbox" name="option" value="8388608"/> 0x00800000 : PKCS1<br>
+			</td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnSignPin" onclick="apnSignPin()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnDeletePin</h3>
+
+<script type="text/javascript">
+function apnDeletePin()
+{
+	var form = document.form_apnDeletePin;
+	var userid = form.userid.value;
+	var option = form.option.value;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = result;
+		if(result != 0) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnDeletePin(userid, option, callback);
+}
+</script>
+
+<form id="form_apnDeletePin" name="form_apnDeletePin" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnDeletePin" onclick="apnDeletePin()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnDeleteAllPin</h3>
+
+<script type="text/javascript">
+function apnDeleteAllPin()
+{
+	var form = document.form_apnDeleteAllPin;
+	var userid = form.userid.value;
+	var option = form.option.value;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = result;
+		if(result != 0) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnDeleteAllPin(userid, option, callback);
+}
+</script>
+
+<form id="form_apnDeleteAllPin" name="form_apnDeleteAllPin" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnDeleteAllPin" onclick="apnDeleteAllPin()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnChangePin</h3>
+
+<script type="text/javascript">
+function apnChangePin()
+{
+	var form = document.form_apnChangePin;
+	var userid = form.userid.value;
+	var oldPin = form.oldPin.value;
+	var newPin = form.newPin.value;
+	var option = form.option.value;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = result;
+		if(result != 0) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnChangePin(userid, oldPin, newPin, option, callback);
+}
+</script>
+
+<form id="form_apnChangePin" name="form_apnChangePin" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>oldPin</td>
+			<td><input type="text" name="oldPin" size="80"/></td>
+		</tr>
+		<tr>
+			<td>newPin</td>
+			<td><input type="text" name="newPin" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnChangePin" onclick="apnChangePin()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnReadDeviceInfoList</h3>
+
+<script type="text/javascript">
+function apnReadDeviceInfoList()
+{
+	var form = document.form_apnReadDeviceInfoList;
+	var userid = form.userid.value;
+	var listNumber = Number(form.listNumber.value);
+	var selectNumber = Number(form.selectNumber.value);
+	var option = form.option.value;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = JSON.stringify(result, null, '\t');
+		if(result === -1) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnReadDeviceInfoList(userid, listNumber, selectNumber, option, callback);
+}
+</script>
+
+<form id="form_apnReadDeviceInfoList" name="form_apnReadDeviceInfoList" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>listNumber</td>
+			<td><input type="text" name="listNumber" size="80"/></td>
+		</tr>
+		<tr>
+			<td>selectNumber</td>
+			<td><input type="text" name="selectNumber" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnReadDeviceInfoList" onclick="apnReadDeviceInfoList()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2" style="height: 300px;"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnReadDeviceInfo</h3>
+
+<script type="text/javascript">
+function apnReadDeviceInfo()
+{
+	var form = document.form_apnReadDeviceInfo;
+	var userid = form.userid.value;
+	var deviceid = form.deviceid.value;
+	var option = form.option.value;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = JSON.stringify(result, null, '\t');
+		if(result === -1) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnReadDeviceInfo(userid, deviceid, option, callback);
+}
+</script>
+
+<form id="form_apnReadDeviceInfo" name="form_apnReadDeviceInfo" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>deviceid</td>
+			<td><input type="text" name="deviceid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnReadDeviceInfo" onclick="apnReadDeviceInfo()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2" style="height: 200px;"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnDeleteDevice</h3>
+
+<script type="text/javascript">
+function apnDeleteDevice()
+{
+	var form = document.form_apnDeleteDevice;
+	var userid = form.userid.value;
+	var deviceid = form.deviceid.value;
+	var option = form.option.value;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = result;
+		if(result !== 0) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnDeleteDevice(userid, deviceid, option, callback);
+}
+</script>
+
+<form id="form_apnDeleteDevice" name="form_apnDeleteDevice" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>deviceid</td>
+			<td><input type="text" name="deviceid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnDeleteDevice" onclick="apnDeleteDevice()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnDeleteAllDevice</h3>
+
+<script type="text/javascript">
+function apnDeleteAllDevice()
+{
+	var form = document.form_apnDeleteAllDevice;
+	var userid = form.userid.value;
+	var option = form.option.value;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = result;
+		if(result !== 0) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnDeleteAllDevice(userid, option, callback);
+}
+</script>
+
+<form id="form_apnDeleteAllDevice" name="form_apnDeleteAllDevice" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnDeleteAllDevice" onclick="apnDeleteAllDevice()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnReadAuditInfoList</h3>
+
+<script type="text/javascript">
+function apnReadAuditInfoList()
+{
+	var form = document.form_apnReadAuditInfoList;
+	var userid = form.userid.value;
+	var listNumber = Number(form.listNumber.value);
+	var selectNumber = Number(form.selectNumber.value);
+	var serviceName = form.serviceName.value;
+	var operationName = form.operationName.value;
+	var requestDateFrom = form.requestDateFrom.value;
+	var requestDateTo = form.requestDateTo.value;
+	var responseCode = form.responseCode.value;
+	var option = form.option.value;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = JSON.stringify(result, null, '\t');
+		if(result === -1) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnReadAuditInfoList(userid, listNumber, selectNumber, serviceName, operationName, requestDateFrom, requestDateTo, responseCode, option, callback);
+}
+</script>
+
+<form id="form_apnReadAuditInfoList" name="form_apnReadAuditInfoList" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>listNumber</td>
+			<td><input type="text" name="listNumber" size="80"/></td>
+		</tr>
+		<tr>
+			<td>selectNumber</td>
+			<td><input type="text" name="selectNumber" size="80"/></td>
+		</tr>
+		<tr>
+			<td>serviceName</td>
+			<td><input type="text" name="serviceName" size="80"/></td>
+		</tr>
+		<tr>
+			<td>operationName</td>
+			<td><input type="text" name="operationName" size="80"/></td>
+		</tr>
+		<tr>
+			<td>requestDateFrom</td>
+			<td><input type="text" name="requestDateFrom" size="80"/></td>
+		</tr>
+		<tr>
+			<td>requestDateTo</td>
+			<td><input type="text" name="requestDateTo" size="80"/></td>
+		</tr>
+		<tr>
+			<td>responseCode</td>
+			<td><input type="text" name="responseCode" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnReadAuditInfoList" onclick="apnReadAuditInfoList()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2" style="height: 300px;"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>apnReadAuditInfo</h3>
+
+<script type="text/javascript">
+function apnReadAuditInfo()
+{
+	var form = document.form_apnReadAuditInfo;
+	var userid = form.userid.value;
+	var transactionid = form.transactionid.value;
+	var option = form.option.value;
+	var output = form.output;
+	
+	var callback = function(result) {
+		output.value = JSON.stringify(result, null, '\t');
+		if(result === -1) {
+			output.value += "\r\n";
+			output.value += "[" + XCrypto.getLastErrCode() + "]" + XCrypto.getLastErrMsg();
+		}
+	}
+	
+	XCrypto.apnReadAuditInfo(userid, transactionid, option, callback);
+}
+</script>
+
+<form id="form_apnReadAuditInfo" name="form_apnReadAuditInfo" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>transactionid</td>
+			<td><input type="text" name="transactionid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="apnReadAuditInfo" onclick="apnReadAuditInfo()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2" style="height: 280px;"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.common">
+	<!-- 페이지명 디비 조회 테스트 -->
+	<select id="findTableNameByUrl" resultType="map">
+		select menu_nm
+		from dvs_cmm_mt_menu
+		where menu_url = #{url}
+	</select>
+
+	<!-- 개인정보 식별여부 -->
+	<select id="selectPrvYn" resultType="map">
+		select case (prvc_idntf_yn) when 'Y' then 'Y' else 'N' end as prvc_idntf_yn
+		from dqvs.dvs_cmm_mt_menu
+		where menu_cd = #{menuCd}
+	</select>
+
+	<!-- 사용자 전환 리스트 -->
+	<select id="selectTrnsprtUserList" resultType="map">
+		select * from (
+			select
+				cmu.user_sn,
+				authrt_cd,
+				cmu.bzmn_sn,
+				cmptnc_zone_cd,
+				coalesce(cmsl.user_id, cmo."ci", '-') as user_id,
+				coalesce(cmsl.user_nm, cmo.user_nm, '-') as user_nm,
+				acnt_stts_cd,
+				aprv_stts_cd
+			from
+				dqvs.dvs_cmm_mt_user cmu
+			left join dqvs.dvs_cmm_mt_onepass cmo on cmu.user_sn = cmo.user_sn
+			left join dqvs.dvs_cmm_mt_sso cmsl on cmu.user_sn = cmsl.user_sn
+		) a
+		where user_sn IN (SELECT user_sn FROM dqvs.dvs_cmm_mt_sso)
+		OR user_sn IN (SELECT user_sn FROM dqvs.dvs_cmm_mt_onepass)
+		order by user_id
+	</select>
+
+	<!-- 인증서 등록 -->
+	<insert id="insertCert">
+		with max_sn as(
+		select coalesce(max(sn), 0) as sn from(
+			select
+				max(sn) as sn
+			from
+				dqvs.dvs_cmm_mt_cert
+			where
+				1 = 1
+				<choose>
+					<when test="sn != null and sn != ''">
+						and user_sn = #{sn}::numeric
+					</when>
+					<otherwise>
+						and user_sn = #{userSn}::numeric
+					</otherwise>
+				</choose>
+			group by user_sn, crtfct_se_cd
+			)a
+		)
+		INSERT INTO dqvs.dvs_cmm_mt_cert
+		(user_sn, crtfct_se_cd, crtfct_id, cert_yn, cert_dt, sn)
+		VALUES(
+		<choose>
+			<when test="sn != null and sn != ''">
+				#{sn}::numeric,
+			</when>
+			<otherwise>
+				#{userSn}::numeric,
+			</otherwise>
+		</choose>
+		#{crtfctSeCd}, #{subjectRDN}, #{certYn}, now()::timestamp, CAST((SELECT sn FROM max_sn) AS numeric) + 1)
+	</insert>
+</mapper>

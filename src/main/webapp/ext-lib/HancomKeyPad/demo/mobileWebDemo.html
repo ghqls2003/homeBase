@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<title>Xecure Virtual Keyboard Demo</title>
+	<meta charset="utf-8">
+	<!-- Zoom 지원 하지않도록 설정 -->
+ 	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+	<!-- 숫자의 특정 갯수 이상시 폰번호 인식을 제거하는 메타태그 -->
+	<meta name="format-detection" content="telephone=no">
+	<!-- XecureKeypad -->
+	<script src="../js/xkeypad_config.js"></script>
+	<script src="../js/xkeypad_mobile.js"></script>
+  	
+	<script type="text/JavaScript">
+   
+	// XKModule은 가상키패드를 연동하는 EditBox마다 생성해야 함
+	var gXKModuleArray = [new XKModule(), new XKModule()];
+
+	function showDeviceSize() {
+		alert('w:'+window.innerWidth+'/h:'+window.innerHeight);
+	}
+
+  	function login() {
+		var form = document.xkf;
+		var aIsE2E = form.isE2E.checked;
+
+		if (!aIsE2E) {
+			var inputText = 'password 1 : ' + gXKModuleArray[0].get_input() + "\n" + 'password 2 : ' + gXKModuleArray[1].get_input();
+			alert(inputText);
+		} else {
+			// 가상키패드 입력값 unpack을 위한 정보를 가져오는 함수 get_sessionInfo (unpack시 세가지 정보 필요함)
+			var info = gXKModuleArray[0].get_sessionInfo();
+			form.xksessionid1.value = info.sessionId;
+			form.xkindexed1.value = info.input;
+			form.xksectoken1.value = info.secToken;
+
+			info = gXKModuleArray[1].get_sessionInfo();
+			form.xksessionid2.value = info.sessionId;
+			form.xkindexed2.value = info.input;
+			form.xksectoken2.value = info.secToken;
+			
+			// if(form.userid.value == "" || form.userid.value == null) {
+			// 	alert("아이디를 입력해주세요");
+			// 	return;
+			// }
+			// else if(form.xkindexed1.value == "" || form.xkindexed1.value == null) {
+			// 	alert("패스워드가 입력되지 않았습니다.");
+			// 	return;
+			// }
+			form.submit();
+		}
+	}
+
+   	function closeKeypad() {
+		// 키패드가 출력되어있으면, 확인하여 키패드를 닫는다.
+  		if(gXKModuleArray[0].isOpen())
+			gXKModuleArray[0].close();
+
+		if(gXKModuleArray[1].isOpen())
+			gXKModuleArray[1].close();
+	}
+
+	function clickPwInput(index){
+		viewKeypad(index, document.querySelector('#userpasswd' + (index+1)));
+	}
+
+	function viewKeypad(index, aEditBox) {
+		var aXKModule = gXKModuleArray[index];
+ 		var form = document.xkf;
+		var aRet = 0;
+		var inputPreviewList = document.querySelectorAll('.keypad-preview li');
+
+		var aName = 'xk-pad' + index;
+		var aKeyType = getRadioValue('keyPadTypeSelect', ['qwertysmart', 'number']);
+		var aMaxInputSize = 20;
+		var aWidth = 100;
+		var aPositionInfo = { top: 10, left: null };
+		var aViewType = getRadioValue('viewType', ['half', 'normal']);
+		var aNumberKeyRowCount = Number(getRadioValue('numberKeyRowCount', ['2', '3', '4']));
+		var aCloseDelay = 300;
+		var aAutoKeyResize = form.autoKeyResize.checked;
+		var aIsE2E = form.isE2E.checked;
+		var aOnlyMobile = form.onlyMobile.checked;
+		var aHasPressEffect = form.hasPressEffect.checked;
+		
+		/**
+		 * --------------------------------------------------------------------
+		 * [EX #1] 인자를 객체로 묶어서 initialize 호출
+		 * --------------------------------------------------------------------
+		 * > v1.1.0.0부터 지원되는 호출 방법
+		 * > 객체 프로퍼티의 순서는 상관 없음 
+		 * --------------------------------------------------------------------
+		 * --------------- 필수로 넘겨줘야 하는 옵션 -------------
+		 * 1.  name              : 키패드 레이아웃 <div> id
+		 * 2.  editBox           : 키패드와 연동 되어 '*'가 표시 될 <input> 태그
+		 * 3.  keyType           : 키패드 자판 유형 ( 'qwertysmart' or 'number' )
+		 * ----------- default 값이 있어서 생략 가능한 옵션 -------------
+		 * 4.  maxInputSize      : 최대 입력길이 ( default: XKConfigMobile.maxInputSize )
+		 * 5.  width             : 키패드 넓이 ( 단위: %, default: 100 )
+		 * 6.  position          : 키패드 위치 정보 ( ex. var aPositionInfo = {top: 10, left: 10}, default: {top:0, left:0} )
+		 * 7.  viewType          : 키패드 출력 위치 ( 'half': 화면 최하단에 플로팅시켜 고정, 'normal': editBox 바로아래, default: 'normal' )
+		 * 8.  numberKeyRowCount : 숫자 키패드에서 숫자 키의 행 개수 ( 2 <= aNumberKeyRowCount <= 4, default: 2 )
+		 * 9.  closeDelay        : 키패드가 닫히는데 지연되는 시간 (단위: 밀리 세컨드)
+		 * 10. onInputChange 	 : 키패드로 입력하는 값이 변경될 때 실행되는 콜백 함수 ( default: 빈 함수 )
+		 * 11. onKeypadClose 	 : 키패드가 닫힐 때 실행되는 콜백 함수 ( default: 빈 함수 )
+		 * 12. autoKeyResize     : 키 사이즈를 화면 크기에 맞게 자동으로 조절할 지 여부 ( true/false, default: false )
+		 * 13. isE2E             : 서버와 E2E 통신 활성화 여부 ( true/false, default: true )
+		 * 14. onlyMobile		 : 모바일에서만 실행할지 여부 ( true/false, default: true )
+		 * 15. hasPressEffect	 : 키를 눌렀을 때의 음영효과 여부 ( true/false, default: true )
+		 */
+		aRet = aXKModule.initialize({
+			name               : aName,
+			editBox            : aEditBox,
+			keyType            : aKeyType,
+			maxInputSize       : aMaxInputSize,
+			width              : aWidth,
+			position           : aPositionInfo,
+			viewType           : aViewType, 
+			numberKeyRowCount  : aNumberKeyRowCount,
+			closeDelay         : aCloseDelay,
+			autoKeyResize      : aAutoKeyResize,
+			isE2E              : aIsE2E,
+			onlyMobile		   : aOnlyMobile,
+			hasPressEffect	   : aHasPressEffect,
+			onInputChange      : function (newLength) {
+				// Ex. 키패드 입력 길이가 최대 입력 길이가 됐을 때 키패드 닫기
+				if(newLength === aMaxInputSize && aXKModule.isOpend()) {
+  					aXKModule.close();
+				}
+			},
+			onKeypadClose      : function () {
+				// 키패드가 닫혔을 때 실행될 로직 작성
+			},
+		});
+		//--------------------------------------------------------------------
+
+		/**
+		 * --------------------------------------------------------------------
+		 * [EX #2] 인자를 콤마로 구분하여 initialize 호출
+		 * --------------------------------------------------------------------
+		 * > v1.1.0.0 이전의 initialize 호출 방법
+		 * > 인자의 순서가 중요함
+		 * > v1.1.0.0 이후의 키패드 JS 라이브러리에서도 이 호출 방법을 지원
+		 * --------------------------------------------------------------------
+		 */
+		// aRet = aXKModule.initialize(
+		// 	aName,               // 1. 키패드 레이아웃 <div> id
+		// 	aEditBox,            // 2. 키패드와 연동 되어 '*'가 표시 될 <input> 태그
+		// 	aKeyType,            // 3. 키패드 자판 유형 ( 'qwertysmart' || 'number' )
+		// 	aMaxInputSize,       // 4. 최대 입력길이 ( default: XKConfigMobile.maxInputSize )
+		// 	aWidth,              // 5. 키패드 넓이 ( 단위: %, default: 100 )
+		// 	aPositionInfo,       // 6. 키패드 위치 정보 ( ex. aPositionInfo = {top: 10, left: 10}, default: {top: 0, left: 0} )
+		// 	aViewType,           // 7. 키패드 출력 위치 ( 'half': 화면 최하단, 'normal': editBox 바로아래, default: 'normal' )
+		// 	aNumberKeyRowCount,  // 8. 숫자 키패드에서 숫자 키의 행 개수 ( 2 <= aNumberKeyRowCount <= 4, default: 2 )
+		// 	aAutoKeyResize,      // 9. 키 사이즈를 화면 크기에 맞게 자동으로 조절할 지 여부 ( true/false, default: false )
+		//	aIsE2E               // 10. 서버와 E2E 통신 활성화 여부 ( true/false, default: true )
+		// );
+
+		// // 키패드 닫힐 때 실행될 콜백함수 등록
+		// aXKModule.setCloseCallback(function() {
+		// 	console.log('close callback');
+		// });
+		// --------------------------------------------------------------------
+
+		if(aRet == -1)
+			alert("지원하지 않는 기기 입니다.");
+		
+		else if(aRet == -2)
+			alert("이미 키패드가 실행 중입니다.");
+	}
+
+	// 데모 전용 유틸리티
+	// 데모 유틸리티
+	// 라디오 버튼 입력값 가져오기
+	function getRadioValue(name, values) {
+		var btns = document.querySelectorAll('input[type=radio][name='+name+']');
+
+		for(var i = 0; i < btns.length; i++) {
+			for(var j = 0; j < values.length; j++) {
+				if(btns[i].value === values[j] && btns[i].checked) {
+					return values[j]
+				}
+			}
+		}
+	}
+
+   </script>
+</head>
+<body>
+	<legend>XecureKeypad E2E Mobile Web Version Sample.</legend>
+	<hr>
+	<p></p>
+	<form name="xkf" method="post" action="mobileWebLogin.jsp">
+		<label for="numberKeyRowCount">
+			<strong>numberKeyRowCount</strong>
+		</label>
+		<br>
+		<input type="radio" name="numberKeyRowCount" value="2">2
+		<input type="radio" name="numberKeyRowCount" value="3" checked>3
+		<input type="radio" name="numberKeyRowCount" value="4">4
+		<p></p>
+
+		<label for="viewType">
+			<strong>viewType</strong>
+		</label>
+		<br>
+		<input type="radio" name="viewType" value="half" checked>'half'
+		<input type="radio" name="viewType" value="normal">'normal'
+		<p></p>
+
+		<label for="type">
+			<strong>Select KeyPad Type</strong>
+		</label>
+		<br>
+		<input type="radio" name="keyPadTypeSelect" value="qwertysmart" checked>Qwertysmart</input>
+		<input type="radio" name="keyPadTypeSelect" value="number">Number</input>
+		<p></p>
+		
+		<label for="autoKeyResize">
+			<strong>autoKeyResize</strong>
+		</label>
+		<br>
+		<input type="checkbox" id="autoKeyResize" name="autoKeyResize">True</input>
+		<p></p>
+
+		<label for="isE2E">E2E 통신여부</label>
+		<input type="checkbox" id="isE2E" name="isE2E" checked>true</input>
+		<p></p>
+
+		<label for="onlyMobile">모바일에서만 실행</label>
+		<input type="checkbox" id="onlyMobile" name="onlyMobile" checked>true</input>
+		<p></p>
+
+		<label for="hasPressEffect">Key 음영효과 여부</label>
+		<input type="checkbox" id="hasPressEffect" name="hasPressEffect" checked>true</input>
+		<p></p>
+
+		<label for="id" z-index="111">Login ID</label>
+		<input type="text" name="userid" id="userid" title="id" value="softforumxk" onClick="closeKeypad();" />
+		<p></p>
+		
+		<label for="pass">Password 1</label>
+		<input type="password" title="password" readonly="true" name="userpasswd1" id="userpasswd1" size="25" onClick="clickPwInput(0);"/>
+		<input type="hidden" name="xksessionid1" id="xksessionid1" />
+		<input type="hidden" name="xksectoken1" id="xksectoken1" />
+		<input type="hidden" name="xkindexed1" id="xkindexed1" />	
+		<p></p>
+
+		<label for="pass">Password 2</label>
+		<input type="password" title="password" readonly="true" name="userpasswd2" id="userpasswd2" size="25" onClick="clickPwInput(1);" />  
+		<input type="hidden" name="xksessionid2" id="xksessionid2" />
+		<input type="hidden" name="xksectoken2" id="xksectoken2" />
+		<input type="hidden" name="xkindexed2" id="xkindexed2" />		
+		<p></p>
+
+		<input type="button" value="Log in" onClick="javascript:login();" />  
+	</form>
+	<br>
+</body>
+</html>

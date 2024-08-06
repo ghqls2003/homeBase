@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<title>브라우저 인증서 내보내기 페이지</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="cache-control" content="no-cache">
+
+	<!-- mobile setting start -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta http-equiv="Expires" content="-1">
+	<meta http-equiv="Pragma" content="no-cache">
+	<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+	
+	<link rel="stylesheet" href="css/common.css" type="text/css"/>
+	<!-- mobile setting end -->
+
+<script type="text/javascript">
+document.write("<script type=\"text/javascript\" src=\"" + "../anySign4PCInterface.js" + "?version=" + new Date().getTime() + "\"></scr"+"ipt>");
+</script>
+
+<!-- XecureKeypad -->
+<!--script src="../XecureKeypad/js/xkeypad_config.js"></script>
+<script src="../XecureKeypad/js/xkeypad_mobile.js"></script-->
+<!-- transkey -->
+<!--script type="text/javascript" src="../transkey_mobile/transkey.js"></script>
+<link rel="stylesheet" type="text/css" href="../transkey_mobile/transkey.css"/-->
+
+<script type="text/javascript">
+function getScript() {
+	var file = "js/export_relay.js";
+	$.getScript(file, function (data, textStatus, jqxhr) {
+		console.log(jqxhr.status);
+	});
+}
+
+$(document).ready(function() {
+	if (AnySignCheckMobile())
+		getScript();
+});
+
+</script>
+
+<body>
+<div id="hancomwith-div"></div>
+</body>
+</html>

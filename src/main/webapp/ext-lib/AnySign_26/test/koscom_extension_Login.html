@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>Login Test	</title>
+<meta charset="utf-8">
+</head>
+<!--script type="text/javascript" src="../xecureweb_up.js"></script-->
+<script type="text/javascript" src="../anySign4PCInterface.js"></script>
+<script language="javascript">
+
+function sign_callback(aSignData) {
+	document.xwup_signkorea_tek_form.result.value = aSignData;
+}
+	
+function sign_errCallback(aResult) {
+	alert("SignDataB64 Failed!\n[" + aResult.code + "]-" + aResult.msg);
+	return;
+}
+
+function sign()
+{
+	// 초기화
+	CertManX.UnSetMatchedContext(_doSetMatchedContext, null);
+
+	document.forms['xwup_signkorea_tek_form'].setAttribute('name', 'xwup_signkorea_tek_form');
+
+	CertManX.SetInputKeyHandler(document.xwup_signkorea_tek_form.signkorea_certpwd_tek_input1);
+
+	function _doSetMatchedContext () {
+		document.xwup_signkorea_tek_form.result.value = "";
+	
+		// 인증서 패스워드 입력 제한
+		CertManX.SetWrongPasswordLimit(1);
+		
+		// 인증서 선택 함수
+		function _getKey (aResult) {
+
+			if(aResult === "")
+				console.log("GetKeywordValue fail")
+			else
+			{
+				var success_callback = function (aResult) {
+
+					var _doSetMatchedFail = function () {
+						sign_callback(aResult);
+					}
+
+					CertManX.UnSetMatchedContext(_doSetMatchedFail, null);
+				}
+
+				var fail_callback = function (aResult) {
+
+					var _doSetMatchedFail = function () {
+						sign_errCallback(aResult);
+					}
+
+					CertManX.UnSetMatchedContext(_doSetMatchedFail, null);
+				}
+
+				console.log("GetKeywordValue get key : [" + aResult + "]");
+				CertManX.SetMatchedContextExtWithSignDataB64(document.xwup_signkorea_tek_form.id.value,"", document.xwup_signkorea_tek_form.id.value,aResult,256+0+1, success_callback, fail_callback);
+			}
+		}
+
+		CertManX.GetKeywordValue(_getKey);
+	}
+	
+	// 인증서 서명
+	function _doSign () {
+		CertManX.SignDataB64(document.xwup_signkorea_tek_form.signkorea_certpwd_tek_input1.value, document.xwup_signkorea_tek_form.id.value, 0, sign_callback); //use default error callback
+	}
+}
+
+PrintObjectTag();
+//var CertManX = XecureWeb.LoadExtension("SignKorea");
+var CertManX = AnySign.LoadExtension("SignKorea.js");
+</script>
+<body>
+	<form method=post id="xwup_signkorea_tek_form">
+	<table border=0 cellspacing=5>
+		<tr align=center>
+			<input type="text" name="id" style="width: 150px" value=""> : id<br>
+			<input type="text" name="pwd" style="width: 150px"> : pwd<br>
+			<input type="text" id="xwup_signkorea_certpwd_tek_input1" name="signkorea_certpwd_tek_input1" style="width: 150px" value=""> : cert pwd
+		</tr>			
+			<br><br>
+			<input name="signtest" onclick="sign()" type=button value="로그인" style="width: 200px"></td>
+		</tr>
+		<tr align=center>
+		<br><br>
+		서명 결과 : <br>
+		<textarea name="result" rows=10 cols=55"></textarea>
+		</tr>
+		</form>
+	</table>
+</body>
+</html>

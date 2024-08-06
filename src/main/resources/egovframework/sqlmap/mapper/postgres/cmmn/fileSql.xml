@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cmmn.file">
+
+	<!-- 파일 업로드 등록 -->
+	<insert id="insertFileUpload" parameterType="map" useGeneratedKeys="true" keyProperty="file_sn" keyColumn="file_sn">
+		INSERT INTO dvs_cmm_mt_file
+		(file_sn, actl_file_nm, atch_file_nm, atch_file_sz, atch_file_path, use_yn, rgtr_sn, reg_dt, reg_ip)
+		VALUES(nextval('dqvs.seq_cmmn_bs_file_info'),
+		#{actlFileNm}, #{atchFileNm}, #{atchFileSz}, #{atchFilePath}, #{useYn},
+		<choose>
+			<when test="rgtrSn != null and rgtrSn != ''">
+				#{rgtrSn}::numeric,
+			</when>
+			<when test="sn != null and sn != ''">
+				#{sn}::numeric,
+			</when>
+			<otherwise>
+				'0'::numeric,
+			</otherwise>
+		</choose>
+		 now()::timestamp, #{regIp});
+	</insert>
+	
+	<!-- 암호화 파일 업로드 등록 -->
+	<insert id="insertEncryptFileUpload" parameterType="map" useGeneratedKeys="true" keyProperty="file_sn" keyColumn="file_sn">
+		INSERT INTO dvs_cmm_mt_intrlcnsfile
+		(file_sn, actl_file_nm, atch_file_nm, atch_file_sz, atch_file_path, use_yn, rgtr_sn, reg_dt, reg_ip)
+		VALUES(nextval('dqvs.seq_cmmn_bs_file_info'),
+		#{actlFileNm}, #{atchFileNm}, #{atchFileSz}, #{atchFilePath}, #{useYn},
+		<choose>
+			<when test="rgtrSn != null and rgtrSn != ''">
+				#{rgtrSn}::numeric,
+			</when>
+			<when test="sn != null and sn != ''">
+				#{sn}::numeric,
+			</when>
+			<otherwise>
+				'0'::numeric,
+			</otherwise>
+		</choose>
+		 now()::timestamp, #{regIp});
+	</insert>
+	
+	<!-- 파일 삭제 -->
+	<delete id="deleteFile" parameterType="int">
+		<if test="fileSn != null and fileSn != ''">
+			DELETE FROM dqvs.dvs_cmm_mt_file
+			WHERE file_sn = CAST(#{fileSn} AS numeric)
+		</if>
+	</delete>
+
+	<select id="selectFileInfo" resultType="map">
+		<choose>
+			<when test='atchFileSn != null and atchFileSn != ""'>
+			select atch_file_nm
+			     , atch_file_path
+				 , actl_file_nm
+			  from dvs_cmm_mt_file
+			 where file_sn = #{atchFileSn}::numeric
+			</when>
+			<otherwise>
+			SELECT NULL as atch_file_nm
+			     , NULL as atch_file_path
+			     , NULL as actl_file_nm
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="selectFileInfo2" parameterType="paraMap" resultType="resultMap">
+		select file_sn as atch_file_sn
+		     , actl_file_nm as atch_file_nm 
+		     , atch_file_sz as atch_file_sz
+		     , atch_file_nm as real_file_nm
+		     , atch_file_path as atch_file_cours
+		 from dqvs.dvs_cmm_mt_file
+		 where file_sn = #{atchmnflSn}
+         and atch_file_nm = #{atchmnflNm}
+	</select>
+	
+	<select id="selectEncryptFileInfo" resultType="map">
+		SELECT 
+			atch_file_nm
+			, atch_file_path
+			, actl_file_nm 
+		FROM dvs_cmm_mt_intrlcnsfile
+		WHERE 1=1
+		<if test='atchFileSn != null and atchFileSn != ""'>
+			AND file_sn = #{atchFileSn}::numeric
+		</if>
+	</select>
+</mapper>

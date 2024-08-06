@@ -1,0 +1,101 @@
+@charset "EUC-KR";
+
+.highlight {
+	font-weight: bold;
+	color: #FF0000;
+}
+.k-grid td{
+	white-space : inherit !important;
+	text-align : center;
+} 
+/******************************************************** 공지사항 (Notice) ********************************************************/
+.search_top .selec_wr .mo_flex .selec_box {display: flex;}
+.search_top .selec_wr .mo_flex .selec_box .dropDownList{width: 150px; background-color: #fff; margin-right: 10px;}
+.search_top .selec_wr .mo_flex .selec_box .textBox{width: 300px;}
+.contBox .fileIco {margin-left: 47%;}
+
+@media (max-width: 480px) {
+    .search_top .selec_wr .mo_flex .selec_box {display: block; width: 100%;}
+    .search_top .selec_wr .mo_flex .selec_box .dropDownList{width: 100%; background-color: #fff;}
+    .search_top .selec_wr .mo_flex .selec_box .textBox{width: 100%; padding: 5px;}
+    .contBox .fileIco {margin-left: 38%;}
+}
+button.yellow_btn2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FED64C;
+    width: 45px;
+    height: 30px;
+    border-radius: 8px;
+    font-size: 1.6rem;
+    line-height: 13px;
+    color: #000;
+    font-weight: 300;
+    margin-left: -15px;
+}
+/******************************************************** 공지사항 상세정보 (Noticedetail) ********************************************************/
+
+table.boardTbl {width: 100%; border-top: 2px solid #000;}
+table.boardTbl tr {height: 50px; border-bottom: 1px solid #ddd;}
+table.boardTbl th {
+    width: 15%;
+    height: 45px;
+    color: #000;
+    border-bottom: 1px solid #fff;
+    background: #ededed;
+    font-size: 2rem;
+    font-weight: bold;
+}
+table.boardTbl td {
+    height: auto;
+    padding: 10px 20px 10px;
+    font-size: 1.6rem;
+    text-align: left;
+/*     color: #787878; */
+}
+/* 삭제 버튼 */
+button.red_btn{width: 152px;height: 54px;background-color: #ff3838;border-radius: 8px;font-size: 1.8rem;line-height: 26px;color: #fff;}
+button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff3838;}
+
+@media (max-width:420px) {
+    .sub03 .popup.com_address01 .box{height: 532px;}
+    button.red_btn{width: 123px !important; height: 42px;}
+}
+
+table.boardTbl td.date {width: 50%;}
+table.boardTbl th.viewNum {border: 1px solid #ddd; border-right: 1px solid #fff;}
+table.boardTbl .detailFileIco {display: flex; align-items: center;}
+table.boardTbl .point {cursor : pointer;}
+table.boardTbl td.content {height: 300px; font-size: 1.3em;}
+table.boardTbl td.prevNext {
+    font-weight: bold;
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.8rem;
+    color: #000;
+    background: #e9e9e9;
+    border: 1px solid #fff;
+}
+
+@media (max-width: 480px) {
+    table.boardTbl{width: 100%;}
+    table.boardTbl th {font-size: 1em; padding: 2px; width: 25%;}
+    table.boardTbl td {font-size: 0.8em; padding: 10px}
+    table.boardTbl td.content {height: 250px; font-size: 1em; display: flex; align-items: flex-start; }
+    table.boardTbl td.prevNext {font-size: 1em;}
+    table.boardTbl td.point {font-size: 0.8em;}
+}
+.cancel_btn{
+    width: 152px;
+    height: 54px;
+    background-color: #ff3838;
+    border-radius: 8px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    font-size: 1.8rem;
+    line-height: 26px;
+    color: #fff;	
+}

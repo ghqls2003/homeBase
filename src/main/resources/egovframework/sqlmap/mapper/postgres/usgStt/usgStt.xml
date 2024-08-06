@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="usgStt.usgStt">
+
+	<!-- 검증이력 조회 -->
+	<select id="historylistView" resultType="map">
+	SELECT 
+		T2.*
+	FROM (
+		SELECT
+			row_number() over (order by T.dmnd_dt desc) as rn,
+		    T.*
+		FROM
+		    (
+			 SELECT
+			    jj1.user_sn,
+				case
+					when jj1.user_sn = 0 then '비회원'
+					else jj3.sso_user_nm
+				end as sso_user_nm,
+				case
+					when jj1.user_sn = 0 then '비회원'
+					else jj3.sso_user_id
+				end as sso_user_id,
+			    user_ip_addr,
+	            coalesce(jj1.menu_cd,'-') as menu_cd ,
+	            jj1.dwnld_rsn,
+				coalesce(jj2.menu_nm,'-') as menu_nm ,
+	            SUBSTRING(dmnd_url_addr FROM '^(/[^/]+/[^/]+)') AS extracted_url,
+			    jj2.prvc_idntf_yn,
+			    dmnd_parameter,
+			    dmnd_url_addr,
+			    CASE
+				        WHEN dmnd_url_addr = '/ma/ssoLogin' THEN 'PTS 로그인'
+				        WHEN dmnd_url_addr = '/ma/logout' THEN 'PTS 로그아웃'
+    					WHEN dmnd_url_addr LIKE '%/ma/main%' THEN 'PTS 메인페이지'
+				        ELSE menu_nm
+				    END AS action_type,
+			    CASE
+			        WHEN dmnd_type_cd IN ('R', 'C', 'U', 'D') THEN
+			            CASE dmnd_type_cd
+			                WHEN 'R' THEN '조회'
+			                WHEN 'C' THEN '입력'
+			                WHEN 'U' THEN '수정'
+			                WHEN 'D' THEN '삭제'
+			                WHEN '파일 다운로드' then '파일 다운로드'
+			                when '화면 조회' then '화면 조회'
+			            END
+			        ELSE dmnd_type_cd
+			    END AS dmnd_type_cd,
+			    dwnld_rsn,
+			    req_hr,
+			    inq_nocs,
+			    TO_CHAR(dmnd_dt, 'YYYY-MM-DD HH24:MI:SS') AS dmnd_dt
+			FROM dqvs.dvs_cmm_hs_sys jj1
+			LEFT OUTER JOIN dqvs.dvs_cmm_mt_menu jj2 ON (jj1.menu_cd = jj2.menu_cd)
+			LEFT OUTER JOIN dqvs.v_intg_user_admin_info jj3 ON (jj1.user_sn = jj3.user_sn)
+			WHERE
+			jj1.dmnd_dt BETWEEN TO_DATE(#{startDt}, 'yyyy-mm-dd') AND TO_DATE(#{endDt}, 'yyyy-mm-dd')+1
+			<if test='useId != null and useId != "" and useId != "비회원"'>
+				AND LOWER(jj3.sso_user_id) LIKE '%' || LOWER(#{useId}) || '%'
+			</if>
+			<if test='useNm != null and useNm != "" and useNm != "비회원"'>
+	   			AND LOWER(jj3.sso_user_nm) LIKE '%' || LOWER(#{useNm}) || '%'
+			</if>
+	<!-- 		<if test='menuNm != null and menuNm != "" and menuCd != "" and menuCd != null'>
+	   			AND LOWER(jj2.menu_nm) LIKE '%' || LOWER(#{menuNm}) || '%'
+			</if> -->
+			<if test='useNm == "비회원" or useId == "비회원"'>
+			    AND jj1.user_sn = 0
+			</if>
+			<if test='typeCd != null and typeCd != ""'>
+				And dmnd_type_cd = #{typeCd}
+			</if>
+			<if test='prvcIdntfYn != null and prvcIdntfYn != "" and prvcIdntfYn == "Y"'>
+				and prvc_idntf_yn = #{prvcIdntfYn}
+			</if>
+			<if test='prvcIdntfYn != null and prvcIdntfYn != "" and prvcIdntfYn == "N"'>
+				and (prvc_idntf_yn != 'Y' or prvc_idntf_yn isnull)
+			</if>
+			<if test='downLoadYn != null and downLoadYn != "" and downLoadYn == "Y"'>
+				and dwnld_rsn is not null
+			</if>
+			<if test='downLoadYn != null and downLoadYn != "" and downLoadYn == "N"'>
+				and dwnld_rsn is null
+			</if>
+			<if test='menuCd != null and menuCd != "" and menuCd == "PTS"'>
+				and (jj1.menu_cd like 'PMNU%' or dmnd_url_addr = '/ma/ssoLogin' or dmnd_url_addr = '/ma/logout' or dmnd_url_addr = '/ma/main')
+			</if>
+			<if test='menuCd != null and menuCd != "" and menuCd == "OPS"'>
+				and jj1.menu_cd like 'OMNU%'
+			</if>
+			<if test='inqNocs != null and inqNocs != ""'>
+				and inq_nocs <![CDATA[>=]]> #{inqNocs}::numeric
+			</if>
+			<if test='chkExtWrk != null and chkExtWrk == "Y"'>
+				and (TO_CHAR(dmnd_dt, 'D') = '1' or TO_CHAR(dmnd_dt, 'D') = '7' or
+				((TO_CHAR(dmnd_dt, 'D') !='1' or TO_CHAR(dmnd_dt, 'D') !='7') and TO_CHAR(dmnd_dt, 'HH24:MI:SS') <![CDATA[>]]> '20' or TO_CHAR(dmnd_dt, 'HH24:MI:SS') <![CDATA[<]]> '08'))
+			</if>
+		    ) T
+		    where 1=1 
+				<if test='menuNm != null and menuNm != "" and menuCd != "" and menuCd != null'>
+<!-- 					AND LOWER(action_type) LIKE '%' || LOWER(#{menuNm}) || '%' -->
+					AND LOWER(action_type) = LOWER(#{menuNm})
+				</if>
+				ORDER BY rn asc
+				)T2
+		        <if test="take != '' and take != null">
+		          	WHERE RN <![CDATA[<=]]> (#{page} * #{take})
+		        </if>
+		        <if test="skip != '' and skip != null">
+		        	AND RN <![CDATA[>]]> #{skip}
+		        </if>
+	
+		</select>
+		
+		<select id="historylistViewCnt" resultType="int">
+			SELECT T2.*
+			FROM(
+				SELECT
+				        count(T.*)
+				    FROM
+				        (
+				        SELECT
+				    jj1.user_sn,
+				    jj1.menu_cd,
+				    jj2.prvc_idntf_yn,
+				    CASE
+				        WHEN dmnd_url_addr = '/ma/ssoLogin' THEN 'PTS 로그인'
+				        WHEN dmnd_url_addr = '/ma/logout' THEN 'PTS 로그아웃'
+				        WHEN dmnd_url_addr = '/ma/main'  THEN 'PTS 메인페이지'
+				        ELSE menu_nm
+				    END AS action_type
+				FROM dqvs.dvs_cmm_hs_sys jj1
+				LEFT OUTER JOIN dqvs.dvs_cmm_mt_menu jj2 ON (jj1.menu_cd = jj2.menu_cd)
+				LEFT OUTER JOIN dqvs.v_intg_user_admin_info jj3 ON (jj1.user_sn = jj3.user_sn)
+				WHERE
+				jj1.dmnd_dt BETWEEN TO_DATE(#{startDt}, 'yyyy-mm-dd') AND TO_DATE(#{endDt}, 'yyyy-mm-dd')+1
+				<if test='useId != null and useId != "" and useId != "비회원"'>
+					AND LOWER(jj3.sso_user_id) LIKE '%' || LOWER(#{useId}) || '%'
+				</if>
+<!-- 				<if test='menuNm != null and menuNm != "" and menuCd != "" and menuCd != null'> -->
+<!-- 		   			AND LOWER(jj2.menu_nm) LIKE '%' || LOWER(#{menuNm}) || '%' -->
+<!-- 				</if>			 -->
+				<if test='useNm != null and useNm != "" and useNm != "비회원"'>
+	   				AND LOWER(jj3.sso_user_nm) LIKE '%' || LOWER(#{useNm}) || '%'
+				</if>
+				<if test='useNm == "비회원" or useId == "비회원"'>
+				    AND jj1.user_sn = 0
+				</if>
+				<if test='typeCd != null and typeCd != ""'>
+					And dmnd_type_cd = #{typeCd}
+				</if>
+				<if test='prvcIdntfYn != null and prvcIdntfYn != "" and prvcIdntfYn == "Y"'>
+					and prvc_idntf_yn = #{prvcIdntfYn}
+				</if>
+				<if test='prvcIdntfYn != null and prvcIdntfYn != "" and prvcIdntfYn == "N"'>
+					and (prvc_idntf_yn != 'Y' or prvc_idntf_yn isnull)
+				</if>
+				<if test='downLoadYn != null and downLoadYn != "" and downLoadYn == "Y"'>
+					and dwnld_rsn is not null
+				</if>
+				<if test='downLoadYn != null and downLoadYn != "" and downLoadYn == "N"'>
+					and dwnld_rsn is null
+				</if>
+				<if test='menuCd != null and menuCd != "" and menuCd == "PTS"'>
+					and (jj1.menu_cd like 'PMNU%' or dmnd_url_addr = '/ma/ssoLogin' or dmnd_url_addr = '/ma/logout' or dmnd_url_addr = '/ma/main')
+				</if>
+				<if test='menuCd != null and menuCd != "" and menuCd == "OPS"'>
+					and jj1.menu_cd like 'OMNU%'
+				</if>
+				<if test='inqNocs != null and inqNocs != ""'>
+					and inq_nocs <![CDATA[>=]]> #{inqNocs}::numeric
+				</if>
+				<if test='chkExtWrk != null and chkExtWrk == "Y"'>
+					and (TO_CHAR(dmnd_dt, 'D') = '1' or TO_CHAR(dmnd_dt, 'D') = '7' or
+					((TO_CHAR(dmnd_dt, 'D') !='1' or TO_CHAR(dmnd_dt, 'D') !='7') and TO_CHAR(dmnd_dt, 'HH24:MI:SS') <![CDATA[>]]> '20' or TO_CHAR(dmnd_dt, 'HH24:MI:SS') <![CDATA[<]]> '08'))
+				</if>
+				ORDER BY dmnd_dt DESC
+		    ) T
+		    	where 1=1 
+					<if test='menuNm != null and menuNm != "" and menuCd != "" and menuCd != null'>
+<!-- 						AND LOWER(action_type) LIKE '%' || LOWER(#{menuNm}) || '%' -->
+						AND LOWER(action_type) = LOWER(#{menuNm})
+					</if>
+				)t2
+
+	</select>
+ 	<select id="usercnctListView" resultType="map">
+		SELECT T.*
+		FROM (
+			 SELECT
+			    dchs.menu_cd,
+			    dcmm.up_menu_cd,
+			    dcmm.menu_nm,
+			    DATE(dchs.dmnd_dt) AS dmnd_date,
+			    (
+			        SELECT menu_nm
+			        FROM dqvs.dvs_cmm_mt_menu DCMM2
+			        WHERE DCMM2.menu_cd = dcmm.up_menu_cd
+			    ) AS up_menu_name,
+			    COUNT(*) AS duplicate_count,
+			    SUM(COUNT(*)) OVER () AS total_duplicate_count,
+			    TO_CHAR(COUNT(*) / SUM(COUNT(*)) OVER () * 100, 'FM9990.00') || '%' AS ratio,
+			    ROW_NUMBER() OVER (ORDER BY DATE(dchs.dmnd_dt) DESC) AS seq_num
+			FROM
+			    dqvs.dvs_cmm_hs_sys AS dchs
+			JOIN dqvs.dvs_cmm_mt_menu AS dcmm ON dchs.menu_cd = dcmm.menu_cd
+			where 
+			  DATE(dchs.dmnd_dt) BETWEEN TO_DATE(#{startDt}, 'yyyy-mm-dd') AND TO_DATE(#{endDt}, 'yyyy-mm-dd')
+			 <if test='search_type_cd2 == "메뉴명"'>
+			   AND (menu_nm LIKE '%' || #{useId} || '%')
+			 </if>
+			 <if test='search_type_cd2 == "상위메뉴명"'>
+			   AND (
+			     SELECT menu_nm
+			     FROM dqvs.dvs_cmm_mt_menu DCMM2
+			     WHERE DCMM2.menu_cd = dcmm.up_menu_cd
+			   ) LIKE '%' || #{useId} || '%'
+			 </if>
+			GROUP BY
+			    dchs.menu_cd,
+			    dcmm.up_menu_cd,
+			    dcmm.menu_nm,
+			    dmnd_date
+			ORDER BY
+			    dmnd_date DESC
+		) T
+			<if test="take != '' and take != null">
+			  WHERE seq_num <![CDATA[<=]]> (#{page} * #{take})
+			</if>
+			<if test="skip != '' and skip != null">
+			AND seq_num <![CDATA[>]]> #{skip}
+			</if>
+ 	</select> 
+	
+	<select id="usercnctListViewCnt" resultType="int">
+			SELECT COUNT(*) AS total_count
+			FROM
+			(
+			SELECT
+			    T.*
+			FROM
+			    (
+				SELECT
+					  row_number() OVER (ORDER BY dchs.menu_cd DESC) AS rn,
+					  dchs.menu_cd,
+					  dcmm.up_menu_cd,
+					  dcmm.menu_nm,
+					  DATE(dchs.dmnd_dt) AS dmnd_date,
+					  (
+					    SELECT menu_nm
+					    FROM dqvs.dvs_cmm_mt_menu DCMM2
+					    WHERE DCMM2.menu_cd = dcmm.up_menu_cd
+					  ) AS up_menu_name,
+					  COUNT(*) AS duplicate_count,
+					  SUM(COUNT(*)) OVER () AS total_duplicate_count,
+					  COUNT(*) / SUM(COUNT(*)) OVER () AS ratio 
+					FROM
+					  dqvs.dvs_cmm_hs_sys AS dchs
+					JOIN dqvs.dvs_cmm_mt_menu AS dcmm ON dchs.menu_cd = dcmm.menu_cd
+					WHERE 
+					DATE(dchs.dmnd_dt) BETWEEN TO_DATE(#{startDt}, 'yyyy-mm-dd') AND TO_DATE(#{endDt}, 'yyyy-mm-dd')
+					<if test='search_type_cd2 == "메뉴명"'>
+					  AND (menu_nm LIKE '%' || #{useId} || '%')
+					</if>
+					<if test='search_type_cd2 == "상위메뉴명"'>
+					  AND (
+					    SELECT menu_nm
+					    FROM dqvs.dvs_cmm_mt_menu DCMM2
+					    WHERE DCMM2.menu_cd = dcmm.up_menu_cd
+			 		 ) LIKE '%' || #{useId} || '%'
+			</if>
+			GROUP BY
+			  dchs.menu_cd,
+			  dcmm.up_menu_cd,
+			  dcmm.menu_nm,
+			  dmnd_date
+			    ) T
+        	) AS CountQuery;
+
+ 	</select>
+ 	<select id="cnctHistListView" resultType="map">
+	SELECT
+	    T.*
+		FROM
+		    (  
+	     select
+			    ROW_NUMBER() OVER (ORDER BY  TO_CHAR(dchs.dmnd_dt, 'yyyy-mm-dd') desc) AS RN,
+			    TO_CHAR(dchs.dmnd_dt, 'yyyy-mm-dd') as dmnd_date,
+			    dcms.sso_user_id,
+			    dcms.sso_user_nm,
+			    dcmm.menu_nm,
+			    dcmm.up_menu_cd,
+			    COUNT(*) as menu_view_count
+			FROM
+			    dqvs.dvs_cmm_hs_sys AS dchs
+			JOIN dqvs.dvs_cmm_mt_menu AS dcmm 
+			ON dchs.menu_cd = dcmm.menu_cd
+			JOIN dqvs.v_intg_user_admin_info as dcms
+			ON dcms.user_sn = dchs.user_sn
+			where 
+					DATE(dchs.dmnd_dt) between TO_DATE(#{startDt},
+					'yyyy-mm-dd') and TO_DATE(#{endDt},
+					'yyyy-mm-dd')
+					 <if test='search_type_cd3 == "성명"'>
+						AND LOWER(dcms.sso_user_nm) LIKE '%' || LOWER(#{useId}) || '%'
+					 </if>		
+					 <if test='search_type_cd3 == "ID"'>
+						AND LOWER(dcms.sso_user_id) LIKE '%' || LOWER(#{useId}) || '%'
+					 </if>		
+			GROUP BY
+			    TO_CHAR(dchs.dmnd_dt, 'yyyy-mm-dd'),
+			    dcms.sso_user_id,
+			    dcmm.menu_nm,
+			    dcms.sso_user_nm,
+			    dcmm.up_menu_cd
+			ORDER BY
+			    rn asc
+			    ) T
+	        <if test="take != '' and take != null">
+	          WHERE RN <![CDATA[<=]]> (#{page} * #{take})
+	        </if>
+	        <if test="skip != '' and skip != null">
+	        AND RN <![CDATA[>]]> #{skip}
+	        </if>
+ 	</select>
+ 	
+ 	<select id="cnctHistListViewCnt" resultType="int">
+ 				SELECT COUNT(*) AS total_count
+			FROM
+					(
+					SELECT
+		    T.*
+		FROM
+		    (  
+	     select
+			    ROW_NUMBER() OVER (ORDER BY  TO_CHAR(dchs.dmnd_dt, 'yyyy-mm-dd') desc) AS RN,
+			    TO_CHAR(dchs.dmnd_dt, 'yyyy-mm-dd') as dmnd_date,
+			    dcms.sso_user_id,
+			    dcms.sso_user_nm,
+			    dcmm.menu_nm,
+			    dcmm.up_menu_cd,
+			    COUNT(*) as menu_view_count
+			FROM
+			    dqvs.dvs_cmm_hs_sys AS dchs
+			JOIN dqvs.dvs_cmm_mt_menu AS dcmm 
+			ON dchs.menu_cd = dcmm.menu_cd
+			JOIN dqvs.v_intg_user_admin_info as dcms
+			ON dcms.user_sn = dchs.user_sn
+			where 
+					DATE(dchs.dmnd_dt) between TO_DATE(#{startDt},
+					'yyyy-mm-dd') and TO_DATE(#{endDt},
+					'yyyy-mm-dd')
+					 <if test='search_type_cd3 == "성명"'>
+						AND LOWER(dcms.sso_user_nm) LIKE '%' || LOWER(#{useId}) || '%'
+					 </if>		
+					 <if test='search_type_cd3 == "ID"'>
+						AND LOWER(dcms.sso_user_id) LIKE '%' || LOWER(#{useId}) || '%'
+					 </if>		
+			GROUP BY
+			    TO_CHAR(dchs.dmnd_dt, 'yyyy-mm-dd'),
+			    dcms.sso_user_id,
+			    dcmm.menu_nm,
+			    dcms.sso_user_nm,
+			    dcmm.up_menu_cd
+			ORDER BY
+			    rn asc
+			    ) T
+		    		) AS CountQuery;
+ 	</select>
+ 	 	<select id="loginView" resultType="map">
+				SELECT *
+			FROM (
+			    SELECT
+			        T.*,
+			        ROW_NUMBER() OVER (ORDER BY cntn_dt DESC) AS seq_num
+			    FROM (
+			        SELECT
+			            dchl.cntn_dt,
+			            dchl.user_sn,
+			            dchl.cntn_ip_addr,
+			            dchl.cntn_mthd_cd,
+			            dchl.cntn_type_cd,
+			            dchl.lgn_type_cd,
+			            CASE WHEN dchl.cntn_type_cd = 'I' THEN '로그인' WHEN dchl.cntn_type_cd = 'O' THEN '로그아웃' ELSE '기타' END AS login_logout,
+			            dcmc.cd_nm,
+			            ds.sso_user_nm,
+			            ds.sso_user_id,
+			            COUNT(*) AS user_login_count
+			        FROM
+			            dqvs.dvs_cmm_hs_login AS dchl
+			        LEFT JOIN
+			            dqvs.dvs_cmm_mt_code AS dcmc ON dchl.lgn_type_cd = dcmc.cd
+			        LEFT JOIN
+			            dqvs.v_intg_user_admin_info AS ds ON dchl.user_sn = ds.user_sn
+			        WHERE
+			            dcmc.cd_group = 'lgn_type_cd'
+			            AND DATE(dchl.cntn_dt) BETWEEN TO_DATE(#{startDt}, 'yyyy-mm-dd') AND TO_DATE(#{endDt}, 'yyyy-mm-dd')
+			             <if test="search_type_cd != ''">
+			            	AND cntn_type_cd = #{search_type_cd}
+			            </if>
+			             <if test="search_type_cd2 != ''">
+							and cntn_mthd_cd = #{search_type_cd2}
+			            </if>
+			             <if test="useId != ''">
+							AND LOWER(sso_user_id) LIKE '%' || LOWER(#{useId}) || '%'
+			            </if>
+			        GROUP BY
+			           dchl.cntn_dt, ds.sso_user_id, dchl.user_sn,dchl.cntn_ip_addr, dchl.cntn_mthd_cd, dchl.cntn_type_cd, dchl.lgn_type_cd, login_logout, dcmc.cd_nm, ds.sso_user_nm
+			    ) T
+			) AS subquery
+			<if test="take != '' and take != null">
+			    WHERE seq_num <![CDATA[<=]]> (#{page} * #{take})
+			</if>
+			<if test="skip != '' and skip != null">
+			    AND seq_num <![CDATA[>]]> #{skip}
+			</if>;
+ 	</select>
+ 	
+ 	<select id="loginViewCnt" resultType="int">
+		SELECT COUNT(*) AS total_count
+			FROM
+			(
+			SELECT
+			    T.*
+			FROM
+			    (
+			        SELECT
+			            dchl.cntn_dt,
+			            dchl.user_sn,
+			            dchl.cntn_ip_addr,
+			            dchl.cntn_mthd_cd,
+			            dchl.cntn_type_cd,
+			            dchl.lgn_type_cd,
+			            CASE WHEN dchl.cntn_type_cd = 'I' THEN '로그인' WHEN dchl.cntn_type_cd = 'O' THEN '로그아웃' ELSE '기타' END AS login_logout,
+			            dcmc.cd_nm,
+			            ds.sso_user_nm,
+			            ds.sso_user_id,
+			            COUNT(*) AS user_login_count
+			        FROM
+			            dqvs.dvs_cmm_hs_login AS dchl
+			        LEFT JOIN
+			            dqvs.dvs_cmm_mt_code AS dcmc ON dchl.lgn_type_cd = dcmc.cd
+			        LEFT JOIN
+			            dqvs.v_intg_user_admin_info AS ds ON dchl.user_sn = ds.user_sn
+			        WHERE
+			            dcmc.cd_group = 'lgn_type_cd'
+			            AND DATE(dchl.cntn_dt) BETWEEN TO_DATE(#{startDt}, 'yyyy-mm-dd') AND TO_DATE(#{endDt}, 'yyyy-mm-dd')
+			             <if test="search_type_cd != ''">
+			            	AND cntn_type_cd = #{search_type_cd}
+			            </if>
+			             <if test="search_type_cd2 != ''">
+							and cntn_mthd_cd = #{search_type_cd2}
+			            </if>
+			             <if test="useId != ''">
+							AND LOWER(sso_user_id) LIKE '%' || LOWER(#{useId}) || '%'
+			            </if>
+			        GROUP BY
+			           dchl.cntn_dt, ds.sso_user_id, dchl.user_sn,dchl.cntn_ip_addr, dchl.cntn_mthd_cd, dchl.cntn_type_cd, dchl.lgn_type_cd, login_logout, dcmc.cd_nm, ds.sso_user_nm
+			    ) T
+		) AS CountQuery
+ 	</select>
+</mapper>

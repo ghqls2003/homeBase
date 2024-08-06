@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<queryMap id="eam-role">
+	
+	<select id="getRolesOfDept" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>ou=roles,ou=pmi,ou=#siteName#</base>
+		<filter>(&amp;(objectclass=eamRole)(eamRlurCode=#eamRlurCode#))</filter>
+		<attributes>
+			<attribute alias="roleCode">cn</attribute>
+		</attributes>
+	</select>
+	
+	<update id="removeDeptInRole" parameterClass="java.util.HashMap">
+		<base>cn=#roleCode#,ou=roles,ou=pmi,ou=#siteName#</base>
+		<attributes>
+			<attribute alias="eamRlurCode" action="DELETE">eamRlurCode</attribute>
+			<attribute alias="eamChangeUserId">eamChangeUserId</attribute>
+			<attribute alias="eamChangeDate">eamChangeDate</attribute>
+			<attribute alias="eamChangeTime">eamChangeTime</attribute>
+		</attributes>
+	</update>
+	
+</queryMap>

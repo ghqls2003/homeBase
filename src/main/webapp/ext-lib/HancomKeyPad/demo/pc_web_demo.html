@@ -1,0 +1,373 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta charset="utf-8" />
+	
+	<title>XecureKeypad Desktop E2E Demo.</title>
+
+  	<script src="../js/xkeypad_config.js"></script>
+	<script src="../js/xkeypad_desktop.js"></script>
+	<!-- <script src="../../pre_obfuscation/xkeypad_desktop.js"></script> -->
+
+	<script type="text/JavaScript">
+ 	
+	/* 전역 변수 */
+	var gTestMode = 2;
+	var gXKeypadE2EArray = new Array(2);
+	
+	gXKeypadE2EArray[0] = new XKeypadE2E();
+	gXKeypadE2EArray[1] = new XKeypadE2E();
+
+	/* login 함수 */
+ 	function login() {
+		var form = document.XKForm;
+		var aIsE2E = form.isE2E.checked;
+
+		if (!aIsE2E) {
+			alert('1:' + gXKeypadE2EArray[0].get_input() + '\n' + '2:' + gXKeypadE2EArray[1].get_input());
+			return;
+		} else {
+			var aXKInfo1 = gXKeypadE2EArray[0].get_sessionInfo();
+  		
+			form.xkinfosessionid.value = aXKInfo1.sessionId;
+			form.xkinfoindexed.value = aXKInfo1.input;
+			form.xkinfosectoken.value = aXKInfo1.secToken;
+			
+			var aXKInfo2 = gXKeypadE2EArray[1].get_sessionInfo();
+			
+			form.xkinfosessionid2.value = aXKInfo2.sessionId;
+			form.xkinfoindexed2.value = aXKInfo2.input;
+			form.xkinfosectoken2.value = aXKInfo2.secToken;
+			
+			if (form.userid.value == "" || form.userid.value == null) {
+				alert("아이디를 입력해주세요");
+				return;
+			} else if (form.xkinfoindexed.value == "" || form.xkinfoindexed.value == null) {
+				alert("패스워드가 입력되지 않았습니다.");
+				return;
+			}
+
+			form.submit();
+		}
+  	}
+
+	/* for test */
+	function changeOption(aOption) {
+		if(aOption != 'type') {
+			gTestMode = aOption;
+		}
+	}
+
+	/* for test 옵션별 분기 : 실제 사이트 적용시에는 실제 show 함수 호출 */
+ 	function showXecureKeypadTest(inputBox, index, maxInput) {
+		var name = "xk_dialog_" + index;
+		var spanId = name + "_button_span";
+		var aXKeypadE2ESpan = document.getElementById(spanId);
+		
+		// 디폴트 "마우스 입력" 버튼 클릭하여 키패드 출력
+		if(gTestMode == 1) 
+		{
+			showXecureKeypadNormal(inputBox, index, maxInput);
+		}
+		// <input> 태그 클릭하여 키패드 출력
+		else if(gTestMode == 2)
+		{
+			if(aXKeypadE2ESpan != null) // for test : option 1, 2 init 
+				aXKeypadE2ESpan.parentNode.removeChild(aXKeypadE2ESpan);
+			
+			showXecureKeypadNoButton (inputBox, index, maxInput);
+		}
+		// 커스텀 "마우스 입력" 버튼 클릭하여 키패드 출력
+		else if(gTestMode == 3)
+		{
+			showXecureKeypadCustomButton(inputBox, index, maxInput);	
+		}
+		
+	}
+	
+	function callback(result)
+	{
+		// result
+		// 닫기 : XK_CLOSE
+		// 입력완료 : XK_ENTER
+		
+		console.log(result);
+	}
+
+	/**
+	 * @case 1
+	 * - 디폴트 "마우스 입력" 버튼 생성
+	 * - 생성된 버튼 클릭하여 키패드 출력함
+	 */
+	function showXecureKeypadNormal (aInputBox, aIndex, aMaxInput)
+	{
+		var aXKDlgName = "xk_dialog_" + aIndex;
+		var aXKSpanID = aXKDlgName + "_button_span";
+		var aXKSpanLayer = document.getElementById(aXKSpanID);
+		var aKeyType = document.XKForm.XKTypeSelect.value;
+		var aIsE2E = document.XKForm.isE2E.checked;
+		var aLanguage = document.XKForm.language.value;
+		var aFunctionKeyButtonStyle = document.XKForm.functionKeyButtonStyle.value;
+		var aPositionInfo = {
+			option: 1, // 절대 위치 지정
+			left: 0,
+			top: 0,
+			appendTo: document.getElementsByTagName('body')[0],
+		};
+		var aMaxInputSize = aMaxInput === 0 ? XKConfigDesktop.maxInputSize : aMaxInput;
+		
+		if(aXKSpanLayer == null)
+		{
+			aXKSpanLayer = document.createElement("SPAN");
+			aXKSpanLayer.id = aXKSpanID ;
+			aInputBox.parentNode.appendChild(aXKSpanLayer);			
+		}
+
+		if(aLanguage !== 'default') {
+			gXKeypadE2EArray[aIndex].setLanguage(aLanguage);
+		}
+
+		if(aFunctionKeyButtonStyle !== 'default') {
+			gXKeypadE2EArray[aIndex].setFunctionKeyButtonStyle(aFunctionKeyButtonStyle);
+		}
+		
+		// 히든 인풋 기능 
+		// 사용하기 위해서는 string 문자열을 넣어주면 적용됨
+		// 값이 "" 일 경우 동작 안함
+		gXKeypadE2EArray[aIndex].setHiddenInput("");
+
+		gXKeypadE2EArray[aIndex].setStartCallback(function() {
+			console.log('start keypad');
+		});
+
+		gXKeypadE2EArray[aIndex].setInputChangeCallback(function(newLength) {
+			if(newLength === aMaxInputSize)
+                xkModule.enter();
+			console.log('keypad input change... ', newLength);
+		});
+
+		gXKeypadE2EArray[aIndex].initVirtualKeypadWithPosition(
+			aXKDlgName, 
+			aXKSpanLayer, 
+			aInputBox, 
+			130, // 버튼 출력시 inputBox width
+			aKeyType, // 키패드 자판 타입
+			aPositionInfo,
+			aMaxInput,
+			aIsE2E
+		);
+
+		gXKeypadE2EArray[aIndex].setCloseCallback(callback);
+	}
+	
+	/**
+	 * @case 2
+	 * - "마우스 입력" 버튼 생성하지 않고 키패드 출력함
+	 */
+	function showXecureKeypadNoButton (aInputBox, aIndex, aMaxInput)
+	{
+		var aPositionInfo = {
+			option : 2, //기본 출력 위치(input box 아래)기준으로 상대 위치
+			left : 50, 
+			top : 5
+		};
+
+		var aResult = 0;
+		var aXKDlgName = "xk_dialog_" + aIndex;
+		var aKeyType = document.XKForm.XKTypeSelect.value;
+		var aLanguage = document.XKForm.language.value;
+		var aFunctionKeyButtonStyle = document.XKForm.functionKeyButtonStyle.value;
+		var aIsE2E = document.XKForm.isE2E.checked;
+		var aMaxInputSize = aMaxInput === 0 ? XKConfigDesktop.maxInputSize : aMaxInput;
+		
+		gXKeypadE2EArray[aIndex].initVirtualKeypadWithPosition(
+			aXKDlgName, 
+			null, 
+			aInputBox, 
+			0, 
+			aKeyType, 
+			aPositionInfo, 
+			aMaxInput,
+			aIsE2E
+		);
+
+		
+		if(aLanguage !== 'default') {
+			gXKeypadE2EArray[aIndex].setLanguage(aLanguage);
+		}
+
+		if(aFunctionKeyButtonStyle !== 'default') {
+			gXKeypadE2EArray[aIndex].setFunctionKeyButtonStyle(aFunctionKeyButtonStyle);
+		}
+		
+		// 히든 인풋 기능 
+		// 사용하기 위해서는 string 문자열을 넣어주면 적용됨
+		// 값이 "" 일 경우 동작 안함
+		gXKeypadE2EArray[aIndex].setHiddenInput("");
+
+		gXKeypadE2EArray[aIndex].setStartCallback(function() {
+			console.log('start keypad');
+		});
+
+		gXKeypadE2EArray[aIndex].setInputChangeCallback(function(newLength) {
+			if(newLength === aMaxInputSize)
+                xkModule.enter();
+			console.log('keypad input change... ', newLength);
+		});
+
+		aResult = gXKeypadE2EArray[aIndex].createKeypad();
+		
+		if(aResult == -1) alert("Not Initialized!");
+		else if(aResult == -2) alert("키패드가 실행중입니다.");
+	}
+
+	/**
+	 * @case 3
+	 * - 커스텀 "마우스 입력" 버튼 생성
+	 * - 생성된 버튼 클릭하여 키패드 출력함
+	 */
+	function showXecureKeypadCustomButton (aInputBox, aIndex, aMaxInput)
+	{
+		var aPositionInfo = {
+			option : 2, //기본 출력 위치(input box 아래)기준으로 상대 위치
+			left : 50, 
+			top : 5
+		};
+
+		var aResult = 0;
+		var aXKDlgName = "xk_dialog_" + aIndex;
+		var aXKSpanID = aXKDlgName + "_button_span";
+		var aXKSpanLayer = document.getElementById(aXKSpanID);
+		var aKeyType = document.XKForm.XKTypeSelect.value;
+		var aIsE2E = document.XKForm.isE2E.checked;
+
+
+		if(aXKSpanLayer == null)
+		{
+			aXKSpanLayer = document.createElement("SPAN");
+			aXKSpanLayer.id = aXKSpanID ;
+			aInputBox.parentNode.appendChild(aXKSpanLayer);			
+		}	  
+		
+		var aXKButtonImg = document.getElementById(aXKDlgName+"_img");				
+		if(aXKButtonImg == null)
+		{
+			var aXKButtonImgLayer = document.createElement("IMG");
+		
+			aXKButtonImgLayer.src = "../img/button.png";	
+			aXKButtonImgLayer.setAttribute('id', aXKDlgName+"_img");
+			aXKButtonImgLayer.style.verticalAlign = 'middle';
+			
+			aXKSpanLayer.appendChild(aXKButtonImgLayer);
+		}
+			
+		gXKeypadE2EArray[aIndex].initVirtualKeypadWithPosition(
+			aXKDlgName, 
+			null, 
+			aInputBox, 
+			0, 
+			aKeyType, 
+			aPositionInfo,
+			aMaxInput,
+			aIsE2E
+		);
+
+		var showKeypad = function(e) {
+			aResult = gXKeypadE2EArray[aIndex].createKeypad();
+			
+			if(aResult == -1) alert("Not Initialized!");
+			else if(aResult == -2) alert("키패드가 실행중입니다.");
+		};
+		
+		if(aXKButtonImgLayer.addEventListener) {
+			aXKButtonImgLayer.addEventListener("click", showKeypad, false);
+		} else {
+			aXKButtonImgLayer.attachEvent("onclick", showKeypad);
+		}
+	}
+
+ 		
+	</script>
+</head>
+
+<body>
+<fieldset>
+	<legend>E2E PC Version Sample</legend>
+  	<p></p>
+  	<div class="xwup_common">
+		<form name="XKForm" method="post" action="pc_e2e_login.jsp">
+			<label for="type">Select KeyPad Type</label>
+			<select name="XKTypeSelect">
+				<option value="qwerty" checked>Qwerty</option>
+				<option value="number">Number</option>
+				<option value="letter">letter</option>
+				<option value="letteru">letteru</option>
+				<option value="letterl">letterl</option>
+			</select>
+			<p></p>
+			<label for="isE2E">E2E 통신여부</label>
+			<input type="checkbox" id="isE2E" name="isE2E" checked>true</input>
+			<p></p>
+			<label for="language">language</label>
+			<select name="language">
+				<option value="default" checked>default(kor)</option>
+				<option value="kor" checked>kor</option>
+				<option value="eng">eng</option>
+			</select>
+			<p></p>
+			<label for="functionKeyButtonStyle">functionKeyButtonStyle</label>
+			<select name="functionKeyButtonStyle">
+				<option value="default" checked>(default)config</option>
+				<option value="text" checked>text</option>
+				<option value="symbol">symbol</option>
+			</select>
+			<p></p>
+			<label for="type">Select Test Mode</label> <br>
+			<input type="radio" value="test1" name="XKOption" onclick="changeOption(1);" />마우스입력 버튼 출력<br>
+			<input type="radio" value="test3" name="XKOption" onclick="changeOption(2);" checked/>마우스입력버튼 사용안함<br>
+			<input type="radio" value="test2" name="XKOption" onclick="changeOption(3);" />마우스입력 버튼 custom 출력<br>
+			<p></p>
+
+			<div>
+				<table>
+					<tr>
+						<td>
+							<label for="id">Login ID</label> 
+							<input type="text" name="userid" id="userid" title="id" value="softforumxk" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="xwup-passwd-field">
+							<label for="pass">Password</label>
+							<input type="password" title="password" style="width:130px;" readonly name="userpasswd" id="userpasswd" size="20" onClick="javascript:showXecureKeypadTest(this, 0, 0);"/>  
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label for="pass">Password2</label>
+							<input type="password" title="password" style="width:130px;" readonly name="userpasswd2" id="userpasswd2" size="20" onClick="javascript:showXecureKeypadTest(this, 1, 0);"/>  
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="button" value="Login" onClick="javascript:login();" />
+						</td>
+					</tr>
+				</table>
+			</div>
+			<input type="hidden" name="xkinfosessionid" id="xkinfosessionid" />
+			<input type="hidden" name="xkinfosectoken" id="xkinfosectoken" />
+			<input type="hidden" name="xkinfoindexed" id="xkinfoindexed" />
+			
+			<input type="hidden" name="xkinfosessionid2" id="xkinfosessionid2" />
+			<input type="hidden" name="xkinfosectoken2" id="xkinfosectoken2" />
+			<input type="hidden" name="xkinfoindexed2" id="xkinfoindexed2" />
+		</form>
+		<p></p>
+ 	</div>
+</fieldset>
+</body>
+</html>

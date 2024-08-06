@@ -1,0 +1,136 @@
+package kr.or.kotsa.rims.sys.web;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
+import kr.or.kotsa.rims.cmmn.sys.service.CmmnAbstractServiceImpl;
+import kr.or.kotsa.rims.cmmn.sys.util.GenericExcelView;
+import kr.or.kotsa.rims.sys.service.SmsSendService;
+import kr.or.kotsa.rims.sys.service.impl.SmsSendDao;
+
+@Controller
+@RequestMapping("sys")
+public class SmsSendController extends CmmnAbstractServiceImpl{
+
+	@Autowired
+	private SmsSendService SmsSendService;
+	
+	@Autowired
+	private SmsSendDao SmsSendDao;
+
+	/**
+	 * sms발송 화면
+	 *
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping("/smsSend")
+	public ModelAndView viewSmsSend(@RequestParam Map<String, Object> paramsMap, ModelAndView mav,
+			HttpServletRequest request, HttpServletResponse response, HttpSession session) throws RimsException {
+		
+ 		String [] validAuth = {"Z01", "K01", "M01", "D01", "G01", "G02"};
+		if(Arrays.asList(validAuth).contains(getAuthrtCd())) {
+		} else {
+			mav.setViewName("redirect:/");
+		}		
+		return mav;
+	}
+
+	
+	// 권한
+	@RequestMapping("/smsSend/selectAuth")
+    @ResponseBody
+    public List<Map<String, Object>> selectAuth(@RequestBody Map<String, Object> paramsMap) {
+        return SmsSendService.selectAuth(paramsMap);
+    }
+	
+	
+	// 법인별 회사 목록
+	@RequestMapping("/smsSend/selectCrno")
+    @ResponseBody
+    public List<Map<String, Object>> selectCrno(@RequestBody Map<String, Object> paramsMap) {
+        return SmsSendService.selectCrno(paramsMap);
+    }
+	
+	// 문자 발송 이력 그리드
+	@PostMapping("/smsSend/selectSmsSendInfo")
+	@ResponseBody
+	public Map<String, Object> selectSmsSendInfo(@RequestBody Map<String, Object> paramsMap){
+		return SmsSendService.selectSmsSendInfo(paramsMap);
+	}
+	
+	// 수신자 목록 그리드
+	@PostMapping("/smsSend/selectReceiverList")
+	@ResponseBody
+	public Map<String, Object> selectReceiverList(@RequestBody Map<String, Object> paramsMap){
+		return SmsSendService.selectReceiverList(paramsMap);
+	}
+	
+	// 개별 발송 그리드
+	@PostMapping("/smsSend/selectIndivReceiverList")
+	@ResponseBody
+	public Map<String, Object> selectIndivReceiverList(@RequestBody Map<String, Object> paramsMap){
+		return SmsSendService.selectIndivReceiverList(paramsMap);
+	}
+	
+	// 그룹 발송 그리드
+	@PostMapping("/smsSend/selectGroupReceiverList")
+	@ResponseBody
+	public Map<String, Object> selectGroupReceiverList(@RequestBody Map<String, Object> paramsMap){
+		return SmsSendService.selectGroupReceiverList(paramsMap);
+	}
+	
+	//문자발송
+	@RequestMapping(value = "/smsSend/insertSendMsg")
+	@ResponseBody
+	public Map<String, Object> insertSendMsg(@RequestBody Map<String, Object> paramsMap) {
+		paramsMap.put("userSn", getUserSn());
+		paramsMap.put("userIp", getClientIP());
+		return SmsSendService.insertSendMsg(paramsMap);
+	}
+	
+	/**
+     * 문자발송 이력 엑셀다운로드
+     * @param
+     * @return
+     * @throws RimsException
+     */
+	@PostMapping("/smsSend/excelDown")
+    public GenericExcelView excelDown(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
+                                      HttpServletRequest request, HttpServletResponse response) throws RimsException {
+
+		String fileName = "smsSend" + (new java.text.SimpleDateFormat("yyyyMMddHHmmss")).format(new java.util.Date());
+        String colName[] = {"순번", "내용", "발송요청일", "발송일", "수신자명", "연락처"};
+        String valName[] = {"rn", "cn", "sndng_dt", "sndng_rsvt_dt", "rcvr", "rcvr_telno"};
+
+
+        List<Map<String, Object>> colValue = SmsSendDao.selectSmsSendInfo(paramsMap);
+		int total = SmsSendDao.selectSmsSendInfoCnt(paramsMap);
+
+        modelMap.put("excelName", fileName);
+        modelMap.put("colName", colName);
+        modelMap.put("valName", valName);
+        modelMap.put("colValue", colValue);
+        paramsMap.put("total", total);
+
+        return new GenericExcelView();
+    }
+	
+
+}

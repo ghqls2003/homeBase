@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<queryMap id="login">
+	
+	<select id="getUser" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>uid=#userId#,ou=people,ou=#siteName#</base>
+		<attributes>
+			<attribute alias="ID">uid</attribute>
+			<attribute alias="NAME">userFullName</attribute>
+			<attribute alias="EMP_NO">empNumber</attribute>
+			<attribute alias="USER_STATUS">status</attribute>
+			<attribute alias="USER_PASSWORD">eamPassword</attribute>
+			<attribute alias="PASSWORD_MISMATCH_COUNT">eamDummy2</attribute>
+			<attribute alias="LAST_CHANGE_PASSWORD_TIME">eamLastChangePwTime</attribute>
+			<attribute alias="LAST_LOGIN_TIME">eamLastLoginTime</attribute>
+			<attribute alias="USER_POLICY_CODE">eamUrpyCode</attribute>
+			<attribute alias="SSN">resiNumber</attribute>
+			<attribute alias="DEPT_CODE">ouCode</attribute>
+			<attribute alias="DEPT_NAME">ou</attribute>
+			<attribute alias="POSITION">position</attribute>
+			<attribute alias="DUMMY_1">eamDummy1</attribute>
+			<attribute alias="DUMMY_3">eamDummy3</attribute>
+			<attribute alias="DUMMY_4">eamDummy4</attribute>
+			<attribute alias="DUMMY_5">eamDummy5</attribute>
+		</attributes>
+	</select>
+	
+	<select id="getUserByDn" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>ou=people,ou=#siteName#</base>
+		<filter>(&amp;(objectclass=eamUser)(cn=#dn#))</filter>
+		<attributes>
+			<attribute alias="ID">uid</attribute>
+			<attribute alias="NAME">userFullName</attribute>
+			<attribute alias="EMP_NO">empNumber</attribute>
+			<attribute alias="USER_STATUS">status</attribute>
+			<attribute alias="POLICY_OID">eamPolicyOid</attribute>
+			<attribute alias="PASSWORD_MISMATCH_COUNT">eamDummy2</attribute>
+			<attribute alias="LAST_CHANGE_PASSWORD_TIME">eamLastChangePwTime</attribute>
+			<attribute alias="LAST_LOGIN_TIME">eamLastLoginTime</attribute>
+			<attribute alias="USER_POLICY_CODE">eamUrpyCode</attribute>
+			<attribute alias="SSN">resiNumber</attribute>
+			<attribute alias="DEPT_CODE">ouCode</attribute>
+			<attribute alias="DEPT_NAME">ou</attribute>
+			<attribute alias="POSITION">position</attribute>
+			<attribute alias="DUMMY_1">eamDummy1</attribute>
+			<attribute alias="DUMMY_3">eamDummy3</attribute>
+			<attribute alias="DUMMY_4">eamDummy4</attribute>
+			<attribute alias="DUMMY_5">eamDummy5</attribute>
+		</attributes>
+	</select>
+	
+	<select id="getSiteDefaultPolicyCode" parameterClass="String" resultClass="java.util.HashMap">
+		<base>ou=#siteName#</base>
+		<attributes>
+			<attribute alias="SITE_POLICY_CODE">eamUrpyCode</attribute>
+		</attributes>
+	</select>
+	
+	<select id="getPolicy" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>cn=#policyCode#,ou=userpolicies,ou=#siteName#</base>
+		<attributes>
+			<attribute alias="POLICY_CODE">cn</attribute>
+			<attribute alias="SESSION_VALIDATE">eamSessionValidate</attribute>
+			<attribute alias="PASSWORD_VALIDATE">eamPasswdValidate</attribute>
+			<attribute alias="PASSWORD_MISMATCH_ALLOW">eamPasswdMismatchAllow</attribute>
+			<attribute alias="PASSWORD_HISTORY_SAVE">eamPasswdHistorySave</attribute>
+			<attribute alias="PASSWORD_CHANGE_WARNING">eamPasswdChangeWarn</attribute>
+			<attribute alias="PASSWORD_MIN_LENGTH">eamPasswdMinLength</attribute>
+			<attribute alias="POLICY_NAME">eamName</attribute>
+			<attribute alias="ROLE_PRIORITY">eamRolePriority</attribute>
+			<attribute alias="IP_ALLOW">eamIpAllow</attribute>
+			<attribute alias="IP_ALLOW_FLAG">eamIpAllowFlag</attribute>
+			<attribute alias="IP_ALLOW_MASK">eamIpAllowMask</attribute>
+			<attribute alias="POLICY_STATUS">eamStatus</attribute>
+		</attributes>
+	</select>
+<!--
+	<select id="getPolicy" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>ou=userpolicies,ou=#siteName#</base>
+		<filter>(&amp;(objectclass=eamUrpy)(cn=#policyCode#))</filter>
+		<attributes>
+			<attribute alias="POLICY_CODE">cn</attribute>
+			<attribute alias="SESSION_VALIDATE">eamSessionValidate</attribute>
+			<attribute alias="PASSWORD_VALIDATE">eamPasswdValidate</attribute>
+			<attribute alias="PASSWORD_MISMATCH_ALLOW">eamPasswdMismatchAllow</attribute>
+			<attribute alias="PASSWORD_HISTORY_SAVE">eamPasswdHistorySave</attribute>
+			<attribute alias="PASSWORD_CHANGE_WARNING">eamPasswdChangeWarn</attribute>
+			<attribute alias="PASSWORD_MIN_LENGTH">eamPasswdMinLength</attribute>
+			<attribute alias="POLICY_NAME">eamName</attribute>
+			<attribute alias="ROLE_PRIORITY">eamRolePriority</attribute>
+			<attribute alias="IP_ALLOW">eamIpAllow</attribute>
+			<attribute alias="IP_ALLOW_FLAG">eamIpAllowFlag</attribute>
+			<attribute alias="IP_ALLOW_MASK">eamIpAllowMask</attribute>
+			<attribute alias="POLICY_STATUS">eamStatus</attribute>
+		</attributes>
+	</select>
+-->
+	<select id="getApplicationInfo" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>ou=applications,ou=pmi,ou=#siteName#</base>
+		<filter>(&amp;(objectclass=eamAppl))</filter>
+		<attributes>
+			<attribute alias="POLICY_CODE">cn</attribute>
+			<attribute alias="SESSION_VALIDATE">eamSessionValidate</attribute>
+			<attribute alias="PASSWORD_VALIDATE">eamPasswdValidate</attribute>
+			<attribute alias="PASSWORD_MISMATCHALLOW">eamPasswdMismatchAllow</attribute>
+			<attribute alias="PASSWORD_HISTORY_SAVE">eamPasswdHistorySave</attribute>
+			<attribute alias="PASSWORD_CHANGE_WARNING">eamPasswdChangeWarn</attribute>
+			<attribute alias="PASSWORD_MIN_LENGTH">eamPasswdMinLength</attribute>
+			<attribute alias="POLICY_NAME">eamName</attribute>
+			<attribute alias="ROLE_PRIORITY">eamRolePriority</attribute>
+			<attribute alias="IP_ALLOW">eamIpAllow</attribute>
+			<attribute alias="IP_ALLOW_FLAG">eamIpAllowFlag</attribute>
+			<attribute alias="IP_ALLOW_MASK">eamIpAllowMask</attribute>
+			<attribute alias="POLICY_STATUS">eamStatus</attribute>
+		</attributes>
+	</select>
+	
+	<select id="getPasswordMismatchAllow" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>cn=#userPolicyCode#,ou=userpolicies,ou=#siteName#</base>
+		<attributes>
+			<attribute alias="PASS_MISMATCH_ALLOW">eamPasswdMismatchAllow</attribute>
+			<attribute alias="SESSION_VALIDATE">eamSessionValidate</attribute>
+		</attributes>
+	</select>
+	
+	<!-- attribute의 action은 ADD/REPLACE/DELETE 중 하나 -->
+	<update id="increasePasswordMismatch" parameterClass="java.util.HashMap">
+		<base>uid=#userId#,ou=people,ou=#siteName#</base>
+		<attributes>
+			<attribute action="REPLACE" alias="userStatus">status</attribute>
+			<attribute action="REPLACE" alias="passwordMismatchCount">eamDummy2</attribute>
+		</attributes>
+	</update>
+	
+	<!-- attribute의 action은 ADD/REPLACE/DELETE 중 하나 -->
+	<update id="modifyUserAccessInfo" parameterClass="java.util.HashMap">
+		<base>uid=#userId#,ou=people,ou=#siteName#</base>
+		<attributes>
+			<attribute action="REPLACE" alias="passwordMismatchCount">eamDummy2</attribute>
+			<attribute action="REPLACE" alias="dummy3">eamDummy3</attribute>
+			<attribute action="REPLACE" alias="lastLoginTime">eamLastLoginTime</attribute>
+			<attribute action="REPLACE" alias="userIp">eamLastLoginIp</attribute>
+			<attribute action="REPLACE" alias="changeUserId">sidoChangeUserId</attribute>
+			<attribute action="REPLACE" alias="changeDate">sidoChangeDate</attribute>
+			<attribute action="REPLACE" alias="changeTime">sidoChangeTime</attribute>
+		</attributes>
+	</update>
+	
+</queryMap>

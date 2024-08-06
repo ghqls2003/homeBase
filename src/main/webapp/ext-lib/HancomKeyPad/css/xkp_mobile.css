@@ -1,0 +1,663 @@
+/**
+ * XecureKeypad Mobile Web
+ * @version 1.5.0.6
+ * @release 2022-12-13
+ */
+@charset "utf-8";
+
+/* iPhone 글자크기 자동조정 방지 */
+html{-webkit-text-size-adjust:100%;}
+
+/* 배포 코드 */
+.xkp_ui_qwerty,
+.xkp_ui_qwerty * { -moz-box-sizing: border-box; box-sizing: border-box; }
+
+.xkp_ui_qwerty div,
+.xkp_ui_qwerty ul,
+.xkp_ui_qwerty li,
+.xkp_ui_qwerty table,
+.xkp_ui_qwerty th,
+.xkp_ui_qwerty td {margin:0;padding:0}
+.xkp_ui_qwerty body{-webkit-text-size-adjust:none}
+.xkp_ui_qwerty img{border:0;vertical-align:top}
+.xkp_ui_qwerty ul,.xkp_ui_qwerty li{list-style:none}
+.xkp_ui_qwerty em{font-style:normal;font-weight:normal}
+.xkp_ui_qwerty table{border-collapse:collapse;border-spacing:0}
+.xkp_ui_qwerty{margin:0;padding:5px 2px 3px;border-top: 1px solid #cfcdcd;border-bottom: 1px solid #b4b4b4;background-color:#dbdde2;font-size:20px}
+.xkp_ui_qwerty table{width:100%;table-layout:fixed}
+.xkp_ui_qwerty td{padding:0 1px 3px;vertical-align:middle}
+
+.xkp_ui_qwerty .xkp_dummy{display:inline-block;height:100%;vertical-align:middle}
+.xkp_ui_qwerty .xkp_ui_tb{display:table;width:100%;table-layout:fixed}
+.xkp_ui_qwerty .xkp_ui_tb .xkp_ui_cell.xkp_first{padding-right:2px}
+.xkp_ui_qwerty .xkp_ui_tb .xkp_ui_cell.xkp_pad_n{padding:0}
+.xkp_ui_qwerty .xkp_ui_cell{display:table-cell;vertical-align:middle}
+
+/* [ Qwerty & Number ] Common Border Style */
+.xkp_ui_qwerty a.xkqwerty,
+.xkp_ui_qwerty a.xkp_key2,
+.xkp_ui_qwerty a.xkp_key3,
+.xkp_ui_qwerty a.xkp_key4 { border-width: 1px; border-style: solid; border-radius: 3px; -webkit-tap-highlight-color: rgba(0,0,0,0) !important;}
+
+/* [ Qwerty ] 0 ~ 9 */
+.xkp_ui_qwerty a.xkqwerty { background-color: #f9f9f9; border-color: #cdced0; }
+/* [ Qwerty & Number ] Upper/Lower Case Character & Number & Symbol On/Off */
+.xkp_ui_qwerty a.xkp_key2{ background-color: #ffffff;  border-color: #cdced0; }
+/* [ Qwerty & Number ] Capslock & Refresh & Symbol On/Off & Space & Backspace */
+.xkp_ui_qwerty a.xkp_key3 { background-color: #262d39; border-color: #565D69; }
+/* [ Qwerty & Number ] Enter */
+.xkp_ui_qwerty a.xkp_key4 { background-color: #126bd8; }
+
+/* [ Qwerty ] 0 ~ 9 */
+.xkp_ui_qwerty.has_press_effect a.xkqwerty:active { background-color: #AFB2B8; border-color: #9CA1AA; }
+/* [ Qwerty & Number ] Upper/Lower Case Character & Number & Symbol On/Off */
+.xkp_ui_qwerty.has_press_effect a.xkp_key2:active{ background-color: #AFB2B8; border-color: #9CA1AA; }
+/* [ Qwerty & Number ] Capslock & Refresh & Symbol On/Off & Space & Backspace */
+.xkp_ui_qwerty.has_press_effect a.xkp_key3:active{ background-color: #AFB2B8; border-color: #9CA1AA; }
+/* [ Qwerty & Number ] Enter */
+.xkp_ui_qwerty.has_press_effect a.xkp_key4:active{ background-color: #AFB2B8; border-color: #9CA1AA; }
+
+/****************************
+    스프라이트 이미지 설정
+*****************************/
+.xkp_ui_qwerty em{display:inline-block;overflow:hidden;color:transparent;white-space:nowrap;vertical-align:top;letter-spacing:-5px}
+
+/****************************
+       버튼 기본 스타일
+*****************************/
+/* [ Qwerty & Number ] Common */
+.xkp_ui_qwerty a,
+.xkp_ui_qwerty span {display:block; position:relative; text-align:center; height: 40px;}
+.xkp_ui_qwerty em {width:21px;height:29px;background:url(../img/sp_xkp_white.png) no-repeat;}
+.xkp_ui_qwerty a { padding-top: 5px; }
+.xkp_ui_qwerty span { background:none;line-height:30px;vertical-align:middle; padding-top: 3px;}
+.xkp_ui_qwerty span img{vertical-align:middle; width: 18px; height: 18px;}
+/* [ Number ] */
+.xkp_ui_qwerty.xkp_ui_number a,
+.xkp_ui_qwerty.xkp_ui_number span { height: 50px; }
+.xkp_ui_qwerty.xkp_ui_number a { padding-top:10px; }
+.xkp_ui_qwerty.xkp_ui_number span { padding-top: 7px; }
+/* [ Qwerty & Number ] Refresh Key & Enter Key */
+.xkp_ui_qwerty.ko .xkp_m106,
+.xkp_ui_qwerty.ko .xkp_m109,
+.xkp_ui_qwerty.ko2 .xkp_m106,
+.xkp_ui_qwerty.ko2 .xkp_m109{width:44px}
+/* [ Qwerty & Number ] Space Key */
+.xkp_ui_qwerty a .xkp_m108{width:33px}
+
+/****************************************************
+   스프라이트 이미지 좌표 설정 ( 키가 눌리지 않았을 때 )
+*****************************************************/
+/* [ Qwerty ] 0 ~ 9 */
+.xkp_ui_qwerty a .xkp_m0{background-position:-207px 0}
+.xkp_ui_qwerty a .xkp_m1{background-position:0 0}
+.xkp_ui_qwerty a .xkp_m2{background-position:-23px 0}
+.xkp_ui_qwerty a .xkp_m3{background-position:-46px 0}
+.xkp_ui_qwerty a .xkp_m4{background-position:-69px 0}
+.xkp_ui_qwerty a .xkp_m5{background-position:-92px 0}
+.xkp_ui_qwerty a .xkp_m6{background-position:-115px 0}
+.xkp_ui_qwerty a .xkp_m7{background-position:-138px 0}
+.xkp_ui_qwerty a .xkp_m8{background-position:-161px 0}
+.xkp_ui_qwerty a .xkp_m9{background-position:-184px 0}
+/* [ Number ] 0 ~ 9 */
+.xkp_ui_qwerty a .xkp_m94{background-position:-253px -310px}
+.xkp_ui_qwerty a .xkp_m95{background-position:-23px -310px}
+.xkp_ui_qwerty a .xkp_m96{background-position:-46px -310px}
+.xkp_ui_qwerty a .xkp_m97{background-position:-69px -310px}
+.xkp_ui_qwerty a .xkp_m98{background-position:-92px -310px}
+.xkp_ui_qwerty a .xkp_m99{background-position:-115px -310px}
+.xkp_ui_qwerty a .xkp_m100{background-position:-138px -310px}
+.xkp_ui_qwerty a .xkp_m101{background-position:-161px -310px}
+.xkp_ui_qwerty a .xkp_m102{background-position:-184px -310px}
+.xkp_ui_qwerty a .xkp_m103{background-position:-207px -310px}
+/* [ Qwerty ] q(ㅂ) ~ p(ㅔ) */
+.xkp_ui_qwerty a .xkp_m10{background-position:0 -31px}
+.xkp_ui_qwerty a .xkp_m11{background-position:-23px -31px}
+.xkp_ui_qwerty a .xkp_m12{background-position:-46px -31px}
+.xkp_ui_qwerty a .xkp_m13{background-position:-69px -31px}
+.xkp_ui_qwerty a .xkp_m14{background-position:-92px -31px}
+.xkp_ui_qwerty a .xkp_m15{background-position:-115px -31px}
+.xkp_ui_qwerty a .xkp_m16{background-position:-138px -31px}
+.xkp_ui_qwerty a .xkp_m17{background-position:-161px -31px}
+.xkp_ui_qwerty a .xkp_m18{background-position:-184px -31px}
+.xkp_ui_qwerty a .xkp_m19{background-position:-207px -31px}
+/* [ Qwerty ] a(ㅁ) ~ l(ㅣ) */
+.xkp_ui_qwerty a .xkp_m20{background-position:0 -62px}
+.xkp_ui_qwerty a .xkp_m21{background-position:-23px -62px}
+.xkp_ui_qwerty a .xkp_m22{background-position:-46px -62px}
+.xkp_ui_qwerty a .xkp_m23{background-position:-69px -62px}
+.xkp_ui_qwerty a .xkp_m24{background-position:-92px -62px}
+.xkp_ui_qwerty a .xkp_m25{background-position:-115px -62px}
+.xkp_ui_qwerty a .xkp_m26{background-position:-138px -62px}
+.xkp_ui_qwerty a .xkp_m27{background-position:-161px -62px}
+.xkp_ui_qwerty a .xkp_m28{background-position:-184px -62px}
+/* [ Qwerty ] z(ㅋ) ~ m(ㅡ) */
+.xkp_ui_qwerty a .xkp_m29{background-position:-207px -62px}
+.xkp_ui_qwerty a .xkp_m30{background-position:0 -93px}
+.xkp_ui_qwerty a .xkp_m31{background-position:-23px -93px}
+.xkp_ui_qwerty a .xkp_m32{background-position:-46px -93px}
+.xkp_ui_qwerty a .xkp_m33{background-position:-69px -93px}
+.xkp_ui_qwerty a .xkp_m34{background-position:-92px -93px}
+.xkp_ui_qwerty a .xkp_m35{background-position:-115px -93px}
+/* [ Qwerty ] Capslock Key */
+.xkp_ui_qwerty a .xkp_m104{background-position:-138px -93px;letter-spacing:-8px}
+/* [ Qwerty & Number ] Backspace Key */
+.xkp_ui_qwerty a .xkp_m105{background-position:-161px -93px;letter-spacing:-9px}
+/* [ Qwerty & Number ] Refresh Key ( XKConfigMobile.functionKeyButtonStyle === 'symbol' ) */
+.xkp_ui_qwerty a .xkp_m106{background-position:-184px -93px}
+/* [ Qwerty ] Refresh Key ( XKConfigMobile.functionKeyButtonStyle === 'text' ) */
+.xkp_ui_qwerty.ko a .xkp_m106{background-position:0 -341px}
+/* [ Number ] Refresh Key ( XKConfigMobile.functionKeyButtonStyle === 'text' ) */
+.xkp_ui_qwerty.ko2 a .xkp_m106{background-position:-92px -341px}
+/* [ Qwerty ] Symbol On/Off Key */
+.xkp_ui_qwerty a .xkp_m107{background-position:-207px -93px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m107_1{background-position:-191px -342px;letter-spacing:-12px;}
+/* [ Qwerty & Number ] Space Key */
+.xkp_ui_qwerty a .xkp_m108{background-position:0 -124px}
+/* [ Qwerty & Number ] Enter Key ( XKConfigMobile.functionKeyButtonStyle === 'symbol' ) */
+.xkp_ui_qwerty a .xkp_m109{background-position:-46px -124px}
+/* [ Qwerty ] Enter Key ( XKConfigMobile.functionKeyButtonStyle === 'text' ) */
+.xkp_ui_qwerty.ko a .xkp_m109{background-position:-46px -341px}
+/* [ Number ] Enter Key ( XKConfigMobile.functionKeyButtonStyle === 'text' ) */
+.xkp_ui_qwerty.ko2 a .xkp_m109{background-position:-138px -341px}
+/* [ Qwerty (Capslock On) ] Q(ㅃ) ~ P(ㅔ) */
+.xkp_ui_qwerty a .xkp_m36{background-position:-69px -124px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m37{background-position:-92px -124px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m38{background-position:-115px -124px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m39{background-position:-138px -124px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m40{background-position:-161px -124px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m41{background-position:-184px -124px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m42{background-position:-207px -124px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m43{background-position:0 -155px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m44{background-position:-23px -155px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m45{background-position:-46px -155px;letter-spacing:-12px}
+/* [ Qwerty (Capslock On) ] A(ㅁ) ~ L(ㅣ) */
+.xkp_ui_qwerty a .xkp_m46{background-position:-69px -155px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m47{background-position:-92px -155px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m48{background-position:-115px -155px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m49{background-position:-138px -155px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m50{background-position:-161px -155px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m51{background-position:-184px -155px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m52{background-position:-207px -155px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m53{background-position:0 -186px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m54{background-position:-23px -186px;letter-spacing:-12px}
+/* [ Qwerty (Capslock On) ] Z(ㅋ) ~ M(ㅡ) */
+.xkp_ui_qwerty a .xkp_m55{background-position:-46px -186px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m56{background-position:-69px -186px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m57{background-position:-92px -186px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m58{background-position:-115px -186px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m59{background-position:-138px -186px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m60{background-position:-161px -186px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m61{background-position:-184px -186px;letter-spacing:-12px}
+/* [ Qwerty (Symbol On) ] "!" ~ ")" */
+.xkp_ui_qwerty a .xkp_m62{background-position:-207px -186px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m63{background-position:0 -217px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m64{background-position:-23px -217px}
+.xkp_ui_qwerty a .xkp_m65{background-position:-46px -217px}
+.xkp_ui_qwerty a .xkp_m66{background-position:-69px -217px}
+.xkp_ui_qwerty a .xkp_m67{background-position:-92px -217px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m68{background-position:-115px -217px}
+.xkp_ui_qwerty a .xkp_m69{background-position:-138px -217px}
+.xkp_ui_qwerty a .xkp_m70{background-position:-161px -217px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m71{background-position:-184px -217px;letter-spacing:-13px}
+/* [ Qwerty (Symbol On) ] "[" ~ ";" */
+.xkp_ui_qwerty a .xkp_m72{background-position:-207px -217px;letter-spacing:-13px}
+.xkp_ui_qwerty a .xkp_m73{background-position:0 -248px;letter-spacing:-13px}
+.xkp_ui_qwerty a .xkp_m74{background-position:-23px -248px;letter-spacing:-13px}
+.xkp_ui_qwerty a .xkp_m75{background-position:-46px -248px;letter-spacing:-13px}
+.xkp_ui_qwerty a .xkp_m76{background-position:-69px -248px;letter-spacing:-13px}
+.xkp_ui_qwerty a .xkp_m77{background-position:-92px -248px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m78{background-position:-115px -248px}
+.xkp_ui_qwerty a .xkp_m79{background-position:-138px -248px}
+/* [ Qwerty (Symbol On) ] ":" ~ "=" */
+.xkp_ui_qwerty a .xkp_m80{background-position:-161px -248px}
+.xkp_ui_qwerty a .xkp_m81{background-position:-184px -248px;letter-spacing:-13px}
+.xkp_ui_qwerty a .xkp_m82{background-position:-207px -248px;letter-spacing:-12px}
+.xkp_ui_qwerty a .xkp_m83{background-position:0 -279px}
+.xkp_ui_qwerty a .xkp_m84{background-position:-23px -279px;letter-spacing:-10px}
+.xkp_ui_qwerty a .xkp_m85{background-position:-46px -279px;letter-spacing:-10px}
+.xkp_ui_qwerty a .xkp_m86{background-position:-69px -279px}
+.xkp_ui_qwerty a .xkp_m87{background-position:-92px -279px}
+/* [ Qwerty (Symbol On) ] "\" ~ "~" */
+.xkp_ui_qwerty a .xkp_m88{background-position:-115px -279px}
+.xkp_ui_qwerty a .xkp_m89{background-position:-138px -279px}
+.xkp_ui_qwerty a .xkp_m90{background-position:-161px -279px}
+.xkp_ui_qwerty a .xkp_m91{background-position:-184px -279px;letter-spacing:-10px}
+.xkp_ui_qwerty a .xkp_m92{background-position:-207px -279px;letter-spacing:-13px}
+.xkp_ui_qwerty a .xkp_m93{background-position:0 -310px;letter-spacing:-13px}
+
+/****************************************************
+   스프라이트 이미지 좌표 설정 ( 키가 눌렸을 때 )
+*****************************************************/
+/* [ Qwerty ] 0 ~ 9 */
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m0{background-position:-437px 0}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m1{background-position:-230px 0}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m2{background-position:-253px 0}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m3{background-position:-276px 0}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m4{background-position:-299px 0}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m5{background-position:-322px 0}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m6{background-position:-345px 0}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m7{background-position:-368px 0}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m8{background-position:-391px 0}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m9{background-position:-414px 0}
+/* [ Qwerty ] q(ㅂ) ~ p(ㅔ) */
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m10{background-position:-230px -31px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m11{background-position:-253px -31px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m12{background-position:-276px -31px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m13{background-position:-299px -31px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m14{background-position:-322px -31px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m15{background-position:-345px -31px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m16{background-position:-368px -31px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m17{background-position:-391px -31px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m18{background-position:-414px -31px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m19{background-position:-437px -31px}
+/* [ Qwerty ] a(ㅁ) ~ l(ㅣ) */
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m20{background-position:-230px -62px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m21{background-position:-253px -62px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m22{background-position:-276px -62px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m23{background-position:-299px -62px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m24{background-position:-322px -62px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m25{background-position:-345px -62px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m26{background-position:-368px -62px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m27{background-position:-391px -62px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m28{background-position:-414px -62px}
+/* [ Qwerty ] z(ㅋ) ~ m(ㅡ) */
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m29{background-position:-437px -62px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m30{background-position:-230px -93px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m31{background-position:-253px -93px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m32{background-position:-276px -93px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m33{background-position:-299px -93px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m34{background-position:-322px -93px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m35{background-position:-345px -93px}
+/* [ Qwerty ] Capslock Key */
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m104{background-position:-368px -93px}
+/* [ Qwerty & Number ] Backspace Key */
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m105{background-position:-391px -93px}
+/* [ Qwerty & Number ] Refresh Key ( XKConfigMobile.functionKeyButtonStyle === 'symbol' ) */
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m106{background-position:-414px -93px}
+/* [ Qwerty ] Refresh Key ( XKConfigMobile.functionKeyButtonStyle === 'text' ) */
+.xkp_ui_qwerty.has_press_effect.ko a:active .xkp_m106{background-position:-276px -310px}
+/* [ Number ] Refresh Key ( XKConfigMobile.functionKeyButtonStyle === 'text' ) */
+.xkp_ui_qwerty.has_press_effect.ko2 a:active .xkp_m106{background-position:-368px -310px}
+/* [ Qwerty ] Symbol On/Off Key */
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m107{background-position:-437px -93px}
+/* [ Qwerty & Number ] Space Key */
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m108{background-position:-230px -124px}
+/* [ Qwerty & Number ] Enter Key ( XKConfigMobile.functionKeyButtonStyle === 'symbol' ) */
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m109{background-position:-276px -124px}
+/* [ Qwerty ] Enter Key ( XKConfigMobile.functionKeyButtonStyle === 'text' ) */
+.xkp_ui_qwerty.has_press_effect.ko a:active .xkp_m109{background-position:-322px -310px}
+/* [ Number ] Enter Key ( XKConfigMobile.functionKeyButtonStyle === 'text' ) */
+.xkp_ui_qwertyhas_press_effect.ko2 a:active .xkp_m109{background-position:-414px -310px}
+/* [ Qwerty (Capslock On) ] Q(ㅃ) ~ P(ㅔ) */
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m36{background-position:-299px -124px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m37{background-position:-322px -124px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m38{background-position:-345px -124px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m39{background-position:-368px -124px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m40{background-position:-391px -124px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m41{background-position:-414px -124px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m42{background-position:-437px -124px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m43{background-position:-230px -155px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m44{background-position:-253px -155px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m45{background-position:-276px -155px}
+/* [ Qwerty (Capslock On) ] A(ㅁ) ~ L(ㅣ) */
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m46{background-position:-299px -155px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m47{background-position:-322px -155px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m48{background-position:-345px -155px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m49{background-position:-368px -155px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m50{background-position:-391px -155px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m51{background-position:-414px -155px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m52{background-position:-437px -155px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m53{background-position:-230px -186px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m54{background-position:-253px -186px}
+/* [ Qwerty (Capslock On) ] Z(ㅋ) ~ M(ㅡ) */
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m55{background-position:-276px -186px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m56{background-position:-299px -186px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m57{background-position:-322px -186px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m58{background-position:-345px -186px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m59{background-position:-368px -186px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m60{background-position:-391px -186px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m61{background-position:-414px -186px}
+/* [ Qwerty (Symbol On) ] "!" ~ ")" */
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m62{background-position:-437px -186px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m63{background-position:-230px -217px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m64{background-position:-253px -217px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m65{background-position:-276px -217px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m66{background-position:-299px -217px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m67{background-position:-322px -217px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m68{background-position:-345px -217px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m69{background-position:-368px -217px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m70{background-position:-391px -217px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m71{background-position:-414px -217px}
+/* [ Qwerty (Symbol On) ] "[" ~ ";" */
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m72{background-position:-437px -217px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m73{background-position:-230px -248px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m74{background-position:-253px -248px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m75{background-position:-276px -248px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m76{background-position:-299px -248px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m77{background-position:-322px -248px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m78{background-position:-345px -248px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m79{background-position:-368px -248px}
+/* [ Qwerty (Symbol On) ] ":" ~ "=" */
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m80{background-position:-391px -248px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m81{background-position:-414px -248px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m82{background-position:-437px -248px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m83{background-position:-230px -279px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m84{background-position:-253px -279px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m85{background-position:-276px -279px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m86{background-position:-299px -279px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m87{background-position:-322px -279px}
+/* [ Qwerty (Symbol On) ] "\" ~ "~" */
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m88{background-position:-345px -279px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m89{background-position:-368px -279px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m90{background-position:-391px -279px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m91{background-position:-414px -279px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m92{background-position:-437px -279px}
+.xkp_ui_qwerty.has_press_effect a:active .xkp_m93{background-position:-230px -310px}
+
+@media (min-width: 840px) and (min-height: 630px) {
+    /* [ Qwerty & Number ] Common  */
+    .xkp_ui_qwerty.auto_resize a { padding-top: 7px; }
+    .xkp_ui_qwerty.auto_resize a,
+    .xkp_ui_qwerty.auto_resize span { height: 60px; }
+    .xkp_ui_qwerty.auto_resize em{width:31.5px;height:43.5px;background:url(../img/sp_xkp_white_big.png) no-repeat;}
+    .xkp_ui_qwerty.auto_resize span { padding-top: 11px;}
+    .xkp_ui_qwerty.auto_resize span img{width: 24.5px; height: 24.5px;}
+    /* [ Number ] */
+    .xkp_ui_qwerty.xkp_ui_number.auto_resize a,
+    .xkp_ui_qwerty.xkp_ui_number.auto_resize span { height: 70px; }
+    .xkp_ui_qwerty.xkp_ui_number.auto_resize a { padding-top:12px; }
+    .xkp_ui_qwerty.xkp_ui_number.auto_resize span { padding-top: 18px; }
+    /* [ Qwerty & Number ] Refresh Key & Enter Key */
+    .xkp_ui_qwerty.ko.auto_resize .xkp_m106,
+    .xkp_ui_qwerty.ko.auto_resize .xkp_m109,
+    .xkp_ui_qwerty.ko2.auto_resize .xkp_m106,
+    .xkp_ui_qwerty.ko2.auto_resize .xkp_m109{width:66px;}
+    /* [ Qwerty & Number ] Space Key */
+    .xkp_ui_qwerty.auto_resize a .xkp_m108{width:50px}
+    
+    /****************************************************
+        스프라이트 이미지 좌표 설정 ( 키가 눌리지 않았을 때 )
+     *****************************************************/
+    /* [ Qwerty ] 0 ~ 9 */
+    .xkp_ui_qwerty.auto_resize a .xkp_m0{background-position:-310.5px 0}
+    .xkp_ui_qwerty.auto_resize a .xkp_m1{background-position:0 0}
+    .xkp_ui_qwerty.auto_resize a .xkp_m2{background-position:-34.5px 0}
+    .xkp_ui_qwerty.auto_resize a .xkp_m3{background-position: -69px 0}
+    .xkp_ui_qwerty.auto_resize a .xkp_m4{background-position:-103.5px 0}
+    .xkp_ui_qwerty.auto_resize a .xkp_m5{background-position:-138px 0}
+    .xkp_ui_qwerty.auto_resize a .xkp_m6{background-position:-172.5px 0}
+    .xkp_ui_qwerty.auto_resize a .xkp_m7{background-position:-207px 0}
+    .xkp_ui_qwerty.auto_resize a .xkp_m8{background-position:-241.5px 0}
+    .xkp_ui_qwerty.auto_resize a .xkp_m9{background-position:-276px 0}
+    /* [ Number ] 0 ~ 9 */
+    .xkp_ui_qwerty.auto_resize a .xkp_m94{background-position:-379.5px -465px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m95{background-position:-34.5px -465px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m96{background-position:-69px -465px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m97{background-position:-103.5px -465px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m98{background-position:-138px -465px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m99{background-position:-172.5px -465px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m100{background-position:-207px -465px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m101{background-position:-241.5px -465px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m102{background-position:-276px -465px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m103{background-position:-310.5px -465px}
+    /* [ Qwerty ] q(ㅂ) ~ p(ㅔ) */
+    .xkp_ui_qwerty.auto_resize a .xkp_m10{background-position:0 -46.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m11{background-position:-34.5px -46.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m12{background-position:-69px -46.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m13{background-position:-103.5px -46.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m14{background-position:-138px -46.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m15{background-position:-172.5px -46.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m16{background-position:-207px -46.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m17{background-position:-241.5px -46.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m18{background-position:-276px -46.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m19{background-position:-310.5px -46.5px}
+    /* [ Qwerty ] a(ㅁ) ~ l(ㅣ) */
+    .xkp_ui_qwerty.auto_resize a .xkp_m20{background-position:0 -93px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m21{background-position:-34.5px -93px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m22{background-position:-69px -93px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m23{background-position:-103.5px -93px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m24{background-position:-138px -93px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m25{background-position:-172.5px -93px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m26{background-position:-207px -93px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m27{background-position:-241.5px -93px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m28{background-position:-276px -93px}
+    /* [ Qwerty ] z(ㅋ) ~ m(ㅡ) */
+    .xkp_ui_qwerty.auto_resize a .xkp_m29{background-position:-310.5px -93px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m30{background-position:0 -139.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m31{background-position:-34.5px -139.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m32{background-position:-69px -139.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m33{background-position:-103.5px -139.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m34{background-position:-138px -139.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m35{background-position:-172.5px -139.5px}
+    /* [ Qwerty ] Capslock Key */
+    .xkp_ui_qwerty.auto_resize a .xkp_m104{background-position:-207px -139.5px;letter-spacing:-8px}
+    /* [ Qwerty & Number ] Backspace Key */
+    .xkp_ui_qwerty.auto_resize a .xkp_m105{background-position:-241.5px -139.5px;letter-spacing:-9px}
+    /* [ Qwerty & Number ] Refresh Key ( XKConfigMobile.functionKeyButtonStyle === 'symbol' ) */
+    .xkp_ui_qwerty.auto_resize a .xkp_m106{background-position:-276px -139.5px}
+    /* [ Qwerty ] Refresh Key ( XKConfigMobile.functionKeyButtonStyle === 'text' ) */
+    .xkp_ui_qwerty.ko.auto_resize a .xkp_m106{background-position:0 -511.5px}
+    /* [ Number ] Refresh Key ( XKConfigMobile.functionKeyButtonStyle === 'text' ) */
+    .xkp_ui_qwerty.ko2.auto_resize a .xkp_m106{background-position:-138px -511.5px}
+    /* [ Qwerty ] Symbol On/Off Key */
+    .xkp_ui_qwerty.auto_resize a .xkp_m107{background-position:-310.5px -139.5px; letter-spacing:-12px}
+    /* [ Qwerty & Number ] Space Key */
+    .xkp_ui_qwerty.auto_resize a .xkp_m108{background-position:0 -186px}
+    /* [ Qwerty & Number ] Enter Key ( XKConfigMobile.functionKeyButtonStyle === 'symbol' ) */
+    .xkp_ui_qwerty.auto_resize a .xkp_m109{background-position:-69px -186px}
+    /* [ Qwerty ] Enter Key ( XKConfigMobile.functionKeyButtonStyle === 'text' ) */
+    .xkp_ui_qwerty.ko.auto_resize a .xkp_m109{background-position:-69px -511.5px}
+    /* [ Number ] Enter Key ( XKConfigMobile.functionKeyButtonStyle === 'text' ) */
+    .xkp_ui_qwerty.ko2.auto_resize a .xkp_m109{background-position:-207px -511.5px}
+    /* [ Qwerty (Capslock On) ] Q(ㅃ) ~ P(ㅔ) */
+    .xkp_ui_qwerty.auto_resize a .xkp_m36{background-position:-103.5px -186px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m37{background-position:-138px -186px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m38{background-position:-172.5px -186px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m39{background-position:-207px -186px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m40{background-position:-241.5px -186px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m41{background-position:-276px -186px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m42{background-position:-310.5px -186px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m43{background-position: 0 -232.5px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m44{background-position:-34.5px -232.5px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m45{background-position:-69px -232.5px;letter-spacing:-12px}
+    /* [ Qwerty (Capslock On) ] A(ㅁ) ~ L(ㅣ) */
+    .xkp_ui_qwerty.auto_resize a .xkp_m46{background-position:-103.5px -232.5px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m47{background-position:-138px -232.5px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m48{background-position:-172.5px -232.5px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m49{background-position:-207px -232.5px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m50{background-position:-241.5px -232.5px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m51{background-position:-276px -232.5px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m52{background-position:-310.5px -232.5px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m53{background-position:0 -279px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m54{background-position:-34.5px -279px;letter-spacing:-12px}
+    /* [ Qwerty (Capslock On) ] Z(ㅋ) ~ M(ㅡ) */
+    .xkp_ui_qwerty.auto_resize a .xkp_m55{background-position:-69px -279px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m56{background-position:-103.5px -279px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m57{background-position:-138px -279px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m58{background-position:-172.5px -279px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m59{background-position:-207px -279px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m60{background-position:-241.5px -279px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m61{background-position:-276px -279px;letter-spacing:-12px}
+    /* [ Qwerty (Symbol On) ] "!" ~ ")" */
+    .xkp_ui_qwerty.auto_resize a .xkp_m62{background-position:-310.5px -279px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m63{background-position:0 -325.5px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m64{background-position:-34.5px -325.5px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m65{background-position:-69px -325.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m66{background-position:-103.5px -325.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m67{background-position:-138px -325.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m68{background-position:-172.5px -325.5px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m69{background-position:-207px -325.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m70{background-position:-241.5px -325.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m71{background-position:-276px -325.5px;letter-spacing:-12px}
+    /* [ Qwerty (Symbol On) ] "[" ~ ";" */
+    .xkp_ui_qwerty.auto_resize a .xkp_m72{background-position:-310.5px -325.5px;letter-spacing:-13px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m73{background-position:0 -372px;letter-spacing:-13px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m74{background-position:-34.5px -372px;letter-spacing:-13px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m75{background-position:-69px -372px;letter-spacing:-13px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m76{background-position:-103.5px -372px;letter-spacing:-13px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m77{background-position:-138px -372px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m78{background-position:-172.5px -372px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m79{background-position:-207px -372px}
+    /* [ Qwerty (Symbol On) ] ":" ~ "=" */
+    .xkp_ui_qwerty.auto_resize a .xkp_m80{background-position:-241.5px -372px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m81{background-position:-276px -372px;letter-spacing:-13px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m82{background-position:-310.5px -372px;letter-spacing:-12px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m83{background-position:0 -418.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m84{background-position:-34.5px -418.5px;letter-spacing:-10px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m85{background-position:-69px -418.5px;letter-spacing:-10px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m86{background-position:-103.5px -418.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m87{background-position:-138px -418.5px}
+    /* [ Qwerty (Symbol On) ] "\" ~ "~" */
+    .xkp_ui_qwerty.auto_resize a .xkp_m88{background-position:-172.5px -418.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m89{background-position:-207px -418.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m90{background-position:-241.5px -418.5px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m91{background-position:-276px -418.5px;letter-spacing:-10px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m92{background-position:-310.5px -418.5px;letter-spacing:-13px}
+    .xkp_ui_qwerty.auto_resize a .xkp_m93{background-position:0 -465px;letter-spacing:-13px}
+
+    /****************************************************
+        스프라이트 이미지 좌표 설정 ( 키가 눌렸을 때 )
+     *****************************************************/
+    /* [ Qwerty ] 0 ~ 9 */
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m0{background-position:-655.5px 0}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m1{background-position:-345px 0}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m2{background-position:-379.5px 0}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m3{background-position:-414px 0}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m4{background-position:-448.5px 0}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m5{background-position:-483px 0}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m6{background-position:-517.5px 0}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m7{background-position:-552px 0}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m8{background-position:-586.5px 0}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m9{background-position:-621px 0}
+    /* [ Qwerty ] q(ㅂ) ~ p(ㅔ) */
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m10{background-position:-345px -46.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m11{background-position:-379.5px -46.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m12{background-position:-414px -46.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m13{background-position:-448.5px -46.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m14{background-position:-483px -46.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m15{background-position:-517.5px -46.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m16{background-position:-552px -46.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m17{background-position:-586.5px -46.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m18{background-position:-621px -46.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m19{background-position:-655.5px -46.5px}
+    /* [ Qwerty ] a(ㅁ) ~ l(ㅣ) */
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m20{background-position:-345px -93px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m21{background-position:-379.5px -93px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m22{background-position:-414px -93px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m23{background-position:-448.5px -93px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m24{background-position:-483px -93px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m25{background-position:-517.5px -93px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m26{background-position:-552px -93px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m27{background-position:-586.5px -93px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m28{background-position:-621px -93px}
+    /* [ Qwerty ] z(ㅋ) ~ m(ㅡ) */
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m29{background-position:-655.5px -93px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m30{background-position:-345px -139.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m31{background-position:-379.5px -139.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m32{background-position:-414px -139.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m33{background-position:-448.5px -139.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m34{background-position:-483px -139.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m35{background-position:-517.5px -139.5px}
+    /* [ Qwerty ] Capslock Key */
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m104{background-position:-552px -139.5px}
+    /* [ Qwerty & Number ] Backspace Key */
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m105{background-position:-587.5px -139.5px}
+    /* [ Qwerty & Number ] Refresh Key ( XKConfigMobile.functionKeyButtonStyle === 'symbol' ) */
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m106{background-position:-621px -139.5px}
+    /* [ Qwerty ] Refresh Key ( XKConfigMobile.functionKeyButtonStyle === 'text' ) */
+    .xkp_ui_qwerty.ko.auto_resize.has_press_effect a:active .xkp_m106{background-position:-414px -465px}
+    /* [ Number ] Refresh Key ( XKConfigMobile.functionKeyButtonStyle === 'text' ) */
+    .xkp_ui_qwerty.ko2.auto_resize.has_press_effect a:active .xkp_m106{background-position:-552px -465px}
+    /* [ Qwerty ] Symbol On/Off Key */
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m107{background-position:-655.5px -139.5px}
+    /* [ Qwerty & Number ] Space Key */
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m108{background-position:-345px -186px}
+    /* [ Qwerty & Number ] Enter Key ( XKConfigMobile.functionKeyButtonStyle === 'symbol' ) */
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m109{background-position:-414px -186px}
+    /* [ Qwerty ] Enter Key ( XKConfigMobile.functionKeyButtonStyle === 'text' ) */
+    .xkp_ui_qwerty.ko.auto_resize.has_press_effect a:active .xkp_m109{background-position:-483px -465px}
+    /* [ Number ] Enter Key ( XKConfigMobile.functionKeyButtonStyle === 'text' ) */
+    .xkp_ui_qwerty.ko2.auto_resize.has_press_effect a:active .xkp_m109{background-position:-621px -465px}
+    /* [ Qwerty (Capslock On) ] Q(ㅃ) ~ P(ㅔ) */
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m36{background-position:-448.5px -186px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m37{background-position:-483px -186px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m38{background-position:-517.5px -186px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m39{background-position:-552px -186px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m40{background-position:-586.5px -186px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m41{background-position:-621px -186px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m42{background-position:-655.5px -186px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m43{background-position:-345px -232.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m44{background-position:-379.5px -232.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m45{background-position:-414px -232.5px}
+    /* [ Qwerty (Capslock On) ] A(ㅁ) ~ L(ㅣ) */
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m46{background-position:-448.5px -232.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m47{background-position:-483px -232.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m48{background-position:-517.5px -232.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m49{background-position:-552px -232.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m50{background-position:-586.5px -232.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m51{background-position:-621px -232.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m52{background-position:-655.5px -232.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m53{background-position:-345px -279px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m54{background-position:-379.5px -279px}
+    /* [ Qwerty (Capslock On) ] Z(ㅋ) ~ M(ㅡ) */
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m55{background-position:-414px -279px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m56{background-position:-448.5px -279px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m57{background-position:-483px -279px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m58{background-position:-517.5px -279px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m59{background-position:-552px -279px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m60{background-position:-586.5px -279px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m61{background-position:-621px -279px}
+    /* [ Qwerty (Symbol On) ] "!" ~ ")" */
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m62{background-position:-655.5px -279px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m63{background-position:-345px -325.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m64{background-position:-379.5px -325.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m65{background-position:-414px -325.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m66{background-position:-448.5px -325.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m67{background-position:-483px -325.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m68{background-position:-517.5px -325.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m69{background-position:-552px -325.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m70{background-position:-586.5px -325.5px}
+    /* [ Qwerty (Symbol On) ] "[" ~ ";" */
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m71{background-position:-621px -325.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m72{background-position:-655.5px -325.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m73{background-position:-345px -372px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m74{background-position:-379.5px -372px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m75{background-position:-414px -372px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m76{background-position:-448.5px -372px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m77{background-position:-483px -372px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m78{background-position:-517.5px -372px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m79{background-position:-552px -372px}
+    /* [ Qwerty (Symbol On) ] ":" ~ "=" */
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m80{background-position:-586.5px -372px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m81{background-position:-621px -372px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m82{background-position:-655.5px -372px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m83{background-position:-345px -418.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m84{background-position:-379.5px -418.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m85{background-position:-414px -418.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m86{background-position:-448.5px -418.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m87{background-position:-483px -418.5px}
+    /* [ Qwerty (Symbol On) ] "\" ~ "~" */
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m88{background-position:-517.5px -418.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m89{background-position:-552px -418.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m90{background-position:-586.5px -418.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m91{background-position:-621px -418.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m92{background-position:-655.5px -418.5px}
+    .xkp_ui_qwerty.auto_resize.has_press_effect a:active .xkp_m93{background-position:-345px -465px}
+}
+
+/* keypad내에 위치할 경우 */
+/*
+.xkalert_overlay{width:100%;height:100%;position:fixed;top:0;left:0;background-image:url(../img/overlay.png);z-index:10;}
+.xkalert_frame{width:100%;position:absolute;top:15%;}
+*/
+
+/* 기존 alert 위치할 경우 */
+.xkalert_overlay{width:100%;height:100%;position:fixed;top:0;left:0;background-image:url(../img/overlay.png);z-index:10;}
+.xkalert_frame{width:100%;position:absolute;top:35%;}
+
+.xkalert_box{font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;font-size:14px;width:90%;height:115px;margin:auto;text-align:center;border:1px solid gray;background-color:white;border-radius:3px;padding-top:15px;z-index:10;}
+.xkalert_box hr{border:0;height:0;border-top:1px solid rgba(0, 0, 0, 0.1);border-bottom:1px solid rgba(255, 255, 255, 0.3);}
+.xkalert_box .content{text-align:center;vertical-align:middle;height:57px;}
+.xkalert_box .bottom{position:absolute;width:90%;bottom:10px;margin:auto;}
+.xkalert_box .btn {display:inline-block;text-decoration:none;font-weight:bold;line-height:240%;color:rgb(102,102,102);text-align:center;background-color:white;width:100px;height:30px;border-color:rgb(180,180,180);border-width:1px;-moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px;border-style:solid;padding-top:3px;}

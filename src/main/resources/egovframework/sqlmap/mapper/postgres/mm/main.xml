@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mm.main">
+	
+	<!-- 사용자 정보 확인 -->
+	<select id="selectUserInfo" parameterType="paraMap"
+		resultType="resultMap">
+		SELECT USER_ID
+		, USER_NM
+		, EMAIL
+		, PW
+		, PETRA.pls_decrypt_b64_id(TELNO,'150') AS TELNO
+		, PETRA.pls_decrypt_b64_id(MPNO,'150') AS MPNO
+		, USER_TY
+		, LDONG_CD
+		, BIZRNO
+		, PSITN_NM
+		, CONFM_CD
+		, (SELECT CD_NM
+		FROM TMSDG.CMM_CD_CODE_INFO
+		WHERE CD_CL = 'CONFM_CD'
+		AND CD_ID = OMUM.CONFM_CD
+		) AS CONFM_NM
+		, REMARK
+		, USE_YN
+		, DELETE_YN
+		, TO_CHAR(LAST_LOGIN_DT, 'YYYY-MM-DD HH24:MI:SS') LAST_LOGIN_DT
+		, ACNT_STA_CD
+		, LOGIN_FAILR_CO
+		, LOCK_DT
+		, LOCK_RESN
+		, CONFM_REQUST_DE
+		, CONFMER
+		, CONFM_DE
+		, ATCH_FILE_SN
+		<!-- , PD_LMTT , PD_LMTT_DAYCNT , TO_CHAR(TO_DATE(PD_LMTT_DT, 'YYYYMMDDHH24MISS'), 
+			'YYYYMMDDHH24MISS') AS PD_LMTT_DT -->
+		, EXDEPT_CD
+		, AUTHOR_ID
+		, (SELECT AUTHOR_NM
+		FROM OPS_MT_ROLE_INFO
+		WHERE AUTHOR_ID = OMUM.AUTHOR_ID
+		) AS AUTHOR_NM
+		, PERM_IP
+		, REG_DT
+		, REG_IP
+		, REG_ID
+		, UPD_DT
+		, UPD_IP
+		, UPD_ID
+		, TELECOM
+		FROM TMSDG.OPS_MT_USER_MST AS OMUM
+		WHERE USER_ID = #{userId}
+		AND DELETE_YN = 'N'
+		AND USE_YN = 'Y'
+		<!-- <if test="userPw != null and userPw != ''"> AND PW = #{userPw} </if> -->
+	</select>
+		
+	<!-- 사용자 로그인 로그 -->
+	<insert id="insertUserConectLog" >
+		insert into  dvs_cmm_hs_sys(
+			user_sn
+		,	user_ip_addr
+		,	menu_cd
+        ,	dmnd_parameter   
+		,	dmnd_url_addr
+		,	dmnd_type_cd
+		,	dwnld_rsn
+		,	req_hr
+		,	dmnd_dt
+		)values(
+				0
+			,	#{ipAddr}
+			,	#{menuId}
+			,	'test'
+			,   #{url}
+			,	#{typeCd}
+			,	'test'
+			,	0
+			,	NOW()
+			);
+		<!-- INSERT INTO PTS_HS_USER_CONN_LOG (
+		SN
+		, USER_ID
+		, REQUST_TY
+		<if test="bizrno != '' and bizrno != null">
+			, BIZRNO
+		</if>
+		, MENU_ID
+		, CLASS_NM
+		, CONECT_DT
+		, REG_IP
+		<if test="url != '' and url != null">
+			, REQUST_URL
+		</if>
+		<choose>
+			<when test="excelDownReason != '' and excelDownReason != null">
+				, REQUST_PARAMTR
+			</when>
+			<when test="requstParamtr != '' and requstParamtr != null">
+				, REQUST_PARAMTR
+			</when>
+		</choose>
+		<if test="inqireCo != '' and inqireCo != null">
+			, INQIRE_CO
+		</if>
+		) VALUES (SQ_PTS_HS_USER_CONN_LOG.nextval
+		, #{userId}
+		, #{requstTy}
+		<if test="bizrno != '' and bizrno != null">
+			, #{bizrno}
+		</if>
+		<choose>
+			<when test="requstTy == '02'">
+				, (SELECT NVL(MAX(MENU_ID), '-') AS MENU_ID
+				FROM PTS_BS_MENU_INFO
+				WHERE MENU_URL = #{url}
+				AND MENU_DIV = '33' AND MENU_ID LIKE 'RMS%'
+				AND DELETE_YN = 'N'
+				)
+			</when>
+			<otherwise>
+				<choose>
+					<when test="menuId != '' and menuId != null">
+						, #{menuId}
+					</when>
+					<otherwise>
+						, '-'
+					</otherwise>
+				</choose>
+			</otherwise>
+		</choose>
+		, #{classNm}
+		, SYSDATE
+		, #{ipAddr}
+		<if test="url != '' and url != null">
+			, #{url}
+		</if>
+		<choose>
+			<when test="excelDownReason != '' and excelDownReason != null">
+				, #{excelDownReason}
+			</when>
+			<when test="requstParamtr != '' and requstParamtr != null">
+				, #{requstParamtr}
+			</when>
+		</choose>
+		<if test="inqireCo != '' and inqireCo != null">
+			, #{inqireCo}
+		</if>
+		) -->
+	</insert>
+	
+	<!-- 로그인 정보 업데이트 -->
+	<update id="updateUserLoginInfo" parameterType="paraMap">
+		UPDATE OPS_MT_USER_MST
+		SET
+		LOGIN_FAILR_CO = #{loginFailrCo}
+		<!-- <if test="lastLoginDt != null and lastLoginDt != ''"> -->
+		, LAST_LOGIN_DT = SYSDATE
+		<!-- </if> -->
+		<if test="acntStaCd != null and acntStaCd != ''">
+			, ACNT_STA_CD = #{acntStaCd}
+		</if>
+		<!-- <if test="lockDt != null and lockDt != ''"> , LOCK_DT = #{lockDt} 
+			</if> -->
+		<if test="lockResn != null and lockResn != ''">
+			, LOCK_RESN = #{lockResn}
+		</if>
+		WHERE USER_ID = #{userId}
+	</update>
+
+	<!-- 권한별 메뉴 목록 -->
+	<select id="selectMenuList" parameterType="paraMap"
+		resultType="resultMap">
+		WITH RS AS(
+		SELECT PBMI.MENU_ID
+		, PBMI.MENU_NM
+		, PBMI.UPPER_MENU_ID
+		, PBMI.UPPER_MENU_NM
+		, PBMI.SORT_ORDR
+		, PBMI.MENU_URL
+		, PBMI.CLASS_NM
+		, PBMI.PRV_YN
+		FROM PTS_BS_MENU_INFO PBMI
+		INNER JOIN OPS_MT_ROLE_MENU_INFO OMRMI ON (PBMI.MENU_ID = OMRMI.MENU_ID)
+		AND OMRMI.AUTHOR_ID = #{authorId}
+		AND PBMI.DELETE_YN = 'N'
+		AND PBMI.USE_YN = 'Y'
+		AND OMRMI.USE_YN = 'Y'
+		AND PBMI.MENU_DIV = '33'
+		UNION
+		SELECT PBMI.MENU_ID
+		, PBMI.MENU_NM
+		, PBMI.UPPER_MENU_ID
+		, PBMI.UPPER_MENU_NM
+		, PBMI.SORT_ORDR
+		, PBMI.MENU_URL
+		, PBMI.CLASS_NM
+		, PBMI.PRV_YN
+		FROM PTS_BS_MENU_INFO PBMI
+		INNER JOIN OPS_MT_USER_MENU_INFO OMRMI ON (PBMI.MENU_ID = OMRMI.MENU_ID)
+		AND OMRMI.USER_ID = #{userId}
+		AND PBMI.DELETE_YN = 'N'
+		AND PBMI.USE_YN = 'Y'
+		AND OMRMI.USE_YN = 'Y'
+		AND PBMI.MENU_DIV = '33'
+		)
+		SELECT MENU_ID
+		, MENU_NM
+		, UPPER_MENU_ID
+		, UPPER_MENU_NM
+		, SORT_ORDR
+		, MENU_URL
+		, CLASS_NM
+		, PRV_YN
+		FROM RS
+		START WITH UPPER_MENU_ID IS NULL CONNECT BY PRIOR MENU_ID = UPPER_MENU_ID
+		ORDER SIBLINGS BY SORT_ORDR
+	</select>
+
+	<!-- 사용자 추가 -->
+	<insert id="insertUser" parameterType="paraMap">
+		INSERT INTO
+		OPS_MT_USER_MST
+		(USER_ID,
+		USER_NM,
+		EMAIL,
+		TELNO,
+		MPNO,
+		USER_TY,
+		CONFM_CD,
+		USE_YN,
+		DELETE_YN,
+		LAST_LOGIN_DT,
+		ACNT_STA_CD,
+		REG_DT,
+		REG_IP,
+		REG_ID,
+		UPD_DT,
+		UPD_IP,
+		UPD_ID)
+		VALUES
+		(#{user_id},
+		#{user_nm},
+		#{email},
+		PETRA.pls_encrypt_b64_id(#{telno},'150'),
+		PETRA.pls_encrypt_b64_id(#{mpno},'150'),
+		#{user_ty},
+		#{confm_cd},
+		#{use_yn},
+		#{delete_yn},
+		SYSDATE,
+		#{acnt_sta_cd},
+		SYSDATE,
+		#{reg_ip},
+		#{reg_id},
+		SYSDATE,
+		#{reg_ip},
+		#{reg_id})
+	</insert>
+
+	<!-- 사업자등록번호 확인 -->
+	<select id="selectBizrNo" resultType="resultMap"
+		parameterType="string">
+		SELECT
+		BIZRNO,
+		CMPNY_NM
+		FROM
+		TMSDG.OPS_MT_TRANSPRT_CMPNY_MST
+		WHERE
+		ROWNUM = 1
+		AND BIZRNO = #{bizrNo}
+	</select>
+
+
+	<!-- 권한 목록 -->
+	<select id="selectAuthTypeList" resultType="resultMap">
+		SELECT
+		DISTINCT(SUBSTRING(AUTHOR_ID, 1, 1)) AS AUTHOR_ID,
+		AUTHOR_NM
+		FROM
+		TMSDG.OPS_MT_ROLE_INFO
+		WHERE AUTHOR_ID NOT IN('S00')
+		ORDER BY
+		AUTHOR_ID ASC
+	</select>
+
+	<!-- 소속 목록 -->
+	<select id="selectBelongTypeList" parameterType="paraMap"
+		resultType="resultMap">
+		SELECT
+		SUBSTRING(AUTHOR_ID, 1, 1) AS AUTHOR_ID,
+		AUTHOR_ID AS BELONG_ID,
+		AUTHOR_DC
+		FROM
+		TMSDG.OPS_MT_ROLE_INFO
+		WHERE AUTHOR_ID LIKE ('%' || #{authType} || '%')
+		ORDER BY
+		AUTHOR_ID ASC
+	</select>
+
+	<!-- 권한 신청 -->
+	<update id="updateAuthRequest" parameterType="paraMap">
+		UPDATE
+		OPS_MT_USER_MST
+		SET UPD_DT = SYSDATE
+		, UPD_IP = #{userIp}
+		, UPD_ID = #{userId}
+		, PSITN_NM = #{psitnNm}
+		, CONFM_REQUST_DE = SYSDATE
+		, CONFM_CD = '01'
+		, AUTHOR_ID = #{authorId}
+		, BIZRNO = #{bizrno}
+		, ATCH_FILE_SN = #{atchFileSn}
+		, INDVDL_INFO_COLCT_AGRE = 'Y'
+		, THPTY_USE_AGRE = 'Y'
+		, LOCK_RESN = NULL
+		WHERE USER_ID = #{userId}
+	</update>
+
+	<!-- 공지사항 -->
+	<select id="selectMainNotiPopup" parameterType="paraMap"
+		resultType="resultMap">
+		SELECT POPUP_SN
+		, ATCH_FILE_SN
+		, NVL2(ATCH_FILE_SN, (SELECT ATCH_FILE_NM FROM PTS_BS_ATCHFILE_INFO
+		WHERE ATCH_FILE_SN = PMPI.ATCH_FILE_SN), '') AS FILE_KEY
+		, TITLE
+		, WIDTH_MG
+		, VRTICL_MG
+		, WIDTH_LC
+		, VRTICL_LC
+		, TO_CHAR(NTCE_PD_BEGIN, 'yyyyMMdd') AS NTCE_PD_BEGIN
+		, TO_CHAR(NTCE_PD_END, 'yyyyMMdd') AS NTCE_PD_END
+		, USE_YN
+		, TO_CHAR(UPD_DT, 'YYYYMMDD') AS UPD_DT
+		, UPD_IP
+		, UPD_ID
+		, CN
+		FROM PTS_MT_POPUP_INFO PMPI
+		WHERE to_char(SYSDATE, 'yyyymmdd') BETWEEN NTCE_PD_BEGIN AND NTCE_PD_END
+		AND ROWNUM = 1
+		AND USE_YN = 'Y'
+		ORDER BY UPD_DT DESC
+	</select>
+
+	<select id="selectNtcnCarList" parameterType="paraMap"
+		resultType="resultMap">
+		/* 고시대상 차량 목록(임시) */
+		SELECT *
+		FROM (
+		SELECT T.*
+		, ROWNUM AS RNUM
+		FROM (
+
+		SELECT OMTCM.CMPNY_NM AS CMPNY_NM
+		, OMTI.CAR_REG_NO AS CAR_REG_NO
+		, TRGET_YEAR AS TRGET_YEAR
+		, CASE TRGET_YEAR WHEN '2020' THEN '2020년 고시대상 차량' ELSE '2020년 고시대상 차량
+		아님' END AS NTCN
+		FROM OPS_MT_TRMNL_INFO AS OMTI
+		LEFT OUTER JOIN OPS_MT_TRANSPRT_CMPNY_MST AS OMTCM ON (OMTI.BIZRNO =
+		OMTCM.BIZRNO)
+		WHERE OMTI.CAR_REG_NO = #{carRegNo}
+		/* AND NTFC_VHCLE_AT = 'Y' */
+		<if test="bizrno != '' and bizrno != null">
+			AND OMTI.BIZRNO = #{bizrno}
+		</if>
+		<if test="cmpnyNm != '' and cmpnyNm != null">
+			AND OMTCM.CMPNY_NM = #{cmpnyNm}
+		</if>
+		) T
+		<if test="take != '' and take != null">
+			WHERE ROWNUM <![CDATA[<=]]>
+			(#{page} * #{take})
+		</if>
+		) T2
+		<if test="skip != '' and skip != null">
+			WHERE RNUM <![CDATA[>]]>
+			#{skip}
+		</if>
+	</select>
+
+	<!-- 고시대상 차량 목록 건수(임시) -->
+	<select id="selectNtcnCarListCnt" parameterType="paraMap"
+		resultType="java.lang.Integer">
+		/* 고시대상 차량 목록 조회 수 */
+		SELECT COUNT(1) AS TOTAL
+		FROM OPS_MT_TRMNL_INFO AS OMTI
+		LEFT OUTER JOIN OPS_MT_TRANSPRT_CMPNY_MST AS OMTCM ON (OMTI.BIZRNO =
+		OMTCM.BIZRNO)
+		WHERE OMTI.CAR_REG_NO = #{carRegNo}
+		/* AND NTFC_VHCLE_AT = 'Y' */
+		<if test="bizrno != '' and bizrno != null">
+			AND OMTI.BIZRNO = #{bizrno}
+		</if>
+		<if test="cmpnyNm != '' and cmpnyNm != null">
+			AND OMTCM.CMPNY_NM = #{cmpnyNm}
+		</if>
+	</select>
+
+
+	<!-- 고시대상 차량 회사명 목록(임시) -->
+	<select id="selectNtcnCmpnyList" parameterType="paraMap"
+		resultType="resultMap">
+		SELECT UNIQUE BIZRNO AS CD_ID
+		, CMPNY_NM AS CD_NM
+		FROM OPS_MT_TRANSPRT_CMPNY_MST
+	</select>
+
+
+	<insert id="insertSendMsg" parameterType="paraMap">
+		/*단말기 SMS 메세지 등록*/
+      <![CDATA[
+		INSERT INTO INNO_TRAN (
+				MSG_ID,
+				SCHEDULE_TYPE,
+				SUBJECT,
+				SEND_DATE,
+				NOW_DATE,
+				CALLBACK,
+				DEST_COUNT,
+				DEST_INFO,
+				MSG,
+				SYSTEM_MSG_ID,
+				SEND_STATUS
+		) VALUES (
+				INNO_TRAN_SEQ.NEXTVAL,
+				0,
+				NULL,
+				TO_CHAR(SYSDATE, 'YYYYMMDDHH24MMSS'),
+				TO_CHAR(SYSDATE, 'YYYYMMDDHH24MMSS'),
+				'0544597865',
+				1,
+				#{destInfo},
+				#{smsMsg},
+				NULL,
+				0
+		)
+		]]>
+	</insert>
+	
+</mapper>

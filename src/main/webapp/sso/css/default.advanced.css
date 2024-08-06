@@ -1,0 +1,54 @@
+@charset "UTF-8";
+
+@import "default.css";
+
+
+/* -- Base style extension -- */
+
+ul.dropdown li a {
+ display: block;
+ padding: 10px 0px;
+}
+
+
+/* -- Base style override -- */
+
+ul.dropdown li {
+ padding: 0;
+}
+
+
+/* -- Base style reinitiate: post-override activities -- */
+
+ul.dropdown li.dir {
+ padding: 7px 20px 7px 14px;
+}
+
+ul.dropdown ul li.dir {
+ padding-right: 10px;
+}
+
+
+/* -- Custom -- */
+
+ul.dropdown ul a {
+ padding: 4px 5px 4px 14px;
+ width: 151px; /* Especially for IE */
+}
+
+ul.dropdown ul a:hover {
+ background-color: #7caae8;
+}
+
+
+/* -- Drop-down open -- */
+
+ul.dropdown li:hover > a.dir {
+ background-color: #151d32;
+ color: #7caae8;
+}
+
+ul.dropdown ul li:hover > a.dir {
+ background-color: #76b900;
+ color: #fff;
+}

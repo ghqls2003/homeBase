@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test WebCrypto API</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="cache-control" content="no-cache">
+
+<script type="text/javascript" src="../AnySign4PC/ext/promise-6.1.0.js"></script>
+
+<script type="text/javascript" src="./webcrypto-shim-master/webcrypto-shim.js"></script>
+
+<script type="text/javascript" src="../XWC/Extensions/xcryptoCore_min.js"></script>
+<script type="text/javascript" src="../XWC/Extensions/xcrypto.js"></script>
+
+<script type="text/javascript" src="../anyPinInterface.js"></script>
+
+<body>
+<h1>Test WebCrypto API</h1>
+
+<script type="text/javascript">
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// test WebCrypto genKey and store idb
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+if(window.crypto ? typeof window.crypto.subtle == "undefined" : true)
+{
+	if(window.msCrypto)
+		var WCrypto = window.msCrypto.subtle;
+}
+else
+{
+	var WCrypto = window.crypto.subtle;
+}
+
+function generateSignSaveKey() {
+	makeSignKeys().then(function (keys){
+		callOnStore(function (store) {
+			store.put({id: "Signkeypair", publicKey: keys.publicKey, privateKey: keys.privateKey});
+			alert("success save SignKey in IndexedDB");
+		});
+	}).catch(function(ex) {
+		console.log(ex);
+		alert("fail generateSignSaveKey");
+	});
+}
+
+/*
+function generateEncSaveKey() {
+	makeEncKeys().then(function (keys){
+		callOnStore(function (store) {
+			store.put({id: "Enckeypair", publicKey: keys.publicKey, privateKey: keys.privateKey});
+			alert("success save EncryptKey in IndexedDB");
+		});
+	}).catch(function(ex) {
+		console.log(ex);
+		alert("fail generateEncSaveKey");
+	});
+}
+*/
+
+function generateEncSaveKey() {
+	var form = document.form_TestWebCrypto;
+	var output = form.outputpubkey;
+
+	makeEncKeys().then(function (keys){
+		callOnStore(function (store) {
+			store.put({id: "Enckeypair", publicKey: keys.publicKey, privateKey: keys.privateKey});
+			alert("success save EncryptKey in IndexedDB");
+		});
+        return window.crypto.subtle.exportKey('spki', keys.publicKey);
+      // avoiding catch(function(err) {...}) to support IE <= 8
+      }).then(undefined, function(ex) {
+        console.log(ex);
+		alert("fail generateSignSaveKey");
+      }).then(function(pkcs8) {
+        if(pkcs8) {
+
+          var decodePubKey = forge.pki.rsa.custom_publicKeyFromAsn1(forge.asn1.fromDer(forge.util.createBuffer(pkcs8)));
+          //var publicKey = forge.util.encode64(forge.util.createBuffer(pkcs8).getBytes());
+
+          var pubKey = forge.asn1.toDer(forge.pki.rsa.publicKeyToAsn1(decodePubKey)).getBytes();
+		  var pubKeyencode64 = forge.util.encode64(pubKey);
+
+          output.value = pubKeyencode64;
+        }
+      });
+}
+
+function signData() {
+	var form = document.form_TestWebCrypto;
+	var data = form.plaindata.value;
+	var output = form.outputsigned;
+
+	var abuffer = base64ToArrayBuffer(forge.util.encode64(data));
+
+	callOnStore(function (store) {
+    var getData = store.get("Signkeypair");
+    getData.onsuccess = function() {
+    	var keys = {};
+    	keys.publicKey = getData.result.publicKey;
+    	keys.privateKey = getData.result.privateKey;
+
+			sign(abuffer, keys).then(function (singeddata){
+				console.log("singeddata data", singeddata);
+				//output = singeddata.toString();
+				output.value = arrayBufferToBase64(singeddata);
+			}).catch(function(ex) {
+				console.log(ex);
+				alert("fail signData");
+			});
+	   };
+	})
+}
+
+function verifyData() {
+	var form = document.form_TestWebCrypto;
+	var base64String = form.outputsigned.value;
+	var data = form.plaindata.value;
+	var output = form.outputverify;
+
+	var sdata = base64ToArrayBuffer(base64String);
+	var abuffer = base64ToArrayBuffer(forge.util.encode64(data));
+
+	callOnStore(function (store) {
+    var getData = store.get("Signkeypair");
+    getData.onsuccess = function() {
+    	var keys = {};
+    	keys.publicKey = getData.result.publicKey;
+    	keys.privateKey = getData.result.privateKey;
+
+			verify(sdata, abuffer, keys).then(function (verifyresult){
+				console.log("verifyresult", verifyresult);
+				output.value = verifyresult;
+			}).catch(function(ex) {
+				console.log(ex);
+				alert("fail verifyData");
+			});
+	   };
+	})
+}
+
+function EncData() {
+	var form = document.form_TestWebCrypto;
+	var data = form.plaindata.value;
+	var output = form.outputencrypted;
+
+	var abuffer = base64ToArrayBuffer(forge.util.encode64(data));
+
+	callOnStore(function (store) {
+    var getData = store.get("Enckeypair");
+    getData.onsuccess = function() {
+    	var keys = {};
+    	keys.publicKey = getData.result.publicKey;
+    	keys.privateKey = getData.result.privateKey;
+
+			enc(abuffer, keys).then(function (encdata){
+				console.log("encdata data", encdata);
+				//output = singeddata.toString();
+				output.value = arrayBufferToBase64(encdata);
+			}).catch(function(ex) {
+				console.log(ex);
+				alert("fail EncData");
+			});
+	   };
+	})
+}
+
+function DecData() {
+	var form = document.form_TestWebCrypto;
+	var data = form.outputencrypted.value;
+	var output = form.outputdecrypted;
+
+	var encdata = base64ToArrayBuffer(data);
+
+	callOnStore(function (store) {
+    var getData = store.get("Enckeypair");
+    getData.onsuccess = function() {
+    	var keys = {};
+    	keys.publicKey = getData.result.publicKey;
+    	keys.privateKey = getData.result.privateKey;
+
+			dec(encdata, keys).then(function (decresult){
+				console.log("decresult", decresult);
+				output.value = forge.util.decode64(arrayBufferToBase64(decresult));
+			}).catch(function(ex) {
+				console.log(ex);
+				alert("fail DecData");
+			});
+	   };
+	})
+}
+
+function arrayBufferToBase64( buffer ) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
+}
+
+
+
+function base64ToArrayBuffer(base64) {
+    var binary_string =  window.atob(base64);
+    var len = binary_string.length;
+    var bytes = new Uint8Array( len );
+    for (var i = 0; i < len; i++)        {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return bytes.buffer;
+}
+
+function callOnStore(fn_) {
+
+	// This works on all devices/browsers, and uses IndexedDBShim as a final fallback 
+	var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+
+	// Open (or create) the database
+	var open = indexedDB.open("MyDatabase", 1);
+
+	// Create the schema
+	open.onupgradeneeded = function() {
+	    var db = open.result;
+	    var store = db.createObjectStore("MyObjectStore", {keyPath: "id"});
+	};
+
+
+	open.onsuccess = function() {
+	    // Start a new transaction
+	    var db = open.result;
+	    var tx = db.transaction("MyObjectStore", "readwrite");
+	    var store = tx.objectStore("MyObjectStore");
+
+	    fn_(store)
+
+
+	    // Close the db when the transaction is done
+	    tx.oncomplete = function() {
+	        db.close();
+	    };
+	}
+}
+
+function makeSignKeys() {
+	return WCrypto.generateKey(
+    {
+        name: "RSASSA-PKCS1-v1_5",
+        modulusLength: 2048, //can be 1024, 2048, or 4096
+        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+        hash: {name: "SHA-256"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+    },
+    false, //whether the key is extractable (i.e. can be used in exportKey)
+    ["sign", "verify"] //must be ["encrypt", "decrypt"] or ["wrapKey", "unwrapKey"]
+   )
+}
+
+function makeEncKeys() {
+	return WCrypto.generateKey(
+    {
+        name: "RSA-OAEP",
+        modulusLength: 2048, //can be 1024, 2048, or 4096
+        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+        hash: {name: "SHA-256"}, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+    },
+    false, //whether the key is extractable (i.e. can be used in exportKey)
+    ["encrypt", "decrypt"] //must be ["encrypt", "decrypt"] or ["wrapKey", "unwrapKey"]
+   )
+}
+
+function sign(data, keys) {
+	return WCrypto.sign(
+	    {
+	        name: "RSASSA-PKCS1-v1_5",
+	        hash: { name: "SHA-256" }
+	        //label: Uint8Array([...]) //optional
+	    },
+	    keys.privateKey, //from generateKey or importKey above
+	    data //ArrayBuffer of the data
+	);
+}
+
+function verify(signature, data, keys) {
+	return WCrypto.verify(
+	    {
+	        name: "RSASSA-PKCS1-v1_5",
+	        hash: { name: "SHA-256" }
+	        //label: Uint8Array([...]) //optional
+	    },
+	    keys.publicKey, //from generateKey or importKey above
+	    signature,
+	    data //ArrayBuffer of the data
+	);
+}
+
+function enc(data, keys) {
+	return WCrypto.encrypt(
+	    {
+	        name: "RSA-OAEP",
+	        hash: { name: "SHA-256" }
+	        //label: Uint8Array([...]) //optional
+	    },
+	    keys.publicKey, //from generateKey or importKey above
+	    data //ArrayBuffer of the data
+	);
+}
+
+function dec(encdata, keys) {
+	return WCrypto.decrypt(
+	    {
+	        name: "RSA-OAEP",
+	        hash: { name: "SHA-256" }
+	        //label: Uint8Array([...]) //optional
+	    },
+	    keys.privateKey, //from generateKey or importKey above
+	    encdata //ArrayBuffer of the data
+	);
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+</script>
+
+<form id="form_TestWebCrypto" name="form_TestWebCrypto" action="#">
+	<table>
+		<tr>
+			<td>plaindata</td>
+			<td><input type="text" name="plaindata" size="80"/></td>
+		</tr>
+		<tr>
+			<td>Generate Signing Key</td>
+			<td>
+				<input type="button" value="generate and save" onclick="generateSignSaveKey()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>sign plaindata</td>
+			<td>
+				<input type="button" value="signData" onclick="signData()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>verify signeddata</td>
+			<td>
+				<input type="button" value="verifyData" onclick="verifyData()"/>
+			</td>
+		</tr>
+				<tr>
+			<td>Generate Encrypt Key</td>
+			<td>
+				<input type="button" value="generate and save" onclick="generateEncSaveKey()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>encrypt plaindata</td>
+			<td>
+				<input type="button" value="EncData" onclick="EncData()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>decrypt encdata</td>
+			<td>
+				<input type="button" value="DecData" onclick="DecData()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>output - signed data</td>
+			<td><textarea name="outputsigned" cols="80" rows="2"></textarea></td>
+		</tr>
+		<tr>
+			<td>output - verify</td>
+			<td><textarea name="outputverify" cols="80" rows="2"></textarea></td>
+		</tr>
+		<tr>
+			<td>output - encrypt data</td>
+			<td><textarea name="outputencrypted" cols="80" rows="2"></textarea></td>
+		</tr>
+		<tr>
+			<td>output - decrypt data</td>
+			<td><textarea name="outputdecrypted" cols="80" rows="2"></textarea></td>
+		</tr>
+		<tr>
+			<td>output - enc pubkey</td>
+			<td><textarea name="outputpubkey" cols="80" rows="2"></textarea></td>
+		</tr>
+
+
+	</table>
+</form>
+<br>
+
+</body>
+</html>

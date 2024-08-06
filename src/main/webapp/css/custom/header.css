@@ -1,0 +1,186 @@
+@charset "UTF-8";
+
+/* 작은 해상도에서 메뉴안열리는 문제 */
+@media ( max-width : 1800px) {
+	.ham_menu.active {
+		width: 60%;
+		visibility: visible;
+	}
+}
+
+@media ( max-width : 1800px){
+	 .ham_menu.active.selec_box {
+		width :	60%;
+		visibility : visible;
+		}
+}
+
+.li_slecsearch {
+	width: fit-content;
+	visibility: visible;
+	display: flex;
+}
+
+li.active>ul.gnb-depth {
+	height: auto !important;
+	max-height: 1000px;
+}
+
+/* 바디 상단 높이 */
+.subPage #container {
+	padding: 100px 0 54px;
+}
+
+/* 서브 타이틀 크기 */
+.contBox h4.name {
+	font-size: 2.2rem;
+}
+
+.hr_btn2 {
+    position: absolute;
+    content: '';
+    height: 35px;
+    right: 325px;
+    z-index: 2;
+}
+@media only screen and (max-width: 2546px) {
+    .hr_btn2 {
+        right: 330px; /* 적절한 위치로 변경 */
+    }
+}
+
+@media only screen and (max-width: 1750px) {
+    .hr_btn2 {
+        right: 290px;
+    }
+}
+@media only screen and (max-width: 1600px) {
+    .hr_btn2 {
+        right: 250px;
+    }
+}
+
+@media only screen and (max-width: 1440px) {
+    .hr_btn2 {
+        right: 35px;
+    }
+}
+/* 기본 위치 */
+.hr_btn3 {
+    position: absolute;
+    content: '';
+    height: 35px;
+    right: 280px;
+    z-index: 2;
+}
+
+@media only screen and (max-width: 2546px) {
+    .hr_btn3 {
+        right: 280px; /* 적절한 위치로 변경 */
+    }
+}
+
+@media only screen and (max-width: 1750px) {
+    .hr_btn3 {
+        right: 240px;
+    }
+}
+@media only screen and (max-width: 1600px) {
+    .hr_btn3 {
+        right: 230px;
+    }
+}
+
+@media only screen and (max-width: 1440px) {
+    .hr_btn3 {
+        right: 35px;
+    }
+}
+
+
+
+
+
+.hr_btn_mobile {
+	position: absolute;
+	content: '';
+	background: url(${contextPath}/images/ico_search.png) no-repeat center;
+	width: 35px;
+	height: 35px;
+/* 	button: px; */
+	right: 30px;
+	z-index: 2;
+	top: 78px;
+}
+
+
+.input2 {
+  display: flex;
+  align-items: center;
+}
+
+
+
+
+
+/* 개인정보 처리방침 팝업 css */
+.privacyPopup {
+	position: fixed;
+	z-index: 1002;
+	top: 0;
+    left: 0;
+    width: 100%;
+	height: 100%;
+}
+
+.privacyPopup .contBox {
+	width: 40vw;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+.privacyBtmCnt{
+	margin-top:38px;
+}	
+
+.privacyBtmTab{
+	width:430px; margin:0 auto;
+}
+.privacyPopup .k-picker-solid{
+	width: 270px !important;
+}
+.privacyBtmCom { 
+	padding:13px; 
+	text-align:right;
+}
+.cont_txt{
+	height:415px;	
+}
+
+
+@media (max-width:1600px) {
+	/*ipad Air*/
+    .privacyPopup .contBox{width: 85%;
+    	
+    }
+    
+}
+
+@media (max-width:768px) {
+	/*iphoneXR*/
+    .privacyPopup .contBox{width: 390px;}
+	.privacyBtmCnt {margin-top: 11px;}
+	.privacyPopup .k-picker-solid {width: 219px !important;height: auto;}
+	.privacyBtmCom {padding: 10px;text-align: right;}
+	.privacyBtmTab {width: 333px;margin: 0 auto;}
+}
+
+@media (max-width:390px) {
+	/*iphoneSE*/
+    .privacyPopup .contBox{width: 320px;}
+	.privacyBtmCnt {margin-top: 11px;}
+	.privacyPopup .k-picker-solid {width: 174px !important;height: auto;}
+	.privacyBtmCom {padding: 9px;text-align: right;}
+	.privacyBtmTab {width: 286px;margin: 0 auto;}
+}

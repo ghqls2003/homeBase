@@ -1,0 +1,383 @@
+﻿@charset "utf-8"; 
+
+/* common css */
+.asl-cert-pop  {position:fixed;top:0;left:0;width:100%;height:100%;background-color:#fff;z-index:1000;display:block}
+.asl-common {box-sizing:border-box; -webkit-overflow-scrolling:touch;background-color:#fff}
+.asl-common .main-div {height:100%;background-color:#fff;z-index:1001;overflow-y:auto}
+.asl-common .head-line {text-align:center;border-bottom:0.5rem solid #ebeef0}
+.asl-common .head-line h3{margin:0.6rem 0}
+.asl-common div, .asl-common p, .asl-common span, .asl-common ul, .asl-common li, .asl-common dl, .asl-common dt, .asl-common dd, .asl-common table, .asl-common th, .asl-common td, .asl-common form, fieldset, .asl-common legend, .asl-common input, .asl-common select, .asl-common textarea, .asl-common a, .asl-common button {font-family:'NotoSans', Arial, sans-serif; font-style:normal; font-weight:400; font-size:1.4rem; color:#0a0a0a; line-height:1.6; word-break:keep-all; word-wrap:break-word; text-rendering:optimizeLegibility !important; -webkit-font-smoothing:antialiased !important;}
+.asl-common p, .asl-common span, .asl-common li, .asl-common dt, .asl-common dd, .asl-common th, .asl-common td {font-size:inherit; font-family:inherit; font-weight:inherit; color:inherit;}
+.asl-common img {display:block;}
+.asl-common * {box-sizing:border-box;-webkit-overflow-scrolling:touch;}
+.asl-common .lb-only {position:absolute !important; width:0.1rem; height:0.1rem; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0;}
+.asl-common .pa-autharea {padding:2.0rem 2.4rem}
+.asl-common p, .asl-common h3 {margin:0; padding:0; font-weight:400;}
+.asl-common p.not-exist {background-color:#F6F7F9;}
+.asl-common .explain p {background:transparent}
+.asl-common .explain dl {word-break:normal}
+.asl-common h3 {font-family:'NotoSans'; font-weight:400; font-size:1.3rem; color:#0a0a0a; line-height:160%;background-color:#fff}
+.asl-common .clear::after, .asl-common .row::after {content:''; display:block; clear:both;}
+.asl-common .align-center {text-align:center}
+.asl-common .mg-auto {margin:0 auto !important;}
+.asl-common .mg-t15 {margin-top:1.5rem !important;}
+.asl-common .mg-t20 {margin-top:2.0rem !important;}
+.asl-common .pd-0 {padding:0 !important;}
+.asl-common .w100p {width:100% !important;}
+.asl-common ul, .asl-common li, .asl-common dl, .asl-common dt, .asl-common dd {margin:0; padding:0;font-size:1rem}
+.asl-common ul, .asl-common li {list-style:none;}
+.asl-common ul > li:not(:first-child) > .tit-main {margin-top:1.4rem;}
+.asl-common ul > li > .tit-main {padding-left:1.8rem;}
+.asl-common ul > li > .tit-main > span:first-child {display:inline-block; width:1.8rem; margin-left:-1.8rem;}
+.asl-common .tit-sub {margin-bottom:1.0rem; font-size:1.4rem; font-weight:500; color:#595959;}
+.asl-common .tit-sub:not(:first-child) {margin-top:2.5rem;}
+.asl-common .modal .tit-sub {font-size:1.5rem;}
+.asl-common a, .asl-common button {display:inline-block; margin:0; padding:0; font-size:1.4rem; vertical-align:top; text-decoration:none; border:none; cursor:pointer;}
+.asl-common a.disabled, .asl-common button[disabled] {pointer-events:none;}
+.asl-common .btn-wrap {position:relative;}
+.asl-common .btn-wrap::after {display:block; clear:both; content:'';}
+.asl-common .btn-wrap:not([class*='col']) [class*='btn-']:not([class*='btn-icon']):not([class*='btn-txt']) {width:100%;}
+.asl-common .btn-wrap[class*='col'] > [class*='btn-'] {float:left; width:auto;}
+.asl-common .btn-wrap[class*='col'] {margin:0;}
+.asl-common .btn-wrap[class*='col'] > [class*='btn-'] {margin-left:0.8rem;}
+.asl-common .btn-wrap[class*='col'] > [class*='btn-']:first-child {margin-left:0;}
+.asl-common .btn-wrap.col2 > [class*='btn-'] {width:calc(50% - 0.4rem);}
+.asl-common .btn-wrap.col3 > [class*='btn-'] {width:calc(33.33% - 0.6rem);}
+.asl-common .btn-wrap.col3 > [class*='btn-']:nth-of-type(2) {width:calc(33.33% - 0.4rem);}
+.asl-common .btn-wrap.col4 > [class*='btn-'] {width:calc(25% - 0.6rem);}
+.asl-common .btn-wrap.col5 > [class*='btn-'] {width:calc(20% - 0.64rem);}
+.asl-common .btn-wrap.col5 > [class*='btn-'] {height:4.0rem; line-height:4.0rem; padding:0; font-size:1.3rem;}
+.asl-common .btn-wrap.center > [class*='btn-'] {width:10.8rem;}
+.asl-common [class*="btn-"] {font-weight:500; text-align:center;}
+.asl-common [class*='btn-main'] {height:5rem; font-size:1.1rem; line-height:3.5rem; color:#fff;}
+.asl-common .btn-main {background-color:#317add; width: 100%;}
+.asl-common .btn-main.active {background-color:#317add;}
+.asl-common .btn-main:not(.grey).disabled, .btn-main:not(.grey)[disabled] {background-color:#aeaeae;}
+.asl-common .btn-main.grey {background-color:#838b92;}
+.asl-common .btn-main.grey.active {background-color:#636b73;}
+.asl-common .btn-main.grey.disabled, .btn-main.grey[disabled] {background-color:#c4c8cb;}
+.asl-common .btn-main.white {background-color:#fff; border:0.1rem solid #317add; color:#317add;}
+.asl-common .btn-wrap.col2.no-mg > .btn-main.disabled, .btn-wrap.col2.no-mg > .btn-main[disabled] {background-color:#838b92;}
+.asl-common .btn-wrap.col2.no-mg > .btn-main.grey, .btn-wrap.col2.no-mg > .btn-main.grey.active, .btn-wrap.col2.no-mg > .btn-main.grey.disabled, .btn-wrap.col2.no-mg > .btn-main.grey[disabled] {background-color:#aeaeae;}
+.asl-common [class*="btn-sub"] {height:3.3rem; line-height:3.3rem; font-size:1rem; box-sizing:border-box;}
+.asl-common [class*="btn-sub"] {background-color:#317add; color:#fff;}
+.asl-common [class*="btn-sub"].disabled, [class*="btn-sub"][disabled] {background-color:#b6b6b6;}
+.asl-common [class*="btn-sub"].grey {background-color:#f2f2f2; border:0.1rem solid #ccc;color:#767676;}
+.asl-common [class*="btn-sub"].white {background-color:#fff; border:0.1rem solid #b7b7b7;color:#595959;}
+.asl-common [class*="btn-sub"].white.t2 {background-color:#fff; border-color:#317add;color:#317add;}
+.asl-common [class*="btn-sub"].grey.disabled, [class*="btn-sub"].grey[disabled], [class*="btn-sub"].white.disabled, [class*="btn-sub"].white[disabled] {background-color:#f2f2f2; border-color:#ccc; color:#bababa;}
+.asl-common .btn-sub2 {height:4.4rem; line-height:4.2rem; font-size:1.4rem;}
+.asl-common .btn-wrap + .btn-wrap {margin-top:1.0rem;}
+.asl-common .btn-wrap:not([class*="col"]) [class*="btn-"] + [class*="btn-"] {margin-top:1.0rem;}
+.asl-common .btn-wrap [class*="btn-sub"].btn-sm {width:auto !important; min-width:16.2rem; padding:0 1.8rem;}
+.asl-common .btn-wrap.col2 > [class*="btn-sub"]:not(.grey):not(.white):first-child {background-color:#b6b6b6;}
+.asl-common .btn-wrap.col2 > [class*="btn-sub"].disabled:not(.grey):not(.white):last-child, .btn-wrap.col2 > [class*="btn-sub"][disabled]:not(.grey):not(.white):last-child {background-color:#8f969d;}
+.asl-common .btn-wrap.no-mg [class*="btn-sub"].grey + [class*="btn-sub"].grey, .btn-wrap.no-mg [class*="btn-sub"].white + [class*="btn-sub"].white, .btn-wrap.no-mg [class*="btn-sub"].grey + [class*="btn-sub"].white {border-left:0;}
+.asl-common .btn-sm {width:auto; padding:0 0.4rem 0.2rem;}
+.asl-common fieldset {position:relative; margin:0; padding:0; border:none;}
+.asl-common fieldset legend {position:absolute !important; width:0.1rem; height:0.1rem; padding:0; margin:-0.1rem; overflow:hidden; clip:rect(0,0,0,0); border:0;}
+.asl-common input, .asl-common select, .asl-common textarea {position:relative; margin:0; font-size:1.0rem; box-sizing:border-box; -webkit-appearance:none; border-radius:0;}
+.asl-common input:-webkit-autofill, .asl-common textarea:-webkit-autofill, .asl-common select:-webkit-autofill, .asl-common textarea:-webkit-autofill:focus, .asl-common select:-webkit-autofill:focus {-webkit-box-shadow:0 0 0 50px white inset; -webkit-test-fill-color: #fff;}
+.asl-common input:-webkit-autofill:focus {background-color:#eee;}
+.asl-common .textarea, .asl-common textarea:-webkit-autofill {margin-bottom:0.4rem; padding:0.6rem 1.0rem; width:100%; color:#151515; background:#fff; border:0.1rem solid #999; outline:none;}
+.asl-common input.text, .asl-common .selectbox, .asl-common input:-webkit-autofill, .asl-common select:-webkit-autofill {padding:0.6rem 1.0rem; width:100%; height:4rem; color:#0a0a0a; background-color:#fff !important; border:0.1rem solid #ccc; outline:none; text-align:left !important;}
+.asl-common input::placeholder, .asl-common textarea::placeholder {color:rgba(169,169,169,.6);}
+.asl-common input.text:focus, .asl-common .selectbox:focus, .asl-common input.text.active, .selectbox.active, .asl-common input:-webkit-autofill:focus, .asl-common textarea:-webkit-autofill:focus, .asl-common select:-webkit-autofill:focus {color:#0a0a0a; border-color:#317add; background-color:#fff !important;}
+.asl-common input.text[disabled], .selectbox[disabled] {border-color:#dedede; background-color:#eee !important;}
+.asl-common input.text[readonly] {border-color:#dedede; background-color:#f8f8f8 !important}
+.asl-common input.text:focus::placeholder, .asl-common textarea:focus::placeholder, .asl-common input.text[disabled]::placeholder, .asl-common input.text[readonly]::placeholder {color:#a9a9a9;}
+.asl-common .input-wrap {position:relative;}
+.asl-common .selectbox {position:relative; padding-right:2.8rem; text-overflow:hidden; white-space:nowrap; background-image:url(../../img/mw/common/bul_select.png); background-repeat:no-repeat; background-position:calc(100% + 0.5rem) 50%; background-size:2.8rem auto;}
+.asl-common .selectbox:focus, .asl-common .select-wrap.error .selectbox:focus {background-image:url(../../img/mw/common/bul_select_act.png); background-repeat:no-repeat; background-position:calc(100% + 0.5rem) calc(50% - 0.1rem); background-size:2.8rem auto;}
+.asl-common .input-wrap > label, .asl-common .form-tit {position:relative; display:inline-block; margin:1.3rem 0 0.9rem; font-size:1.6rem; color:#0a0a0a;}
+.asl-common .input-wrap + .form-tit, .asl-common .select-wrap + .form-tit, .asl-common .conts-wrap > [class*="sect-wrap"]:first-of-type > .input-wrap + .form-tit:first-of-type {margin-top:2.5rem;}
+fieldset > div:first-of-type > label {margin-top:0;}
+.asl-common .input-wrap > label > i {margin-left:0.4rem; vertical-align:middle;}
+.asl-common label.essential, .asl-common label > span.essential, .asl-common .form-tit.essential, .asl-common .form-tit > span.essential {position:relative; display:inline-block; padding:0 1.0rem 0 0;}
+.asl-common label.essential::after, .asl-common label > span.essential::after, .asl-common .form-tit.essential::after, .asl-common .form-tit > span.essential::after {display:block; position:absolute; top:0.6rem; right:0; width:0.6rem; height:0.6rem; background:#e45506; border-radius:50%; content:'';}
+.asl-common .form-tit.w100p .btn-sub.btn-sm {position:absolute; top:0; right:0; padding:0 0.8rem 0.2rem; height:2.8rem; font-size:1.3rem; font-weight:400; color:#767676; line-height:2.6rem; border:0.1rem solid #bfbfbf;}
+.asl-common .conts-wrap > [class*="sect-wrap"]:first-of-type > .form-tit:first-of-type, .asl-common .conts-wrap > [class*="sect-wrap"]:first-child > fieldset:first-child > .form-tit:first-of-type, .asl-common .wrap .conts-wrap:not(.main-conts) > .txt-box:first-child + [class*="sect-wrap"]:first-of-type > fieldset:first-child > .form-tit:first-of-type, .asl-common .wrap .conts-wrap.has-form form.flex-form .check-wrap.type2 ~ .section > .form-tit:first-child, .asl-common .wrap .conts-wrap.has-form form.flex-form [class*="sect-wrap"] > [class*="sect-wrap"]:first-child legend ~ .form-tit:first-of-type, .asl-common [class*="sect-wrap"] > h2.lb-only + .form-tit {margin-top:0;}
+.asl-common .input-wrap.error input.text, .asl-common .selectbox, .asl-common input.text.error, .asl-common .selectbox.error {padding:0.6rem 1.0rem 0.5rem; background-color:#fff; border-color:#f34235 !important;}
+.asl-common .input-wrap.error input.text:focus, .asl-common .selectbox:focus, .asl-common .input-wrap.error input.text.active, .asl-common .selectbox.active, .asl-common input.text.active.error, .asl-common .selectbox.active.error {border:0.1rem solid #007edd !important;}
+.asl-common .input-wrap.error > .text + .guide, .asl-common .select-wrap.error > .selectbox + .guide, .asl-common input.text.error + .guide, .asl-common .selectbox.error + .guide {margin-top:0.3rem;color:#f34235 !important;}
+.asl-common .input-wrap.error > .text + .guide + .guide, .asl-common .select-wrap.error > .selectbox + .guide + .guide {margin-top:0.2rem;}
+.asl-common .select-wrap.error .selectbox, .asl-common .selectbox.error {background-image:url(../../img/mw/common/bul_select_error.png); background-repeat:no-repeat; background-position: 100% 50%; background-size:2.8rem auto;}
+.asl-common .guide {display:block; width:100%; flex:none; margin-top:0.6rem; color:#8a8a8a; font-size:1.3rem;}
+.asl-common .guide + .guide {margin-top:0;}
+.asl-common .input-wrap > .guide > li, .asl-common .select-wrap > .guide > li {margin-top:0.2rem;}
+.asl-common .guide-btn {padding:0.1rem 0.7rem 0.3rem; font-size:1.3rem; background:#fff; border:0.1rem solid #ccc; border-radius:0.3rem; margin-top:0.6rem;}
+.asl-common .input-wrap > .text ~ .counter {margin-top:0.6rem; font-size:1.2rem; color:#317add; text-align:right;}
+.asl-common .input-wrap[class*="type"] {display:flex; flex-wrap:wrap; width:100%;}
+.asl-common .input-wrap[class*="type"]::after {position:absolute; display:block; clear:both;}
+.asl-common .input-wrap[class*="type"] .text, .asl-common .input-wrap[class*="type"] .selectbox {flex:auto;}
+.asl-common .input-wrap[class*="type"] span {line-height:5.0rem;}
+.asl-common .input-wrap[class*="type"] span.dash {width:2.0rem; text-align:center;}
+.asl-common .input-wrap.type2 .text, .asl-common .input-wrap .selectbox {width:calc(50% - 2.0rem);}
+.asl-common .input-wrap.type2 .selectbox:first-child {width:auto;}
+.asl-common .input-wrap.type2 .guide {flex:none; display:block; width:100%;}
+.asl-common .input-wrap.flex-wrap, .asl-common .input-wrap .flex-wrap {position:relative; display:flex; flex-wrap:wrap;}
+.asl-common .input-wrap.flex-wrap > select, .asl-common .input-wrap.flex-wrap > [class*="btn-"], .asl-common .input-wrap .flex-wrap .selectbox {flex:0 0 auto; width:auto; min-width:8.0rem;}
+.asl-common .input-wrap.flex-wrap > [class*="btn-"] {padding:0 0.8rem;}
+.asl-common .input-wrap.flex-wrap > select {min-width:12.0rem; max-width:12.8rem;}
+.asl-common .input-wrap.flex-wrap > input.text, .asl-common .input-wrap .flex-wrap .selectbox + .text {flex:1;}
+.asl-common .input-wrap.flex-wrap > *:not(label):not(.guide) + *:not(.guide):not(.selectbox), .asl-common .input-wrap .flex-wrap > *:not(label):not(.guide) + *:not(.guide):not(.selectbox) {margin-left:0.8rem;}
+.asl-common .input-wrap.flex-wrap .guide {flex:0 0 auto; width:100%;}
+.asl-common input[type="number"]::-webkit-outer-spin-button, .asl-common input[type="number"]::-webkit-inner-spin-button {margin:0; -webkit-appearance:none;}
+.asl-common .input-wrap + .input-wrap, .asl-common .input-wrap .text + .text, .asl-common .input-wrap + .check-wrap, .asl-common .input-wrap + .select-wrap, .asl-common .input-wrap .text + label.lb-only + .text, .asl-common .input-wrap + .btn-wrap, .asl-common .input-wrap + .hide + .btn-wrap, .asl-common .select-wrap + .input-wrap, .asl-common .check-wrap + .input-wrap, .asl-common .check-wrap + .section, .asl-common .form-tit.lb-only + .check-wrap, .asl-common .select-wrap + .select-wrap, .asl-common fieldset + fieldset, .asl-common .select-wrap + .check-wrap.type2, .asl-common .input-wrap .text + i + label.lb-only + .text, .asl-common .input-wrap.type2 .text + .selectbox, .asl-common .input-wrap.certNum-wrap + .btn-wrap, .asl-common .btn-wrap + .input-wrap.type2, .asl-common .input-wrap .text + i + .text, .asl-common .input-wrap .text + i + .selectbox, .asl-common .input-search + .guide-btn + .input-wrap {margin-top:1.2rem;}
+.input-wrap .btn-sub {height:5.5rem; line-height:5.3rem;}
+[class*="sect-wrap"] > .input-wrap:first-child > label.essential, .asl-common [class*="sect-wrap"] .lb-only:first-child + .input-wrap .essential {margin-top:0;}
+.asl-common table {margin:0; width:100%; border-collapse:collapse; border-spacing:0; table-layout:fixed;}
+.asl-common table caption {width:0; height:0; font-size:0; line-height:0; visibility:hidden;}
+.asl-common .list-wrap {position:relative;}
+.asl-common .list-wrap:not([class*="agree-wrap"]) > ul:not([class*="data-list"]) > li:not(.accordion-list) {background:#F6F7F9;}
+.asl-common .list-wrap:not([class*="agree-wrap"]) > ul:not([class*="data-list"]) > li.cert-list {background: #fff;}
+.asl-common .list-wrap:not([class*="agree-wrap"]) > ul:not([class*="data-list"]) > li.cert-list div {height: 100%; padding: 1.3rem 2.0rem; box-shadow: #00000014 0px 2px 5px; border-radius: 10px;}
+.asl-common .list-wrap:not([class*="agree-wrap"]) > ul:not([class*="data-list"]) > li.cert-list p {background: #fff;}
+.asl-common .list-wrap > ul:not([class*="data-list"]) > li:not(.accordion-list) > a:not(.txt-link):not(.btn-txt){padding:2.0rem 1.8rem;}
+.asl-common .list-wrap > .btn-wrap:last-child {margin:2.0rem;}
+.asl-common .nodata {display:flex; flex-direction: column; width:100%; height:21.0rem; margin:0; justify-content:center; align-items:center;}
+.asl-common .nodata > span:first-child, .asl-common .nodata > p:first-child:last-child {display:table-cell;}
+.asl-common .nodata > span:first-child, .asl-common .nodata > p:first-child {background: url(../img/icon_sign_2.png); background-color: #F6F7F9; width: 97px; height: 97px; border-radius: 75px; text-align: center; font-size: 12px; vertical-align: middle; line-height: 150px; box-shadow: #0000000d 0px 3px 6px; margin-bottom: 25px;}
+.asl-common .nodata > span:first-child, .asl-common .nodata > p:last-child {text-align:center; vertical-align:middle; font-weight: bold;}
+.asl-common .nodata.icon1 > span:first-child, .asl-common .nodata.icon1 > p:first-child{position:relative; padding-top:6.6rem;}
+.asl-common .nodata.icon1 > span:first-child::before, .asl-common .nodata.icon1 > p:first-child::before {content:''; position:absolute; top:0; left:50%; width:5.6rem; height:5.6rem; -webkit-transform:translateX(-50%); transform:translateX(-50%); background:url(../../img/mw/common/icon_message_01.png) no-repeat; background-size:5.6rem auto; background-position-y:-39.2rem;}
+.asl-common .agree-wrap:not(.accordion-wrap) li {position:relative; padding:1.6rem 8.8rem 1.7rem 1.5rem; border:0.1rem solid #ccc; font-size:1.6rem;}
+.asl-common .agree-wrap:not(.accordion-wrap) li ~ li {margin:0.8rem 0 0; border-color:#ccc;}
+.asl-common .agree-wrap:not(.accordion-wrap) li > a.txt-link {position:absolute;top:50%;right:1.5rem;transform:translateY(-50%);font-size:1.3rem; color:#6f6f6f; text-align:right;}
+.asl-common .agree-wrap:not(.accordion-wrap) li > a.txt-link::before {bottom:0; left:50%; width:100%; background:#6f6f6f; -webkit-transform:translateX(-50%); transform:translateX(-50%);}
+.asl-common .agree-wrap.t2:not(.accordion-wrap) li {padding:0;}
+.asl-common .agree-all:not(:first-child) {margin-top:2rem;}
+.asl-common .agree-all .agree-wrap {height:100%; overflow:hidden;}
+.asl-common .agree-all .agree-wrap ul {border:0.05rem solid #e6e6e6;}
+.asl-common .agree-all .agree-wrap li {margin:0; border:0; padding:0;}
+.asl-common .agree-all .agree-wrap li ~ li {border-top:0.1rem solid #e6e6e6; margin:0;}
+.asl-common .agree-all.active + [class*="mg-t"] {margin:0 !important;}
+.asl-common [class*="agree-"] + .check-wrap {margin:2.0rem 0;}
+.accordion-list.agree-list .tit-sub {color:#0a0a0a;}
+.accordion-list.agree-list:first-child:last-child > div {padding:1rem 1.2rem; border:0;}
+.accordion-list.agree-list:first-child:last-child > div .tit-sub ~ *, .asl-common .accordion-list.agree-list:first-child:last-child > div .tit-sub ~ .tbl-wrap * {font-size:1.2rem;}
+.asl-common .accordion-wrap .accordion-list > .certNumGuide {position:relative; display:block; padding:1rem; font-size:1.2rem; background: #317add; color: #fff;}
+.asl-common .accordion-wrap .accordion-list > a {position:relative; display:block; padding:1rem; font-size:1.2rem; background:#fff;}
+.asl-common .accordion-wrap .accordion-list > a > .blt {position:absolute; top:50%; right:1.6rem; width:1.5rem; height:1.0rem; -webkit-transform:translateY(-50%); transform:translateY(-50%); color:transparent;}
+.asl-common .accordion-wrap .accordion-list > a > .blt::before, .asl-common .accordion-wrap .accordion-list > a > .blt::after {position:absolute; top:0; left:0.7rem; width:0.2rem; height:1.0rem; background:#999; content:''; -webkit-transform-origin:50% 92%; transform-origin:50% 92%;}
+.asl-common .accordion-wrap .accordion-list > a > .blt::before {-webkit-transform:rotate(-40deg); transform:rotate(-40deg);}
+.asl-common .accordion-wrap .accordion-list > a > .blt::after {-webkit-transform:rotate(40deg); transform:rotate(40deg);}
+.asl-common .accordion-wrap .accordion-list.active > a > .blt::before, .asl-common .accordion-wrap .accordion-list.active > a > .blt::after {-webkit-transform-origin:50% 8%; transform-origin:50% 8%;}
+.asl-common .accordion-wrap .accordion-list.active > a > .blt::before {-webkit-transform:rotate(40deg); transform:rotate(40deg);}
+.asl-common .accordion-wrap .accordion-list.active > a > .blt::after {-webkit-transform:rotate(-40deg); transform:rotate(-40deg);}
+.asl-common .accordion-wrap .accordion-list > a + * {display:none; padding:2.6rem 1.8rem; background:#f4f4f4;}
+.asl-common .accordion-wrap [class*="txt-"] > li {background:transparent !important; border:none !important;}
+.asl-common .accordion-wrap .accordion-list .bg-white {background:#fff; border-bottom:0.1rem solid #f2f2f2;}
+.asl-common .modal {display:none; position:fixed; top:50%; left:50%; width:calc(100% - 3.6rem); height:auto; max-height:calc(100% - 5.0rem); background:#fff; z-index:3999; -webkit-transform:translate(-50%, -50%); transform:translate(-50%, -50%);}
+@media screen and (min-width:768px){
+	.asl-common .modal {width:34.2rem;}
+}
+.asl-common .modal-wrap {display:flex; flex-direction:column; width:100%; height:100%; overflow:hidden;}
+.asl-common .modal-wrap.none-flex {display:block;}
+.asl-common .modal:not(.slider) .md-header, .asl-common .modal .md-body, .asl-common .modal .md-footer {position:relative; flex:none; z-index:99;}
+.asl-common .modal:not(.slider) .md-header {padding:2.0rem 1.8rem 1.5rem; min-height:5.0rem; font-size:1.8rem; z-index:3100;}
+.asl-common .modal:not(.slider) .md-header > h2 {margin:-0.2rem 0 0; padding:0 3.0rem 0 0; font-size:1.8rem; font-weight:500; line-height:1.4; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
+.asl-common .modal:not(.slider) .md-header > h2.lb-only {margin:0;}
+.asl-common .modal .md-header .btn-close {position:absolute; top:1.5rem; right:1.1rem; width:1.0rem; height:1.0rem; background:transparent; text-indent:-999.9rem; z-index:9;}
+.asl-common .modal .md-header .btn-close::before, .asl-common .modal .md-header .btn-close::after {content:''; display:block; position:absolute; top:50%; left:50%; background:#0a0a0a;}
+.asl-common .modal .md-header .btn-close::before {width:0.1rem; height:1.5rem; -webkit-transform:translate(-50%, -50%)rotate(45deg); transform:translate(-50%, -50%)rotate(45deg);}
+.asl-common .modal .md-header .btn-close::after {width:1.5rem; height:0.1rem; -webkit-transform:translate(-50%, -50%)rotate(45deg); transform:translate(-50%, -50%)rotate(45deg);}
+.asl-common .modal:not(.slider) .md-body {flex:1; margin:0; padding:0 1.8rem 3.0rem; height:auto; overflow-y:auto; color:#595959;}
+.asl-common .modal:not(.slider):not(.alert):not(.full):not(.t2):not(.noti) .md-body *:not(.header-sub) {font-size:1.4rem;}
+.asl-common .modal:not(.slider) .md-body > *:not(dt):not(.sect-terms) {color:inherit;}
+.asl-common .modal .md-body .header-sub {height:auto; min-height:5.0rem;}
+.asl-common .modal .md-body .header-sub .tab-wrap {min-height:100%;}
+.asl-common .modal .md-body > p > strong {display:block; font-weight:500; color:#0a0a0a;}
+.asl-common .modal .md-body p + p {margin-top:1.5rem;}
+.asl-common .modal .md-body [class*='txt-num'], .asl-common .modal .md-body [class*='txt-bul'] {text-align:left;}
+.asl-common .modal .md-body dl[class*='txt-num'] > dt {color:#0a0a0a;}
+.asl-common .modal .md-footer .btn-wrap[class*='col'] > [class*='btn-'] {margin-left:0;}
+.asl-common .modal .md-footer .btn-wrap.col2 > [class*='btn-'] {width:50%;}
+.asl-common .dimmed {position:fixed; top:0; left:0; width:100%; height:100%; background:#000; opacity:0.8; z-index:3995;}
+.asl-common .dimmed.t2 {opacity:0.6;}
+.asl-common .modal.t2:not(.slider) .md-header {padding:0; min-height:0;}
+.asl-common .modal.t2:not(.slider) .md-body {display:flex; width:100%; flex-direction:column; padding: 1.2rem 0.8rem 0; align-items:center; min-height:7.8rem; justify-content: center;}
+.asl-common .modal.t2:not(.slider) .md-body > p {text-align:center;font-size:0.9rem}
+.asl-common .modal.t2 .title {font-size:1.6rem; font-weight:500;}
+.asl-common .modal.full {width:100%; height:100%; max-height:100%;}
+.asl-common .modal.full .md-header {padding:0; padding:1.8rem 0 1.7rem; background:#f2f2f2; min-height:5.6rem;}
+.asl-common .modal.full .md-header > h2 {padding:0 4.5rem; text-align:center; font-size:1.8rem;}
+.asl-common .modal.full .md-header .btn-close {top:1.3rem;}
+.asl-common .modal.full .md-body {position:relative; display:flex; flex-direction:column; flex:0 0 auto; padding:0 0 6.0rem 0; height:calc(100% - 5.8rem);}
+.asl-common .modal.full .md-header.hide +  .md-body {max-height:100vh;}
+.asl-common .modal.full .md-body .header-sub + .dp-f.fd-col {min-height:calc(100% - 6.0rem);}
+.asl-common .modal.full .md-body .agree-txt * {word-break:normal;}
+.asl-common .modal.full .md-footer {position:fixed; bottom:0; left:0; width:100%;}
+.asl-common .modal.slider {width:100%; height:auto; background:transparent; overflow:hidden; -webkit-overflow-scrolling:touch;}
+.asl-common .modal.slider .modal-wrap {padding:5.0rem 0 4.4rem;}
+.asl-common .modal.slider .md-header {flex:none; width:100%;}
+.asl-common .modal.slider .md-header .btn-close {position:absolute; top:0.7rem; right:1.2rem; width:3.0rem; height:3.0rem; background:transparent; text-indent:-999.9rem; opacity:1; z-index:9; -webkit-transform:rotate(45deg); transform:rotate(45deg);}
+.asl-common .modal.slider .md-header .btn-close::before, .asl-common .modal.slider .md-header .btn-close::after {content:''; display:block; position:absolute; top:50%; left:50%; background:#fff; -webkit-transform:translate(-50%, -50%); transform:translate(-50%, -50%);}
+.asl-common .modal.slider .md-header .btn-close::before {width:0.1rem; height:2.2rem;}
+.asl-common .modal.slider .md-header .btn-close::after {width:2.2rem; height:0.1rem;}
+.asl-common .modal.slider .slider-wrap {position:relative; display:flex; flex-direction:row; padding:0 1.8rem; overflow-x:auto;}
+.asl-common .modal.slider .slider-wrap .list-wrap {padding:0 1.8rem 0 0;}
+.asl-common .modal.slider .slider-wrap .slider {display:flex;}
+.asl-common .modal.slider .md-body .slidebar {position:fixed; left:1.8rem; bottom:1.1rem; width:calc(100% - 3.6rem); height:0.4rem; background:transparent; border-bottom:0.1rem solid rgba(255,255,255,.2);}
+.asl-common .modal.slider .md-body .slidebar .bar {position:absolute; left:0; top:0; width:0; height:0.4rem; background:#317add;}
+.asl-common .layer-pop {display:none; position:fixed; top:100%; left:0; width:100%; background:#fff; z-index:997; -webkit-transition:top 0.5s; transition:top 0.5s;}
+.asl-common .layer-pop.active {display:block;}
+.asl-common .layer-pop .pop-header {padding:2.0rem 1.8rem 0.5rem; min-height:4.8rem; font-size:1.8rem;}
+.asl-common .layer-pop .pop-header > h2 {font-size:1.8rem; font-weight:500; line-height:1;}
+.asl-common .layer-pop .pop-header .btn-close {position:absolute; top:1.4rem; right:1.2rem; width:3.0rem; height:3.0rem; background:transparent; text-indent:-999.9rem; z-index:9; -webkit-transform:rotate(45deg); transform:rotate(45deg);}
+.asl-common .layer-pop .pop-header .btn-close::before, .asl-common .layer-pop .pop-header .btn-close::after {content:''; display:block; position:absolute; top:50%; left:50%; background:#0a0a0a; -webkit-transform:translate(-50%, -50%); transform:translate(-50%, -50%);}
+.asl-common .layer-pop .pop-header .btn-close::before {width:0.1rem; height:2.2rem;}
+.asl-common .layer-pop .pop-header .btn-close::after {width:2.2rem; height:0.1rem;}
+.asl-common .layer-pop .pop-body {padding:1.8rem 1.8rem 2.8rem;} 
+.asl-common .layer-pop.t2 .pop-header {position:relative; padding:0 1.8rem; min-height:1.7rem;}
+.asl-common .layer-pop.t2 .pop-header::before {content:''; display:block; position:absolute; top:-1.5rem; left:1.5rem; width:2.8rem; height:2.8rem; background:url(../../img/mw/common/icon-set.png) -33.1rem -0.1rem no-repeat; background-size:36.0rem auto; border:0.3rem solid #fff; border-radius:100%;}
+.asl-common .layer-pop.t2 .pop-body {padding:0 1.8rem;}
+.asl-common .layer-pop .pop-footer {position:absolute; top:-3.2rem; right:5.0rem;}
+.asl-common .slider-wrap {position:relative; width:100%; overflow:hidden;}
+.asl-common .slider-wrap .ui-slider {display:flex; flex-wrap:unset; overflow-x:auto;}
+.asl-common .slider-wrap .ui-slider > li {min-width:9.8rem;min-height:5.0rem;}
+.asl-common .slider-wrap .ui-slider > li > a {display:flex !important; align-items:center; justify-content:center; width:100%; height:100%; word-break:break-all;line-height:1.4 !important; text-align:center;}
+.asl-common .slider-wrap .btn-icon-prev, .asl-common .slider-wrap .btn-icon-next {position:absolute; top:50%; -webkit-transform:translateY(-50%); transform:translateY(-50%);}
+.asl-common .slider-wrap .btn-icon-prev {left:0;}
+.asl-common .slider-wrap .btn-icon-next {right:0;}
+.asl-common .header-sub .slider-wrap {padding:0 3.3rem;}
+.asl-common .slider-wrap .ui-slider > section {min-width:100vw; margin:0 !important;}
+.asl-common .wrap {display:flex; flex-direction:column; width:100%; height:auto; min-height:100%;}
+.asl-common .wrap .bottom-wrap {position:relative; bottom:0; left:0; width:100%; z-index:9;}
+.asl-common .wrap .bottom-wrap.fix {position:fixed;}
+.asl-common .wrap header {position:fixed; top:0; left:0; padding:0.4rem 0; width:100%; height:5.8rem; color:#0a0a0a; line-height:5.0rem; background:#fff; border-bottom:0.1rem solid #f2f2f2; z-index:990;}
+.asl-common .wrap header.no-line {border:none;}
+.asl-common .wrap header h1 {margin:0 5.7rem; font-size:2.0rem; font-weight:500; color:inherit; text-align:center; line-height:inherit; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.asl-common .wrap header h1.logo {display:inline-block; position:absolute; top:50%; left:1.8rem; margin:0; width:7.3rem; height:2.2rem; text-indent:-999.9rem; background:url(../../img/mw/common/icon-set.png) -9.0rem 0 no-repeat; background-size:36.0rem auto; -webkit-transform:translateY(-50%); transform:translateY(-50%);}
+.asl-common .wrap header.t2 {color:#fff; background:#57b8f7; border-color:rgba(0,0,0,.05);}
+.asl-common .login-wrap .lnb {padding:0;}
+.asl-common .cert-wrap {overflow:hidden;}
+.asl-common .cert-wrap li:last-child {border-color:#dbdbdb !important;}
+.asl-common .cert-wrap li > a {position:relative; display:block; padding:1.2rem 1.2rem 0.3rem !important;}
+.asl-common .cert-wrap .cert-info {position:relative; padding:0 0 0 7.5rem;}
+.asl-common .cert-wrap .cert-info::before, .asl-common .cert-wrap .cert-info::after {display:block; position:absolute; top:50%; left:0; width:5.5rem; height:5.5rem; content:''; border-radius:50%;  -webkit-transform:translateY(-50%); transform:translateY(-50%);}
+.asl-common .cert-wrap .cert-info::before {background: #F6F7F9; z-index: 0; box-shadow: #0000000f 0px 3px 6px;}
+.asl-common .cert-wrap .cert-info::after {background:url(../img/icon_sign_1.png); z-index:1;} 
+.asl-common .cert-wrap .cert-info dt {display:block; font-size:1.0rem; font-weight:500;}
+.asl-common .cert-wrap .cert-info dd {display:block; margin:0.2rem 0 0;}
+.asl-common .cert-wrap .cert-info p {font-size:0.8rem; color:#686868; line-height:1.4; letter-spacing:0;}
+.asl-common .cert-wrap .cert-info .alert {position:relative; margin:0.4rem 0 0; padding:0 0 0 1.1rem; font-size:0.8rem;}
+.asl-common .cert-wrap .cert-info .alert i {display:block; position:absolute; top:50%; left:0; width:0.8rem; height:0.8rem; text-indent:-999.9rem; border:0.05rem solid #a30014; border-radius:50%; -webkit-transform:translateY(-50%); transform:translateY(-50%);}
+.asl-common .cert-wrap .cert-info .alert i::before, .asl-common .cert-wrap .cert-info .alert i::after {content:''; display:block; position:absolute; left:0.3rem; width:0.1rem; background:#a30014;}
+.asl-common .cert-wrap .cert-info .alert i::before {top:0.1rem; height:0.1rem;}
+.asl-common .cert-wrap .cert-info .alert i::after {top:0.25rem; height:0.3rem;}
+.asl-common .cert-wrap .cert-info .alert, .asl-common .cert-wrap .cert-info.near p:not(:first-child) {color:#a30014;}
+.asl-common .cert-wrap .cert-info.near::after {background: url("../img/icon_sign_5.png");}
+.asl-common .cert-wrap .cert-info.expire::after {background: url("../img/icon_sign_4.png");}
+.asl-common .cert-wrap .cert-info.cloud::after {background: url("../img/icon_cloud_1.png");}
+.asl-common .cert-wrap .cert-info.cloud.near::after {background: url("../img/icon_cloud_5.png");}
+.asl-common .cert-wrap .cert-info.cloud.expire::after {background: url("../img/icon_cloud_4.png");}
+.asl-common .cert-wrap .cert-info.expire dt, .asl-common .cert-wrap .cert-info.expire p {opacity:0.6;}
+.asl-common .cert-wrap .cert-info.expire p {text-decoration:line-through;}
+.asl-common .cert-wrap .btn-wrap {padding:0 3.6rem 2.0rem;}
+.asl-common .cert-wrap .btn-wrap > .btn-sub {height:3.5rem; font-size:1.4rem; font-weight:400; line-height:3.3rem;}
+.asl-common .cert-wrap.t1 li > a:not(.cloud):not(.expire)::after {content:''; display:block; position:absolute; top:50%; right:3.8rem; width:0.9rem; height:0.9rem; border-right:0.2rem solid #adadad; border-bottom:0.2rem solid #adadad; -webkit-transform:translateY(-50%)rotate(-45deg); transform:translateY(-50%)rotate(-45deg);}
+.asl-common .cert-wrap.t1 li > a.expire + .btn-wrap {display:none;}
+.asl-common .cert-wrap.t2 li {padding:1.8rem;}
+.asl-common .cert-wrap.t2 .cert-info {margin:0 1.8rem;}
+.asl-common .cert-wrap.t2 .cert-info2 {margin:0.7rem 1.0rem; display:flex; flex-wrap:wrap;}
+.asl-common .cert-wrap.t2 .cert-info2 dt, .asl-common .cert-wrap.t2 .cert-info2 dd {flex:0 0 auto;}
+.asl-common .cert-wrap.t2 .cert-info2 dt {width:9.0rem; color:#6f6f6f;}
+.asl-common .cert-wrap.t2 .cert-info2 dd {margin-left:1.7rem; width:calc(100% - 10.7rem);}
+.asl-common .cert-wrap + .btn-wrap {margin:0 1.8rem;}
+.asl-common .close-panel {position:absolute; top:0; right:0; width:3rem; height:3rem; text-indent:-999.9rem; background:transparent;z-index:1020}
+.asl-common .close-panel::before, .asl-common .close-panel::after {content:''; position:absolute; top:50%; left:50%; width:2rem; height:0.1rem; background:#dadbdc;}
+.asl-common .close-panel::before {-webkit-transform:translate(-50%, -50%) rotate(45deg); transform:translate(-50%, -50%) rotate(45deg);}
+.asl-common .close-panel::after {-webkit-transform:translate(-50%, -50%) rotate(-45deg); transform:translate(-50%, -50%) rotate(-45deg);}
+.asl-common .login-wrap .btn-wrap:not(.bottom-wrap) .btn-main {height:5.0rem; line-height:5.0rem;}
+.asl-common .line {display:inline-block;width:3.2%;text-align:center}
+.asl-common .input-auth {height:3.5rem;width:25%;border:1px solid #f4f4f4;text-align:center;background:#f4f4f4;font-size:1.4rem}
+.asl-common .auth-message {font-size:2rem;line-height:1.4;font-weight:500;color:#595959;text-align:center;margin-bottom:15px}
+.asl-common #asl-certListArea h3 {background-color:#fff}
+.asl-common #asl-passwdArea {padding:3.0rem 2.4rem}
+.asl-common #asl-passwdArea {padding:1rem 2.7rem 1.0rem}
+.asl-common #asl-passwdArea p{font-size:1.1rem;margin-bottom:0.5rem;margin-top:0.5rem}
+.asl-common #asl-passwdArea h3 {margin:1rem 0}
+.asl-common #asl-passwdArea input::placeholder {color: #666666;}
+.asl-common #asl-passwdArea input::-webkit-input-placeholder {color: #666666;}
+.asl-common #asl-passwdArea input:-ms-input-placeholder {color: #666666;}
+.asl-common .plus-button, .asl-common .plus-button-b {border: 2px solid lightgrey;background-color: lightgrey;height: 3rem;width:3rem;border-radius: 999px;position: relative}
+.asl-common .plus-button-b {border: 2px solid #4e58a7;background-color: #fff;height: 3rem;width: 3rem;border-radius: 999px;position: relative;/*margin-bottom:1.7rem*/}
+.asl-common .plus-button:after, .asl-common .plus-button:before {content: "";display:block;background-color:#fff;position:absolute;top:50%;left: 50%;transform: translate(-50%, -50%);}
+.asl-common .plus-button-b:after, .asl-common .plus-button-b:before {content:"";display:block;background-color:#4e58a7;position:absolute;top:50%;left:50%;transform: translate(-50%, -50%) rotate(45deg);}
+.asl-common .plus-button:before, .asl-common .plus-button-b:before {height:1.8rem;width:0.1rem;}
+.asl-common .plus-button:after, .asl-common .plus-button-b:after {height: 0.1rem;width: 1.8rem;}
+.asl-common .asl-buttonWrapper {position: fixed;width: 100%;bottom: 0;z-index: 1;display: flex;flex-direction: column;align-items: flex-end;margin: 0;padding: 0;font-size:0.8rem}
+.asl-common .button {padding: 0.75em 2em; text-align: center; text-decoration: none;color: #2194E0;border: 2px solid #2194E0;font-size: 13px;display: inline-block;border-radius: 0.3em;transition: all 0.2s ease-in-out;position: relative;overflow: hidden;}
+.asl-common .button:before {content: "";background-color: rgba(255, 255, 255, 0.5);height: 100%;width: 3em;display: block;position: absolute;top: 0;left: -4.5em; -webkit-transform: skewX(-45deg) translateX(0);transform: skewX(-45deg) translateX(0);transition: none;}
+.asl-common .button:hover {	background-color: #2194E0;color: #fff;border-bottom: 4px solid #1977b5;}
+.asl-common .button:hover:before {-webkit-transform: skewX(-45deg) translateX(13.5em);transform: skewX(-45deg) translateX(13.5em);transition: all 0.5s ease-in-out;}
+.asl-common a:active, .asl-common a:hover {outline-width: 0;}
+.asl-common .btn-import-line {width:11rem;height:3rem;color:#4e58a7;text-align:center;padding:0 0;border:solid 0.1rem #4e58a7;border-radius:0.15rem;background-color:#fff;box-sizing:border-box;font-size:1.2rem;font-weight:600;display:none}
+.asl-common .btn-mg-03 {margin-bottom: 0.3rem;}
+.asl-loading-wrap {position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:20000}
+.asl-loading-wrap .asl-loading {position:absolute;top:50%;left:50%;width:28.0rem;color:#fff;text-align:center;transform:translate(-50%, -50%)}
+.asl-loading-wrap .asl-loading p {position:relative;/*padding:11.5rem 0 0;*/padding:0;min-height:15.0rem;font-size:1.6rem;font-weight:300}
+.asl-loading-wrap .asl-loading p::before {content: '';display:block;position:absolute;top:0;left:50%;width:4.4rem;height:4.4rem;background:url(../img/loading.gif) 0 0 no-repeat;background-size:4.4rem auto;overflow:hidden;-webkit-transform:translateX(-50%);transform:translateX(-50%);}
+
+/*** screen reader only ***/
+.sr-only {position:absolute !important; width:0.1rem; height:0.1rem; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0;}
+
+/** iPad Pro Landscape **/
+@media (min-width: 1281px) {
+}
+/** iPad Landscape **/
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+	.asl-common .main-div {height:70% !important;width:50%;margin: 3rem 0 0 25%}
+	.asl-common #asl-passwdArea {padding:1rem 5.7rem 1.0rem}
+	.asl-common .plus-button:after, .asl-common .plus-button-b:after {height: 0.2rem;width: 2.6rem;}
+	.asl-common .plus-button:before, .asl-common .plus-button-b:before {height: 2.6rem;width: 0.2rem;}
+	.asl-common .plus-button, .asl-common .plus-button-b {height: 4rem;width:4rem}
+	.asl-common .btm-asl-buttonWrapper {text-align:center;margin-top:1rem}
+	.asl-common .btm-asl-buttonWrapper p {font-size:1rem;margin-top:0.5rem}
+	.asl-common .close-panel::before, .asl-common .close-panel::after {width:3rem; height:0.2rem}
+	.asl-common .close-panel {width:3.5rem;height:3.5rem;top:0.5rem;right:0.5rem}
+	.asl-common .btn-import-line {width:14rem;height:4rem;font-size:1.4rem}
+	.asl-common .btn-mg-03 {margin-bottom:0.5rem}
+}
+/** iPad Portrait **/
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+	.asl-common .main-div {height:75% !important;width:60%;margin: 3rem 0 0 20%}
+	.asl-common #asl-passwdArea {padding:1rem 4.7rem 1.0rem}
+	.asl-common #asl-passwdArea p{font-size:1.2rem}
+	.asl-common .plus-button:after, .asl-common .plus-button-b:after {height: 0.2rem;width: 2.6rem;}
+	.asl-common .plus-button:before, .asl-common .plus-button-b:before {height: 2.6rem;width: 0.2rem;}
+	.asl-common .plus-button, .asl-common .plus-button-b {height: 4rem;width:4rem}
+	.asl-common .btm-asl-buttonWrapper {text-align:center;margin-top:1rem}
+	.asl-common .btm-asl-buttonWrapper p {font-size:1rem;margin-top:0.5rem}
+	.asl-common .close-panel::before, .asl-common .close-panel::after {width:3rem; height:0.2rem}
+	.asl-common h3 {font-size:1.8rem}
+	.asl-common .cert-wrap .cert-info dt {font-size:1.4rem}
+	.asl-common .cert-wrap .cert-info p {font-size:1.2rem}
+	.asl-common .close-panel {width:3.5rem;height:3.5rem;top:0.5rem;right:0.5rem}
+	.asl-common .btn-import-line {width:14rem;height:4rem;font-size:1.4rem}
+	.asl-common .pa-autharea {padding:2.0rem 3rem}
+	.asl-common dl, .asl-common dt, .asl-common dd {font-size:1.25rem}
+	.asl-common .accordion-wrap .accordion-list > a {font-size:1.4rem}
+	.asl-common .input-auth {font-size:1.5rem}
+	.asl-common [class*="btn-sub"] {font-size:1.2rem}
+}
+/** iPad mini Landscape **/
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) and (-webkit-min-device-pixel-ratio: 1)  {
+}
+/** iphone X Landscape **/
+@media only screen and (min-device-width: 375px) and (max-device-height: 812px) and (orientation : landscape) and (-webkit-device-pixel-ratio: 3) {
+	.asl-common #asl-passwdArea {padding:1rem 4.7rem 1.0rem}
+}
+/** iPhone XS Max Landscape **/
+@media only screen and (min-device-width : 414px) and (max-device-height : 896px) and (orientation : landscape) and (-webkit-device-pixel-ratio : 3) {
+}
+@media screen and (device-aspect-ratio: 40/71) {
+	.asl-common h3 {font-size:1.1rem}
+	.asl-common #asl-passwdArea {padding:1rem 1.7rem 1.0rem}
+	.asl-common .cert-wrap .cert-info dt {font-size:1.3rem}
+	.asl-common .accordion-wrap .accordion-list > a {font-size:1.1rem}
+	.asl-common .cert-wrap li > a {padding:1.05rem 1.2rem !important}
+	.asl-common .input-auth {height:3rem;font-size:1.2rem}
+	.asl-common ul, .asl-common li, .asl-common dl, .asl-common dt, .asl-common dd {font-size:0.95rem}
+}

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+                http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+                http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<context:component-scan
+		base-package="egovframework, kr.or.kotsa.rims">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+		<!--<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"
+			/> -->
+		<!--<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"
+			/> -->
+	</context:component-scan>
+
+
+	<bean id="htmlEscapeTag"
+		class="kr.or.kotsa.rims.cmmn.sys.service.HtmlEscapingObjectMapperFactory" />
+
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+		<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+		<list>
+		<value>application/json</value>
+		<value>text/html;charset=UTF-8</value>
+		</list>
+		</property>
+		<property name="objectMapper" ref="htmlEscapeTag"></property>
+		</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<mvc:resources mapping="/resources/**"
+		location="/resources/" />
+	<mvc:resources mapping="/images/**" location="/images/" />
+	<mvc:resources mapping="/font/**" location="/font/" />
+	<mvc:resources mapping="/js/**" location="/js/" />
+	<mvc:resources mapping="/css/**" location="/css/" />
+	<mvc:resources mapping="/audio/**" location="/audio/" />
+	<mvc:resources mapping="/ext-lib/**" location="/ext-lib/" />
+	<mvc:resources mapping="/DQVuserguide/**" location="/DQVuserguide/" />
+
+	<mvc:resources mapping="/mip/**" location="/mip/" />
+	<!-- <mvc:resources mapping="/dashboard/**" location="/dashboard/"/> <mvc:resources
+		mapping="/initech/**" location="/initech/"/> <mvc:resources mapping="/SW/**"
+		location="/SW/"/> -->
+	<aop:aspectj-autoproxy />
+
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="webBindingInitializer">
+			<bean
+				class="egovframework.example.cmmn.web.EgovBindingInitializer" />
+		</property>
+	</bean>
+
+	<bean id="beanNameViewResolver"
+		class="org.springframework.web.servlet.view.BeanNameViewResolver">
+		<property name="order" value="0" />
+	</bean>
+
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="localeChangeInterceptor" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+	<!-- 쿠키를 이용한 Locale 이용시 <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/> -->
+	<bean id="localeChangeInterceptor"
+		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+		<property name="paramName" value="language" />
+	</bean>
+
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean
+				class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+				<property name="paramName" value="lang" />
+			</bean>
+
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/bd/**" />
+			<mvc:mapping path="/mm/**" />
+			<mvc:mapping path="/rm/**" />
+			<mvc:mapping path="/sh/**" />
+			<mvc:mapping path="/vm/**" />
+			<mvc:mapping path="/usgStt/**" />
+			<mvc:exclude-mapping path="/resources/**" />
+			<mvc:exclude-mapping path="/mm/ssoLogin" />
+			<mvc:exclude-mapping path="/ma/ttLogin"/>
+			<mvc:exclude-mapping path="/mm/bizrNoConfirm" />
+			<mvc:exclude-mapping path="/mm/notiPopup" />
+			<mvc:exclude-mapping path="/mm/spcNtcnPop" />
+			<mvc:exclude-mapping path="/sso/Response.jsp"/>
+			<mvc:exclude-mapping path="/cmmn/software" />
+			<mvc:exclude-mapping path="/cmmn/signResult" />
+			<bean
+				class="kr.or.kotsa.rims.cmmn.sys.interceptor.AuthenticInterceptor">
+			</bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources
+		in the /WEB-INF/views directory -->
+
+	<!-- Tiles -->
+	<bean id="tilesViewResolver"
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.tiles3.TilesView" />
+		<property name="order" value="1" />
+	</bean>
+
+	<bean id="tilesConfigurer"
+		class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/config/egovframework/layout/layout-tiles.xml</value>
+			</list>
+		</property>
+		<property name="preparerFactoryClass"
+			value="org.springframework.web.servlet.view.tiles3.SpringBeanPreparerFactory" />
+	</bean>
+
+	<!-- tilesView, jstlView 사용을 위하여 UrlBasedViewResolver의 하위 객체인 InternalResourceViewResolver
+		사용 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+		<property name="contentType" value="text/html; charset=UTF-8" />
+		<property name="order" value="2" />
+	</bean>
+
+
+	<bean id="imageRenderer"
+		class="egovframework.example.cmmn.web.EgovImgPaginationRenderer" />
+
+	<bean id="paginationManager"
+		class="egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager">
+		<property name="rendererType">
+			<map>
+				<entry key="image" value-ref="imageRenderer" />
+			</map>
+		</property>
+	</bean>
+	<!-- /For Pagination Tag -->
+
+	<mvc:view-controller path="/cmmn/validator.do"
+		view-name="cmmn/validator" />
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!--<property name="maxUploadSize" value="10240000" /> -->
+		<property name="maxUploadSize" value="20480000" />
+	</bean>
+
+	<!-- json view -->
+	<bean id="jsonView"
+		class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+		<property name="contentType" value="text/html;charset=UTF-8" />
+	</bean>
+
+</beans>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ma.login">
+
+	<select id="selectTTUserInfo" parameterType="paraMap" resultType="resultMap">
+	<!-- 사용자 정보 조회 (개발용) -->
+		select T1.user_sn /* 사용자 일련번호 */
+			 , T1.authrt_cd /* 사용자 권한 코드 */
+			 , T1.cmptnc_zone_cd /* 사용자 관할구역 코드 */
+			 , T1.bzmn_sn /* 사업자 일련번호 */
+			 , T1.up_bzmn_sn /* 상위 사업자 일련번호 */
+		from dvs_cmm_mt_user T1 inner join dvs_cmm_tt_user T2 on (T1.user_sn = T2.user_sn)
+		where 1=1
+			<if test="userId != null and userId != ''">
+				and T2.id = #{userId}
+			</if>
+			<if test="userPw != null and userPw != ''">
+				and T2.pw = #{userPw}
+			</if>
+	</select>
+	
+	<select id="selectUserInfo" parameterType="paraMap" resultType="resultMap">
+	<!-- 사용자 정보 조회 -->
+		select T1.*,
+			   T2.user_sn as sso_user_sn,
+			   T2.user_id as sso_user_id,
+			   T2.user_nm as sso_user_nm,
+			   dqvs.pca_decrypt(T2.mbl_telno, '150') as sso_mbl_telno,
+			   T2.eml_addr as sso_eml_addr
+		from dvs_cmm_mt_user T1
+		left outer join dvs_cmm_mt_sso T2 ON (T1.user_sn = T2.user_sn)
+		where 1=1
+			<if test="userId != null and userId != ''">
+				and  T2.user_id = #{userId}
+			</if>
+	</select>
+	
+    <update id="updateUserInfo">
+   		UPDATE dvs_cmm_mt_sso
+		   SET user_nm      = (case when #{chargerNm} != '' then #{chargerNm} else #{userNm} end)
+		     , mbl_telno    =  dqvs.pca_encrypt(REGEXP_REPLACE(#{mbtlnum}, '[^0-9]', '', 'g'), '150')
+		     , eml_addr     = #{email}
+		 WHERE 1=1
+ 			<if test="userId != null and userId != ''">
+				and  user_id = #{userId}
+			</if>
+	</update>
+	
+	<update id="updateAcntCd">
+		<if test="userSn != null or userSn &gt;= 0">
+		UPDATE dqvs.dvs_cmm_mt_user
+		   SET acnt_stts_cd = '3'
+		   where user_sn = #{userSn}
+		</if>
+	</update>
+	
+	<update id="updateLastDt">
+		<if test="userSn != null or userSn &gt;= 0">
+		UPDATE dqvs.dvs_cmm_mt_user
+		   SET last_lgn_dt = now()
+		 WHERE user_sn = #{userSn}
+		</if>
+	</update>
+	
+	<select id="seletRjctRsn" parameterType="paraMap" resultType="resultMap">
+	<!-- 사용자 반려사유 조회 -->
+		select rjct_rsn
+		from dvs_cmm_mt_user T1
+		left outer join dvs_cmm_mt_sso T2 ON (T1.user_sn = T2.user_sn)
+		where 1=1
+			<if test="userId != null and userId != ''">
+				and  T2.user_id = #{userId}
+			</if>
+	</select>
+	
+	<!-- 로그인이력 -->
+   <insert id="insertLoginLog">
+	insert into  dqvs.dvs_cmm_hs_login(
+		cntn_dt 
+		,	user_sn
+		,	cntn_ip_addr
+        ,	cntn_mthd_cd   
+		,	cntn_type_cd
+		,	lgn_type_cd
+		)values(
+			NOW()
+			,	#{ssoUserSn}
+			,	#{regIp}
+			,	#{deviceType}
+			,   #{setInOut}
+			,   #{lgnType}
+		)
+	</insert>
+
+</mapper>

@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="stts.verfStts">
+	
+	<!-- 자격검증통계(시간별) -->
+	<select id="verfCount" parameterType="paraMap" resultType="resultMap">
+	/* 자격검증통계 카운트(시간별) */
+	<!-- 통계 테이블 테스트 -->
+		SELECT dt_use
+			, dt
+			, COALESCE("0", 0) "0", COALESCE("1", 0) "1", COALESCE("2", 0) "2"
+			, COALESCE("3", 0) "3", COALESCE("4", 0) "4", COALESCE("5", 0) "5"
+			, COALESCE("6", 0) "6", COALESCE("7", 0) "7", COALESCE("8", 0) "8"
+			, COALESCE("9", 0) "9", COALESCE("10", 0) "10", COALESCE("11", 0) "11"
+			, COALESCE("12", 0) "12", COALESCE("13", 0) "13", COALESCE("14", 0) "14"
+			, COALESCE("15", 0) "15", COALESCE("16", 0) "16", COALESCE("17", 0) "17"
+			, COALESCE("18", 0) "18", COALESCE("19", 0) "19", COALESCE("20", 0) "20"
+			, COALESCE("21", 0) "21", COALESCE("22", 0) "22", COALESCE("23", 0) "23"
+		FROM 
+			(SELECT TO_CHAR(GENERATE_SERIES(DATE_TRUNC('month', CONCAT(#{bsM}, '-01')::DATE), DATE_TRUNC('month', CONCAT(#{bsM}, '-01')::DATE) + INTERVAL '1 month' - INTERVAL '1 day', '1 day'), 'yyyy-mm-dd') dt_use) AS tt
+		LEFT OUTER JOIN
+			(
+			SELECT *
+			FROM 
+			crosstab(
+				'SELECT hs.dt 
+					, hs.hr
+					, SUM(hs.sum) tot
+				FROM
+					dqvs.dvs_st_verf_hour hs
+				WHERE hs.dt::DATE BETWEEN CONCAT('''||#{bsM}||''', ''-01'')::DATE AND CONCAT('''||#{bsM}||''', ''-01'')::DATE + INTERVAL ''1 month'' - INTERVAL ''1 second''
+				<choose>
+					<when test='mthd != null and mthd != "" and mthd != "123"'>
+						AND vrfc_mthd = ''4''
+					</when>
+					<when test='mthd != null and mthd != "" and mthd != "4"'>
+						AND vrfc_mthd != ''4''
+					</when>
+				</choose>
+				GROUP BY hs.dt
+					, hs.hr
+				ORDER BY dt
+				,hr'
+				, 'SELECT GENERATE_SERIES(0,23)'
+				) AS RESULT(dt TEXT
+					, "0" INT, "1" INT, "2" INT, "3" INT, "4" INT, "5" INT
+					, "6" INT, "7" INT, "8" INT, "9" INT, "10" INT, "11" INT
+					, "12" INT, "13" INT, "14" INT, "15" INT, "16" INT, "17" INT
+					, "18" INT, "19" INT, "20" INT, "21" INT, "22" INT, "23" INT
+				)
+			) AS t1
+		ON tt.dt_use = t1.dt
+		
+	<!-- 기존 쿼리 -->
+<!-- 		SELECT dt_use -->
+<!-- 			, dt -->
+<!-- 			, COALESCE("0", 0) "0", COALESCE("1", 0) "1", COALESCE("2", 0) "2" -->
+<!-- 			, COALESCE("3", 0) "3", COALESCE("4", 0) "4", COALESCE("5", 0) "5" -->
+<!-- 			, COALESCE("6", 0) "6", COALESCE("7", 0) "7", COALESCE("8", 0) "8" -->
+<!-- 			, COALESCE("9", 0) "9", COALESCE("10", 0) "10", COALESCE("11", 0) "11" -->
+<!-- 			, COALESCE("12", 0) "12", COALESCE("13", 0) "13", COALESCE("14", 0) "14" -->
+<!-- 			, COALESCE("15", 0) "15", COALESCE("16", 0) "16", COALESCE("17", 0) "17" -->
+<!-- 			, COALESCE("18", 0) "18", COALESCE("19", 0) "19", COALESCE("20", 0) "20" -->
+<!-- 			, COALESCE("21", 0) "21", COALESCE("22", 0) "22", COALESCE("23", 0) "23" -->
+<!-- 		FROM  -->
+<!-- 			(SELECT TO_CHAR(GENERATE_SERIES(DATE_TRUNC('month', CONCAT(#{bsM}, '-01')::DATE), DATE_TRUNC('month', CONCAT(#{bsM}, '-01')::DATE) + INTERVAL '1 month' - INTERVAL '1 day', '1 day'), 'yyyymmdd') dt_use) AS tt -->
+<!-- 		LEFT OUTER JOIN -->
+<!-- 			( -->
+<!-- 			SELECT * -->
+<!-- 			FROM  -->
+<!-- 				crosstab( -->
+<!-- 					'SELECT TO_CHAR(vrfc_dmnd_dt,''YYYYMMDD'') dt -->
+<!-- 						, EXTRACT(HOUR FROM vrfc_dmnd_dt) hr -->
+<!-- 						, COUNT(*)  -->
+<!-- 					FROM  -->
+<!-- 						dqvs.dvs_dqv_hs_verf -->
+<!-- 					<if test="bsM != null and bsM != ''"> -->
+<!-- 						WHERE vrfc_dmnd_dt BETWEEN TO_TIMESTAMP(CONCAT('''||#{bsM}||''', ''-01 00:00''), ''yyyy-mm-dd hh24:mi'') -->
+<!-- 							AND DATE_TRUNC(''month'', CONCAT('''||#{bsM}||''', ''-01'')::DATE) + INTERVAL ''1 month'' - INTERVAL ''1 second'' -->
+<!-- 					</if> -->
+<!-- 					<choose> -->
+<!-- 						<when test="mthd != null and mthd != '' and mthd != '123'"> -->
+<!-- 							AND vrfc_mthd = ''4'' -->
+<!-- 						</when> -->
+<!-- 						<when test="mthd != null and mthd != '' and mthd != '4'"> -->
+<!-- 							AND vrfc_mthd != ''4'' -->
+<!-- 						</when> -->
+<!-- 					</choose> -->
+<!-- 					GROUP BY dt -->
+<!-- 						,hr -->
+<!-- 					ORDER BY dt  -->
+<!-- 						,hr' -->
+<!-- 					, 'SELECT GENERATE_SERIES(0,23)' -->
+<!-- 				) AS RESULT(dt TEXT -->
+<!-- 					, "0" INT -->
+<!-- 					, "1" INT -->
+<!-- 					, "2" INT  -->
+<!-- 					, "3" INT  -->
+<!-- 					, "4" INT  -->
+<!-- 					, "5" INT  -->
+<!-- 					, "6" INT -->
+<!-- 					, "7" INT -->
+<!-- 					, "8" INT -->
+<!-- 					, "9" INT -->
+<!-- 					, "10" INT -->
+<!-- 					, "11" INT -->
+<!-- 					, "12" INT -->
+<!-- 					, "13" INT -->
+<!-- 					, "14" INT -->
+<!-- 					, "15" INT -->
+<!-- 					, "16" INT -->
+<!-- 					, "17" INT -->
+<!-- 					, "18" INT -->
+<!-- 					, "19" INT -->
+<!-- 					, "20" INT -->
+<!-- 					, "21" INT -->
+<!-- 					, "22" INT -->
+<!-- 					, "23" INT) -->
+<!-- 			) AS t1 -->
+<!-- 		ON tt.dt_use = t1.dt -->
+	</select>
+	
+	<!-- 자격검증통계(사업자별) Sql -->
+	<sql id="verfResultSql">
+	<!-- 통계테이블 테스트 -->
+	(
+	SELECT ROW_NUMBER() OVER(ORDER BY t.bzmn) sn
+	    , COALESCE(t.co_nm, '합계') co_nm
+	    , SUM(t.rslt_cd_00) cd00, SUM(t.rslt_cd_01) cd01, SUM(t.rslt_cd_02) cd02, SUM(t.rslt_cd_03) cd03, SUM(t.rslt_cd_04) cd04
+	    , SUM(t.rslt_cd_11) cd11, SUM(t.rslt_cd_12) cd12, SUM(t.rslt_cd_13) cd13, SUM(t.rslt_cd_14) cd14, SUM(t.rslt_cd_21) cd21
+	    , SUM(t.rslt_cd_22) cd22, SUM(t.rslt_cd_23) cd23, SUM(t.rslt_cd_24) cd24, SUM(t.rslt_cd_25) cd25, SUM(t.rslt_cd_31) cd31
+	    , SUM(t.rslt_cd_51) cd51, SUM(t.sum) tot
+	FROM
+		(
+		SELECT COALESCE(agency.co_nm, '-') co_nm
+			, CASE hs.bzmn_sn WHEN '-' THEN NULL WHEN '' THEN NULL ELSE hs.bzmn_sn END bzmn
+			, hs.*
+		FROM 
+			dqvs.dvs_st_verf_hour hs
+		LEFT OUTER JOIN
+			dqvs.dvs_rac_mt_agency agency
+		ON hs.bzmn_sn = agency.bzmn_sn
+		WHERE 1=1
+		<if test="monthDt != null and monthDt != ''">
+			AND hs.dt::DATE BETWEEN CONCAT(#{monthDt}, '-01')::DATE AND CONCAT(#{monthDt}, '-01')::DATE + INTERVAL '1 month' - INTERVAL '1 second'
+		</if> 
+		<if test="companyNm != null and companyNm != ''">
+			AND agency.co_nm LIKE '%'||#{companyNm}||'%'
+		</if>
+		<choose>
+			<when test="carReg != null and carReg != '' and carReg == 0">
+				AND (hs.vhcl_reg_no != '99임9999' OR hs.vhcl_reg_no ISNULL)
+			</when>
+			<when test="carReg != null and carReg != '' and carReg == 1">
+				AND hs.vhcl_reg_no = '99임9999' 
+			</when>
+		</choose>
+		) AS t 
+	WHERE 1=1
+	GROUP BY ROLLUP((t.bzmn, t.co_nm))
+	) AS T
+	
+	
+	<!-- 기존 쿼리 -->
+<!-- 		( -->
+<!-- 		SELECT ROW_NUMBER() OVER(ORDER BY a.bzmn_sn) sn -->
+<!-- 		    , COALESCE(a.co_nm, '합계') co_nm -->
+<!-- 			, SUM(a.cd00) cd00 -->
+<!-- 		    , SUM(a.cd01) cd01 -->
+<!-- 		    , SUM(a.cd02) cd02 -->
+<!-- 		    , SUM(a.cd03) cd03 -->
+<!-- 		    , SUM(a.cd04) cd04 -->
+<!-- 		    , SUM(a.cd11) cd11 -->
+<!-- 		    , SUM(a.cd12) cd12 -->
+<!-- 		    , SUM(a.cd13) cd13 -->
+<!-- 		    , SUM(a.cd14) cd14 -->
+<!-- 		    , SUM(a.cd21) cd21 -->
+<!-- 		    , SUM(a.cd22) cd22 -->
+<!-- 		    , SUM(a.cd23) cd23 -->
+<!-- 		    , SUM(a.cd24) cd24 -->
+<!-- 		    , SUM(a.cd25) cd25 -->
+<!-- 		    , SUM(a.cd31) cd31 -->
+<!-- 		    , SUM(a.cd51) cd51 -->
+<!-- 		    , SUM(a.tot) tot -->
+<!-- 		FROM -->
+<!-- 			( -->
+<!-- 			SELECT RESULT.bzmn_sn bzmn_sn -->
+<!-- 				, COALESCE(mstr.co_nm, '-') co_nm -->
+<!-- 				, COALESCE("00", 0) cd00 -->
+<!-- 				, COALESCE("01", 0) cd01  -->
+<!-- 				, COALESCE("02", 0) cd02 -->
+<!-- 				, COALESCE("03", 0) cd03 -->
+<!-- 				, COALESCE("04", 0) cd04 -->
+<!-- 				, COALESCE("11", 0) cd11 -->
+<!-- 				, COALESCE("12", 0) cd12 -->
+<!-- 				, COALESCE("13", 0) cd13 -->
+<!-- 				, COALESCE("14", 0) cd14 -->
+<!-- 				, COALESCE("21", 0) cd21 -->
+<!-- 				, COALESCE("22", 0) cd22 -->
+<!-- 				, COALESCE("23", 0) cd23 -->
+<!-- 				, COALESCE("24", 0) cd24 -->
+<!-- 				, COALESCE("25", 0) cd25 -->
+<!-- 				, COALESCE("31", 0) cd31 -->
+<!-- 				, COALESCE("51", 0) cd51 -->
+<!-- 				, COALESCE("00", 0)+COALESCE("01", 0)+COALESCE("02", 0)+COALESCE("03", 0)+COALESCE("04", 0)+COALESCE("11", 0) -->
+<!-- 				 +COALESCE("12", 0)+COALESCE("13", 0)+COALESCE("14", 0)+COALESCE("21", 0)+COALESCE("22", 0)+COALESCE("23", 0) -->
+<!-- 				 +COALESCE("24", 0)+COALESCE("25", 0)+COALESCE("31", 0)+COALESCE("51", 0) tot -->
+<!-- 			FROM  -->
+<!-- 				crosstab( -->
+<!-- 					'SELECT aa.bzmn_sn -->
+<!-- 						, aa.result_cd -->
+<!-- 						, COUNT(*) -->
+<!-- 					FROM -->
+<!-- 						( -->
+<!-- 						SELECT COALESCE(dcmc.cd, ''51'') result_cd -->
+<!-- 							, TO_CHAR(ddhv.vrfc_dmnd_dt, ''yyyy-mm'') dmnd_dt -->
+<!-- 							, rent.bzmn_sn  -->
+<!-- 						FROM -->
+<!-- 							dqvs.dvs_dqv_hs_verf ddhv -->
+<!-- 						LEFT OUTER JOIN -->
+<!-- 							dqvs.dvs_cmm_mt_code dcmc -->
+<!-- 						ON ddhv.vrfc_cd = dcmc.cd AND dcmc.cd_group = ''verify_cd'' -->
+<!-- 						LEFT OUTER JOIN -->
+<!-- 							( -->
+<!-- 							SELECT rent.vhcl_reg_no -->
+<!-- 								, rent.vrfc_hstry_sn -->
+<!-- 								, agency.bzmn_sn -->
+<!-- 								, agency.co_nm  -->
+<!-- 							FROM -->
+<!-- 								dqvs.dvs_dqv_mt_rent rent -->
+<!-- 							LEFT JOIN -->
+<!-- 								dqvs.dvs_rac_mt_agency agency -->
+<!-- 							ON rent.bzmn_sn = agency.bzmn_sn -->
+<!-- 							) rent -->
+<!-- 						ON ddhv.vrfc_hstry_sn = rent.vrfc_hstry_sn -->
+<!-- 						WHERE 1=1 -->
+<!-- 						<if test="companyNm != null and companyNm != ''"> -->
+<!-- 							AND rent.co_nm LIKE ''%'||#{companyNm}||'%'' -->
+<!-- 						</if> -->
+<!-- 						<choose> -->
+<!-- 							<when test="carReg != null and carReg != '' and carReg == 0"> -->
+<!-- 								AND (rent.vhcl_reg_no != ''99임9999'' OR rent.vhcl_reg_no ISNULL) -->
+<!-- 							</when> -->
+<!-- 							<when test="carReg != null and carReg != '' and carReg == 1"> -->
+<!-- 								AND rent.vhcl_reg_no = ''99임9999'' -->
+<!-- 							</when> -->
+<!-- 						</choose> -->
+<!-- 						<if test="monthDt != null and monthDt != ''"> -->
+<!-- 							AND (ddhv.vrfc_dmnd_dt BETWEEN TO_TIMESTAMP(CONCAT('''||#{monthDt}||''', ''-01 00:00''), ''yyyy-mm-dd hh24:mi'') -->
+<!-- 								AND DATE_TRUNC(''month'', CONCAT('''||#{monthDt}||''', ''-01'')::DATE) + INTERVAL ''1 month'' - INTERVAL ''1 second'') -->
+<!-- 						</if> -->
+<!-- 						) AS aa -->
+<!-- 					WHERE 1=1 -->
+<!-- 					<if test="resultType != null and resultType != ''"> -->
+<!-- 						AND aa.result_cd = '''||#{resultType}||''' -->
+<!-- 					</if> -->
+<!-- 					GROUP BY aa.result_cd, aa.bzmn_sn -->
+<!-- 					ORDER BY aa.bzmn_sn' -->
+<!-- 					, 'SELECT cd FROM dqvs.dvs_cmm_mt_code WHERE cd_group = ''verify_cd'' AND use_yn = ''Y'' AND del_yn = ''N'' ORDER BY cd' -->
+<!-- 				) AS RESULT ( -->
+<!-- 					bzmn_sn TEXT -->
+<!-- 					, "00" INT -->
+<!-- 					, "01" INT -->
+<!-- 					, "02" INT -->
+<!-- 					, "03" INT -->
+<!-- 					, "04" INT -->
+<!-- 					, "11" INT -->
+<!-- 					, "12" INT -->
+<!-- 					, "13" INT -->
+<!-- 					, "14" INT -->
+<!-- 					, "21" INT -->
+<!-- 					, "22" INT -->
+<!-- 					, "23" INT -->
+<!-- 					, "24" INT -->
+<!-- 					, "25" INT -->
+<!-- 					, "31" INT -->
+<!-- 					, "51" INT -->
+<!-- 				) -->
+<!-- 			LEFT OUTER JOIN -->
+<!-- 				dqvs.dvs_rac_mt_agency mstr -->
+<!-- 			ON mstr.bzmn_sn = RESULT.bzmn_sn -->
+<!-- 			) AS a -->
+<!-- 		GROUP BY ROLLUP((a.bzmn_sn, a.co_nm)) -->
+<!-- 		) AS T -->
+	</sql>
+	
+	<!-- 자격검증통계(사업자별) -->
+	<select id="verfResult" parameterType="paraMap" resultType="resultMap">
+	/* 자격검증통계 카운트(사업자별) */
+		SELECT *
+		FROM
+			<include refid="verfResultSql" />
+		<if test="take != '' and take != null">
+			WHERE T.sn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		</if>
+		<if test="skip != '' and skip != null">
+			AND T.sn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+		</if>
+	</select>
+	
+	<!-- 자격검증통계(사업자별) Cnt -->
+	<select id="verfResultCnt" resultType="int">
+	/* 자격검증통계 카운트(사업자별) Cnt */
+		SELECT COUNT(*)
+		FROM
+			<include refid="verfResultSql" />
+	</select>
+	
+	<!-- 검증결과다롭다운 -->
+	<select id="verfResultDrop" parameterType="paraMap" resultType="resultMap">
+	/* 검증결과 드롭다운 */
+		SELECT cd.cd
+			, cd.cd_nm 
+		FROM 
+			dqvs.dvs_cmm_mt_code cd 
+		WHERE cd.cd_group = 'verify_cd' 
+			AND cd.cd NOT IN('06', '15', 'test')
+		ORDER BY cd.cd
+	</select>
+	
+</mapper>

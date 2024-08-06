@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sft.notice">
+
+    <!-- 공지사항 리스트 -->
+	<select id="selectNoticeList" resultType="map">
+		SELECT T.* FROM (
+		SELECT
+			row_number() over(ORDER BY pst_sn DESC) as rn
+			, pst_sn
+			, pst_ttl
+			, to_char(reg_dt, 'yyyy-mm-dd') as reg_dt
+			, (select file_sn from dqvs.dvs_cmm_mt_file where file_sn = atch_file_sn)
+			, inq_cnt
+			, use_yn
+		FROM dqvs.dvs_cmm_mt_post
+		where menu_cd = 'BBST01'
+		<if test='authrtCd != "K01" and authrtCd != "Z01"'>
+			and use_yn = 'Y'
+		</if>
+		<if test='searchWrd != null and searchWrd != ""'>
+			and pst_ttl like '%' || #{searchWrd} || '%'
+		</if>
+		<if test="startDt != '' and startDt != null and endDt != '' and endDt != null">
+			and reg_dt <![CDATA[>=]]> to_date(#{startDt}, 'yyyy-mm-dd') and reg_dt <![CDATA[<=]]> to_date(#{endDt}, 'yyyy-mm-dd')+1
+		</if>
+		) T
+		WHERE 1 = 1
+			<if test="take != '' and take != null">
+				AND T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+			</if>
+			<if test="skip != '' and skip != null">
+				AND T.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+			</if>
+		ORDER BY T.rn ASC
+	</select>
+
+	<select id="selectNoticeListCnt" resultType="int">
+		select count(*) from (
+		SELECT
+			row_number() over(ORDER BY pst_sn DESC) as rn
+			, pst_sn
+			, pst_ttl
+			, to_char(reg_dt, 'yyyy-mm-dd') as reg_dt
+			, atch_file_sn
+			, inq_cnt
+		FROM dqvs.dvs_cmm_mt_post
+		where menu_cd = 'BBST01'
+		<if test='authrtCd != "K01" and authrtCd != "Z01"'>
+			and use_yn = 'Y'
+		</if>
+		<if test='searchWrd != null and searchWrd != ""'>
+			and pst_ttl like '%' || #{searchWrd} || '%'
+		</if>
+		<if test="startDt != '' and startDt != null and endDt != '' and endDt != null">
+			and reg_dt <![CDATA[>=]]> to_date(#{startDt}, 'yyyy-mm-dd') and reg_dt <![CDATA[<=]]> to_date(#{endDt}, 'yyyy-mm-dd')+1
+		</if>
+		) T
+	</select>
+
+	<!-- 공지사항 상세정보(내용) -->
+	<select id="selectDetailNoticeInfo" resultType="map">
+		SELECT
+			 menu_cd
+			, use_yn
+			, pst_sn
+			, pst_ttl
+			, to_char(reg_dt, 'yyyy-mm-dd') as reg_dt
+			, inq_cnt
+			, pst_cn
+			, file_sn
+			, atch_file_nm
+		FROM dqvs.dvs_cmm_mt_post dcmp
+		LEFT JOIN (
+			SELECT
+				file_sn
+				, atch_file_nm
+			FROM dqvs.dvs_cmm_mt_file ) dcmf
+		ON dcmp.atch_file_sn = dcmf.file_sn
+		WHERE menu_cd = 'BBST01'
+			AND dcmp.pst_sn = #{pstSn}::numeric
+	</select>
+
+	<!-- 공지사항 (조회수+1 증가) -->
+	<update id="updateNoticeCnt">
+		UPDATE
+			dqvs.dvs_cmm_mt_post
+		SET inq_cnt = #{inqCnt}+1
+		WHERE menu_cd = 'BBST01'
+			  AND pst_sn = #{pstSn}::numeric
+	</update>
+
+	<!-- 공지사항 상세정보(이전글, 다음글 제목) -->
+	<select id="selectDetailNoticeTitle" resultType="map">
+		select prev_pst_sn, prev_pst_ttl, next_pst_sn, next_pst_ttl from(
+		select
+			pst_sn as next_pst_sn,
+			pst_ttl as next_pst_ttl
+		from dqvs.dvs_cmm_mt_post dcmp
+		join (
+			select
+				max(pst_sn) as prev_pst_sn
+			from dqvs.dvs_cmm_mt_post dcmp
+			where
+				menu_cd = 'BBST01'
+				and use_yn = 'Y'
+				and pst_sn <![CDATA[<]]> #{pstSn}
+		) a on dcmp.pst_sn = a.prev_pst_sn
+		where
+			menu_cd = 'BBST01')a
+		full join
+		(select
+			pst_sn as prev_pst_sn,
+			pst_ttl as prev_pst_ttl
+		from dqvs.dvs_cmm_mt_post dcmp
+		join (
+			select
+				min(pst_sn) as next_pst_sn
+			from dqvs.dvs_cmm_mt_post dcmp
+			where
+				menu_cd = 'BBST01'
+				and use_yn = 'Y'
+				and pst_sn <![CDATA[>]]> #{pstSn}
+		) a on dcmp.pst_sn = a.next_pst_sn
+		where
+			menu_cd = 'BBST01')b on 1=1
+	</select>
+
+	<!-- 공지사항 등록 -->
+	<insert id="insertNotice">
+		insert into dqvs.dvs_cmm_mt_post
+		(menu_cd, pst_ttl, pst_cn, inq_cnt, atch_file_sn, rgtr_sn, reg_dt, reg_ip)
+		values(#{menuCd}, #{pstTtl}, #{pstCn}, 0, #{atchFileSn}::numeric, #{userSn}::numeric, now()::timestamp, #{regIp})
+	</insert>
+
+	<!-- 자동화 공격 -->
+	<select id="atatcPrvnt" resultType="map">
+		SELECT
+    (SELECT COUNT(*)
+     FROM dqvs.dvs_cmm_mt_post
+     WHERE menu_cd = #{menuCd}
+       AND rgtr_sn = #{userSn}::numeric
+       AND reg_dt <![CDATA[>=]]> (now() - interval '5 minutes')) AS loginCount,
+    (CASE WHEN EXISTS (
+        SELECT 1
+        FROM dqvs.dvs_cmm_mt_post
+        WHERE menu_cd = #{menuCd}
+          AND rgtr_sn = #{userSn}::numeric
+          AND pst_cn = #{pstCn}
+          AND reg_dt <![CDATA[>=]]> (now() - interval '5 minutes')
+    ) THEN 1
+    ELSE 0
+    END) AS textCount
+	</select>
+
+	<!-- 공지사항 수정 -->
+	<update id="updateNotice" parameterType="paraMap">
+		<if test="menuCd != '' and menuCd != null and pstSn != '' and pstSn != null">
+			UPDATE dqvs.dvs_cmm_mt_post
+			SET pst_ttl=#{pstTtl}, pst_cn=#{pstCn},
+			<if test ='atchFileSn != "" and atchFileSn != null'>
+			atch_file_sn=#{atchFileSn}::numeric,
+			</if>
+			 mdfr_sn=#{mdfrSn}::numeric, mdfcn_dt=now()::timestamp, mdfcn_ip=#{mdfcnIp}
+			WHERE menu_cd=#{menuCd} AND pst_sn=#{pstSn}
+		</if>
+	</update>
+
+	<!-- 공지사항 삭제 -->
+	<update id="updateDeleteNotice" parameterType="paraMap">
+		<if test="menuCd != '' and menuCd != null and pstSn != '' and pstSn != null">
+			UPDATE dqvs.dvs_cmm_mt_post
+			SET use_yn=#{useYn}, mdfr_sn=#{mdfrSn}::numeric, mdfcn_dt=now()::timestamp, mdfcn_ip=#{mdfcnIp}
+			WHERE menu_cd=#{menuCd} AND pst_sn=#{pstSn}
+		</if>
+	</update>
+
+</mapper>

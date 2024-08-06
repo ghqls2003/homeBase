@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   					   http://www.springframework.org/schema/beans/spring-beans.xsd
+						   http://mybatis.org/schema/mybatis-spring
+						   http://mybatis.org/schema/mybatis-spring.xsd">
+
+	<!-- sqlsession setup for mybatis database layer -->
+	<bean id="sqlSessionTemplate"
+		class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactorypostgres" />
+	</bean>
+
+	<!-- SqlSession setup for MyBatis Database Layer -->
+	<bean id="sqlSessionFactorypostgres"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation"
+			value="classpath:/egovframework/sqlmap/config/sql-map-config.xml" />
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:/egovframework/sqlmap/mapper/postgres/**/*.xml
+				</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="lobHandler"
+		class="org.springframework.jdbc.support.lob.DefaultLobHandler"
+		lazy-init="true" />
+
+
+	<!-- MapperConfigurer setup for MyBatis Database Layer with @Mapper("deptMapper") 
+		in DeptMapper Interface -->
+	<!-- <bean class="egovframework.rte.psl.dataaccess.dao.MapperConfigurer"> 
+		<property name="basePackage" value="egovframework.example.sample.service.impl" 
+		/> </bean> -->
+
+	<bean
+		class="egovframework.rte.psl.dataaccess.mapper.MapperConfigurer">
+		<property name="basePackage" value="kr.or.kotsa" />
+		<property name="sqlSessionFactoryBeanName"
+			value="sqlSessionFactoryOracle" />
+	</bean>
+
+</beans>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<queryMap id="eam-policy">
+	
+	<select id="getAdminPolicyOfDept" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>ou=adminpolicy,ou=#siteName#</base>
+		<filter>(&amp;(objectclass=eamAdpy)(eamAdpyKey=#deptCode#))</filter>
+		<attributes>
+			<attribute alias="adminPolicyCode">cn</attribute>
+		</attributes>
+	</select>
+	
+	<delete id="removeAdminPolicy" parameterClass="java.util.HashMap">
+		<base>cn=#adminPolicyCode#,ou=adminpolicy,ou=#siteName#</base>
+	</delete>
+	
+</queryMap>

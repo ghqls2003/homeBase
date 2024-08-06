@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AnyPIN & FacePhi Register</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="cache-control" content="no-cache">
+<meta name="viewport" content="width=device-width">
+
+<script type="text/javascript" src="../AnyPin/lib/xcryptoCore_min.js"></script>
+<script type="text/javascript" src="../AnyPin/lib/xcrypto_min.js"></script>
+
+<script type="text/javascript" src="../anyPinInterface.js"></script>
+
+<!-- FacePhi -->
+<script type="text/javascript" src="../FacePhi/FPhiUserControl/FPhiUserControl.js"></script>
+
+<script type="text/javascript">
+
+var keyIndex = 0;
+var ExtractionFinished = false;
+
+function init()
+{	
+	AnyPin.InitAnyPin();
+	AnyPin.SetRequestCertRaFunc(requestCertRaFunc);
+}
+
+</script>
+</head>
+<body onload="init();">
+
+<h1>AnyPIN & FacePhi Register</h1>
+
+<hr>
+
+<script type="text/javascript">
+
+var aRaType = "xecureca";
+var aRaPage = "./user_regist_anypin.jsp";
+
+var time2;
+function requestCertRaFunc(callback, param)
+{
+	var form = document.form_Regist;
+	var ra_result = form.ra_result;
+	
+	ra_result.value = "id:" + param.id + "\n" + "deviceId:" + param.deviceId + "\n";
+	
+	var req= new XMLHttpRequest ();
+	var url = aRaPage;
+	url += "?commandType=new";
+	url += "&user_policy_type=104";
+	url += "&targetRA=2048";
+	url += "&user_public_or_private=" + aRaType;
+	url += "&user_id=" + param.deviceId;
+	url += "&real_id=" + param.id;
+	
+	req.open ("GET", url, false);
+	req.send (null);
+	
+	var res = eval (req.responseText);
+	
+	if (parseInt (res["code"]) == 0) {
+		
+		var refNum = res["refcode"];
+		var authCode = res["authcode"];
+		var name = res["name"];
+		var ssn = res["ssn"];
+		var userid = res["userid"];
+		var realid = res["realid"];
+		var check_real_id = res["check_real_id"];
+		var cert_status = res["cert_status"];
+		
+		ra_result.value += "[등록 결과]\n" + 
+			"refcode:" + refNum + "\n" +
+			"authcode:" + authCode + "\n" +
+			"name:" + name + "\n" +
+			"ssn:" + ssn + "\n" +
+			"userid(deviceId):" + userid + "\n" +
+			"realid(id):" + realid + "\n" +
+			"check_real_id(id):" + check_real_id + "\n" +
+			"cert_status:" + cert_status;
+		
+		time2 = new Date();
+		callback(refNum, authCode);
+	} else {
+		ra_result.value += "[등록 결과]\n" +
+			"code:" + res["code"] + "\n" +
+			"reason:" + res["reason"] + "\n" +
+			"moreInformation:" + res["moreinformation"] + "\n";
+	}
+}
+
+function InitRegist()
+{
+	var form = document.form_Regist;
+	var userid = form.userid.value;
+	
+	if(!userid) {
+		alert("invalid userid");
+		return;
+	}
+	
+	var InitRegistUserCallback = function(result) {
+		var aResult = result.split("$");
+		if(aResult[1] == "401") { // auth (401)
+			SetPinElement(0);
+		} else { // reg (402, 403)
+			SetPinElement(1);
+		}
+	}
+	
+	var InitRegistErrCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.InitRegist(userid, 0, InitRegistUserCallback, InitRegistErrCallback);
+}
+
+function SetPinElement(facePhiMode) // auth: 0, reg: 1
+{
+	if(facePhiMode == 0) {
+		document.getElementById("mode").innerText = "Authenticate";
+	} else {
+		document.getElementById("mode").innerText = "Register";
+	}
+	
+	var SetPinOkFunc = function (result) {
+		if(result == true) {
+			document.getElementById("facePhiResult").innerText = "ExtractionFinished : success";
+			ExtractionFinished = true;
+		} else {
+			document.getElementById("facePhiResult").innerText = "ExtractionFinished : fail";
+		}
+	}
+	
+	var SetPinCloseFunc = function () {
+		document.getElementById("facePhiResult").innerText = "CancelledDetected";
+		alert("close")
+	}
+	
+	var SetPinErrorFunc = function (result) {
+		var aErrMsg = "[" + result.code + "] " + result.msg;
+		document.getElementById("facePhiResult").innerText = "ExceptionCaptured : " + aErrMsg;
+		alert(aErrMsg)
+	}
+	
+	keyIndex = AnyPin.SetPinElement("18", "facePhiDiv", SetPinOkFunc, SetPinCloseFunc, SetPinErrorFunc, facePhiMode);
+}
+
+function RegistPin()
+{
+	var form = document.form_Regist;
+	var userid = form.userid.value;
+	var nickname = form.nickname.value;
+	var description = form.description.value;
+	var output = form.output;
+	
+	var option = 0;
+	if(nickname) option |= 1;
+	if(description) option |= 2;
+	
+	if(!ExtractionFinished) {
+		alert("not ExtractionFinished")
+		return;
+	}
+	
+	var time1 = new Date();
+	var RegistPinUserCallback = function(result) {
+		var time3 = new Date();
+		var time_ra = new Date(time2 - time1);
+		var time_result = new Date(time3 - time1);
+		
+		output.value = "RA 등록 시간: " + time_ra.getMinutes() + " 분 " + time_ra.getSeconds() + " 초\r\n"
+		output.value += "최종 등록 시간: " + time_result.getMinutes() + " 분 " + time_result.getSeconds() + " 초\r\n"
+		output.value += result;
+	}
+	
+	var RegistPinErrCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.RegistPin(userid, nickname, description, keyIndex, option, RegistPinUserCallback, RegistPinErrCallback);
+}
+
+</script>
+
+<form id="form_Regist" name="form_Regist" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="60"/></td>
+		</tr>
+		<tr>
+			<td>nickname</td>
+			<td><input type="text" name="nickname" size="60"/></td>
+		</tr>
+		<tr>
+			<td>description</td>
+			<td><input type="text" name="description" size="60"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="InitRegist" onclick="InitRegist()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>mode</td>
+			<td><span id="mode"></span></td>
+		</tr>
+		<tr>
+			<td colspan="2">facePhiDiv</td>
+		</tr>
+		<tr>
+			<td colspan="2" align="center">
+				<table>
+					<tr>
+						<td><div id="facePhiDiv" style="border:1px solid #dfdfdf;margin:auto;"></div></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>facePhiResult</td>
+			<td><span id="facePhiResult"></span></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="RegistPin" onclick="RegistPin()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>ra_result</td>
+			<td><textarea name="ra_result" cols="60" style="height:220px"></textarea></td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="60" rows="4"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+</body>
+</html>

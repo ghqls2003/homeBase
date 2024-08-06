@@ -1,0 +1,51 @@
+/*메인 : 배경 데코*/
+@keyframes right-plus-ani { 
+    0% { transform: translate(0,0) } 
+    100% { transform: translate(40px,0px) } 
+}
+@keyframes left-plus-ani { 
+    0% { transform: translate(0,0) rotateZ(0deg) } 
+    100% { transform: translate(0px,40px) } 
+}
+@keyframes deco-cycl-ani { 
+    0% { transform: translate(0,0) } 
+    50% { transform: translate(10px,10px) } 
+    100% { transform: translate(-30px,20px) } 
+}
+@keyframes deco-ova-ani { 
+    0% { transform: rotateZ(0deg); } 
+    100% { transform: rotateZ(360deg); } 
+}
+@keyframes up-down{
+    from{
+      transform: translatey(0px);
+    }
+    to{
+      transform: translatey(-20px);
+    }
+}
+
+/* 메인 : 주요 텍스트 */
+@keyframes text-active-animation {
+	from {
+		opacity:0;filter:Alpha(opacity=0);
+		margin-right:15px
+	}
+	to {
+		opacity:1.0;filter:Alpha(opacity=100);
+		margin-right:0
+	}
+}
+
+/* 메인 : 메뉴 링크 영역 텍스트 마우스 오버 */
+@keyframes motion {
+	0% {margin-left: 0px;}
+	100% {margin-left: 8px;}
+}
+
+/* 메인 : 서버상태 마우스 오버 시 애니메이션 */
+@keyframes bar-hover {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+
+}

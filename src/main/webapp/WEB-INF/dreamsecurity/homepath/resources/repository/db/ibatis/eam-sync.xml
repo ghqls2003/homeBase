@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="eam-sync">
+
+	<insert id="addUser" parameterClass="map">
+		INSERT INTO
+			CSUS_EV_USER
+		(
+			USER_ID,
+			PASSWORD,
+			STATUS,
+			DESCRIPTION,
+			REGIST_USER_ID,
+			REGIST_DATE
+		)
+		VALUES
+		(
+			#memberId#,
+			' ',
+			'A',
+			null,
+			#createUserId#,
+			SYSDATE
+		)
+	</insert>
+	
+	<delete id="removeUser" parameterClass="string">
+		DELETE FROM
+			CSUS_EV_USER
+		WHERE
+			USER_ID IN ($userIds$)
+	</delete>
+	
+	<insert id="addUserDetail" parameterClass="map">
+		INSERT INTO
+			CSUS_EV_USER_DETAIL
+		(
+			USER_ID,
+			USER_NAME,
+			USER_ENGLISH_NAME,
+			LOCALE,
+			TIME_ZONE_ID,
+			TEAM,
+			POSITION,
+			E_MAIL,
+			OFFICE_PHONE,
+			CELLULAR_PHONE,
+			OFFICE_ADDRESS,
+			PICTURE_IMAGE,
+			EMOTICON_IMAGE,
+			MAILQUOTA
+		)
+		VALUES
+		(
+			#memberId#,
+			#userName#,
+			null,
+			'ko',
+			'000000000012',
+			#deptName#,
+			#jobName#,
+			#email#,
+			#officePhoneNumber#,
+			#mobilePhoneNumber#,
+			#homePostalAddress#,
+			null,
+			null,
+			null
+		)
+	</insert>
+	
+	<update id="modifyUserDetail" parameterClass="map">
+		UPDATE
+			CSUS_EV_USER_DETAIL
+		SET
+			USER_NAME = #userName#,
+			TEAM = #deptName#,
+			POSITION = #jobName#,
+			E_MAIL = #email#,
+			OFFICE_PHONE = #officePhoneNumber#,
+			OFFICE_ADDRESS = #homePostalAddress#,
+			CELLULAR_PHONE = #mobilePhoneNumber#
+		WHERE
+			USER_ID = #userId#
+	</update>
+	
+	<delete id="removeUserDetail" parameterClass="string">
+		DELETE FROM
+			CSUS_EV_USER_DETAIL
+		WHERE
+			USER_ID IN ($userIds$)
+	</delete>
+	
+	<insert id="addDeptMembers" parameterClass="map">
+		INSERT INTO
+			CSUS_EV_USER2GROUP
+		(
+			USER_ID,
+			GROUP_ID
+		)
+		SELECT
+			USER_ID,
+			#deptCode#
+		FROM
+			CSUS_EV_USER
+		WHERE
+			USER_ID IN ($memberIds$)
+	</insert>
+	
+	<update id="modifyDeptNameOfUser" parameterClass="map">
+		UPDATE
+			CSUS_EV_USER_DETAIL
+		SET
+			TEAM = #deptName#
+		WHERE
+			USER_ID IN ($memberIds$)
+	</update>
+	
+	<select id="selectDeptMember" parameterClass="map" resultClass="hashMap">
+		SELECT
+			USER_ID,
+			GROUP_ID
+		FROM
+			CSUS_EV_USER2GROUP
+		WHERE
+			GROUP_ID = #deptCode#
+		<isNotEmpty prepend="AND" property="memberId">
+			USER_ID = #memberId#
+		</isNotEmpty>
+	</select>
+	
+	<insert id="addDeptUser" parameterClass="map">
+		INSERT INTO
+			CSUS_EV_USER2GROUP
+		(
+			USER_ID,
+			GROUP_ID
+		)
+		VALUES
+		(
+			#memberId#,
+			#deptCode#
+		)
+	</insert>
+	
+	<update id="modifyDeptUser" parameterClass="map">
+		UPDATE
+			CSUS_EV_USER2GROUP
+		SET
+			GROUP_ID = #deptCode#
+		WHERE
+			USER_ID IN ($userIds$)
+	</update>
+	
+	<update id="modifyDeptMember" parameterClass="map">
+		UPDATE
+			CSUS_EV_USER2GROUP
+		SET
+			USER_ID = #memberId#
+		WHERE
+			GROUP_ID = #deptCode#
+	</update>
+	
+	<delete id="removeDeptUser" parameterClass="string">
+		DELETE FROM
+			CSUS_EV_USER2GROUP
+		WHERE
+			USER_ID IN ($memberIds$)
+	</delete>
+	
+	<delete id="removeDeptMembers" parameterClass="string">
+		DELETE FROM
+			CSUS_EV_USER2GROUP
+		WHERE
+			GROUP_ID IN 
+			(
+				SELECT
+					GROUP_ID
+				FROM
+					CSUS_EV_GROUP
+				START WITH 
+      				GROUP_ID = #deptCode#
+      			CONNECT BY PRIOR GROUP_ID = GROUP_PARENT_ID
+			)
+	</delete>
+	
+	<update id="removeTeamName" parameterClass="string">
+		UPDATE
+			CSUS_EV_USER_DETAIL
+		SET
+			TEAM = NULL
+		WHERE
+			TEAM = (SELECT GROUP_NAME FROM CSUS_EV_GROUP WHERE GROUP_ID = #deptCode#)
+	</update>
+	
+	<insert id="addDept" parameterClass="map">
+		INSERT INTO
+			CSUS_EV_GROUP
+		(
+			GROUP_ID,
+			GROUP_NAME,
+			DESCRIPTION,
+			GROUP_TYPE_ID,
+			SIBLING_ORDER,
+			STATUS,
+			GROUP_PARENT_ID,
+			GROUP_FULL_NAME
+		)
+		VALUES
+		(
+			#deptCode#,
+			#deptName#,
+			null,
+			'0001',
+			#order#,
+			'A',
+			#parentDeptCode#,
+			#deptFullName#
+		)
+	</insert>
+	
+	<update id="modifyDept" parameterClass="map">
+		UPDATE
+			CSUS_EV_GROUP
+		SET
+			GROUP_NAME = #deptName#,
+			SIBLING_ORDER = #deptOrder#,
+			GROUP_PARENT_ID = #parentDeptCode#,
+			GROUP_FULL_NAME = #deptFullName#
+		WHERE
+			GROUP_ID = #deptCode#
+	</update>
+	
+	<delete id="removeDept" parameterClass="string">
+		DELETE FROM
+			CSUS_EV_GROUP
+		WHERE
+			GROUP_ID IN 
+			(
+				SELECT
+					GROUP_ID
+				FROM
+					CSUS_EV_GROUP
+				START WITH 
+      				GROUP_ID = #deptCode#
+      			CONNECT BY PRIOR GROUP_ID = GROUP_PARENT_ID
+			)
+	</delete>
+	
+	<insert id="addPosition" parameterClass="map">
+		INSERT INTO
+			CSUS_EV_USER_POSITION_ORDER
+		(
+			PCODE,
+			POSITION,
+			ORDERNO,
+			STATUS,
+			TYPE
+		)
+		VALUES
+		(
+			#pCode#,
+			#position#,
+			#orderNo#,
+			'A',
+			#type#
+		)
+	</insert>
+	
+	<update id="modifyPosition" parameterClass="map">
+		UPDATE
+			CSUS_EV_USER_POSITION_ORDER
+		SET
+			POSITION = #position#,
+			ORDERNO = #orderNo#,
+			TYPE = #type#
+		WHERE
+			PCODE = #pCode#
+	</update>
+	
+	<delete id="removePosition" parameterClass="map">
+		DELETE FROM
+			CSUS_EV_USER_POSITION_ORDER
+		WHERE
+			PCODE = #pCode#
+	</delete>
+	
+</sqlMap>

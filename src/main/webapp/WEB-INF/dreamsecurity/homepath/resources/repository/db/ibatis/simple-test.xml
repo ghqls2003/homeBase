@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="test.data">
+
+	<cacheModel id="dataCache" type="LRU">
+		<flushInterval hours="24"/>
+		<property name="size" value="1000" />
+	</cacheModel>
+<!--
+	<typeAlias alias="data" type="com.dreamer.app.domain.DreamerData" />
+
+	<parameterMap id="dataParam" class="data">
+		<parameter property="id"/>
+	</parameterMap>
+
+	<resultMap id="dataResult" class="data">
+		<result property="id" column="ID"/>
+		<result property="name" column="NAME"/>
+		<result property="value" column="VALUE"/>
+		<result property="data" column="DATA"/>
+		<result property="description" column="DESCRIPTION"/>
+	</resultMap>
+-->
+	<select id="getUser" parameterClass="map" resultClass="hashMap" cacheModel="dataCache">
+		SELECT
+			*
+		FROM
+			EAM_USER
+		WHERE
+			COMP_CODE = #siteName#
+			AND USER_ID = #userId#
+	</select>
+	
+</sqlMap>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<queryMap id="eam">
+	
+	<select id="getAllApplication" parameterClass="java.util.HashMap" resultClass="com.biz.app.eam.domain.BizApplication">
+		<base>ou=applications,ou=pmi,ou=#siteName#</base>
+		<filter>(&amp;(objectclass=eamappl)(cn=APPL*))</filter>
+		<attributes>
+			<attribute alias="code">cn</attribute>
+			<attribute alias="name">eamName</attribute>
+		</attributes>
+	</select>
+	
+	<select id="getResourceOfApplication" parameterClass="com.biz.app.eam.domain.BizApplication" resultClass="com.biz.app.eam.domain.BizResource">
+		<base>cn=#code#,ou=applications,ou=pmi,ou=#companyCode#</base>
+		<filter>(&amp;(objectclass=eamresc)(&amp;(cn=RESC*)(eamStatus=C)))</filter>
+		<attributes>
+			<attribute alias="code">cn</attribute>
+			<attribute alias="name">eamName</attribute>
+			<attribute alias="resourceOrder">eamOrder</attribute>
+			<attribute alias="resourceValue">eamRescValue</attribute>
+		</attributes>
+		<search-scope>SUB</search-scope>
+		<sort>
+			<attribute ascending="true">code</attribute>
+		</sort>
+	</select>
+	
+	<select id="getUserGroup" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>uid=#userId#,ou=people,ou=#companyCode#</base>
+		<attributes>
+			<attribute alias="userGroupCode">eamUgrpCode</attribute>
+		</attributes>
+	</select>
+	
+	<select id="getUserRoleInGroup" parameterClass="String" resultClass="java.util.HashMap">
+		<base>ou=roles,ou=pmi,ou=#companyCode#</base>
+		<filter></filter>
+		<attributes>
+			<attribute alias="roleCode">cn</attribute>
+			<attribute alias="resource">eamRlapCode</attribute>
+			<attribute alias="roleStatus">eamStatus</attribute>
+			<attribute alias="permission">eamRoleFlag</attribute>
+		</attributes>
+	</select>
+	
+	<select id="getApplicationInfo" parameterClass="String" resultClass="java.util.HashMap">
+		<base>ou=applications,ou=pmi,ou=#companyCode#</base>
+		<filter></filter>
+		<attributes>
+			<attribute alias="applicationCode">cn</attribute>
+			<attribute alias="applicationName">eamName</attribute>
+			<attribute alias="applicationType">eamApplFlag</attribute>
+			<attribute alias="applicationUrl">eamApplUrl</attribute>
+			<attribute alias="applicationLoginPage">eamLoginPage</attribute>
+			<attribute alias="applicationActionPage">eamActionPage</attribute>
+			<attribute alias="applicationMenu">eamAclFlag</attribute>
+			<attribute alias="applicationCreateDate">eamAddDate</attribute>
+			<attribute alias="applicationCreateTime">eamAddTime</attribute>
+			<attribute alias="applicationChangeDate">eamChangeDate</attribute>
+			<attribute alias="applicationChangeTime">eamChangeTime</attribute>
+		</attributes>
+	</select>
+
+</queryMap>

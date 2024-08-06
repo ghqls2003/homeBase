@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="login">
+
+	<cacheModel id="dataCache" type="LRU">
+		<flushInterval hours="24"/>
+		<property name="size" value="1000" />
+	</cacheModel>
+<!--
+	<typeAlias alias="data" type="com.dreamer.app.domain.DreamerData" />
+
+	<parameterMap id="dataParam" class="data">
+		<parameter property="id"/>
+	</parameterMap>
+
+	<resultMap id="dataResult" class="data">
+		<result property="id" column="ID"/>
+		<result property="name" column="NAME"/>
+		<result property="value" column="VALUE"/>
+		<result property="data" column="DATA"/>
+		<result property="description" column="DESCRIPTION"/>
+	</resultMap>
+-->
+
+	<select id="getUser" parameterClass="map" resultClass="hashMap">
+		SELECT
+			USER_ID ID,
+			USER_NAME NAME,
+			USER_PW USER_PASSWORD,
+			USER_STATUS
+		FROM
+			SSO_USER
+		WHERE
+			USER_ID = #userId#
+	</select>
+	
+	<!-- original "getUserWithPolicy" query
+	<select id="getUserWithPolicy" parameterClass="map" resultClass="hashMap">
+		SELECT
+			A.HOUS_CODE,
+			A.COMP_CODE,
+			A.USER_ID ID,
+			A.USER_NAME NAME,
+			A.EMPLOYEE_NUMBER EMP_NO,
+			A.USER_PASSWORD,
+			NVL(A.DUMMY_2, 0) PASSWORD_MISMATCH_COUNT,
+			A.LASTCHANGEPW_TIME LAST_CHANGE_PASSWORD_TIME,
+			A.LASTLOGIN_TIME LAST_LOGIN_TIME,
+			A.SSN,
+			A.DEPT_CODE,
+			A.DEPT_NAME,
+			A.POSITION_CODE,
+			A.POSITION_NAME,
+			A.TITLE_CODE,
+			A.TITLE_NAME,
+			NVL(B.PASS_MISMATCH_ALLOW, 0) PASS_MISMATCH_ALLOW,
+			A.STATUS USER_STATUS,
+			A.URPY_CODE USER_POLICY_CODE,
+			A.DUMMY_1,
+			A.DUMMY_3,
+			A.DUMMY_4,
+			A.DUMMY_5
+		FROM
+			EAM_USER A,
+			EAM_URPY B
+		WHERE
+			A.HOUS_CODE = B.HOUS_CODE
+			AND A.COMP_CODE = B.COMP_CODE
+			AND A.URPY_CODE = B.URPY_CODE
+			AND A.COMP_CODE = #siteName#
+		<isNotEmpty prepend="AND" property="userId">
+			USER_ID = #userId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="dn">
+			DN = #dn#
+		</isNotEmpty>
+	</select>
+	-->
+
+	<!-- test for user policy -->
+	<select id="getUserWithPolicy" parameterClass="map" resultClass="hashMap">
+		SELECT
+			USER_ID ID,
+			USER_ID NAME,
+			PASSWORD_DAMO USER_PASSWORD,
+			STATUS USER_STATUS,
+			TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') TIMESTAMP
+		FROM
+			ikep_ev_user
+		WHERE
+			USER_ID = #userId#
+	</select>
+
+
+	<select id="getSiteDefaultPolicyCode" parameterClass="string" resultClass="hashMap">
+		SELECT
+			URPY_CODE SITE_POLICY_CODE
+		FROM
+			EAM_COMP
+		WHERE
+			COMP_CODE = #siteName#
+	</select>
+	
+	<select id="getPolicy" parameterClass="map" resultClass="hashMap">
+		SELECT
+			URPY_CODE POLICY_CODE,
+			SESSION_VALIDATE,
+			PASS_VALIDATE PASSWORD_VALIDATE,
+			PASS_MISMATCH_ALLOW PASSWORD_MISMATCH_ALLOW,
+			PASS_HISTORY_SAVE PASSWORD_HISTORY_SAVE,
+			PASS_CHANGE_WARN PASSWORD_CHANGE_WARNING,
+			PASS_MIN_LENGTH PASSWORD_MIN_LENGTH,
+			URPY_NAME POLICY_NAME,
+			ROLE_PRIORITY,
+			IP_ALLOW,
+			IP_ALLOW_MASK_FLAG IP_ALLOW_FLAG,
+			IP_ALLOW_MASK,
+			STATUS POLICY_STATUS
+		FROM
+			EAM_COMP
+		WHERE
+			COMP_CODE = #siteName#
+			AND URPY_CODE = #policyCode#
+	</select>
+	
+	<!-- original 
+	<update id="increasePasswordMismatch" parameterClass="map">
+		UPDATE
+			EAM_USER
+		SET
+		<isNotNull property="passwordMismatchCount">
+			DUMMY_2 = #passwordMismatchCount#
+		</isNotNull>
+		<isNull property="passwordMismatchCount">
+			DUMMY_2 = NVL(DUMMY_2, 0) + 1,
+			STATUS = DECODE(NVL(DUMMY_2, 0) + 1, (SELECT NVL(PASS_MISMATCH_ALLOW, 0) FROM EAM_URPY WHERE URPY_CODE = (SELECT URPY_CODE FROM EAM_USER WHERE COMP_CODE = #siteName# AND USER_ID = #userId#)), 'D', 'C')
+		</isNull>
+		WHERE
+			COMP_CODE = #siteName#
+			AND USER_ID = #userId#
+	</update>
+	 -->
+	 
+	 <update id="increasePasswordMismatch" parameterClass="map">
+		UPDATE
+			EAM_USER
+		SET
+		<isNotNull property="passwordMismatchCount">
+			DUMMY_2 = #passwordMismatchCount#
+		</isNotNull>
+		<isNull property="passwordMismatchCount">
+			DUMMY_2 = NVL(DUMMY_2, 0) + 1,
+			STATUS = DECODE(
+						NVL(DUMMY_2, 0) + 1, 
+						(SELECT NVL(PASS_MISMATCH_ALLOW, 0) FROM EAM_URPY 
+							WHERE URPY_CODE = (SELECT URPY_CODE FROM EAM_USER WHERE USER_ID = #userId#)), 
+						'D', 
+						'C')
+		</isNull>
+		WHERE			
+			USER_ID = #userId#
+	</update>
+	 
+	<update id="modifyUserAccessInfo" parameterClass="map">
+		UPDATE
+			SSO_USER
+		SET
+			LASTLOGIN_TIME = SYSDATE
+		WHERE
+			USER_ID = #userId#
+	</update>
+	
+</sqlMap>

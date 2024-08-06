@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mm.apiList">
+
+
+	<select id="listViewReq" parameterType="paraMap" resultType="resultMap">
+		SELECT 
+		    dami.api_nm,
+		    dami.api_sn,
+		    dami.api_expln,
+		    dami.dmnd_addr,
+		    string_agg(damp.parameter, ', ') as parameter,
+		    string_agg(damp.vl, ', ') as vl,
+		    string_agg(damp.esntl_yn, ', ') as esntl_yn,
+    		string_agg(COALESCE('(' || damp.expln || ')', '설명 없음'), ', ') as expln,
+		    string_agg(damp.parameter_se_cd, ', ') as parameter_se_cd
+		FROM dqvs.dvs_api_mt_info as dami
+		LEFT JOIN dqvs.dvs_api_mt_param as damp
+		ON dami.api_sn = damp.api_sn
+		WHERE damp.parameter_se_cd = '1'
+		GROUP BY dami.api_nm, dami.api_sn, dami.api_expln, dami.dmnd_addr
+		ORDER BY dami.api_nm ASC
+   </select>
+   		
+   <select id="listViewRes"  parameterType="paraMap" resultType="resultMap">
+		SELECT 
+		    dami.api_nm,
+		    dami.api_sn,
+		    dami.api_expln,
+		    dami.dmnd_addr,
+		    string_agg(damp.parameter, ', ') as parameter,
+		    string_agg(damp.vl, ', ') as vl,
+		    string_agg(damp.esntl_yn, ', ') as esntl_yn,
+    		string_agg(COALESCE('(' || damp.expln || ')', '설명 없음'), ', ') as expln,
+		    string_agg(damp.parameter_se_cd, ', ') as parameter_se_cd
+		FROM dqvs.dvs_api_mt_info as dami
+		LEFT JOIN dqvs.dvs_api_mt_param as damp
+		ON dami.api_sn = damp.api_sn
+		WHERE damp.parameter_se_cd = '2'
+		GROUP BY dami.api_nm, dami.api_sn, dami.api_expln, dami.dmnd_addr
+		ORDER BY dami.api_nm ASC
+    </select>
+    
+    <select id="listViewCnt"  parameterType="paraMap" resultType="int">
+		select count(t.rn) 
+		  from (
+		      SELECT '1' as rn
+		      FROM dqvs.dvs_api_mt_info as dami
+		      LEFT JOIN dqvs.dvs_api_mt_param as damp
+		      ON dami.api_sn = damp.api_sn
+		      WHERE damp.parameter_se_cd = '2'
+		      GROUP BY dami.api_nm, dami.api_sn, dami.api_expln, dami.dmnd_addr
+		) t
+    </select>
+    
+    	<insert id="insertApiAuthKey"  parameterType="paraMap">
+  		insert
+			into
+			dqvs.dvs_api_mt_key
+		(
+				user_sn,
+				key_sn,
+				cert_key,
+				secret_key,
+				stts_cd,
+				issu_dt,
+				cert_token,	
+				token_issu_dt
+			)
+		values(
+				#{userSn},
+				(SELECT COALESCE(MAX(key_sn), 0)+1 FROM dqvs.dvs_api_mt_key),
+				#{certKey},
+				#{secretKey},
+				'1',
+				now(),
+				null,
+				null
+		);
+
+    </insert>
+</mapper>

@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="usermanage">
+
+	<!-- 사용자 관리 그리드 -->
+	<select id="listView" resultType="map">
+		select * from
+		(
+		select
+			row_number() over( order by
+			<!-- sort 배열 내의 각 항목에 대한 정렬을 처리합니다. -->
+		    <if test="sort != null">
+		        <!-- sort 배열의 크기만큼 반복합니다. -->
+		        <foreach item="sortItem" collection="sort">
+		            <!-- sortItem.field는 정렬 필드, sortItem.dir는 정렬 방향입니다. -->
+		            <if test="sortItem.field != null and sortItem.dir != null">
+		                <!--
+		                정렬 방향이 'asc' 또는 'desc'인 경우에만 정렬을 적용합니다.
+		                필요에 따라 다른 정렬 방향도 처리할 수 있습니다.
+		                -->
+		                <choose>
+		                    <when test="sortItem.dir == 'asc' and sortItem.field == 'user_id'">
+		                        user_id ASC,
+		                    </when>
+		                    <when test="sortItem.dir == 'desc' and sortItem.field == 'user_id'">
+		                        user_id DESC,
+		                    </when>
+		                    <when test="sortItem.dir == 'asc' and sortItem.field == 'user_nm'">
+		                        user_nm ASC,
+		                    </when>
+		                    <when test="sortItem.dir == 'desc' and sortItem.field == 'user_nm'">
+		                        user_nm DESC,
+		                    </when>
+		                    <when test="sortItem.dir == 'asc' and sortItem.field == 'reg_dt'">
+		                        reg_dt ASC,
+		                    </when>
+		                    <when test="sortItem.dir == 'desc' and sortItem.field == 'reg_dt'">
+		                        reg_dt DESC,
+		                    </when>
+		                </choose>
+		            </if>
+		        </foreach>
+		    </if>
+			user_id asc,
+			authrt_cd) as rn ,
+			*,
+			CASE
+		        WHEN user_sn IN (SELECT user_sn FROM dqvs.dvs_cmm_mt_sso) THEN 'sso'
+		        WHEN user_sn IN (SELECT user_sn FROM dqvs.dvs_cmm_mt_onepass) THEN 'onepass'
+		        ELSE '-'
+		    END AS source_table,
+		    case
+				when user_sn in ( select user_sn from dqvs.dvs_api_mt_key) then 'Y'
+				else 'N'
+			end as api
+		from
+			(
+			select * from (
+				select
+					cmu.user_sn,
+					authrt_cd,
+					cmu.bzmn_sn,
+					agency.brno,
+					cmptnc_zone_cd,
+					ctpv_nm,
+					sgg_nm,
+					coalesce(cmsl.user_id, cmo."ci", '-') as user_id,
+					coalesce(cmsl.user_nm, cmo.user_nm, '-') as user_nm,
+					coalesce(cmsl.eml_addr, '-') as eml_addr,
+					coalesce(dqvs.pca_decrypt(cmsl.mbl_telno, '150'), dqvs.pca_decrypt(cmo.mbl_telno, '150'), '-') as user_tel,
+					dqvs.pca_decrypt(assi_telno, '150') as assi_telno,
+					(select authrt_nm from dqvs.dvs_cmm_mt_auth dcma where authrt_cd =cmu.authrt_cd),
+					(select	case when drma.co_nm1 is not null then drma.co_nm1 when drma.co_nm2 is not null then drma.co_nm2 else null end as co_nm
+					from (select co_nm as co_nm1, null as co_nm2 from dqvs.dvs_rac_mt_agency where bzmn_sn = cmu.bzmn_sn
+						 union all
+						 select null as co_nm1, co_nm as co_nm2 from dqvs.dvs_rac_mt_request where bzmn_sn = cmu.bzmn_sn) drma
+					limit 1),
+					case
+						when acnt_stts_cd = '1' then (select cd_nm from dqvs.dvs_cmm_mt_code where
+					cd_group = 'aprv_stts_cd' and cd=cmu.aprv_stts_cd)
+						else (select cd_nm from dqvs.dvs_cmm_mt_code where
+					cd_group = 'acnt_stts_cd' and cd=acnt_stts_cd)
+					end as stts_cd,
+					TO_CHAR(cmu.reg_dt, 'YYYY-MM-DD') reg_dt
+				from
+					dqvs.dvs_cmm_mt_user cmu
+				left join dqvs.dvs_cmm_mt_onepass cmo on cmu.user_sn = cmo.user_sn
+				left join dqvs.dvs_cmm_mt_sso cmsl on cmu.user_sn = cmsl.user_sn
+				left join dqvs.dvs_rac_mt_agency agency on agency.bzmn_sn = cmu.bzmn_sn
+				left join (
+					select
+						stdg_cd,
+						ctpv_nm,
+						sgg_nm
+					from
+						dqvs.dvs_cmm_mt_area)g
+					on cmu.cmptnc_zone_cd = g.stdg_cd
+				where 1=1
+				<if test='LoginUserAuthrtCd.equals("S01")' >
+					and (authrt_cd = 'S01' and (
+						cmu.bzmn_sn in (
+						select bzmn_sn
+						from dqvs.dvs_rac_mt_agency
+						where up_brno = (
+								select brno
+								from dqvs.dvs_rac_mt_agency
+								where bzmn_sn = #{LoginUserBzmnSn}
+							)
+						)
+						or cmu.bzmn_sn = #{LoginUserBzmnSn}
+					)) or (authrt_cd = 'S02' and agency.bzmn_se_cd = '2' and agency.bzmn_sn = #{LoginUserBzmnSn})
+				</if>
+				) a
+				where user_sn IN (SELECT user_sn FROM dqvs.dvs_cmm_mt_sso)
+				OR user_sn IN (SELECT user_sn FROM dqvs.dvs_cmm_mt_onepass)
+			)T
+		where 1 = 1
+				and stts_cd != '삭제'
+			<if test="cmptnc_zone_cd != '' and cmptnc_zone_cd != null">
+				and T.cmptnc_zone_cd like #{cmptnc_zone_cd} || '%'
+			</if>
+			<if test='search_other_condition == "user_id"'>
+				and T.user_id like '%' || #{search_wrd} || '%'
+			</if>
+			<if test='search_other_condition == "user_nm"'>
+				and T.user_nm like '%' || #{search_wrd} || '%'
+			</if>
+			<if test='search_other_condition == "co_nm"'>
+				and T.co_nm like '%' || #{search_wrd} || '%'
+			</if>
+			<if test='search_other_condition == "brno"'>
+				and T.brno like '%' || #{search_wrd} || '%'
+			</if>
+			<if test='search_other_condition == "bzmn_sn"'>
+				and T.bzmn_sn like '%' || #{search_wrd} || '%'
+			</if>
+			<if test='stts_cd != null and stts_cd != "" and stts_cd != "계정상태(전체)"'>
+				and T.stts_cd = #{stts_cd}
+			</if>
+			<if test='authrt_cd != null and authrt_cd != ""'>
+				and T.authrt_cd = #{authrt_cd}
+			</if>
+			order by rn asc
+		) c
+		where 1=1
+		<if test="take != '' and take != null">
+			AND c.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		</if>
+		<if test="skip != '' and skip != null">
+			AND c.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+		</if>
+	</select>
+
+	<!-- 사용자 관리 그리드 카운트 -->
+	<select id="listViewCnt" resultType="int">
+		select count(*) from
+		(
+		select
+			row_number() over(
+		order by
+			user_id asc,
+			authrt_cd) as rn ,
+			*,
+			CASE
+		        WHEN user_sn IN (SELECT user_sn FROM dqvs.dvs_cmm_mt_sso) THEN 'sso'
+		        WHEN user_sn IN (SELECT user_sn FROM dqvs.dvs_cmm_mt_onepass) THEN 'onepass'
+		        ELSE '-'
+		    END AS source_table,
+		    case
+				when user_sn in ( select user_sn from dqvs.dvs_api_mt_key) then 'Y'
+				else 'N'
+			end as api
+		from
+			(
+			select * from (
+				select
+					cmu.user_sn,
+					authrt_cd,
+					cmu.bzmn_sn,
+					agency.brno,
+					cmptnc_zone_cd,
+					ctpv_nm,
+					sgg_nm,
+					coalesce(cmsl.user_id, cmo."ci", '-') as user_id,
+					coalesce(cmsl.user_nm, cmo.user_nm, '-') as user_nm,
+					coalesce(cmsl.eml_addr, '-') as eml_addr,
+					coalesce(dqvs.pca_decrypt(cmsl.mbl_telno, '150'), dqvs.pca_decrypt(cmo.mbl_telno, '150'), '-') as user_tel,
+					dqvs.pca_decrypt(assi_telno, '150') as assi_telno,
+					(select authrt_nm from dqvs.dvs_cmm_mt_auth dcma where authrt_cd =cmu.authrt_cd),
+					(select	case when drma.co_nm1 is not null then drma.co_nm1 when drma.co_nm2 is not null then drma.co_nm2 else null end as co_nm
+					from (select co_nm as co_nm1, null as co_nm2 from dqvs.dvs_rac_mt_agency where bzmn_sn = cmu.bzmn_sn
+						 union all
+						 select null as co_nm1, co_nm as co_nm2 from dqvs.dvs_rac_mt_request where bzmn_sn = cmu.bzmn_sn) drma
+					limit 1),
+					case
+						when acnt_stts_cd = '1' then (select cd_nm from dqvs.dvs_cmm_mt_code where
+					cd_group = 'aprv_stts_cd' and cd=cmu.aprv_stts_cd)
+						else (select cd_nm from dqvs.dvs_cmm_mt_code where
+					cd_group = 'acnt_stts_cd' and cd=acnt_stts_cd)
+					end as stts_cd,
+					TO_CHAR(cmu.reg_dt, 'YYYY-MM-DD') reg_dt
+				from
+					dqvs.dvs_cmm_mt_user cmu
+				left join dqvs.dvs_cmm_mt_onepass cmo on cmu.user_sn = cmo.user_sn
+				left join dqvs.dvs_cmm_mt_sso cmsl on cmu.user_sn = cmsl.user_sn
+				left join dqvs.dvs_rac_mt_agency agency on agency.bzmn_sn = cmu.bzmn_sn
+				left join (
+					select
+						stdg_cd,
+						ctpv_nm,
+						sgg_nm
+					from
+						dqvs.dvs_cmm_mt_area)g
+					on cmu.cmptnc_zone_cd = g.stdg_cd
+				where 1=1
+				<if test='LoginUserAuthrtCd.equals("S01")' >
+					and (authrt_cd = 'S01' and (
+						cmu.bzmn_sn in (
+						select bzmn_sn
+						from dqvs.dvs_rac_mt_agency
+						where up_brno = (
+								select brno
+								from dqvs.dvs_rac_mt_agency
+								where bzmn_sn = #{LoginUserBzmnSn}
+							)
+						)
+						or cmu.bzmn_sn = #{LoginUserBzmnSn}
+					)) or (authrt_cd = 'S02' and agency.bzmn_se_cd = '2' and agency.bzmn_sn = #{LoginUserBzmnSn})
+				</if>
+				) a
+				where user_sn IN (SELECT user_sn FROM dqvs.dvs_cmm_mt_sso)
+				OR user_sn IN (SELECT user_sn FROM dqvs.dvs_cmm_mt_onepass) )T
+		where 1 = 1
+				and stts_cd != '삭제'
+			<if test="cmptnc_zone_cd != '' and cmptnc_zone_cd != null">
+				and T.cmptnc_zone_cd like #{cmptnc_zone_cd} || '%'
+			</if>
+			<if test='search_other_condition == "user_id"'>
+				and T.user_id like '%' || #{search_wrd} || '%'
+			</if>
+			<if test='search_other_condition == "user_nm"'>
+				and T.user_nm like '%' || #{search_wrd} || '%'
+			</if>
+			<if test='search_other_condition == "co_nm"'>
+				and T.co_nm like '%' || #{search_wrd} || '%'
+			</if>
+			<if test='search_other_condition == "brno"'>
+				and T.brno like '%' || #{search_wrd} || '%'
+			</if>
+			<if test='search_other_condition == "bzmn_sn"'>
+				and T.bzmn_sn like '%' || #{search_wrd} || '%'
+			</if>
+			<if test='stts_cd != null and stts_cd != "" and stts_cd != "계정상태(전체)"'>
+				and T.stts_cd = #{stts_cd}
+			</if>
+			<if test='authrt_cd != null and authrt_cd != ""'>
+				and T.authrt_cd = #{authrt_cd}
+			</if>
+		order by rn asc
+		) c
+	</select>
+
+	<!-- 대여사업자 목록 조회 -->
+	<select id="selectCompanyList" resultType="map">
+		SELECT T.* FROM (
+			select
+				row_number() over() as rn,
+				T2.*, COALESCE(NULLIF(T2.cmptnc_zone,''), '-') AS cmptnc_zone_nm
+			from (
+			select
+				COALESCE(NULLIF(drma.brno, ''), '-') brno,
+				up_brno,
+				drma.bzmn_sn,
+				co_nm,
+				COALESCE(NULLIF(road_nm_addr, ''), '-') road_nm_addr,
+				reg_cmptnc_cd,
+				bzmn_se_cd,
+				CASE
+		        	WHEN bzmn_se_cd = '1' THEN '주사업소'
+		        	WHEN bzmn_se_cd = '2' THEN '영업소'
+		        	ELSE '-'
+		    	END AS bzmn_se_cd_nm,
+		    	(SELECT COALESCE(NULLIF(cd_nm, ''), '-') cd_nm FROM dqvs.dvs_cmm_mt_code dcmc WHERE cd_group = 'bsn_stts_cd' AND cd = bsn_stts_cd) bsn_stts_cd_nm,
+				(SELECT concat(ctpv_nm, ' ', sgg_nm) FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) cmptnc_zone,
+				oper_bgng_dt,
+				oper_end_dt,
+				COALESCE(NULLIF(to_char(mdfcn_dt ::timestamp, 'YYYY-MM-DD HH24:MI:SS'), ''), '-') drma_mdfcn_dt
+			from
+				dqvs.dvs_rac_mt_agency drma
+			union all
+			select
+				COALESCE(NULLIF(brno, ''),'-') brno,
+				up_brno,
+				bzmn_sn,
+				co_nm,
+				COALESCE(NULLIF(road_nm_addr, ''),'-') road_nm_addr,
+				reg_cmptnc_cd,
+				bzmn_se_cd,
+				CASE
+		        	WHEN bzmn_se_cd = '1' THEN '주사업소'
+		        	WHEN bzmn_se_cd = '2' THEN '영업소'
+	        		ELSE '-'
+		    	END AS bzmn_se_cd_nm,
+		    	(SELECT COALESCE(NULLIF(cd_nm, ''), '-') cd_nm FROM dqvs.dvs_cmm_mt_code dcmc WHERE cd_group = 'bsn_stts_cd' AND cd = bsn_stts_cd) bsn_stts_cd_nm,
+				(SELECT concat(ctpv_nm, ' ', sgg_nm) FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) cmptnc_zone,
+				oper_bgng_dt,
+				oper_end_dt,
+				COALESCE(NULLIF(to_char(mdfcn_dt ::timestamp, 'YYYY-MM-DD HH24:MI:SS'), ''), '-') drma_mdfcn_dt
+			from dqvs.dvs_rac_mt_request
+			) T2
+			where 1=1
+			<if test='coNm != null and coNm != ""'>
+				and co_nm like '%' || #{coNm} || '%'
+			</if>
+			<if test='brno != null and brno != ""'>
+				and brno like '%' || REGEXP_REPLACE(#{brno}, '\D', '', 'g') || '%'
+			</if>
+			) T
+		WHERE 1 = 1
+			<if test="take != '' and take != null">
+				AND T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+			</if>
+			<if test="skip != '' and skip != null">
+				AND T.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+			</if>
+		ORDER BY T.rn ASC
+	</select>
+
+	<select id="selectCompanyListCnt" resultType="int">
+		select count(*) from (
+			select
+				row_number() over() as rn,
+				T2.*, COALESCE(NULLIF(T2.cmptnc_zone,''), '-') AS cmptnc_zone_nm
+			from (
+			select
+				drma.brno,
+				up_brno,
+				drma.bzmn_sn,
+				co_nm,
+				road_nm_addr,
+				reg_cmptnc_cd,
+				bzmn_se_cd,
+				CASE
+		        	WHEN bzmn_se_cd = '1' THEN '주사업소'
+		        	WHEN bzmn_se_cd = '2' THEN '영업소'
+		    	END AS bzmn_se_cd_nm,
+		    	(SELECT cd_nm FROM dvs_cmm_mt_code dcmc WHERE cd_group = 'bsn_stts_cd' AND cd = bsn_stts_cd) bsn_stts_cd_nm,
+				(SELECT concat(ctpv_nm, ' ', sgg_nm) FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) cmptnc_zone,
+				oper_bgng_dt,
+				oper_end_dt,
+				to_char(mdfcn_dt ::timestamp, 'YYYY-MM-DD HH24:MI:SS') drma_mdfcn_dt
+			from
+				dqvs.dvs_rac_mt_agency drma
+			union all
+			select
+				brno,
+				up_brno,
+				bzmn_sn,
+				co_nm,
+				road_nm_addr,
+				reg_cmptnc_cd,
+				bzmn_se_cd,
+				CASE
+		        	WHEN bzmn_se_cd = '1' THEN '주사업소'
+		        	WHEN bzmn_se_cd = '2' THEN '영업소'
+		    	END AS bzmn_se_cd_nm,
+		    	(SELECT cd_nm FROM dvs_cmm_mt_code dcmc WHERE cd_group = 'bsn_stts_cd' AND cd = bsn_stts_cd) bsn_stts_cd_nm,
+				(SELECT concat(ctpv_nm, ' ', sgg_nm) FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) cmptnc_zone,
+				oper_bgng_dt,
+				oper_end_dt,
+				to_char(mdfcn_dt ::timestamp, 'YYYY-MM-DD HH24:MI:SS') drma_mdfcn_dt
+			from dqvs.dvs_rac_mt_request
+			) T2
+			where 1=1
+			<if test='coNm != null and coNm != ""'>
+				and co_nm like '%' || #{coNm} || '%'
+			</if>
+			<if test='brno != null and brno != ""'>
+				and brno like '%' || REGEXP_REPLACE(#{brno}, '\D', '', 'g') || '%'
+			</if>
+			) T
+	</select>
+
+    <select id="selectBzmnSe" resultType="map">
+        select cd, cd_nm from dqvs.dvs_cmm_mt_code where cd_group = 'bzmn_se_cd'
+    </select>
+
+	<select id="selectCtpvNm" resultType="map">
+        SELECT DISTINCT
+		    SUBSTRING(stdg_cd, 1, 2) AS ctpv_cd, ctpv_nm
+		FROM
+		    dqvs.dvs_cmm_mt_area
+		where mtnabn_yn = 'Y'
+		ORDER BY
+		    ctpv_cd
+    </select>
+
+    <select id="selectApproveStts" resultType="map">
+		SELECT a.aprv_stts_cd
+			FROM dqvs.dvs_rac_mt_agency a
+			LEFT JOIN dqvs.dvs_cmm_mt_user u
+			ON a.bzmn_sn = u.bzmn_sn
+			WHERE u.user_sn = #{userSn}
+    </select>
+
+    <select id="selectAuthSearch" resultType="map">
+    	select case when authrt_cd = 'G01' then '1'
+			   else '2'
+			   end as authrt_cd
+	      from dqvs.dvs_cmm_mt_user
+		 where user_sn = #{userSn}
+    </select>
+
+	<select id="selectSggNm" resultType="map">
+        select distinct
+			SUBSTRING(stdg_cd, 3, 3) AS sgg_cd, sgg_nm
+		from dqvs.dvs_cmm_mt_area
+		where mtnabn_yn = 'Y'
+			and sgg_nm != ''
+		<if test="ctpvCd != null and ctpvCd != ''">
+			and stdg_cd LIKE CONCAT(#{ctpvCd}, '%')
+		</if>
+		order by sgg_cd
+    </select>
+
+    <select id="selectBsnStts" resultType="map">
+        select
+			cd, cd_nm
+		from dqvs.dvs_cmm_mt_code
+		where cd_group = 'bsn_stts_cd'
+		order by cd
+    </select>
+
+    <!-- 권한 검색조건 -->
+	<select id="selectAuth"  resultType="map">
+        select authrt_cd, authrt_nm from dqvs.dvs_cmm_mt_auth
+        where use_yn = 'Y'
+    </select>
+
+    <!-- 권한변경 검색조건 -->
+	<select id="selectAuthrtNm"  resultType="map">
+        select authrt_cd,authrt_nm,(select a.authrt_nm from dqvs.dvs_cmm_mt_user u join dqvs.dvs_cmm_mt_auth a on u.authrt_cd=a.authrt_cd where u.user_sn=#{userSn}::numeric) user_authrt_nm
+		from dqvs.dvs_cmm_mt_auth
+		where use_yn = 'Y'
+    </select>
+
+	<!-- 계정상태 검색조건 -->
+	<select id="selectSttsCd" resultType="map">
+        select cd_nm from dqvs.dvs_cmm_mt_code
+        where cd_nm != '정상' and cd_group = 'acnt_stts_cd' or cd_group  = 'aprv_stts_cd'
+    </select>
+
+	<!-- 사용자 삭제 -->
+	<update id="updateDeleteUser">
+        <!-- mdfrSn이 있다면 정상적으로 작동할 코드 -->
+        UPDATE dqvs.dvs_cmm_mt_user
+        SET acnt_stts_cd = 5,
+        	mdfr_sn = #{mdfrSn}::numeric,
+        	mdfcn_dt=now()::timestamp,
+        	mdfcn_ip = #{mdfcnIp}
+		where user_sn = #{userSn}::numeric
+    </update>
+
+	<!-- 사용자 상세 -->
+	<select id="selectUserDetailInfo" resultType="map">
+		select
+			cmu.user_sn,
+			COALESCE(NULLIF(cmu.bzmn_sn, ''), '-') as bzmn_sn,
+			cmu.cmptnc_zone_cd,
+			drma.sgg_cd,
+			(select concat(ctpv_nm, ' ', sgg_nm) from dqvs.dvs_cmm_mt_area where stdg_cd = drma.sgg_cd) cmptnc_zone_nm,
+			COALESCE(NULLIF(drma.road_nm_addr, ''), '-') as road_nm_addr,
+			drma.bzmn_se_cd,
+			(SELECT cd_nm FROM dqvs.dvs_cmm_mt_code dcmc WHERE cd_group = 'bzmn_se_cd' AND cd = drma.bzmn_se_cd)bzmn_se_cd_nm,
+			(SELECT cd_nm FROM dqvs.dvs_cmm_mt_code dcmc WHERE cd_group = 'bsn_stts_cd' AND cd = drma.bsn_stts_cd) bsn_stts_cd_nm,
+			drma.oper_bgng_dt,
+			drma.oper_end_dt,
+			to_char(drma.mdfcn_dt::timestamp, 'YYYY-MM-DD HH24:MI:SS') as drma_mdfcn_dt,
+			cmu.authrt_cd,
+			(select a.authrt_nm from dqvs.dvs_cmm_mt_auth a where cmu.authrt_cd = a.authrt_cd) authrt_nm,
+			cmf.file_sn,
+			cmf.atch_file_nm,
+			coalesce(cmsl.user_id, cmo."ci", '-') as user_id,
+			coalesce(cmsl.user_nm, cmo.user_nm, '-') as user_nm,
+			coalesce(cmsl.eml_addr, cmo.eml_addr, '-') as eml_addr,
+			coalesce(dqvs.pca_decrypt(cmsl.mbl_telno, '150'), dqvs.pca_decrypt(cmo.mbl_telno, '150'), '-') as mbl_telno,
+			dqvs.pca_decrypt(assi_telno, '150') as assi_telno,
+			rjct_rsn,
+			TO_CHAR(last_lgn_dt, 'YYYY-MM-DD') last_lgn_dt,
+			TO_CHAR(cmu.mdfcn_dt, 'YYYY-MM-DD') mdfcn_dt,
+			TO_CHAR(cmu.aprv_dmnd_dt, 'YYYY-MM-DD') aprv_dmnd_dt,
+			case
+				when acnt_stts_cd = '1' then (select cd_nm from dqvs.dvs_cmm_mt_code where
+				cd_group = 'aprv_stts_cd' and cd = cmu.aprv_stts_cd)
+				else (select cd_nm from dqvs.dvs_cmm_mt_code where
+				cd_group = 'acnt_stts_cd' and cd = cmu.acnt_stts_cd)
+			end as stts_cd,
+			TO_CHAR(cmu.aprv_dt, 'YYYY-MM-DD') aprv_dt,
+			cmu.aprv_dt,
+			(select	case when drma.co_nm1 is not null then drma.co_nm1 when drma.co_nm2 is not null then drma.co_nm2 else null end as co_nm
+			from (select co_nm as co_nm1, null as co_nm2 from dqvs.dvs_rac_mt_agency where bzmn_sn = cmu.bzmn_sn
+				 union all
+				 select null as co_nm1, co_nm as co_nm2 from dqvs.dvs_rac_mt_request where bzmn_sn = cmu.bzmn_sn) drma
+			limit 1),
+			coalesce((select
+				case when drma.brno1 is not null then drma.brno1 when drma.brno2 is not null then drma.brno2 else null end as brno
+			from
+				(select brno as brno1, null as brno2 from dqvs.dvs_rac_mt_agency where bzmn_sn = cmu.bzmn_sn
+				 union all
+				 select null as brno1, brno as brno2 from dqvs.dvs_rac_mt_request where bzmn_sn = cmu.bzmn_sn) drma
+			limit 1), '-') as brno,
+			CASE
+		        WHEN cmu.user_sn IN (SELECT user_sn FROM dqvs.dvs_cmm_mt_sso) THEN 'sso'
+		        WHEN cmu.user_sn IN (SELECT user_sn FROM dqvs.dvs_cmm_mt_onepass) THEN 'onepass'
+		        ELSE '-'
+		    END AS source_table,
+		    ogdp_nm,
+			ogdp_dept_nm,
+			ogdp_telno
+		from dqvs.dvs_cmm_mt_user cmu
+		left join dqvs.dvs_cmm_mt_onepass cmo on cmu.user_sn = cmo.user_sn
+		left join dqvs.dvs_cmm_mt_sso cmsl on cmu.user_sn = cmsl.user_sn
+		left join dqvs.dvs_cmm_mt_file cmf on file_sn = cmu.atch_file_sn
+		left join dqvs.dvs_rac_mt_agency drma on drma.bzmn_sn = cmu.bzmn_sn
+		where cmu.user_sn = #{userSn}::numeric
+	</select>
+
+	<!-- 계정상태 변경 -->
+	<update id="updateApprove">
+        UPDATE dqvs.dvs_cmm_mt_user
+	        SET mdfcn_dt=now()::timestamp,
+				mdfr_sn = #{mdfrSn}::numeric,
+				mdfcn_ip = #{mdfcnIp},
+				aprv_stts_cd = '2',
+				autzr_sn=1::numeric,
+				aprv_dt = now()::timestamp
+		where user_sn = #{userSn}::numeric
+    </update>
+
+    <update id="updateReject">
+        UPDATE dqvs.dvs_cmm_mt_user
+	        SET mdfcn_dt=now()::timestamp,
+	        	mdfr_sn = #{mdfrSn}::numeric,
+				mdfcn_ip = #{mdfcnIp},
+				rjct_rsn = #{rjctRsn},
+				aprv_stts_cd = '3'
+		where user_sn = #{userSn}::numeric
+    </update>
+
+    <update id="updateLock">
+        UPDATE dqvs.dvs_cmm_mt_user
+	        SET mdfcn_dt=now()::timestamp,
+	        	mdfr_sn = #{mdfrSn}::numeric,
+				mdfcn_ip = #{mdfcnIp},
+				acnt_stts_cd = '4'
+		where user_sn = #{userSn}::numeric
+    </update>
+
+    <update id="updateUnlock">
+        UPDATE dqvs.dvs_cmm_mt_user
+	        SET mdfcn_dt=now()::timestamp,
+	        	mdfr_sn = #{mdfrSn}::numeric,
+				mdfcn_ip = #{mdfcnIp},
+				acnt_stts_cd = '1'
+			where user_sn = #{userSn}::numeric
+    </update>
+
+    <update id="updateLongterm">
+        UPDATE dqvs.dvs_cmm_mt_user
+	        SET mdfcn_dt=now()::timestamp,
+	        	last_lgn_dt = now()::timestamp,
+	        	mdfr_sn = #{mdfrSn}::numeric,
+				mdfcn_ip = #{mdfcnIp},
+				acnt_stts_cd = '1'
+			where user_sn = #{userSn}::numeric
+    </update>
+
+	<update id="updateReleaseStop">
+        UPDATE dqvs.dvs_cmm_mt_user
+	        SET mdfcn_dt=now()::timestamp,
+	        	lgn_fail_nmtm = 0::numeric,
+	        	mdfr_sn = #{mdfrSn}::numeric,
+				mdfcn_ip = #{mdfcnIp},
+				acnt_stts_cd = '1'
+			where user_sn = #{userSn}::numeric
+    </update>
+
+   	<update id="updateWithdraw">
+    	UPDATE dqvs.dvs_cmm_mt_user
+    		SET mdfcn_dt=now()::timestamp,
+	        	lgn_fail_nmtm = 0::numeric,
+	        	mdfr_sn = #{mdfrSn}::numeric,
+				mdfcn_ip = #{mdfcnIp},
+				acnt_stts_cd = '1'
+			where user_sn = #{userSn}::numeric
+    </update>
+
+ 	<update id="updateUserInfo">
+        UPDATE dqvs.dvs_cmm_mt_user
+	        SET mdfcn_dt=now()::timestamp,
+   	        	mdfr_sn = #{mdfrSn}::numeric,
+				mdfcn_ip = #{mdfcnIp},
+				<if test="authrtCd != '' and authrtCd != null">
+					authrt_cd = #{authrtCd},
+				</if>
+				<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
+					cmptnc_zone_cd = #{cmptncZoneCd},
+				</if>
+				<if test="bzmnSn != '' and bzmnSn != null">
+					bzmn_sn = #{bzmnSn},
+				</if>
+				<if test="fileSn != '' and fileSn != null">
+					atch_file_sn = #{fileSn},
+				</if>
+	        	assi_telno=dqvs.pca_encrypt(#{assiTelno}, '150')
+			where user_sn = #{userSn}::numeric
+    </update>
+
+    <select id="selectApiStts" resultType="resultMap">
+		select user_sn, stts_cd, issu_dt from dqvs.dvs_api_mt_key
+		WHERE 1=1
+		<if test="userSn != '' and userSn != null">
+			and user_sn = #{userSn}::numeric
+		</if>
+		order by issu_dt desc
+	</select>
+
+    <update id="updateApiKey">
+		<if test="userSn != null and userSn != ''">
+	        UPDATE dqvs.dvs_api_mt_key
+	        SET stts_cd='4'
+			where user_sn = #{userSn}::numeric
+		</if>
+	</update>
+
+	<update id="updateApiStts">
+		<if test="userSn != null and userSn != ''">
+	        UPDATE dqvs.dvs_api_mt_stts
+	        SET stts_cd='4'
+			where user_sn = #{userSn}::numeric
+		</if>
+	</update>
+
+</mapper>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sys.cmmnCd">
+
+	<!-- 공통코드 관리 그리드 -->
+	<select id="selectCmmnCdList" resultType="resultMap">
+		SELECT T.* FROM (
+		select
+			row_number() over(order by cd_group, sort_ordr) as rn,
+			cd,
+			cd_nm,
+			cd_group,
+			cd_group_nm,
+			cd_expln,
+			sort_ordr,
+			use_yn
+		from
+			dqvs.dvs_cmm_mt_code
+		where del_yn='N'
+			<if test='searchCol == "cd" and searchWrd != null and searchWrd != ""'>
+				and cd like '%' || #{searchWrd} || '%'
+			</if>
+			<if test='searchCol == "cdNm" and searchWrd != null and searchWrd != ""'>
+				and cd_nm like '%' || #{searchWrd} || '%'
+			</if>
+			<if test='searchCol == "cdGroup" and searchWrd != null and searchWrd != ""'>
+				and cd_group like '%' || #{searchWrd} || '%'
+			</if>
+			<if test='searchCol == "cdGroupNm" and searchWrd != null and searchWrd != ""'>
+				and cd_group_nm like '%' || #{searchWrd} || '%'
+			</if>
+			<if test="searchUseYn != '' and searchUseYn != null">
+				and use_yn = #{searchUseYn}
+			</if>
+		) T
+		WHERE 1 = 1
+		<if test="take != '' and take != null">
+			AND T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		</if>
+		<if test="skip != '' and skip != null">
+			AND T.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+		</if>
+		ORDER BY T.rn ASC
+	</select>
+
+	<select id="selectCmmnCdListCnt" resultType="int">
+		select count(*) from(
+			select
+			cd,
+			cd_nm,
+			cd_group,
+			cd_group_nm,
+			cd_expln,
+			sort_ordr,
+			use_yn
+		from
+			dqvs.dvs_cmm_mt_code
+		where del_yn='N'
+			<if test='searchCol == "cd" and searchWrd != null and searchWrd != ""'>
+				and cd like '%' || #{searchWrd} || '%'
+			</if>
+			<if test='searchCol == "cdNm" and searchWrd != null and searchWrd != ""'>
+				and cd_nm like '%' || #{searchWrd} || '%'
+			</if>
+			<if test='searchCol == "cdGroup" and searchWrd != null and searchWrd != ""'>
+				and cd_group like '%' || #{searchWrd} || '%'
+			</if>
+			<if test='searchCol == "cdGroupNm" and searchWrd != null and searchWrd != ""'>
+				and cd_group_nm like '%' || #{searchWrd} || '%'
+			</if>
+			<if test="searchUseYn != '' and searchUseYn != null">
+				and use_yn = #{searchUseYn}
+			</if>
+		)a
+	</select>
+	
+	<select id="cddpPrvnt" resultType="map">
+		SELECT
+			CASE 
+		        WHEN COUNT(*) <![CDATA[>]]> 0 THEN 1
+		        ELSE 0
+		    END
+		 FROM dqvs.dvs_cmm_mt_code
+		WHERE cd_group = #{cdGroup}
+		  AND cd = #{cd};
+	</select>
+	
+	<!-- 공통코드 등록 -->
+	<insert id="insertCmmnCd">
+		INSERT INTO dqvs.dvs_cmm_mt_code
+		(cd_group, cd, cd_group_nm, cd_nm, cd_expln, sort_ordr, use_yn, del_yn, rgtr_sn, reg_dt, reg_ip)
+		VALUES(#{cdGroup}, #{cd}, #{cdGroupNm}, #{cdNm}, #{cdExpln}, #{sortOrdr}::numeric, #{useYn}, 'N', #{rgtrSn}::numeric, now()::timestamp, #{regIp})
+	</insert>
+
+	<!-- 공통코드 수정 -->
+	<update id="updateCmmnCd">
+        <if test="cdGroup != null and cdGroup != '' and cd != null and cd != ''">
+	        UPDATE dqvs.dvs_cmm_mt_code
+			SET cd_group_nm=#{cdGroupNm}, cd_nm=#{cdNm}, cd_expln=#{cdExpln}, sort_ordr=#{sortOrdr}::numeric, use_yn=#{useYn}, mdfr_sn=#{mdfrSn}::numeric, mdfcn_dt=now()::timestamp, mdfcn_ip=#{mdfcnIp}
+			WHERE cd_group = #{cdGroup} AND cd=#{cd}
+		</if>
+    </update>
+
+	<!-- 공통코드 삭제 -->
+	<delete id="updateDeleteCmmnCd">
+		<if test="cdGroup != null and cdGroup != '' and cd != null and cd != ''">
+        	UPDATE dqvs.dvs_cmm_mt_code
+			SET del_yn='Y', mdfr_sn=#{mdfrSn}::numeric, mdfcn_dt=now()::timestamp, mdfcn_ip=#{mdfcnIp}
+			WHERE cd_group = #{cdGroup} AND cd=#{cd}
+		</if>
+    </delete>
+
+    <!-- 그룹명 -->
+	<select id="selectCdGroupNm" resultType="map">
+        select distinct cd_group, cd_group_nm, max(sort_ordr)+1 as sort_ordr from dqvs.dvs_cmm_mt_code
+        where 1=1
+        <if test="cdGroupNm != null and cdGroupNm != ''">
+			and cd_group_nm = #{cdGroupNm}
+		</if>
+		group by cd_group, cd_group_nm
+		order by cd_group
+    </select>
+</mapper>

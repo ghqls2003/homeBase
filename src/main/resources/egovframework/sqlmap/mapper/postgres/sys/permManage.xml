@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sys.permManage">
+
+	<!-- 권한관리 리스트 카운트 -->
+	<select id="selectPermManageInfoCnt" resultType="int">
+		SELECT
+			count(*)
+		FROM (
+			SELECT
+				row_number() over(ORDER BY authrt_cd ASC) as rn
+				, authrt_cd
+				, authrt_nm
+				, authrt_expln
+				, COALESCE(total_user,0) as total_user
+				, COALESCE(use_user,0) as use_user
+				, COALESCE(nouse_user,0) as nouse_user
+				, user_id
+				, tb1.use_yn as use_yn
+				, TO_CHAR(tb1.reg_dt, 'YYYY-MM-DD') as reg_dt
+			FROM dvs_cmm_mt_sso sso
+			right join
+			(
+				SELECT
+					cmau.authrt_cd
+					, authrt_nm
+					, authrt_expln
+					, COALESCE(total_user,0) as total_user
+					, COALESCE(use_user,0) as use_user
+					, COALESCE(nouse_user,0) as nouse_user
+					, rgtr_sn
+					, reg_dt
+					, use_yn
+					, del_yn
+				FROM dvs_cmm_mt_auth cmau
+				left join
+				(
+					SELECT
+						authrt_cd
+						, count(*) as total_user
+						, count(CASE WHEN acnt_stts_cd ='1' and aprv_stts_cd = '2' THEN 1 END) as use_user
+						, count(CASE WHEN acnt_stts_cd!='1' or aprv_stts_cd!= '2' THEN 1 END) as nouse_user
+					FROM dvs_cmm_mt_user
+				group by authrt_cd ) cmu
+				on cmu.authrt_cd = cmau.authrt_cd )tb1
+			on tb1.rgtr_sn = sso.user_sn
+			where 1=1
+			<choose>
+			    <when test='searchCol1 == "all" and searchCol2 == "Y" and (searchWrd != null or searchWrd != "")'>
+			    	AND tb1.use_yn = 'Y'
+			    </when>
+			    <when test='searchCol1 == "all" and searchCol2 == "N" and (searchWrd != null or searchWrd != "")'>
+			    	AND tb1.use_yn = 'N'
+			    </when>
+			    <when test='searchCol1 == "authrtCd" and searchCol2 == "Y" and (searchWrd != null or searchWrd != "")'>
+			    	AND tb1.del_yn = 'Y'
+			    	AND authrt_cd LIKE CONCAT('%', #{searchWrd}, '%')
+			    </when>
+			    <when test='searchCol1 == "authrtCd" and searchCol2 == "N" and (searchWrd != null or searchWrd != "")'>
+			   		AND tb1.use_yn = 'N'
+			    	AND authrt_cd LIKE CONCAT('%', #{searchWrd}, '%')
+			    </when>
+			    <when test='searchCol1 == "authrtNm" and searchCol2 == "Y" and (searchWrd != null or searchWrd != "")'>
+			    	AND tb1.use_yn = 'Y'
+			    	AND authrt_nm LIKE CONCAT('%', #{searchWrd}, '%')
+			    </when>
+			    <when test='searchCol1 == "authrtNm" and searchCol2 == "N" and (searchWrd != null or searchWrd != "")'>
+			    	AND tb1.use_yn = 'N'
+			    	AND authrt_nm LIKE CONCAT('%', #{searchWrd}, '%')
+			    </when>
+			</choose>
+ 		) tb2
+	</select>
+
+	<!-- 권한관리 리스트 -->
+	<select id="selectPermManageInfo" resultType="map">
+		SELECT
+			tb2.*
+		FROM (
+			select
+				row_number() over(ORDER BY authrt_cd ASC) as rn
+				, authrt_cd
+				, authrt_nm
+				, authrt_expln
+				, COALESCE(total_user,0) as total_user
+				, COALESCE(use_user,0) as use_user
+				, COALESCE(nouse_user,0) as nouse_user
+				, user_id
+				, tb1.use_yn as use_yn
+				, TO_CHAR(tb1.reg_dt, 'YYYY-MM-DD') as reg_dt
+			FROM dvs_cmm_mt_sso sso
+			right join
+			(
+				SELECT
+					cmau.authrt_cd
+					, authrt_nm
+					, authrt_expln
+					, COALESCE(total_user,0) as total_user
+					, COALESCE(use_user,0) as use_user
+					, COALESCE(nouse_user,0) as nouse_user
+					, rgtr_sn
+					, reg_dt
+					, use_yn
+					, del_yn
+				FROM dvs_cmm_mt_auth cmau
+				left join
+				(
+					SELECT
+						authrt_cd
+						, count(*) as total_user
+						, count(CASE WHEN acnt_stts_cd ='1' and aprv_stts_cd = '2' THEN 1 END) as use_user
+						, count(CASE WHEN acnt_stts_cd!='1' or aprv_stts_cd!= '2' THEN 1 END) as nouse_user
+					FROM dvs_cmm_mt_user
+				group by authrt_cd ) cmu
+				on cmu.authrt_cd = cmau.authrt_cd )tb1
+			on tb1.rgtr_sn = sso.user_sn
+			where 1=1
+			<choose>
+			    <when test='searchCol1 == "all" and searchCol2 == "Y" and (searchWrd != null or searchWrd != "")'>
+			    	AND tb1.use_yn = 'Y'
+			    </when>
+			    <when test='searchCol1 == "all" and searchCol2 == "N" and (searchWrd != null or searchWrd != "")'>
+			    	AND tb1.use_yn = 'N'
+			    </when>
+			    <when test='searchCol1 == "authrtCd" and searchCol2 == "Y" and (searchWrd != null or searchWrd != "")'>
+			    	AND tb1.del_yn = 'Y'
+			    	AND authrt_cd LIKE CONCAT('%', #{searchWrd}, '%')
+			    </when>
+			    <when test='searchCol1 == "authrtCd" and searchCol2 == "N" and (searchWrd != null or searchWrd != "")'>
+			   		AND tb1.use_yn = 'N'
+			    	AND authrt_cd LIKE CONCAT('%', #{searchWrd}, '%')
+			    </when>
+			    <when test='searchCol1 == "authrtNm" and searchCol2 == "Y" and (searchWrd != null or searchWrd != "")'>
+			    	AND tb1.use_yn = 'Y'
+			    	AND authrt_nm LIKE CONCAT('%', #{searchWrd}, '%')
+			    </when>
+			    <when test='searchCol1 == "authrtNm" and searchCol2 == "N" and (searchWrd != null or searchWrd != "")'>
+			    	AND tb1.use_yn = 'N'
+			    	AND authrt_nm LIKE CONCAT('%', #{searchWrd}, '%')
+			    </when>
+			</choose>
+		) tb2
+		WHERE
+			1 = 1
+		<if test="take != '' and take != null">
+			AND tb2.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		</if>
+		<if test="skip != '' and skip != null">
+			AND tb2.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+		</if>
+		ORDER BY tb2.rn ASC
+	</select>
+
+	<!-- 포털관리메뉴 리스트 -->
+	<select id="selectPtsMenuInfo" resultType="map">
+		SELECT
+			menu_cd
+			, menu_nm
+			, menu_level
+		FROM dvs_cmm_mt_menu
+		WHERE menu_cd like 'PMNU%'
+		and use_yn = 'Y'
+		order by menu_cd asc
+	</select>
+
+	<!-- 운영관리메뉴 리스트 -->
+	<select id="selectOpsMenuInfo" resultType="map">
+		SELECT
+			menu_cd
+			, menu_nm
+			, menu_level
+		FROM dvs_cmm_mt_menu
+		WHERE menu_cd like 'OMNU%'
+		and use_yn = 'Y'
+		order by menu_cd asc
+	</select>
+
+	<!-- 권한관리-등록 -->
+	<insert id="insertAuth">
+		INSERT INTO dvs_cmm_mt_auth
+			(authrt_cd, authrt_nm, authrt_expln, use_yn, rgtr_sn, reg_dt, reg_ip, mdfr_sn, mdfcn_dt, mdfcn_ip)
+			VALUES(#{authrtCd}, #{authrtNm}, #{authrtExpln}, #{useYn}, #{rgtrSn}::numeric, now()::timestamp, #{regIp}, NULL, NULL, NULL)
+	</insert>
+
+	<!-- 권한관리-등록정보(권한id에 대한 메뉴체크등록) -->
+	<insert id="insertAuthMenu">
+		INSERT INTO
+			dvs_cmm_rt_access (authrt_cd, menu_cd, use_yn, rgtr_sn, reg_dt, reg_ip)
+			VALUES (#{authrtCd}, #{menuCd}, #{useYn}, #{rgtrSn}::numeric, now()::timestamp, #{regIp})
+			ON CONFLICT (authrt_cd, menu_cd)
+			DO UPDATE SET use_yn = #{useYn}
+	</insert>
+
+	<!-- 권한관리-상세정보(수정) -->
+	<update id="updateAuth">
+		UPDATE dvs_cmm_mt_auth
+		SET
+			authrt_expln=#{authrtExpln}
+			, use_yn=#{useYn}
+			, mdfr_sn=#{mdfrSn}::numeric
+			, mdfcn_dt=now()::timestamp
+			, mdfcn_ip=#{mdfcnIp}
+		<if test="authrtCd != null and authrtCd != ''">
+			WHERE authrt_cd = #{authrtCd}
+		</if>
+	</update>
+
+	<!-- 권한관리-상세정보(권한id에 대한 메뉴체크등록) -->
+	<update id="updateAuthMenu">
+		INSERT INTO
+			dvs_cmm_rt_access (authrt_cd, menu_cd, use_yn, mdfr_sn, mdfcn_dt, mdfcn_ip)
+			VALUES (#{authrtCd}, #{menuCd}, #{useYn}, #{mdfrSn}::numeric, now()::timestamp, #{mdfcnIp})
+			ON CONFLICT (authrt_cd, menu_cd)
+			DO UPDATE SET use_yn = #{useYn}, mdfr_sn=#{mdfrSn}::numeric, mdfcn_dt=now()::timestamp, mdfcn_ip=#{mdfcnIp}
+	</update>
+
+	<!-- 권한관리-상세정보(권한id에 대한 메뉴체크확인) -->
+	<select id="selectAuthMenuCheck" resultType="map">
+		SELECT
+			menu_cd
+		FROM dvs_cmm_rt_access
+		where 1=1
+		<if test="authrtCd != null and authrtCd != ''">
+			and authrt_cd = #{authrtCd}
+		</if>
+		and use_yn = 'Y'
+	</select>
+
+	<!-- 권한관리-체크박스메뉴삭제(권한id에 대한 메뉴삭제) -->
+	<delete id="deleteAuthMenu">
+		<if test="authrtCd != null and authrtCd != ''">
+			DELETE FROM dvs_cmm_rt_access
+			WHERE authrt_cd=#{authrtCd}
+		</if>
+	</delete>
+
+	<!-- 권한관리-상세정보(삭제) -->
+	<update id="deleteAuth">
+		<if test="authrtCd != null and authrtCd != ''">
+			UPDATE dvs_cmm_mt_auth
+			SET
+				use_yn = 'N'
+				, del_yn = 'Y'
+				, mdfcn_dt = now()::timestamp
+				, mdfcn_ip = #{mdfcnIp}
+				WHERE authrt_cd = #{authrtCd}
+		</if>
+	</update>
+
+
+</mapper>

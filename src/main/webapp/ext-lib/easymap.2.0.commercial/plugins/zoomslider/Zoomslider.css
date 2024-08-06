@@ -1,0 +1,175 @@
+/** Slider **/
+.tsmap-control-zoomslider-wrap {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+}
+
+.tsmap-control-zoomslider-body {
+	width: 2px;
+	border: solid #fff;
+	border-width: 0px 9px 0px 9px;
+	background-color: black;
+	margin: 0 auto;
+}
+
+.tsmap-control-zoomslider-knob {
+	position: relative;
+	width: 12px;
+	height: 4px;
+	background-color: #efefef;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	border: 1px solid #000;
+	margin-left: -6px;
+}
+
+.tsmap-control-zoomslider-body:hover {
+	cursor: pointer;
+}
+
+.tsmap-control-zoomslider-knob:hover {
+	cursor: default;
+	cursor: -webkit-grab;
+	cursor: -moz-grab;
+}
+
+.tsmap-dragging .tsmap-control-zoomslider, .tsmap-dragging .tsmap-control-zoomslider-wrap,
+	.tsmap-dragging .tsmap-control-zoomslider-body, .tsmap-dragging .tsmap-control-zoomslider a,
+	.tsmap-dragging .tsmap-control-zoomslider a.tsmap-control-zoomslider-disabled,
+	.tsmap-dragging .tsmap-control-zoomslider-knob:hover {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor: -moz-grabbing;
+}
+
+/** Leaflet Zoom Styles **/
+.tsmap-container .tsmap-control-zoomslider {
+	margin-left: 10px;
+	margin-top: 10px;
+}
+
+.tsmap-control-zoomslider a {
+	width: 26px;
+	height: 26px;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	display: block;
+}
+
+.tsmap-control-zoomslider a:hover {
+	background-color: #f4f4f4;
+}
+
+.tsmap-control-zoomslider-in {
+	/*font: bold 18px 'Lucida Console', Monaco, monospace;*/
+	font-size: 18px;
+}
+
+.tsmap-control-zoomslider-in:after {
+	content: "+"
+}
+
+.tsmap-control-zoomslider-out {
+	/*font: bold 22px 'Lucida Console', Monaco, monospace;*/
+	font-size: 22px;
+}
+
+.tsmap-control-zoomslider-out:after {
+	content: "-"
+}
+
+.tsmap-control-zoomslider a.tsmap-control-zoomslider-disabled {
+	cursor: default;
+	color: #bbb;
+}
+
+/* Touch */
+.tsmap-touch .tsmap-control-zoomslider-body {
+	background-position: 10px 0px;
+}
+
+.tsmap-touch .tsmap-control-zoomslider-knob {
+	width: 16px;
+	margin-left: -7px;
+}
+
+.tsmap-touch .tsmap-control-zoomslider a {
+	width: 30px;
+	line-height: 30px;
+}
+
+.tsmap-touch .tsmap-control-zoomslider a:hover {
+	width: 30px;
+	line-height: 30px;
+}
+
+.tsmap-touch .tsmap-control-zoomslider-in {
+	font-size: 24px;
+	line-height: 29px;
+}
+
+.tsmap-touch .tsmap-control-zoomslider-out {
+	font-size: 28px;
+	line-height: 30px;
+}
+
+.tsmap-touch .tsmap-control-zoomslider {
+	box-shadow: none;
+	border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+/* Old IE */
+.tsmap-oldie .tsmap-control-zoomslider-wrap {
+	width: 26px;
+}
+
+.tsmap-oldie .tsmap-control-zoomslider {
+	border: 1px solid #999;
+}
+
+.tsmap-oldie .tsmap-control-zoomslider-in {
+	*zoom: expression(this.runtimeStyle [ 'zoom' ] = '1', this.innerHTML = '+');
+}
+
+.tsmap-oldie .tsmap-control-zoomslider-out {
+	*zoom: expression(this.runtimeStyle [ 'zoom' ] = '1', this.innerHTML = '-');
+}
+
+.zoom-label-area {
+	display: none;
+}
+
+.zoom-label-area .label {
+	position: absolute;
+	font-size: 9px;
+	background-color: #0a4d85;
+	color: #ffffff;
+	font-weight: bold;
+	right: 30px;
+	overflow: hidden;
+	width: 40px;
+	text-align: left;
+	padding-left: 2px;
+	background:
+		url(/ext-lib/easymap.2.0.commercial/plugins/zoomslider/images/btn_03.png)
+		no-repeat 0 center;
+}
+
+.zoom-label-area .label-1 {
+	top: 50px;
+}
+
+.zoom-label-area .label-2 {
+	top: 80px;
+}
+
+.zoom-label-area .label-3 {
+	top: 100px;
+}
+
+.zoom-label-area .label-4 {
+	top: 130px;
+}

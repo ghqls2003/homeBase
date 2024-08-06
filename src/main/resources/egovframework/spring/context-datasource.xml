@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:encryption="http://www.jasypt.org/schema/encryption"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util.xsd
+                           http://www.jasypt.org/schema/encryption
+                           http://www.jasypt.org/schema/encryption/jasypt-spring31-encryption-1.xsd
+                           http://www.springframework.org/schema/jdbc
+                           http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd ">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- db.properties.xml -->
+	<util:properties id="config"
+		location="classpath:/egovframework/egovProps/globals.properties" />
+
+	<alias name="dataSource-${Globals.DbType}" alias="dataSource" />
+
+    <bean id="dataSource-postgreSql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${Globals.DriverClassName}"/>
+        <property name="url" value="${Globals.Url}"/>
+        <property name="username" value="${Globals.UserName}"/>
+        <property name="password" value="${Globals.Password}"/>
+        <property name="validationQuery" value="SELECT 1 "/>
+        <property name="initialSize" value="10"/>
+        <property name="maxActive" value="100"/>
+        <property name="minIdle" value="10"/>
+        <property name="maxIdle" value="10"/>
+        <property name="maxWait" value="5000"/>
+    </bean>
+
+	<!-- Jasypt 설정 -->
+	<bean id="encryptorConfig"
+		class="org.jasypt.encryption.pbe.config.EnvironmentPBEConfig">
+		<property name="algorithm" value="PBEWithMD5AndDES" />
+		<property name="password" value="NEIGHBOR_ENCRYPTION_KEY" />
+	</bean>
+
+	<bean id="encryptor"
+		class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+		<property name="config" ref="encryptorConfig" />
+	</bean>
+
+	<bean
+		class="org.jasypt.spring31.properties.EncryptablePropertyPlaceholderConfigurer">
+		<constructor-arg ref="encryptor" />
+		<property name="locations">
+			<list>
+				<value>classpath:/egovframework/egovProps/globals.properties</value>
+			</list>
+		</property>
+	</bean>
+
+</beans>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<object-pools>
+
+	<pool name="DB_POOL" type="DB">
+		<xml-parser value="org.apache.crimson.parser.XMLReaderImpl"/>
+		<xml-parser value="org.apache.xerces.parsers.SAXParser"/>
+		<jdbc-driver value="oracle.jdbc.driver.OracleDriver"/>
+		<config-file value="config/pooling/repository/db/db-pool-config.jocl"/>
+	</pool>
+<!--
+	<pool name="LDAP_POOL" type="LDAP">
+		<digester-rule-file value="config/pooling/repository/ldap/ldap-pool-rules.xml"/>
+		<config-file value="config/pooling/repository/ldap/ldap-pool-config.xml"/>
+	</pool>
+-->
+</object-pools>

@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AnyPIN</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="cache-control" content="no-cache">
+
+<script type="text/javascript" src="../anyPinInterface.js"></script>
+
+<!-- XecureKeyPad Plugin -->
+<script type="text/javascript" src="../XecureKeypad/js/xkeypad_config.js"></script>
+<script type="text/javascript" src="../XecureKeypad/js/xkeypad_html5_pin.js"></script>
+<script type="text/javascript" src="../XecureKeypad/js/xkeypad_mobile.js"></script>
+
+<script type="text/javascript">
+
+function init()
+{
+	numbering();
+	
+	var form = document.form_setAnyPinInterface;
+	form.mLanguage.value = AnyPin.mLanguage;
+	form.mCharset.value = AnyPin.mCharset;
+	form.mLicense.value = AnyPin.mLicense;
+	form.mServiceURL.value = AnyPin.mServiceURL;
+	form.mServiceKey.value = AnyPin.mServiceKey;
+	form.mServiceMode.value = AnyPin.mServiceMode;
+	form.mWebWorkerNum.value = AnyPin.mWebWorkerNum;
+	form.mWebWorkerScript.value = AnyPin.mWebWorkerScript;
+	form.mPinListInfo_delimiter1.value = AnyPin.mPinListInfo.delimiter1;
+	form.mPinListInfo_delimiter2.value = AnyPin.mPinListInfo.delimiter2;
+	form.mAllowNativeInput.value = AnyPin.mAllowNativeInput;
+	form.mXecureKeyPadHTML5_enable.value = AnyPin.mXecureKeyPadHTML5.enable;
+	form.mPinMinLen.value = AnyPin.mPinMinLen;
+	form.mPinMaxLen.value = AnyPin.mPinMaxLen;
+	form.mCaType.value = AnyPin.mCaType;
+	form.mWebCMPURL.value = AnyPin.mWebCMPURL;
+	
+	AnyPin.InitAnyPin();
+	SetPinElement();
+}
+
+function numbering()
+{
+	var aElements = document.getElementsByTagName('h3');
+
+	for (i = 0 ; i < aElements.length ; i++)
+	{
+		aElements[i].innerHTML = (i + 1) + ". " + aElements[i].innerHTML;
+		aElements.id = "elem" + (i + 1);
+	}
+}
+
+function sumCheckbox(aCheckbox)
+{
+	var aIter;
+	var aTotal = 0;
+
+	for(aIter = 0;aIter < aCheckbox.length;aIter++)
+	{
+		if(aCheckbox[aIter].checked)
+			aTotal += parseInt(aCheckbox[aIter].value);
+	}
+	return aTotal;
+}
+
+function getRadio(aRadio)
+{
+	var aIter;
+
+	for (aIter = 0;aIter < aRadio.length;aIter++)
+	{
+		if (aRadio[aIter].checked)
+			return aRadio[aIter].value;
+	}
+	return "";
+}
+
+</script>
+</head>
+<body onload="init();">
+
+<h1>AnyPIN API Test</h1>
+
+<hr>
+
+<!--*************************************************************************-->
+* 공통 변수 설정 (member)
+
+<script type="text/javascript">
+
+function setAnyPinInterface()
+{
+	var form = document.form_setAnyPinInterface;
+	
+	AnyPin.mLanguage = form.mLanguage.value;
+	AnyPin.mCharset = form.mCharset.value;
+	AnyPin.mLicense = form.mLicense.value;
+	AnyPin.mServiceURL = form.mServiceURL.value;
+	AnyPin.mServiceKey = form.mServiceKey.value;
+	AnyPin.mServiceMode = parseInt(form.mServiceMode.value);
+	AnyPin.mWebWorkerNum = parseInt(form.mWebWorkerNum.value);
+	AnyPin.mWebWorkerScript = form.mWebWorkerScript.value;
+	AnyPin.mPinListInfo.delimiter1 = form.mPinListInfo_delimiter1.value;
+	AnyPin.mPinListInfo.delimiter2 = form.mPinListInfo_delimiter2.value;
+	
+	if(form.mAllowNativeInput.value.toLowerCase() == "true")
+		AnyPin.mAllowNativeInput = true;
+	else
+		AnyPin.mAllowNativeInput = false;
+	
+	if(form.mXecureKeyPadHTML5_enable.value.toLowerCase() == "true")
+		AnyPin.mXecureKeyPadHTML5.enable = true;
+	else
+		AnyPin.mXecureKeyPadHTML5.enable = false;
+	
+	AnyPin.mPinMinLen = parseInt(form.mPinMinLen.value);
+	AnyPin.mPinMaxLen = parseInt(form.mPinMaxLen.value);
+	AnyPin.mCaType = parseInt(form.mCaType.value);
+	AnyPin.mWebCMPURL = form.mWebCMPURL.value;
+}
+</script>
+
+<form id="form_setAnyPinInterface" name="form_setAnyPinInterface" action="#">
+	<table>
+		<tr>
+			<td>mLanguage</td>
+			<td><input type="text" name="mLanguage" size="80"/></td>
+		</tr>
+		<tr>
+			<td>mCharset</td>
+			<td><input type="text" name="mCharset" size="80"/></td>
+		</tr>
+		<tr>
+			<td>mLicense</td>
+			<td><input type="text" name="mLicense" size="80"/></td>
+		</tr>
+		<tr>
+			<td>mServiceURL</td>
+			<td><input type="text" name="mServiceURL" size="80"/></td>
+		</tr>
+		<tr>
+			<td>mServiceKey</td>
+			<td><input type="text" name="mServiceKey" size="80"/></td>
+		</tr>
+		<tr>
+			<td>mServiceMode</td>
+			<td><input type="text" name="mServiceMode" size="80"/></td>
+		</tr>
+		<tr>
+			<td>mWebWorkerNum</td>
+			<td><input type="text" name="mWebWorkerNum" size="80"/></td>
+		</tr>
+		<tr>
+			<td>mWebWorkerScript</td>
+			<td><input type="text" name="mWebWorkerScript" size="80"/></td>
+		</tr>
+		<tr>
+			<td>mPinListInfo.delimiter1</td>
+			<td><input type="text" name="mPinListInfo_delimiter1" size="80"/></td>
+		</tr>
+		<tr>
+			<td>mPinListInfo.delimiter2</td>
+			<td><input type="text" name="mPinListInfo_delimiter2" size="80"/></td>
+		</tr>
+		<tr>
+			<td>mAllowNativeInput</td>
+			<td><input type="text" name="mAllowNativeInput" size="80"/></td>
+		</tr>
+		<tr>
+			<td>mXecureKeyPadHTML5.enable</td>
+			<td><input type="text" name="mXecureKeyPadHTML5_enable" size="80"/></td>
+		</tr>
+		<tr>
+			<td>mPinMinLen</td>
+			<td><input type="text" name="mPinMinLen" size="80"/></td>
+		</tr>
+		<tr>
+			<td>mPinMaxLen</td>
+			<td><input type="text" name="mPinMaxLen" size="80"/></td>
+		</tr>
+		<tr>
+			<td>mCaType</td>
+			<td><input type="text" name="mCaType" size="80"/></td>
+		</tr>
+		<tr>
+			<td>mWebCMPURL</td>
+			<td><input type="text" name="mWebCMPURL" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="setAnyPinInterface" onclick="setAnyPinInterface()"/>
+			</td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<hr>
+
+<!--*************************************************************************-->
+<h3>InitAnyPin</h3>
+
+<script type="text/javascript">
+function InitAnyPin()
+{
+	var form = document.form_InitAnyPin;
+	var output = form.output;
+
+	output.value = "";
+	
+	var result = AnyPin.InitAnyPin();
+	output.value = result;
+}
+</script>
+
+<form id="form_InitAnyPin" name="form_InitAnyPin" action="#">
+	<table>
+		<tr>
+			<td>member</td>
+			<td>
+				AnyPin.mLanguage<br>
+				AnyPin.mCharset<br>
+				AnyPin.mLicense<br>
+				AnyPin.mServiceURL<br>
+				AnyPin.mServiceKey<br>
+				AnyPin.mServiceMode<br>
+				AnyPin.mWebWorkerNum<br>
+				AnyPin.mWebWorkerScript
+			</td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="InitAnyPin" onclick="InitAnyPin()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>IsMobilePlatform</h3>
+
+<script type="text/javascript">
+function IsMobilePlatform()
+{
+	var form = document.form_IsMobilePlatform;
+	var output = form.output;
+
+	output.value = "";
+	
+	var result = AnyPin.IsMobilePlatform();
+	output.value = result;
+}
+</script>
+
+<form id="form_IsMobilePlatform" name="form_IsMobilePlatform" action="#">
+	<table>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="IsMobilePlatform" onclick="IsMobilePlatform()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>GetDeviceInfo</h3>
+
+<script type="text/javascript">
+function GetDeviceInfo()
+{
+	var form = document.form_GetDeviceInfo;
+	var output = form.output;
+
+	output.value = "";
+	
+	var userCallback = function(result) {
+		output.value = result;
+	}
+	
+	var errCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.GetDeviceInfo(userCallback, errCallback);
+}
+</script>
+
+<form id="form_GetDeviceInfo" name="form_GetDeviceInfo" action="#">
+	<table>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="GetDeviceInfo" onclick="GetDeviceInfo()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>GetError</h3>
+
+<script type="text/javascript">
+function GetError()
+{
+	var form = document.form_GetError;
+	var code = form.code.value;
+	var output = form.output;
+
+	output.value = "";
+	
+	var result = AnyPin.GetError(code);
+	
+	var msg = "code: " + result.code + "\r\n";
+	msg += "msg: " + result.msg + "\r\n";
+	
+	if(result.remainCount) {
+		msg += "remainCount: " + result.remainCount;
+	}
+	
+	output.value = msg;
+}
+</script>
+
+<form id="form_GetError" name="form_GetError" action="#">
+	<table>
+		<tr>
+			<td>code</td>
+			<td><input type="text" name="code" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="GetError" onclick="GetError()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="3"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>GetPinIDList</h3>
+
+<script type="text/javascript">
+function GetPinIDList()
+{
+	var form = document.form_apnGetPinIDList;
+	var userid = form.userid.value;
+	var option = sumCheckbox(form.option);
+	var output = form.output;
+
+	output.value = "";
+	
+	var userCallback = function(result) {
+		output.value = result;
+	}
+	
+	var errCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.GetPinIDList(userid, option, userCallback, errCallback);
+}
+</script>
+
+<form id="form_apnGetPinIDList" name="form_apnGetPinIDList" action="#">
+	<table>
+		<tr>
+			<td>member</td>
+			<td>
+				AnyPin.mPinListInfo.delimiter1<br>
+				AnyPin.mPinListInfo.delimiter2
+			</td>
+		</tr>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td>
+				<input type="checkbox" name="option" value="0" checked disabled="true"/> 0x00 : default - ID (userid 입력 시 미출력)<br>
+				<input type="checkbox" name="option" value="1"/> 0x01 : Nickname<br>
+				<input type="checkbox" name="option" value="2"/> 0x02 : Input Type<br>
+				<input type="checkbox" name="option" value="4"/> 0x04 : Last Time<br>
+				<input type="checkbox" name="option" value="16"/> 0x10 : 등록된 Pin 개수<br>
+			</td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="GetPinIDList" onclick="GetPinIDList()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>UpdatePinLastTime</h3>
+
+<script type="text/javascript">
+function UpdatePinLastTime()
+{
+	var form = document.form_UpdatePinLastTime;
+	var userid = form.userid.value;
+	var output = form.output;
+
+	output.value = "";
+	
+	var userCallback = function(result) {
+		output.value = result;
+	}
+	
+	var errCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.UpdatePinLastTime(userid, userCallback, errCallback);
+}
+</script>
+
+<form id="form_UpdatePinLastTime" name="form_UpdatePinLastTime" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="UpdatePinLastTime" onclick="UpdatePinLastTime()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>SetPinElement</h3>
+
+<script type="text/javascript">
+function SetPinElement()
+{
+	var form = document.form_SetPinElement;
+	var inputType = getRadio(form.inputType);
+	var inputCheck = getRadio(form.inputCheck);
+	var input1 = form.input1;
+	var input2 = form.input2;
+	var input3 = form.input3;
+	var okFunc = null;
+	var closeFunc = null;
+	var option = form.option.value;
+	var output = form.output;
+
+	output.value = "";
+	
+	if(inputCheck == "1") {
+		var keyIndex = AnyPin.SetPinElement(inputType, input1, okFunc, closeFunc, option);
+		output.value = keyIndex;
+	} else if(inputCheck == "2") {
+		var keyIndex = AnyPin.SetPinElement(inputType, input2, okFunc, closeFunc, option);
+		output.value = keyIndex;
+	} else if(inputCheck == "3") {
+		var keyIndex = AnyPin.SetPinElement(inputType, input3, okFunc, closeFunc, option);
+		output.value = keyIndex;
+	}
+}
+</script>
+
+<form id="form_SetPinElement" name="form_SetPinElement" action="#">
+	<table>
+		<tr>
+			<td>member</td>
+			<td>
+				AnyPin.mAllowNativeInput<br>
+				AnyPin.mXecureKeyPadHTML5.enable
+			</td>
+		</tr>
+		<tr>
+			<td>inputType</td>
+			<td>
+				<input type="radio" name="inputType" value="0" checked/> 0 : 일반 입력<br>
+				<input type="radio" name="inputType" value="13"/> 13 : XecureKeypad HTML5
+			</td>
+		</tr>
+		<tr>
+			<td>inputElement</td>
+			<td>
+			<div id="intput1_div">
+				<input type="radio" name="inputCheck" value="1" checked/><input type="text" id="input_1" name="input1" size="80" value="1212"/>
+			</div>
+			<div id="intput2_div">
+				<input type="radio" name="inputCheck" value="2"/><input type="text" id="input_2" name="input2" size="80"/>
+			</div>
+			<div id="intput3_div">
+				<input type="radio" name="inputCheck" value="3"/><input type="text" id="input_3" name="input3" size="80"/>
+			</div>
+			</td>
+		</tr>
+		<tr>
+			<td>okCallback</td>
+			<td><input type="text" name="okCallback" size="80" disabled="true" value="function"/></td>
+		</tr>
+		<tr>
+			<td>closeCallback</td>
+			<td><input type="text" name="closeCallback" size="80" disabled="true" value="function"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="SetPinElement" onclick="SetPinElement()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>ClearPinElement</h3>
+
+<script type="text/javascript">
+function ClearPinElement()
+{
+	var form = document.form_ClearPinElement;
+	var keyIndex = form.keyIndex.value;
+	var output = form.output;
+
+	output.value = "";
+	
+	var result = AnyPin.ClearPinElement(keyIndex);
+	output.value = result;
+}
+</script>
+
+<form id="form_ClearPinElement" name="form_ClearPinElement" action="#">
+	<table>
+		<tr>
+			<td>keyIndex</td>
+			<td><div id="div_1"><input type="text" id="input_1" name="keyIndex" size="80"/></div></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="ClearPinElement" onclick="ClearPinElement()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>GetPinLength</h3>
+
+<script type="text/javascript">
+function GetPinLength()
+{
+	var form = document.form_GetPinLength;
+	var keyIndex = form.keyIndex.value;
+	var output = form.output;
+
+	output.value = "";
+	
+	var result = AnyPin.GetPinLength(keyIndex);
+	output.value = result;
+}
+</script>
+
+<form id="form_GetPinLength" name="form_GetPinLength" action="#">
+	<table>
+		<tr>
+			<td>keyIndex</td>
+			<td><div id="div_1"><input type="text" id="input_1" name="keyIndex" size="80"/></div></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="GetPinLength" onclick="GetPinLength()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>CheckPin</h3>
+
+<script type="text/javascript">
+function CheckPin()
+{
+	var form = document.form_CheckPin;
+	var userid = form.userid.value;
+	var keyIndex1 = form.keyIndex1.value;
+	var keyIndex2 = form.keyIndex2.value;
+	var minLen = form.minLen.value;
+	var maxLen = form.maxLen.value;
+	var option = sumCheckbox(form.option);
+	var output = form.output;
+
+	output.value = "";
+	
+	var userCallback = function(result) {
+		output.value = result;
+	}
+	
+	var errCallback = function(result) {
+		if(result.remainCount) {
+			alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n') + " 남은 횟수: " + result.remainCount);
+		} else {
+			alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+		}
+	}
+	
+	AnyPin.CheckPin(userid, keyIndex1, keyIndex2, minLen, maxLen, option, userCallback, errCallback);
+}
+</script>
+
+<form id="form_CheckPin" name="form_CheckPin" action="#">
+	<table>
+		<tr>
+			<td>member</td>
+			<td>
+				AnyPin.mPinMinLen<br>
+				AnyPin.mPinMaxLen
+			</td>
+		</tr>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>keyIndex1</td>
+			<td><div id="div_1"><input type="text" id="input_1" name="keyIndex1" size="80"/></div></td>
+		</tr>
+		<tr>
+			<td>keyIndex2</td>
+			<td><div id="div_2"><input type="text" id="input_2" name="keyIndex2" size="80"/></div></td>
+		</tr>
+		<tr>
+			<td>minLen</td>
+			<td><input type="text" name="minLen" size="80"/></td>
+		</tr>
+		<tr>
+			<td>maxLen</td>
+			<td><input type="text" name="maxLen" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td>
+				<input type="checkbox" name="option" value="0" checked disabled="true"/> 0x00 : default - 숫자만, 패턴검사(3자리 이상 동일한 숫자, 연속 숫자)<br>
+				<input type="checkbox" name="option" value="1"/> 0x01 : 두 입력값이 동일한지 검사<br>
+				<input type="checkbox" name="option" value="2"/> 0x02 : 두 입력값이 동일하지 않은지 검사 (기존 핀, 변경할 핀 확인)<br>
+				<input type="checkbox" name="option" value="4"/> 0x04 : 입력한 핀번호가 맞는지 확인하기 위하여 서버로 로그인 요청 (InitSession 선호출 필요, ID 입력 필요)<br>
+			</td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="CheckPin" onclick="CheckPin()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>InitPin</h3>
+
+<script type="text/javascript">
+function InitPin()
+{
+	var form = document.form_InitPin;
+	var userid = form.userid.value;
+	var option = form.option.value;
+	var output = form.output;
+	
+	output.value = "";
+
+	var userCallback = function(result) {
+		output.value = result;
+	}
+	
+	var errCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.InitPin(userid, option, userCallback, errCallback);
+}
+</script>
+
+<form id="form_InitPin" name="form_InitPin" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="InitPin" onclick="InitPin()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>InitRegist</h3>
+
+<script type="text/javascript">
+function InitRegist()
+{
+	var form = document.form_InitRegist;
+	var userid = form.userid.value;
+	var option = form.option.value;
+	var output = form.output;
+	
+	output.value = "";
+
+	var userCallback = function(result) {
+		output.value = result;
+	}
+	
+	var errCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.InitRegist(userid, option, userCallback, errCallback);
+}
+</script>
+
+<form id="form_InitRegist" name="form_InitRegist" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="InitRegist" onclick="InitRegist()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>SetRequestCertRaFunc</h3>
+
+<script type="text/javascript">
+var aRaType = "xecureca";
+var aRaPage = "../test/user_regist_anypin.jsp";
+
+var time2;
+function requestCertRaFunc(callback, param)
+{
+	var form = document.form_RegistPin;
+	var ra_result = form.ra_result;
+	
+	ra_result.value = "id:" + param.id + "\n" + "deviceId:" + param.deviceId + "\n";
+	
+	var req= new XMLHttpRequest ();
+	var url = aRaPage;
+	url += "?commandType=new";
+	url += "&user_policy_type=104";
+	url += "&targetRA=2048";
+	url += "&user_public_or_private=" + aRaType;
+	url += "&user_id=" + param.deviceId;
+	url += "&real_id=" + param.id;
+	
+	req.open ("GET", url, false);
+	req.send (null);
+	
+	var res = eval (req.responseText);
+	
+	if (parseInt (res["code"]) == 0) {
+		
+		var refNum = res["refcode"];
+		var authCode = res["authcode"];
+		var name = res["name"];
+		var ssn = res["ssn"];
+		var userid = res["userid"];
+		var realid = res["realid"];
+		var check_real_id = res["check_real_id"];
+		var cert_status = res["cert_status"];
+		
+		ra_result.value += "[등록 결과]\n" + 
+			"refcode:" + refNum + "\n" +
+			"authcode:" + authCode + "\n" +
+			"name:" + name + "\n" +
+			"ssn:" + ssn + "\n" +
+			"userid(deviceId):" + userid + "\n" +
+			"realid(id):" + realid + "\n" +
+			"check_real_id(id):" + check_real_id + "\n" +
+			"cert_status:" + cert_status;
+		
+		time2 = new Date();
+		callback(refNum, authCode);
+	} else {
+		ra_result.value += "[등록 결과]\n" +
+			"code:" + res["code"] + "\n" +
+			"reason:" + res["reason"] + "\n" +
+			"moreInformation:" + res["moreinformation"] + "\n";
+	}
+}
+
+function SetRequestCertRaFunc()
+{
+	var form = document.form_SetRequestCertRaFunc;
+	var output = form.output;
+
+	output.value = "";
+	
+	AnyPin.SetRequestCertRaFunc(requestCertRaFunc);
+	output.value = "ok";
+}
+</script>
+
+<form id="form_SetRequestCertRaFunc" name="form_SetRequestCertRaFunc" action="#">
+	<table>
+		<tr>
+			<td>raCallback</td>
+			<td><input type="text" name="raCallback" size="80" disabled="true" value="function"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="SetRequestCertRaFunc" onclick="SetRequestCertRaFunc()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>RegistPin</h3>
+
+<script type="text/javascript">
+function RegistPin()
+{
+	var form = document.form_RegistPin;
+	var userid = form.userid.value;
+	var keyIndex = form.keyIndex.value;
+	var nickname = form.nickname.value;
+	var description = form.description.value;
+	var option = sumCheckbox(form.option);
+	var output = form.output;
+
+	form.ra_result.value = "";
+	output.value = "";
+	
+	var time1 = new Date();
+	var userCallback = function(result) {
+		var time3 = new Date();
+		var time_ra = new Date(time2 - time1);
+		var time_result = new Date(time3 - time1);
+		
+		output.value = "RA 등록 시간: " + time_ra.getMinutes() + " 분 " + time_ra.getSeconds() + " 초\r\n"
+		output.value += "최종 등록 시간: " + time_result.getMinutes() + " 분 " + time_result.getSeconds() + " 초\r\n"
+		output.value += result;
+
+		if(result == 1) {
+			if(AnyPin.mLanguage == "ko-KR")
+				alert('등록 가능한 기기수량이 초과되어, 가장 오래전 사용된 핀 정보가 삭제되었습니다.');
+			else
+				alert('The number of devices that can be registered is exceeded, delete the oldest used PIN information.');
+		}
+	}
+	
+	var errCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.RegistPin(userid, nickname, description, keyIndex, option, userCallback, errCallback);
+}
+</script>
+
+<form id="form_RegistPin" name="form_RegistPin" action="#">
+	<table>
+		<tr>
+			<td>member</td>
+			<td>
+				AnyPin.mServiceMode<br>
+				AnyPin.mCaType<br>
+				AnyPin.mWebCMPURL
+			</td>
+		</tr>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>keyIndex</td>
+			<td><input type="text" name="keyIndex" size="80" value="0"/></td>
+		</tr>
+		<tr>
+			<td>nickname</td>
+			<td><input type="text" name="nickname" size="80"/></td>
+		</tr>
+		<tr>
+			<td>description</td>
+			<td><input type="text" name="description" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td>
+				<input type="checkbox" name="option" value="0" checked disabled="true"/> 0x00 : 기본값<br>
+				<input type="checkbox" name="option" value="1"/> 0x01 : nickname 서버로 전송<br>
+				<input type="checkbox" name="option" value="2"/> 0x02 : description 서버로 전송<br>
+				<input type="checkbox" name="option" value="4"/> 0x04 : 사용자 기기정보(getDeviceInfo) 서버로 전송<br>
+			</td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="RegistPin" onclick="RegistPin()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>ra_result</td>
+			<td><textarea name="ra_result" cols="80" style="height:220px"></textarea></td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="4"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>InitSession</h3>
+
+<script type="text/javascript">
+function InitSession()
+{
+	var form = document.form_InitSession;
+	var userid = form.userid.value;
+	var option = form.option.value;
+	var output = form.output;
+
+	output.value = "";
+	
+	var userCallback = function(result) {
+		output.value = result;
+	}
+	
+	var errCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.InitSession(userid, option, userCallback, errCallback);
+}
+</script>
+
+<form id="form_InitSession" name="form_InitSession" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="InitSession" onclick="InitSession()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>SetNoDueDay</h3>
+
+<script type="text/javascript">
+function SetNoDueDay()
+{
+	var form = document.form_SetNoDueDay;
+	var userid = form.userid.value;
+	var day = form.day.value;
+	var output = form.output;
+
+	output.value = "";
+	
+	var userCallback = function(result) {
+		output.value = result;
+	}
+	
+	var errCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.SetNoDueDay(userid, day, userCallback, errCallback);
+}
+</script>
+
+<form id="form_SetNoDueDay" name="form_SetNoDueDay" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>day</td>
+			<td><input type="text" name="day" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="SetNoDueDay" onclick="SetNoDueDay()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>EndSession</h3>
+
+<script type="text/javascript">
+function EndSession()
+{
+	var form = document.form_EndSession;
+	var userid = form.userid.value;
+	var output = form.output;
+
+	output.value = "";
+	
+	var userCallback = function(result) {
+		output.value = result;
+	}
+	
+	var errCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.EndSession(userid, userCallback, errCallback);
+}
+</script>
+
+<form id="form_EndSession" name="form_EndSession" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="EndSession" onclick="EndSession()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>SetRenewCertRaFunc</h3>
+
+<script type="text/javascript">
+
+function renewCertRaFunc(callback)
+{
+	callback(0);
+}
+
+function SetRenewCertRaFunc()
+{
+	var form = document.form_SetRenewCertRaFunc;
+	var output = form.output;
+
+	output.value = "";
+	
+	AnyPin.SetRenewCertRaFunc(renewCertRaFunc);
+	output.value = "ok";
+}
+</script>
+
+<form id="form_SetRenewCertRaFunc" name="form_SetRenewCertRaFunc" action="#">
+	<table>
+		<tr>
+			<td>raCallback</td>
+			<td><input type="text" name="raCallback" size="80" disabled="true" value="function"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="SetRenewCertRaFunc" onclick="SetRenewCertRaFunc()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>SignPin</h3>
+
+<script type="text/javascript">
+function SignPin()
+{
+	var form = document.form_SignPin;
+	var userid = form.userid.value;
+	var keyIndex = form.keyIndex.value;
+	var plain = form.plain.value;
+	var option = sumCheckbox(form.option);
+	// test
+	var radioRenewCert = getRadio(form.renewEnforcedly);
+	var aResult = form.aResult;
+
+	aResult.value = "";
+
+	// test
+	if(radioRenewCert == 0)
+		AnyPin.mRenewCertEnforcedly = false;
+	else
+		AnyPin.mRenewCertEnforcedly = true;
+	
+	var userCallback = function(result) {
+		aResult.value = result;
+	}
+	
+	var errCallback = function(result) {
+		if(result.delayTime && result.remainCount) {
+			var msg = result.msg.split("\n");
+			msg[1] += " " + result.remainCount;
+			msg[2] += " " + result.delayTime;
+			if(result.remainCount > 0) {
+				alert("[" + result.code + "] " + msg[0] + "\n" + msg[1] + "\n" + msg[2]);
+			} else {
+				alert("[" + result.code + "] " + msg[0] + "\n" + msg[2]);
+			}
+			
+		} else if(result.delayTime) {
+			var msg = result.msg.split("\n");
+			msg[1] += " " + result.delayTime;
+			alert("[" + result.code + "] " + msg[0] + "\n" + msg[1]);
+		} else if(result.remainCount > -1) {
+			alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n') + " 남은 횟수: " + result.remainCount);
+		} else {
+			alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+		}
+	}
+
+	AnyPin.SignPin(userid, keyIndex, plain, option, userCallback, errCallback);
+}
+</script>
+
+<form id="form_SignPin" name="form_SignPin" action="#">
+	<table>
+		<tr>
+			<td>member</td>
+			<td>
+				AnyPin.mServiceMode<br>
+				AnyPin.mCaType<br>
+				AnyPin.mWebCMPURL
+			</td>
+		</tr>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>keyIndex</td>
+			<td><input type="text" name="keyIndex" size="80" value="0"/></td>
+		</tr>
+		<tr>
+			<td>plain/seqnum</td>
+			<td><input type="text" name="plain" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td>
+				<input type="checkbox" name="option" value="0" checked disabled="true"/> 0x00000000 : 기본값<br>
+				<input type="checkbox" name="option" value="256"/> 0x00000100 : 출력 값을 Base64로<br>
+				<input type="checkbox" name="option" value="512"/> 0x00000200 : 서명 시간 추가 (SignedAttributes)<br>
+				<input type="checkbox" name="option" value="4096"/> 0x00001000 : 분리 서명 (No Content)<br>
+				<input type="checkbox" name="option" value="65536"/> 0x00010000 : No CMS<br>
+				<input type="checkbox" name="option" value="8388608"/> 0x00800000 : PKCS1<br>
+			</td>
+		</tr>
+		<tr>
+			<td>갱신테스트</td>
+			<td>
+				<input type="radio" name="renewEnforcedly" value="0" checked/> 0 : 미설정<br>
+				<input type="radio" name="renewEnforcedly" value="1"/> 1 : 설정 (인증서 자동갱신 테스트를 위한 임시 강제설정)
+			</td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="SignPin" onclick="SignPin()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="aResult" cols="80" rows="2"></textarea></td>
+		</tr>
+		<tr>
+			<td>서명검증</td>
+			<td>
+				<button onClick="this.form.action='./sign_result1.jsp';this.form.submit();">서버로 전송</button>
+				<button onClick="this.form.action='./sign_result1_VerifyM.jsp';this.form.submit();">서버로 전송 (VerifyM)</button>
+			</td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>DeletePin</h3>
+
+<script type="text/javascript">
+function DeletePin()
+{
+	var form = document.form_DeletePin;
+	var userid = form.userid.value;
+	var option = form.option.value;
+	var output = form.output;
+
+	output.value = "";
+	
+	var userCallback = function(result) {
+		output.value = result;
+	}
+	
+	var errCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.DeletePin(userid, option, userCallback, errCallback);
+}
+</script>
+
+<form id="form_DeletePin" name="form_DeletePin" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="DeletePin" onclick="DeletePin()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>DeleteAllPin</h3>
+
+<script type="text/javascript">
+function DeleteAllPin()
+{
+	var form = document.form_DeleteAllPin;
+	var userid = form.userid.value;
+	var keyIndex = form.keyIndex.value;
+	var option = form.option.value;
+	var output = form.output;
+
+	output.value = "";
+	
+	var userCallback = function(result) {
+		output.value = result;
+	}
+	
+	var errCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.DeleteAllPin(userid, keyIndex, option, userCallback, errCallback);
+}
+</script>
+
+<form id="form_DeleteAllPin" name="form_DeleteAllPin" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>keyIndex</td>
+			<td><input type="text" name="keyIndex" size="80" value="0"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="DeleteAllPin" onclick="DeleteAllPin()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>DeletePinLocal</h3>
+
+<script type="text/javascript">
+function DeletePinLocal()
+{
+	var form = document.form_DeletePinLocal;
+	var userid = form.userid.value;
+	var option = form.option.value;
+	var output = form.output;
+
+	output.value = "";
+	
+	var userCallback = function(result) {
+		output.value = result;
+	}
+	
+	var errCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.DeletePinLocal(userid, option, userCallback, errCallback);
+}
+</script>
+
+<form id="form_DeletePinLocal" name="form_DeletePinLocal" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="DeletePinLocal" onclick="DeletePinLocal()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+<!--*************************************************************************-->
+<h3>ChangePin</h3>
+
+<script type="text/javascript">
+function ChangePin()
+{
+	var form = document.form_ChangePin;
+	var userid = form.userid.value;
+	var keyIndex1 = form.keyIndex1.value;
+	var keyIndex2 = form.keyIndex2.value;
+	var option = form.option.value;
+	var output = form.output;
+
+	output.value = "";
+	
+	var userCallback = function(result) {
+		output.value = result;
+	}
+	
+	var errCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.ChangePin(userid, keyIndex1, keyIndex2, option, userCallback, errCallback);
+}
+</script>
+
+<form id="form_ChangePin" name="form_ChangePin" action="#">
+	<table>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="80"/></td>
+		</tr>
+		<tr>
+			<td>keyIndex1</td>
+			<td><input type="text" name="keyIndex1" size="80" value="0"/></td>
+		</tr>
+		<tr>
+			<td>keyIndex2</td>
+			<td><input type="text" name="keyIndex2" size="80" value="1"/></td>
+		</tr>
+		<tr>
+			<td>option</td>
+			<td><input type="text" name="option" size="80"/></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="ChangePin" onclick="ChangePin()"/><br>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="80" rows="2"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+</body>
+</html>

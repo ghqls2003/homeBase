@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sys.company">
+
+	<!-- 검색옵션 - 시도(전체) -->
+	<select id="selectCtpvNm" resultType="map">
+        SELECT DISTINCT SUBSTRING(stdg_cd, 1, 2) AS ctpv_cd
+        	, ctpv_nm
+		FROM 
+			dqvs.dvs_cmm_mt_area
+		WHERE 1=1
+		<if test="regCmptncCd != null and regCmptncCd != ''">
+			AND stdg_cd = #{regCmptncCd}
+		</if>
+		ORDER BY ctpv_cd
+    </select>
+
+    <!-- 검색옵션 - 시군구(전체) -->
+	<select id="selectSggNm" resultType="map">
+        SELECT DISTINCT stdg_cd
+			, sgg_nm
+		FROM 
+			dqvs.dvs_cmm_mt_area
+		WHERE 1=1
+			AND sgg_nm != ''
+		<if test="ctpvCd != null and ctpvCd != ''">
+			AND stdg_cd LIKE CONCAT(#{ctpvCd}, '%')
+		</if>
+		<if test="regCmptncCd != null and regCmptncCd != ''">
+			AND stdg_cd = #{regCmptncCd}
+		</if>
+		ORDER BY stdg_cd
+    </select>
+
+    <!-- 검색옵션 - 영업상태(전체) -->
+	<select id="searchBsnStts" resultType="map">
+        SELECT cd
+        	, cd_nm
+		FROM 
+			dqvs.dvs_cmm_mt_code
+		WHERE cd_group = 'bsn_stts_cd'
+			AND use_yn != 'N'
+		ORDER BY cd
+    </select>
+    
+    <!-- 사업자정보갱신이력 Sql -->
+    <sql id="selectCompanyHistoryInfoSql">
+    	(
+			SELECT ROW_NUMBER() OVER(ORDER BY range_reg_dt DESC) rn
+				, t3.*
+				, cnt
+			FROM
+				(
+				SELECT DISTINCT ON(bzmn_sn) bzmn_sn
+					, mdfcn_sn
+					, co_nm
+					, brno
+					, crno
+					, mdfcn_rsn
+					, reg_dt as range_reg_dt
+					, TO_CHAR(reg_dt, 'YYYY-MM-DD') reg_dt
+					, (SELECT user_nm FROM dqvs.dvs_cmm_mt_sso WHERE user_sn = rgtr_sn) user_nm
+					, reg_cmptnc_cd
+					, sgg_cd
+					, bsn_stts_cd
+					, CONCAT(
+						(SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = reg_cmptnc_cd), ' '
+						, (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = reg_cmptnc_cd)) jurisdiction
+					, CONCAT(
+				        (SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd), ' '
+				        , (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd)) locgov
+				    , rmrk
+				FROM
+					dqvs.dvs_rac_hs_agency
+				ORDER BY bzmn_sn ASC, mdfcn_sn DESC
+				) AS t3
+			LEFT JOIN
+				(
+				SELECT t1.bzmn_sn
+					, COUNT(*)-1 cnt
+				FROM
+					(
+					SELECT bzmn_sn
+					FROM
+						dqvs.dvs_rac_hs_agency
+					) AS t1
+				GROUP BY t1.bzmn_sn
+				) AS t2
+			ON t3.bzmn_sn = t2.bzmn_sn
+			WHERE 1=1
+			<choose>
+			    <when test='searchChk == "jurisdiction" and regCmptncCd != "" and regCmptncCd != null'>
+			        AND reg_cmptnc_cd LIKE CONCAT(#{regCmptncCd}, '%')
+			    </when>
+
+			    <when test='searchChk == "location" and regCmptncCd != "" and regCmptncCd != null'>
+			        AND sgg_cd LIKE CONCAT(#{regCmptncCd}, '%')
+			    </when>
+			</choose>
+			<if test="searchCompany != '' and searchCompany != null">
+				AND t3.co_nm LIKE CONCAT('%', #{searchCompany}, '%')
+			</if>
+			<if test="searchBsnStts != '' and searchBsnStts != null">
+				AND bsn_stts_cd = #{searchBsnStts}
+			</if>
+		)t4
+    </sql>
+
+	<!-- 사업자 정보 갱신 이력 갯수 -->
+    <select id="selectCompanyHistoryInfoCnt" resultType="int">
+    /* 사업자정보갱신이력 카운트 */
+		SELECT COUNT(*)
+		FROM
+			<include refid="selectCompanyHistoryInfoSql" />
+    </select>
+
+	<!-- 사업자 정보 갱신 이력 그리드 -->
+    <select id="selectCompanyHistoryInfo" resultType="map">
+    /* 사업자정보갱신이력 그리드 */
+		SELECT *
+		FROM
+			<include refid="selectCompanyHistoryInfoSql" />
+		WHERE 1=1
+		<if test="take != '' and take != null">
+			AND t4.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		</if>
+		<if test="skip != '' and skip != null">
+			AND t4.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+		</if>
+		ORDER BY t4.rn ASC
+    </select>
+
+	<!-- 상세팝업 - 수정갯수 -->
+    <select id="selectmdfCnt" resultType="int">
+    	SELECT count(*)
+		FROM (
+			SELECT
+				row_number() over(order by mdfcn_sn desc) as rn,
+			    bzmn_Sn,
+			    reg_cmptnc_cd,
+			    (SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = reg_cmptnc_cd) AS reg_ctpv_nm,
+			    (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = reg_cmptnc_cd) AS reg_sgg_nm,
+			    co_nm,
+			    rprsv_nm,
+			    offi_sn,
+			    up_brno,
+				(
+					select
+						distinct CONCAT(max(co_nm), '(', trim(brno), ')')
+					from
+						dqvs.dvs_rac_mt_agency
+					where 1 = 1
+						and bzmn_sn = T1.up_brno
+					group by brno
+				) as up_brno_nm,
+			    brno,
+			    crno,
+			    bzmn_se_cd,
+			    (SELECT cd_nm FROM dqvs.dvs_cmm_mt_code WHERE cd_group = 'bzmn_se_cd' and cd = bzmn_se_cd) AS bzmn_se_nm,
+			    biz_strt_day,
+			    sgg_cd,
+			    (SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) AS ctpv_nm,
+			    (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) AS sgg_nm,
+			    road_nm_addr,
+			    lotno_addr,
+			    garage_road_nm_addr,
+			    road_nm_daddr,
+			    lotno_daddr,
+			    garage_road_nm_daddr,
+			    lat,
+				lot,
+			    bsn_stts_cd,
+			    (SELECT cd_nm FROM dqvs.dvs_cmm_mt_code WHERE cd_group = 'bsn_stts_cd' and cd = bsn_stts_cd) AS bsn_stts_nm,
+			    bsn_stts_mdfcn_dt,
+			    dqvs.pca_decrypt(telno, '150') telno,
+			    vhcl_reg_noh,
+			    car_noh,
+			    van_noh,
+			    oper_bgng_dt,
+			    oper_end_dt,
+			    elcty_car_noh,
+			    elcty_van_noh,
+			    rmrk,
+			    mdfcn_rsn,
+			    (SELECT user_nm FROM dqvs.dvs_cmm_mt_sso WHERE user_sn = rgtr_sn) AS user_nm,
+			    to_char(reg_dt, 'YYYY-MM-DD') as reg_dt
+			FROM dqvs.dvs_rac_hs_agency T1
+			<if test="bzmnSn != null and bzmnSn != ''">
+				WHERE bzmn_Sn = #{bzmnSn}
+			</if>
+			ORDER BY mdfcn_sn desc
+		) t1
+    </select>
+
+	<!-- 상세팝업 내용 -->
+    <select id="selectDetailInfo"  resultType="map">
+    	SELECT
+			row_number() over(order by mdfcn_sn desc) as rn,
+		    bzmn_Sn,
+		    reg_cmptnc_cd,
+		    (SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = reg_cmptnc_cd) AS reg_ctpv_nm,
+		    (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = reg_cmptnc_cd) AS reg_sgg_nm,
+		    co_nm,
+		    rprsv_nm,
+		    offi_sn,
+		    up_brno,
+			(
+				select
+					distinct CONCAT(max(co_nm), '(', trim(brno), ')')
+				from
+					dqvs.dvs_rac_mt_agency
+				where 1 = 1
+					and bzmn_sn = T1.up_brno
+				group by brno
+			) as up_brno_nm,
+		    brno,
+		    crno,
+		    bzmn_se_cd,
+		    (SELECT cd_nm FROM dqvs.dvs_cmm_mt_code WHERE cd_group = 'bzmn_se_cd' and cd = bzmn_se_cd) AS bzmn_se_nm,
+		    biz_strt_day,
+		    sgg_cd,
+		    (SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) AS ctpv_nm,
+		    (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) AS sgg_nm,
+		    road_nm_addr,
+		    lotno_addr,
+		    garage_road_nm_addr,
+		    road_nm_daddr,
+		    lotno_daddr,
+		    garage_road_nm_daddr,
+		    lat,
+			lot,
+		    bsn_stts_cd,
+		    (SELECT cd_nm FROM dqvs.dvs_cmm_mt_code WHERE cd_group = 'bsn_stts_cd' and cd = bsn_stts_cd) AS bsn_stts_nm,
+		    bsn_stts_mdfcn_dt,
+		    dqvs.pca_decrypt(telno, '150') telno,
+		    vhcl_reg_noh,
+		    car_noh,
+		    van_noh,
+		    oper_bgng_dt,
+		    oper_end_dt,
+		    elcty_car_noh,
+		    elcty_van_noh,
+		    rmrk,
+		    mdfcn_rsn,
+		    (SELECT user_nm FROM dqvs.dvs_cmm_mt_sso WHERE user_sn = rgtr_sn) AS user_nm,
+		    to_char(reg_dt, 'YYYY-MM-DD') as reg_dt
+		FROM dqvs.dvs_rac_hs_agency T1
+	    <if test="bzmnSn != null and bzmnSn != ''">
+			WHERE bzmn_Sn = #{bzmnSn}
+		</if>
+		ORDER BY mdfcn_sn desc
+    </select>
+
+
+</mapper>

@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ma.auth">
+
+    <!-- 시도 -->
+	<select id="selectCtpvNm" resultType="map">
+        select distinct substring (stdg_cd, 1, 2) AS ctpv_cd, ctpv_nm from dqvs.dvs_cmm_mt_area
+        where mtnabn_yn = 'Y'
+		order by ctpv_cd
+    </select>
+
+    <!-- 시군구 -->
+	<select id="selectSggNm" resultType="map">
+        select distinct coalesce(sgg_nm, '전체') as sgg_nm, stdg_cd from dqvs.dvs_cmm_mt_area
+        where mtnabn_yn = 'Y'
+        <if test="ctpvNm != null and ctpvNm != ''">
+			and ctpv_nm = #{ctpvNm}
+		</if>
+		order by stdg_cd
+    </select>
+
+    <!-- 대여사업자 목록 조회 -->
+	<select id="selectCompanyList" resultType="map">
+		select * from(
+		select
+			row_number() over() as rn,
+			T2.*
+		from
+			(
+			select
+				a.brno,
+				a.up_brno,
+				a.bzmn_sn,
+				a.up_bzmn_sn,
+				a.co_nm,
+				a.road_nm_addr,
+				a.reg_cmptnc_cd,
+				a.bzmn_se_cd,
+				(select cd_nm from dvs_cmm_mt_code dcmc where cd_group = 'bzmn_se_cd' and cd = a.bzmn_se_cd)
+			from
+				(
+				select
+					drma.brno,
+					up_brno,
+					row_number() over (partition by drma.bzmn_sn
+				order by
+					mdfcn_dt desc) as rn,
+					drma.bzmn_sn,
+					b.bzmn_sn as up_bzmn_sn,
+					co_nm,
+					road_nm_addr,
+					reg_cmptnc_cd,
+					bzmn_se_cd
+				from dqvs.dvs_rac_mt_agency drma
+				left join (
+					select
+						bzmn_sn,
+						brno
+					from dqvs.dvs_rac_mt_agency)b on
+					drma.up_brno = b.brno
+				) a
+			where
+				rn = 1
+		union all
+			select
+				brno,
+				up_brno,
+				bzmn_sn,
+				bzmn_sn as up_bzmn_sn,
+				co_nm,
+				road_nm_addr,
+				reg_cmptnc_cd,
+				bzmn_se_cd,
+				(select cd_nm from dvs_cmm_mt_code dcmc where cd_group = 'bzmn_se_cd' and cd = bzmn_se_cd)
+			from dqvs.dvs_rac_mt_request )T2
+		where 1=1
+			<if test='bzmnSeCd != null and bzmnSeCd != ""'>
+				and bzmn_se_cd = #{bzmnSeCd}
+			</if>
+			<if test='searchWrd != null and searchWrd != ""'>
+				and co_nm like '%' || #{searchWrd} || '%'
+			</if>
+			<if test='searchWrd != null and searchWrd != ""'>
+				or brno like '%' || #{searchWrd} || '%'
+			</if>
+			) T
+		WHERE 1 = 1
+			<if test="take != '' and take != null">
+				AND T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+			</if>
+			<if test="skip != '' and skip != null">
+				AND T.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+			</if>
+		ORDER BY T.rn ASC
+	</select>
+
+	<select id="selectCompanyListCnt" resultType="int">
+		select count(*) from (
+			select
+			a.brno,
+			a.up_brno,
+			a.bzmn_sn,
+			a.up_bzmn_sn,
+			a.co_nm,
+			a.road_nm_addr,
+			a.reg_cmptnc_cd,
+			a.bzmn_se_cd,
+			(select cd_nm from dvs_cmm_mt_code dcmc where cd_group = 'bzmn_se_cd' and cd = a.bzmn_se_cd)
+			from
+				(
+				select
+					drma.brno,
+					up_brno,
+					row_number() over (partition by drma.bzmn_sn
+				order by
+					mdfcn_dt desc) as rn,
+					drma.bzmn_sn,
+					b.bzmn_sn as up_bzmn_sn,
+					co_nm,
+					road_nm_addr,
+					reg_cmptnc_cd,
+					bzmn_se_cd
+				from dqvs.dvs_rac_mt_agency drma
+				left join (
+					select
+						bzmn_sn,
+						brno
+					from dqvs.dvs_rac_mt_agency)b on
+					drma.up_brno = b.brno
+				) a
+			where
+				rn = 1
+			union all
+				select
+					brno,
+					up_brno,
+					bzmn_sn,
+					bzmn_sn as up_bzmn_sn,
+					co_nm,
+					road_nm_addr,
+					reg_cmptnc_cd,
+					bzmn_se_cd,
+					(select cd_nm from dvs_cmm_mt_code dcmc where cd_group = 'bzmn_se_cd' and cd = bzmn_se_cd)
+				from dqvs.dvs_rac_mt_request
+			where 1=1
+			<if test='bzmnSeCd != null and bzmnSeCd != ""'>
+				and bzmn_se_cd = #{bzmnSeCd}
+			</if>
+			<if test='searchWrd != null and searchWrd != ""'>
+				and co_nm like '%' || #{searchWrd} || '%'
+			</if>
+			<if test='searchWrd != null and searchWrd != ""'>
+				or brno like '%' || #{searchWrd} || '%'
+			</if>
+			) T
+	</select>
+
+	<!-- 지자체 목록 조회 -->
+	<select id="selectLocGovList" resultType="map">
+		SELECT T.* FROM (
+		select
+			row_number() over(order by a.stdg_cd) as rn,
+			*
+		from
+			dqvs.dvs_cmm_mt_area a
+		where mtnabn_yn = 'Y'
+		<if test="ctpvNm != null and ctpvNm != ''">
+			and substring(stdg_cd, 1, 2) = #{ctpvNm}
+		</if>
+		<if test="stdgCd != null and stdgCd != ''">
+			and stdg_cd = #{stdgCd}
+		</if>
+		) T
+		WHERE 1 = 1
+			<if test="take != '' and take != null">
+				AND T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+			</if>
+			<if test="skip != '' and skip != null">
+				AND T.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+			</if>
+		ORDER BY T.rn ASC
+	</select>
+
+	<select id="selectLocGovListCnt" resultType="int">
+		select count(*) from (
+		select
+			row_number() over() as rn,
+			*
+		from
+			dqvs.dvs_cmm_mt_area
+		where mtnabn_yn = 'Y'
+		<if test="ctpvNm != null and ctpvNm != ''">
+			and substring(stdg_cd, 1, 2) = #{ctpvNm}
+		</if>
+		<if test="stdgCd != null and stdgCd != ''">
+			and stdg_cd = #{stdgCd}
+		</if>
+		) T
+	</select>
+
+	<!-- 사용자 중복확인 -->
+	<select id="selectUserDuplicChk" resultType="int">
+		select count(*)
+		  from dqvs.dvs_cmm_mt_sso
+		<if test="userId != null and userId != ''">
+		 where user_id = #{userId}
+		</if>
+	</select>
+
+	<!-- 사업자중복확인 -->
+	<select id="selectDuplicChk" resultType="int">
+		select count(*) from(
+		select brno from dqvs.dvs_rac_mt_agency
+		<if test="brno != null and brno != ''">
+			where brno = #{brno}
+		</if>
+		)a
+	</select>
+
+	 <!-- 영업상태 -->
+	<select id="selectBsnStts" resultType="map">
+        select cd, cd_nm from dqvs.dvs_cmm_mt_code where cd_group = 'bsn_stts_cd'
+        order by cd
+    </select>
+
+    <!-- 사업소종류 -->
+	<select id="selectBzmnSe" resultType="map">
+        select cd, cd_nm from dqvs.dvs_cmm_mt_code where cd_group = 'bzmn_se_cd'
+    </select>
+
+    <!-- 사업자 등록 -->
+	<insert id="insertCmpny">
+		insert into dqvs.dvs_rac_mt_request(
+			bzmn_sn,
+			bzmn_se_cd,
+			offi_sn,
+			brno,
+			up_brno,
+			crno,
+			reg_cmptnc_cd,
+			co_nm,
+			rprsv_nm,
+			biz_strt_day,
+			sgg_cd,
+			road_nm_addr,
+			road_nm_daddr,
+			lotno_addr,
+			garage_road_nm_addr,
+			garage_road_nm_daddr,
+			bsn_stts_cd,
+			bsn_stts_mdfcn_dt,
+			telno,
+			vhcl_reg_noh,
+			car_noh,
+			van_noh,
+			oper_bgng_dt,
+			oper_end_dt,
+			elcty_car_noh,
+			elcty_van_noh,
+			lat,
+			lot,
+			bzmn_license_atch_sn,
+			cocs_atch_sn,
+			aprv_stts_cd,
+			aprv_dmnd_dt,
+			rmrk,
+			rgtr_sn,
+			reg_dt,
+			reg_ip,
+			aprv_dmnd_cd)
+		values(
+			(select 'RCC' || lpad(nextval('seq_cmmn_mt_cmpny')::text, 7, '0')),
+			#{bzmnSeCd},
+			#{offiSn},
+			#{brno},
+			#{upBrno},
+			#{crno},
+			#{regCmptncCd},
+			#{coNm},
+			#{rprsvNm},
+			#{bizStrtDay},
+			#{sggCd},
+			#{roadNmAddr},
+			#{roadNmDaddr},
+			#{lotnoAddr},
+			#{garageRoadNmAddr},
+			#{garageRoadNmDaddr},
+			#{bsnSttsCd},
+			#{bsnSttsMdfcnDt},
+			dqvs.pca_encrypt(#{telno}, '150'),
+			#{vhclRegCntom}::numeric,
+			#{sednCarNoh}::numeric,
+			#{passVhcleNoh}::numeric,
+			#{operBgngDt},
+			#{operEndDt},
+			#{elecSednCarNoh}::numeric,
+			#{elecPassVhcleNoh}::numeric,
+			#{lat}::numeric,
+			#{lot}::numeric,
+			#{bzmnLicenseAtchSn}::numeric,
+			#{cocosAtchSn}::numeric,
+			'1',
+			now()::timestamp,
+			#{rmrk},
+		<choose>
+			<when test="sn != null and sn != ''">
+				#{sn}::numeric,
+			</when>
+			<otherwise>
+				'0'::numeric,
+			</otherwise>
+		</choose>
+			now()::timestamp,
+			#{regIp},
+			'1')
+	</insert>
+
+	<!-- 사용자 등록 -->
+	<insert id="insertUser">
+		INSERT INTO dqvs.dvs_cmm_mt_user
+		(user_sn, authrt_cd, assi_telno, ogdp_nm, ogdp_dept_nm, ogdp_telno, cmptnc_zone_cd, last_lgn_dt, lgn_fail_nmtm, acnt_stts_cd, aprv_stts_cd, aprv_dmnd_dt, rgtr_sn, reg_dt, reg_ip, bzmn_sn, atch_file_sn)
+		VALUES(#{sn}::numeric, #{authrtCd}, dqvs.pca_encrypt(replace(#{assiTelno}, '-', ''), '150'), #{ogdpNm}, #{ogdpDeptNm}, #{ogdpTelno}, #{cmptncZoneCd}, now()::timestamp, 0, '1', '1', now()::timestamp,
+		<choose>
+			<when test="sn != null and sn != ''">
+				#{sn}::numeric,
+			</when>
+			<otherwise>
+				'0'::numeric,
+			</otherwise>
+		</choose>
+		now()::timestamp, #{regIp}, #{bzmnSn}, #{atchFileSn}::numeric)
+	</insert>
+
+	<insert id="insertSso">
+		INSERT INTO dqvs.dvs_cmm_mt_sso
+		(user_sn, user_id, user_nm, mbl_telno, eml_addr)
+		VALUES(#{sn}::numeric, #{userId}, #{userNm}, dqvs.pca_encrypt(replace(#{mblTelno}, '-', ''), '150'), #{emlAddr})
+	</insert>
+
+    <!-- 사용자일련변호 -->
+	<select id="selectUserSn" resultType="int">
+        SELECT nextval('dqvs.seq_cmmn_mt_user')
+    </select>
+
+    <update id="updateUser">
+   		UPDATE dqvs.dvs_cmm_mt_user
+		   SET authrt_cd      = #{authrtCd}
+		     , assi_telno     = dqvs.pca_encrypt(replace(#{assiTelno}, '-', ''), '150')
+		     , cmptnc_zone_cd = #{cmptncZoneCd}
+		     , acnt_stts_cd   = '1'
+		     , aprv_stts_cd   = '1' <!-- /* 승인요청 */ -->
+		     , mdfcn_dt       = now()::timestamp
+		     , mdfcn_ip       = #{regIp}
+		     , bzmn_sn        = #{bzmnSn}
+		     , atch_file_sn   = #{atchFileSn}::numeric
+       <!-- /* SSO_ID를 이용해서 sso 테이블에서 사용자 순번을 가져와야 함 */ -->
+		 WHERE user_sn = (SELECT user_sn FROM dqvs.dvs_cmm_mt_sso WHERE user_id = #{userId} LIMIT 1)
+	</update>
+
+	<!-- 주사무소 -->
+	<select id="selectUpBrno" resultType="map">
+        SELECT DISTINCT bzmn_sn
+			, co_nm
+			, CONCAT(co_nm, '(', brno, ')') up_brno
+		FROM dqvs.dvs_rac_mt_agency
+		WHERE bzmn_se_cd = '1'
+			AND bsn_stts_cd = '0'
+    </select>
+
+    <!-- 기관 사업자일련번호 -->
+	<select id="selectBzmnSn" resultType="map">
+        SELECT bzmn_sn, reg_cmptnc_cd
+		FROM dqvs.dvs_rac_mt_agency
+		WHERE co_nm = #{ogdpNm}
+    </select>
+
+</mapper>

@@ -1,0 +1,787 @@
+/********************************************************************************/
+/*                                      */
+/*  SamsnugSDS Kim MIn A                */
+/*  Date : 2002-08-07                   */
+/*                                      */
+/*                                      */
+/********************************************************************************/
+
+/* Black 텍스트 Hyperlink Style */
+A:link { font-size:9pt; font-family:돋움;color:#000000; text-decoration:none; }
+A:visited { font-size:9pt; font-family:돋움;color:#000000; text-decoration:none; }
+A:active { font-size:9pt; font-family:돋움;color:red; text-decoration:none; }
+A:hover { font-size:9pt; font-family:돋움;color:red;text-decoration:none;}
+
+/* contents 상단의 메뉴 타이틀 텍스트 */
+.top_m_title {font-size: 9pt; color: #585858; text-decoration: none; font-family:돋움; font-weight:bold;
+ padding-top:4px; padding-left:32px;
+ }
+ 
+/* 게시판 Hyperlink Style */
+A.A_board:link { font-size:9pt; font-family:돋움;color:#58595B; text-decoration:none; }
+A.A_board:visited { font-size:9pt; font-family:돋움;color:#669900; text-decoration:none; }
+A.A_board:active { font-size:9pt; font-family:돋움;color:#FF7F01; text-decoration:none; }
+A.A_board:hover { font-size:9pt; font-family:돋움;color:#FF7F01;text-decoration:none;}
+
+/* 게시판 Hyperlink Style */
+A.A_board_line:link { font-size:9pt; font-family:돋움;color:#58595B; text-decoration:none; }
+A.A_board_line:visited { font-size:9pt; font-family:돋움;color:#669900; text-decoration:none; }
+A.A_board_line:active { font-size:9pt; font-family:돋움;color:#FF7F01; text-decoration:underline; }
+A.A_board_line:hover { font-size:9pt; font-family:돋움;color:#FF7F01;text-decoration:underline;}
+
+/* Page Navigation */
+span.currPageNo { font-size:10pt; font-family:돋움;color:#ff9900;
+                  font-weight:bold; vertical-align:middle; }
+
+A.pageNO:link { font-size:10pt; font-family:돋움;color:#000000; text-decoration:none; vertical-align:middle;}
+A.pageNO:visited { font-size:10pt; font-family:돋움;color:#000000; text-decoration:none; vertical-align:middle;}
+A.pageNO:active { font-size:10pt; font-family:돋움;color:red; text-decoration:none; vertical-align:middle;}
+A.pageNO:hover { font-size:10pt; font-family:돋움;color:red;text-decoration:none;vertical-align:middle;}
+
+
+/* Gray 텍스트 Hyperlink Style */
+A.gr:link { font-size:9pt; font-family:돋움;color:#58595B; text-decoration:none; }
+A.gr:visited { font-size:9pt; font-family:돋움;color:#58595B; text-decoration:none; }
+A.gr:active { font-size:9pt; font-family:돋움;color:red; text-decoration:none; }
+A.gr:hover { font-size:9pt; font-family:돋움;color:red ;text-decoration:none;}
+
+/* Gray 텍스트 Hyperlink Style */
+A.bbs:link { font-weight:bold; font-size:9pt; font-family:돋움;color:#404040; text-decoration:none; }
+A.bbs:visited { font-size:9pt; font-family:돋움;color:#58595B; text-decoration:none; }
+A.bbs:active { font-size:9pt; font-family:돋움;color:red; text-decoration:none; }
+A.bbs:hover { font-size:9pt; font-family:돋움;color:red ;text-decoration:none;}
+
+ 
+/* Black 텍스트 Hyperlink Style_언더라인 */
+A.underline:link { font-size:9pt; font-family:돋움;color:#000000; text-decoration:underline; }
+A.underline:visited { font-size:9pt; font-family:돋움;color:#000000; text-decoration:underline; }
+A.underline:active { font-size:9pt; font-family:돋움;color:red; text-decoration:underline; }
+A.underline:hover { font-size:9pt; font-family:돋움;color:red;text-decoration:underline;}
+
+/* Disabled Gray 텍스트 Label -- 김명신 추가 2002/10/12 -- 확정된 스타일이 아니고 Disable Button 테스트용*/
+LABEL.gr { font-size:9pt; font-family:돋움;color:#58595B; text-decoration:none; }
+
+
+/* Top_Util Hyperlink Style */
+A.util:link { font-size:8pt; font-family:돋움;color:#58595B; text-decoration:none; }
+A.util:visited { font-size:8pt; font-family:돋움;color:#58595B; text-decoration:none; }
+A.util:active { font-size:8pt; font-family:돋움;color:red; text-decoration:none; }
+A.util:hover { font-size:8pt; font-family:돋움;color:red ;text-decoration:none;}
+
+
+/* Top_menu_skin01 Hyperlink Style */
+A.t_menu:link { font-size:9pt; font-family:돋움; color:#FFFFFF; font-weight: bold; text-decoration:none; }
+A.t_menu:visited { font-size:9pt; font-family:돋움; color:#FFFFFF; font-weight: bold; text-decoration:none; }
+A.t_menu:active { font-size:9pt; font-family:돋움; color:#0B467A; font-weight: bold; text-decoration:none; }
+A.t_menu:hover { font-size:9pt; font-family:돋움; color:#0B467A; font-weight: bold; text-decoration:none;}
+
+
+/* Top_sub_skin01 Hyperlink Style */
+A.t_sub_menu:link { font-size:9pt; font-family:돋움; color:#467299; text-decoration:none; }
+A.t_sub_menu:visited { font-size:9pt; font-family:돋움; color:#467299; text-decoration:none; }
+A.t_sub_menu:active { font-size:9pt; font-family:돋움; color:#043763; text-decoration:none; }
+A.t_sub_menu:hover { font-size:9pt; font-family:돋움; color:#043763; text-decoration:none;}
+
+
+/* Top_menu_skin02 Hyperlink Style */
+A.t_menu2:link { font-size:9pt; font-family:돋움; color:#FFFFFF; font-weight: bold; text-decoration:none; }
+A.t_menu2:visited { font-size:9pt; font-family:돋움; color:#FFFFFF; font-weight: bold; text-decoration:none; }
+A.t_menu2:active { font-size:9pt; font-family:돋움; color:#3E579C; font-weight: bold; text-decoration:none; }
+A.t_menu2:hover { font-size:9pt; font-family:돋움; color:#3E579C; font-weight: bold; text-decoration:none;}
+
+
+/* Top_sub_skin02 Hyperlink Style */
+A.t_sub_menu2:link { font-size:9pt; font-family:돋움; color:#4F67AB; text-decoration:none; }
+A.t_sub_menu2:visited { font-size:9pt; font-family:돋움; color:#4F67AB; text-decoration:none; }
+A.t_sub_menu2:active { font-size:9pt; font-family:돋움; color:#2C458A; text-decoration:none; }
+A.t_sub_menu2:hover { font-size:9pt; font-family:돋움; color:#2C458A; text-decoration:none;}
+
+
+/* Top_menu_skin03 Hyperlink Style */
+A.t_menu3:link { font-size:9pt; font-family:돋움; color:#FFFFFF; font-weight: bold; text-decoration:none; }
+A.t_menu3:visited { font-size:9pt; font-family:돋움; color:#FFFFFF; font-weight: bold; text-decoration:none; }
+A.t_menu3:active { font-size:9pt; font-family:돋움; color:#235D78; font-weight: bold; text-decoration:none; }
+A.t_menu3:hover { font-size:9pt; font-family:돋움; color:#235D78; font-weight: bold; text-decoration:none;}
+
+
+/* Top_sub_skin03 Hyperlink Style */
+A.t_sub_menu3:link { font-size:9pt; font-family:돋움; color:#3C7B99; text-decoration:none; }
+A.t_sub_menu3:visited { font-size:9pt; font-family:돋움; color:#3C7B99; text-decoration:none; }
+A.t_sub_menu3:active { font-size:9pt; font-family:돋움; color:#174D66; text-decoration:none; }
+A.t_sub_menu3:hover { font-size:9pt; font-family:돋움; color:#174D66; text-decoration:none;}
+
+/****************************************** 카렌다   ************************************************************/
+
+
+ /*카렌다테이블_토요일_중앙정렬*/
+.calendar_blue_center {
+ FONT-SIZE: 9pt; COLOR: #000000;FONT-FAMILY: 돋움; HEIGHT: 25px;
+ BACKGROUND-COLOR:#D5E6EE; Text-align: center ; vertical-align: middle
+}
+
+
+/*카렌다테이블_토요일_중앙정렬_볼드*/
+.calendar_blue_center_b {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 50px; font-weight: bold ;
+ BACKGROUND-COLOR:#D5E6EE; Text-align: center ; vertical-align: middle
+}
+
+/*카렌다테이블_날짜_토요일_오른쪽정렬*/
+.calendar_blue_date {
+ FONT-SIZE: 9pt; COLOR: #000000;FONT-FAMILY: 돋움; HEIGHT: 80px; line-height:120%;
+ padding-right:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F3F4F6; Text-align: left ;vertical-align: top
+}
+
+/*카렌다 작은 테이블_날짜_토요일_가운데정렬*/
+.calendar_blue_date_s {
+ FONT-SIZE: 9pt; COLOR: #000000;FONT-FAMILY: 돋움; HEIGHT: 30px; line-height:120%;
+ padding-right:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F3F4F6; Text-align: center ;vertical-align: middle
+}
+
+/*카렌다테이블_토요일_일정_왼쪽정렬*/
+.calendar_blue_left {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 50px;  line-height:150%;
+ padding-left:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F3F4F6; Text-align:left
+ }
+
+/*카렌다테이블_평일_중앙정렬_볼드*/
+.calendar_center_b {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 50px; font-weight: bold ;
+ BACKGROUND-COLOR:#e3e3e3; Text-align: center ; vertical-align: middle
+}
+
+
+/*카렌다테이블_날짜_평일_오른쪽정렬*/
+.calendar_date {
+ FONT-SIZE: 9pt; COLOR: #000000;FONT-FAMILY: 돋움; HEIGHT: 80px;  line-height:120%;
+ padding-right:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F7F7F7; Text-align: left ;vertical-align: top
+}
+
+/*카렌다 작은테이블_날짜_평일_가운데정렬*/
+.calendar_date_s {
+ FONT-SIZE: 9pt; COLOR: #000000;FONT-FAMILY: 돋움; HEIGHT: 30px;  line-height:120%;
+ padding-right:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F7F7F7; Text-align: center ;vertical-align: middle
+}
+
+ /*카렌다테이블_평일_일정_왼쪽정렬*/
+.calendar_left {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 50px;  line-height:150%;
+ padding-left:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F7F7F7; Text-align:left
+ }
+
+
+/*카렌다테이블_일요일_중앙정렬*/
+.calendar_red_center {
+ FONT-SIZE: 9pt; COLOR: #000000;FONT-FAMILY: 돋움; HEIGHT: 25px;
+ BACKGROUND-COLOR:#EEDBD5; Text-align: center ; vertical-align: middle
+}
+
+/*카렌다테이블_일요일_중앙정렬_볼드*/
+.calendar_red_center_b {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 50px; font-weight: bold ;
+ BACKGROUND-COLOR:#EEDBD5; Text-align: center ; vertical-align: middle
+}
+
+/*카렌다테이블_날짜_일요일_오른쪽정렬*/
+.calendar_red_date {
+ FONT-SIZE: 9pt; COLOR: #000000;FONT-FAMILY: 돋움; HEIGHT: 80px;  line-height:120%;
+ padding-right:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F6F2F1; Text-align: left ;vertical-align: top
+}
+
+/*카렌다 작은테이블_날짜_일요일_가운데정렬*/
+.calendar_red_date_s {
+ FONT-SIZE: 9pt; COLOR: #000000;FONT-FAMILY: 돋움; HEIGHT: 30px;  line-height:120%;
+ padding-right:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F6F2F1; Text-align: center ;vertical-align: middle
+}
+
+/*카렌다테이블__일요일_일정_왼쪽정렬*/
+.calendar_red_left {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 50px;  line-height:150%;
+ padding-left:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F6F2F1; Text-align:left
+ }
+
+
+
+
+/****************************************** 텍스트   ************************************************************/
+
+
+/* 로케이션_텍스트 */
+.location{ font-family:"돋움"; font-size:8pt; color:#6d6d6d ;padding-top:1px; padding-left:3px;
+           vertical-align: middle}
+
+
+/* 회색 텍스트_왼쪽정렬 */
+.text_gr{ font-family:"돋움"; font-size:9pt; color:#58595B ;
+          line-height:150%}
+
+/* 회색 텍스트_왼쪽정렬  editor view : 안경혁*/
+.text_editor{ font-family:"돋움"; font-size:9pt; color:#58595B  }
+
+
+/* 회색 텍스트_볼드_왼쪽정렬 */
+.text_gr_b{ font-familY:"돋움"; font-size:9pt; color:#58595B ;
+            font-weight: bold ; vertical-align: middle}
+
+
+/* 기본 텍스트_블랙_중앙정렬 */
+.text_center{ font-family:"돋움"; font-size:9pt; color:#000000;
+              Text-align:center ; vertical-align: middle }
+
+
+/* 기본 텍스트_블랙_왼쪽정렬 */
+.text_left{ font-family:"돋움"; font-size:9pt; color:#000000 ;
+            Text-align:left ; vertical-align: middle ; line-height:150%
+             }
+/* 회색 텍스트_왼쪽정렬 */
+.text_red{ font-family:"돋움"; font-size:9pt; color:#aa0000 ;
+          line-height:150%}
+
+
+/* 기본 텍스트_블랙_오른쪽정렬 */
+.text_right{ font-family:"돋움"; font-size:9pt; color:#000000;
+              Text-align:right ; vertical-align: middle}
+
+
+/* 타이틀_볼드 */
+.title{ font-family:"돋움"; font-size:9pt; color:#000000 ;
+        font-weight: bold ; vertical-align: middle}
+
+/* 팝업_타이틀_볼드 */
+.title_wh{ font-family:"돋움"; font-size:9pt; color:#ffffff ;
+           font-weight: bold ; vertical-align: middle}
+
+
+/****************************************** 테이블 & 텍스트   ************************************************************/
+
+
+/*리스트테이블 내용_중앙정렬*/
+.ltb_center {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: "돋움"; HEIGHT: 23px;
+ BORDER-BOTTOM: #E0E0E0 1px solid; BACKGROUND-COLOR: #F7F7F7 ;
+ Text-align: center ; vertical-align: middle
+}
+
+
+/*리스트테이블 내용_중앙정렬_bottom*/
+.ltb_center_bottom {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 23px;
+ BORDER-BOTTOM: #A3A3A3 1px solid; BACKGROUND-COLOR: #F7F7F7 ;
+ Text-align: center ; vertical-align: middle
+}
+
+/*리스트테이블 내용_중앙정렬_좀연한회색*/
+.ltb_center_color {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 23px;
+ BORDER-BOTTOM: #E0E0E0 1px solid; BACKGROUND-COLOR: #E8E8E8 ;
+ Text-align: center ; vertical-align: middle
+}
+
+/* 리스트테이블 내용_중앙정렬_bottom_좀 연한보더 */
+.ltb_center_bottom_light {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 23px;
+ BORDER-BOTTOM: #C3C3C3 1px solid; BACKGROUND-COLOR: #F7F7F7 ;
+ Text-align: center ; vertical-align: middle
+}
+
+
+/*리스트테이블 내용_중앙정렬_세로선*/
+.ltb_center_line {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 23px;
+ BORDER-BOTTOM: #E0E0E0 1px solid; BORDER-right: #E0E0E0 1px solid; BACKGROUND-COLOR: #F7F7F7 ;
+ Text-align: center ; vertical-align: middle
+}
+
+/*리스트테이블 내용_중앙정렬_세로선_bottom*/
+.ltb_center_line_bottom {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 23px;
+ BORDER-BOTTOM: #A3A3A3 1px solid; BORDER-right: #E0E0E0 1px solid; BACKGROUND-COLOR: #F7F7F7 ;
+ Text-align: center ; vertical-align: middle
+}
+
+/*리스트테이블 head*/
+.ltb_head {
+ FONT-SIZE: 9pt; COLOR: #000000; font-family:"돋움"; HEIGHT: 23px;
+ BORDER-TOP: #A3A3A3 1px solid;
+ BORDER-BOTTOM: #A3A3A3 1px solid;  BACKGROUND-COLOR: #E0E0E0 ;
+ Text-align: center ; vertical-align: middle; }
+
+/* 리스트테이블 head_좀 연한보더 */
+.ltb_head_light {
+ FONT-SIZE: 9pt; COLOR: #000000; font-family:"돋움"; HEIGHT: 23px;
+ BORDER-TOP: #C3C3C3 1px solid;
+ BORDER-BOTTOM: #C3C3C3 1px solid;  BACKGROUND-COLOR: #E0E0E0 ;
+ Text-align: center ; vertical-align: middle; }
+
+/*리스트테이블 내용_왼쪽정렬*/
+.ltb_left {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 23px; padding-left:3px;
+ BORDER-BOTTOM: #E0E0E0 1px solid; BACKGROUND-COLOR: #F7F7F7 ; line-height:140% ;
+ Text-align: left ; vertical-align: middle;
+}
+
+/*리스트테이블 내용_왼쪽정렬_bottom*/
+.ltb_left_bottom {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 23px; padding-left:3px;
+ BORDER-BOTTOM: #A3A3A3 1px solid; BACKGROUND-COLOR: #F7F7F7 ; line-height:140% ;
+ Text-align: left ; vertical-align: middle
+}
+
+
+/*리스트테이블 내용_왼쪽정렬_좀 연한회색*/
+.ltb_left_color {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 23px; padding-left:3px;
+ BORDER-BOTTOM: #E0E0E0 1px solid; BACKGROUND-COLOR: #E8E8E8 ; ;line-height:140% ;
+ Text-align: left ; vertical-align: middle;
+}
+
+/* 리스트테이블 내용_왼쪽정렬_bottom_좀 연한보더 */
+.ltb_left_bottom_light {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 23px; padding-left:3px;
+ BORDER-BOTTOM: #C3C3C3 1px solid; BACKGROUND-COLOR: #F7F7F7 ;
+ Text-align: left ; vertical-align: middle
+}
+
+/*리스트테이블_읽지않은 내용_왼쪽정렬*/
+.ltb_new_left {
+ FONT-SIZE: 9pt; COLOR: #58595B; FONT-FAMILY: 돋움; HEIGHT: 23px; font-weight:bold;padding-left:3px;
+ BORDER-BOTTOM: #E0E0E0 1px solid; BACKGROUND-COLOR: #F7F7F7 ;
+ Text-align: left ; vertical-align: middle;
+}
+
+/*리스트테이블_데이터가 없습니다_내용_빨강색_왼쪽정렬_bottom : 2002/11/20 김명신 추가*/
+.ltb_left_bottom_nodata {
+ FONT-SIZE: 9pt; COLOR: red;FONT-FAMILY: 돋움; HEIGHT: 23px; padding-left:3px;
+ BORDER-BOTTOM: #A3A3A3 1px solid; BACKGROUND-COLOR: #F7F7F7 ; line-height:140% ;
+ Text-align: left ; vertical-align: middle
+}
+
+
+
+/*테이블 내용_중앙정렬*/
+.tb_center {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 23px;
+ BACKGROUND-COLOR:#ebebeb; Text-align: center ; vertical-align: middle
+}
+
+/*테이블 내용_왼쪽정렬 */
+.tb_left {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 23px; padding-left:3px; padding-right:3px;
+ BACKGROUND-COLOR:#ebebeb; Text-align: left ; vertical-align: middle ;line-height:150%
+}
+
+/*editor view 용 : 안경혁 */
+.tb_left_editor {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 23px; padding-left:3px; padding-right:3px;
+ BACKGROUND-COLOR:#ebebeb; Text-align: left ; vertical-align: middle ;
+}
+
+
+/*테이블 내용_오른쪽정렬*/
+.tb_right {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 23px; padding-left:3px; padding-right:3px;
+ BACKGROUND-COLOR:#ebebeb; Text-align: right ; vertical-align: middle ;line-height:150%
+}
+
+/*테이블 내용_왼쪽정렬_양쪽 패팅 들어간것*/
+.tb_padding {
+ FONT-SIZE: 9pt; COLOR: #000000;FONT-FAMILY: 돋움; HEIGHT: 23px; padding-left:3px; padding-right:3px;
+ Text-align: left ; vertical-align: middle
+}
+
+
+/*테이블 제목_중앙정렬*/
+.tb_tit_center {
+ FONT-SIZE: 9pt; COLOR: #000000;FONT-FAMILY: 돋움; HEIGHT: 23px;
+ BACKGROUND-COLOR:#dcdcdc; Text-align: center ; vertical-align: middle
+}
+
+/*테이블 제목_왼쪽정렬*/
+.tb_tit_left {
+ FONT-SIZE: 9pt; COLOR: #000000;FONT-FAMILY: 돋움; HEIGHT: 23px; padding-left:3px;
+ BACKGROUND-COLOR:#dcdcdc; Text-align: left ; vertical-align: middle
+}
+
+/*테이블 제목_오른쪽정렬*/
+.tb_tit_right {
+ FONT-SIZE: 9pt; COLOR: #000000;FONT-FAMILY: 돋움; HEIGHT: 23px; padding-left:3px;
+ BACKGROUND-COLOR:#dcdcdc; Text-align: right ; vertical-align: middle
+}
+
+.line{
+HEIGHT: 1px; BACKGROUND-COLOR:#a3a3a3
+}
+/*카렌다테이블_월간_평일_오늘*/
+td.month_today
+{
+ FONT-SIZE: 9pt; COLOR: #000000;FONT-FAMILY: 돋움; HEIGHT: 80px;  line-height:120%;
+ padding-right:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F7F7F7; Text-align: left ;vertical-align: top;
+ border:1px #000033 solid;
+}
+/*카렌다테이블_월간_일요일_오늘*/
+td.month_today_red_date {
+ FONT-SIZE: 9pt; COLOR: #000000;FONT-FAMILY: 돋움; HEIGHT: 80px;  line-height:120%;
+ padding-right:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F6F2F1; Text-align: left ;vertical-align: top;
+ border:1px #000033 solid;
+}
+/*카렌다테이블_월간_토요일_오늘*/
+td.month_today_blue_date {
+ FONT-SIZE: 9pt; COLOR: #000000;FONT-FAMILY: 돋움; HEIGHT: 80px; line-height:120%;
+ padding-right:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F3F4F6; Text-align: left ;vertical-align: top;
+ border:1px #000033 solid;
+}
+/*카렌다테이블_주간_평일_오늘*/
+ td.week_today
+{
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 50px;  line-height:150%;
+ padding-left:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F7F7F7; Text-align:left ; border:1px #000033 solid;
+}
+/*카렌다테이블_주간_일요일_오늘*/
+td.week_today_red_date {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 50px;  line-height:150%;
+ padding-left:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F6F2F1; Text-align:left; border:1px #000033  solid;
+}
+/*카렌다테이블_주간_토요일_오늘*/
+td.week_today_blue_date {
+  FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 50px;  line-height:150%;
+ padding-left:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F3F4F6; Text-align:left; border:1px #000033  solid;
+}
+
+/*카렌다테이블_주간_일요일_타인일정_중앙정렬*/
+.ver_week_calendar_red_left {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 350px;  line-height:150%;
+ padding-left:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F6F2F1; Text-align:center
+ }
+
+/*카렌다테이블_주간_토요일_타인일정_중앙정렬*/
+.ver_week_calendar_blue_left {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 350px;  line-height:150%;
+ padding-left:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F3F4F6; Text-align:center
+ }
+
+ /*카렌다테이블_주간_평일_타인일정_중앙정렬*/
+.ver_week_calendar_left {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 350px;  line-height:150%;
+ padding-left:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F7F7F7; Text-align:center
+ }
+
+/*카렌다테이블_주간_평일_현재일표시_타인일정_중앙정렬*/
+
+ td.ver_week_today
+{
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 350px;  line-height:150%;
+ padding-left:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F7F7F7; Text-align:center ; border:1px #000033 solid;
+
+}
+/*카렌다테이블_주간_일요일_현재일표시_타인일정_중앙정렬*/
+td.ver_week_today_red_date{
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 350px;  line-height:150%;
+ padding-left:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F6F2F1; Text-align:center; border:1px #000033  solid;
+
+ /*카렌다테이블_주간_토요일_현재일표시_타인일정_중앙정렬*/
+}
+td.ver_week_today_blue_date{
+  FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 350px;  line-height:150%;
+ padding-left:3px;  padding-top:3px;
+ BACKGROUND-COLOR:#F3F4F6; Text-align:center; border:1px #000033  solid;
+
+}
+
+/*테이블 회색배경*/
+.tb_bg_gr {
+ BACKGROUND-COLOR:#a3a3a3;
+}
+
+.tb_bg_bgr {
+ BACKGROUND-COLOR:#c3c3c3;
+}
+
+/*탭 배경*/
+.tab_bg {
+ BACKGROUND-COLOR:#9dbecf;
+}
+
+
+.text {
+    font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
+    font-size: 9pt;
+    color: #666666;
+}
+
+.local_menu {
+    font-family: "굴림", "Arial"; font-size: 11px; color: #333333
+}
+
+.buttom_white {
+    font-size:9pt;  font-family:"굴림";   text-decoration:none;   color:#FFFFFF;  font-weight: bold;
+}
+
+.butext {
+    font-family: "굴림", "굴림체";
+    font-size: 9pt;
+    color: #666666;
+}
+
+/*ACUBE NEW IMAGE*/
+
+
+.ltb_center_community_coolsite {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 23px; padding-left:3px;
+ BORDER-BOTTOM: #A3A3A3 1px solid; BORDER-right: #E0E0E0 1px solid; BACKGROUND-COLOR: #F7F7F7 ; line-height:140% ;
+ Text-align: center ; vertical-align: middle;
+}
+
+.ltb_left_community_coolsite {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: "돋움"; HEIGHT: 23px;
+ BORDER-BOTTOM: #A3A3A3 1px solid; BACKGROUND-COLOR: #F7F7F7 ;
+ Text-align: left ; vertical-align: middle
+}
+
+
+.ltr_odd {
+ BACKGROUND-COLOR: #F7F7F7 ; line-height:140% ;
+}
+
+.ltr_even {
+ BACKGROUND-COLOR: #ffffff ; line-height:140% ;
+}
+
+
+/*리스트테이블 내용_왼쪽정렬*/
+.ltb_left2 {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: 돋움; HEIGHT: 23px; padding-left:3px;
+ BORDER-BOTTOM: #E0E0E0 1px solid;
+ Text-align: left ; vertical-align: middle;
+}
+
+/*리스트테이블 내용_중앙정렬*/
+.ltb_center2 {
+ FONT-SIZE: 9pt; COLOR: #58595B;FONT-FAMILY: "돋움"; HEIGHT: 23px;
+ BORDER-BOTTOM: #E0E0E0 1px solid;
+ Text-align: center ; vertical-align: middle
+}
+
+/* 리스트 테이블에서 토글 적용 */
+.list_over { background-color:#F5F5F5; }
+.list_out { background-color:#FFFFFF; }
+
+/********************************************************************************************************************************/
+/***                                                                                                                         ****/
+/***    디자인팀 : Acube Html 파일에 들어가는 CSS 모음 (2004.07.13)                                                              ****/
+/***                                                                                                                         ****/
+/********************************************************************************************************************************/
+
+td {font-size: 9pt; color: #585858; text-decoration: none; font-family:돋움; line-height:130%;}
+.util {font-size: 8pt; color: #585858; text-decoration: none; font-family:돋움; line-height:130%;}
+
+BODY {
+       scrollbar-3dlight-color:#CFCFCF;
+       scrollbar-arrow-color:#7F7F7F;
+       scrollbar-base-color:#FFFFFF;
+       scrollbar-darkshadow-color:#FFFFFF;
+       scrollbar-face-color:#FFFFFF;
+       scrollbar-highlight-color:#FFFFF;
+       scrollbar-shadow-color:#CFCFCF   
+}
+
+
+
+/*사용자 로그인 표시, 메일, 일정, 명함, 행사 */
+.mem_contents { font-size:9pt; font-family:돋움; color:#0F72B2; text-decoration:none; }
+.mem_contents A:link { font-size:9pt; font-family:돋움; color:#0F72B2; text-decoration:none; }
+.mem_contents A:visited { font-size:9pt; font-family:돋움; color:#0F72B2; text-decoration:none;  }
+.mem_contents A:active { font-size:9pt; font-family:돋움; color:#0F72B2; text-decoration:none; }
+.mem_contents A:hover { font-size:9pt; font-family:돋움; color:#0F72B2; text-decoration:none; }
+
+.tab_menu { font-size:9pt; font-family:돋움;color:#000000; text-decoration:none; }
+.tab_menu_b { font-size:9pt; font-family:돋움;color:#000000; font-weight: bold ; text-decoration:none; }
+
+/***********************************************************************************
+    어플리케이션 : index화면
+***********************************************************************************/
+/* left menu Hyperlink Style */
+
+.sub_menu { font-size:9pt; letter-spacing:-1px; font-family:돋움; color:#FFFFFF; text-decoration:none; }
+.sub_menu A:link { font-size:9pt; letter-spacing:-1px; font-family:돋움; color:#FFFFFF; text-decoration:none; }
+.sub_menu A:visited { font-size:9pt; letter-spacing:-1px; font-family:돋움;color:#FFFFFF; text-decoration:none;  }
+.sub_menu A:active { font-size:9pt; letter-spacing:-1px; font-family:돋움;color:#FFFFFF; text-decoration:none; }
+.sub_menu A:hover { font-size:9pt; letter-spacing:-1px; font-family:돋움; font-weight: bold ; color:#FFFFFF;text-decoration:none; }
+
+
+/* Left Sub-menu text */
+.l_sub_m { font-size:9pt; font-family:돋움; color:#444443; }
+.l_sub_bm { font-size:9pt; font-family:돋움; font-weight: bold ; color:#444443; }
+
+
+/* news-notice 지역구분 text */
+.area_t_notice { font-size:9pt; font-family:돋움; font-weight: bold ; color:#478B0A; }
+.area_t_news { font-size:9pt; font-family:돋움; font-weight: bold ; color:#6495CF; }
+.area_contents { font-size:9pt; font-family:돋움; color:#585858 }
+
+
+/* select box의 text*/
+.sel_text {font-size: 9pt; font-family:돋움; color: #585858; }
+
+.td_input{ font-family:"돋움"; font-size:9pt; color:#000000 ;
+ border:1px solid #C7C7C7; background:#FAFAFA; Text-align:left ; 
+ padding:3 0 0 3; vertical-align: middle ; }
+
+ .td_input_right{ font-family:"돋움"; font-size:9pt; color:#585858 ; border:1px solid #C7C7C7; 
+ background:#FAFAFA; Text-align:right ;  padding:3 3 0 3; vertical-align: middle ; 
+ }
+
+.td_input_center{ font-family:"돋움"; font-size:9pt; color:#585858 ; border:1px solid #C7C7C7; 
+ background:#FAFAFA; Text-align:center ;  padding:3 3 0 3; vertical-align: middle ; 
+ }
+
+ /* 왼쪽 3depth 메뉴 폰트 */
+.ep_left { font-size: 9pt; font-family:돋움; color: #585858; text-decoration: none; vertical-align: middle; 
+ background-image:url(../image/ep_sub1_out_bg.gif); height:26px; padding-left:20px; padding-top:4px;}
+.ep_left_tx_b { font-size: 9pt; font-family:돋움; color: #585858; font-weight:bold; text-decoration: none; vertical-align: middle; 
+ background-image:url(../image/ep_sub1_out_bg.gif); height:26px; padding-left:20px; padding-top:4px;}
+.ep_left_b { font-size: 9pt; font-family:돋움; color: #585858; font-weight:bold; text-decoration: none; 
+ vertical-align: middle; background-image:url(../image/ep_sub1_over_bg.gif); height:26px; padding-left:20px; padding-top:4px; }
+
+/* 왼쪽 4depth 메뉴 폰트 */
+.ep_left_n { font-size: 9pt; font-family:돋움; color: #585858; text-decoration: none; vertical-align: middle; 
+ background-image:url(../image/ep_sub2_out_bg.gif); height:26px; padding-left:24px; padding-top:4px; }
+.ep_left_n_tx_b { font-size: 9pt; font-family:돋움; color: #585858; font-weight:bold; text-decoration: none; vertical-align: middle; 
+ background-image:url(../image/ep_sub2_out_bg.gif); height:26px; padding-left:24px; padding-top:4px; }
+.ep_left_b_n { font-size: 9pt; font-family:돋움; color: #585858; font-weight:bold; text-decoration: none; 
+ vertical-align: middle; height:26px; background-image:url(../image/ep_sub2_over_bg.gif); padding-left:24px; padding-top:4px; }
+
+
+
+
+
+/***********************************************************************************
+    어플리케이션 : 공통
+***********************************************************************************/
+ /* top 메뉴 폰트 */
+.top_sub_text { font-size: 9pt; color: #FFFFFF; font-family: 돋움; vertical-align: middle;  text-decoration:none; }
+.top_sub_text_b { font-size: 9pt; color: #58595B; font-family: 돋움; font-weight: bold ; vertical-align: middle; 
+ text-decoration:none; }
+.left_sub_text { font-size: 9pt; color: #444443; font-family: 돋움; vertical-align: middle;  text-decoration:none; padding-left:10px;}
+.left_sub_text_b { font-size: 9pt; color: #444443; font-family: 돋움; font-weight: bold ; vertical-align: middle; 
+ text-decoration:none;  padding-left:20px;}
+
+
+/********** Top Menu START **************************************************************************************************************/
+
+/* aqube Top1 Sub-menu Hyperlink Style */
+.aqube_sub_text { font-size:9pt; font-family:돋움; color:#FFFFFF; text-decoration:none; }
+.aqube_sub_text A:link { font-size:9pt; font-family:돋움; color:#FFFFFF; text-decoration:none; }
+.aqube_sub_text A:visited { font-size:9pt; font-family:돋움; color:#FFFFFF; text-decoration:none;  }
+.aqube_sub_text A:active { font-size:9pt; font-family:돋움; color:#FFFFFF; text-decoration:none; }
+.aqube_sub_text A:hover { font-size:9pt; font-family:돋움; font-weight: bold ; color:#FFFFFF; 
+ text-decoration:none; }
+
+/* aqube Top2 Sub-menu Hyperlink Style */
+.aqube2_top_text { font-size:9pt; font-family:돋움; font-weight: bold ; color:#FFFFFF; text-decoration:none; }
+.aqube2_top_text A:link { font-size:9pt; font-family:돋움; font-weight: bold ; color:#FFFFFF; text-decoration:none; }
+.aqube2_top_text A:visited { font-size:9pt; font-family:돋움; font-weight: bold ; color:#FFFFFF; text-decoration:none;  }
+.aqube2_top_text A:active { font-size:9pt; font-family:돋움; font-weight: bold ; color:#FFFFFF; text-decoration:none; }
+.aqube2_top_text A:hover { font-size:9pt; font-family:돋움; font-weight: bold ; font-weight: bold ; 
+ color:#FFFFFF; text-decoration:none; }
+
+.aqube2_sub_text { font-size:9pt; font-family:돋움; color:#376595; text-decoration:none; }
+.aqube2_sub_text A:link { font-size:9pt; font-family:돋움; color:#376595; text-decoration:none; }
+.aqube2_sub_text A:visited { font-size:9pt; font-family:돋움; color:#376595; text-decoration:none;  }
+.aqube2_sub_text A:active { font-size:9pt; font-family:돋움; color:#376595; text-decoration:none; }
+.aqube2_sub_text A:hover { font-size:9pt; font-family:돋움; font-weight: bold ; color:#376595; text-decoration:none; }
+
+
+/* agc Top1 Sub-menu Hyperlink Style */
+.agc_sub_text { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#265260; text-decoration:none; }
+.agc_sub_text A:link { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#265260; text-decoration:none; }
+.agc_sub_text A:visited { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#265260; text-decoration:none;  }
+.agc_sub_text A:active { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#265260; text-decoration:none; }
+.agc_sub_text A:hover { font-size:8pt; font-family:돋움; letter-spacing:-1px; font-weight: bold ; color:#265260; 
+ text-decoration:none; }
+
+/* cta Top1 Sub-menu Hyperlink Style */
+.cta_sub_text { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#642617; text-decoration:none; }
+.cta_sub_text A:link { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#642617; text-decoration:none; }
+.cta_sub_text A:visited { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#642617; text-decoration:none;  }
+.cta_sub_text A:active { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#642617; text-decoration:none; }
+.cta_sub_text A:hover { font-size:8pt; font-family:돋움; letter-spacing:-1px; font-weight: bold ; color:#642617; 
+ text-decoration:none; }
+
+/* frs Top1 Sub-menu Hyperlink Style */
+.frs_sub_text { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#047F6C; text-decoration:none; }
+.frs_sub_text A:link { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#047F6C; text-decoration:none; }
+.frs_sub_text A:visited { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#047F6C; text-decoration:none;  }
+.frs_sub_text A:active { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#047F6C; text-decoration:none; }
+.frs_sub_text A:hover { font-size:8pt; font-family:돋움; letter-spacing:-1px; font-weight: bold ; color:#047F6C; 
+ text-decoration:none; }
+
+/* sga Top1 Sub-menu Hyperlink Style */
+.sga_sub_text { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#1B3A6C; text-decoration:none; }
+.sga_sub_text A:link { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#1B3A6C; text-decoration:none; }
+.sga_sub_text A:visited { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#1B3A6C; text-decoration:none;  }
+.sga_sub_text A:active { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#1B3A6C; text-decoration:none; }
+.sga_sub_text A:hover { font-size:8pt; font-family:돋움; letter-spacing:-1px; font-weight: bold ; color:#1B3A6C; 
+ text-decoration:none; }
+
+/* wfw Top1 Sub-menu Hyperlink Style */
+.wfw_sub_text { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#6C479B; text-decoration:none; }
+.wfw_sub_text A:link { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#6C479B; text-decoration:none; }
+.wfw_sub_text A:visited { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#6C479B; text-decoration:none;  }
+.wfw_sub_text A:active { font-size:8pt; font-family:돋움; letter-spacing:-1px; color:#6C479B; text-decoration:none; }
+.wfw_sub_text A:hover { font-size:8pt; font-family:돋움; letter-spacing:-1px; font-weight: bold ; color:#6C479B; 
+ text-decoration:none; }
+
+/********** Top Menu END **************************************************************************************************************/
+
+
+
+/********** Community Start **********************************************************************************************************/
+/* Community Text color */
+.com_green_text {
+ FONT-SIZE: 9pt; COLOR: #5F991A; FONT-FAMILY: 돋움; FONT-WEIGHT:bold; 
+ Text-align: left ; vertical-align: middle ;line-height:150%
+}
+
+.com_blue_text {
+ FONT-SIZE: 9pt; COLOR: #5E95D1; FONT-FAMILY: 돋움; FONT-WEIGHT:bold;
+ Text-align: left ; vertical-align: middle ;line-height:150%
+}
+
+.com_blue_violet {
+ FONT-SIZE: 9pt; COLOR: #9B5BD2; FONT-FAMILY: 돋움; FONT-WEIGHT:bold; 
+ Text-align: left ; vertical-align: middle ;line-height:150%
+}
+
+.com_blue_white {
+ FONT-SIZE: 9pt; COLOR: #FFFFFF; FONT-FAMILY: 돋움; FONT-WEIGHT:bold; 
+ Text-align: left ; vertical-align: middle ;line-height:150%
+}
+
+.com_notice_text {
+ FONT-SIZE: 9pt; COLOR: #5E95D1; FONT-FAMILY: 돋움; FONT-WEIGHT:bold; Text-align: left ; vertical-align: middle ;
+}
+
+.com_ad_text {
+ FONT-SIZE: 9pt; COLOR: #74A52E; FONT-FAMILY: 돋움; FONT-WEIGHT:bold; Text-align: left ; vertical-align: middle ;
+}
+/********** Community END *************************************************************************************************************/

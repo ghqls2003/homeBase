@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="stts.rentStts">
+
+
+	<resultMap id="getSttsGeomResult" type="egovframework.rte.psl.dataaccess.util.EgovMap">
+		<result property="geometry" column="geometry"  javaType="_byte[]" />
+		<result property="rr" column="rr" />
+	</resultMap>
+	
+	<!-- 메인 지도 데이터 및 폴리곤 -->
+	<select id="MapData" resultMap="getSttsGeomResult">
+	/* 메인 지도 데이터 및 폴리곤 */
+		SELECT CASE WHEN t2.sn <![CDATA[ <= ]]> 2 AND t2.cnt != 0 THEN 'Level1'
+				WHEN t2.sn <![CDATA[ > ]]> 2 AND t2.sn <![CDATA[ <= ]]> 4 AND t2.cnt != 0 THEN 'Level2'
+				WHEN t2.sn <![CDATA[ > ]]> 4 AND t2.sn <![CDATA[ <= ]]> 6 AND t2.cnt != 0 THEN 'Level3'
+				WHEN t2.sn <![CDATA[ > ]]> 6 AND t2.sn <![CDATA[ <= ]]> 8 AND t2.cnt != 0 THEN 'Level4'
+				WHEN t2.sn <![CDATA[ > ]]> 8 AND t2.sn <![CDATA[ <= ]]> 10 AND t2.cnt != 0 THEN 'Level5'
+				WHEN t2.sn <![CDATA[ > ]]> 10 AND t2.sn <![CDATA[ <= ]]> 12 AND t2.cnt != 0 THEN 'Level6'
+				WHEN t2.sn <![CDATA[ > ]]> 12 AND t2.sn <![CDATA[ <= ]]> 14 AND t2.cnt != 0 THEN 'Level7'
+				ELSE 'Level8'
+				END group_level
+			, t2.*
+		FROM 
+			(
+			SELECT ROW_NUMBER() OVER (ORDER BY t1.cnt DESC ) sn
+				, t1.*
+				, geom.ctpv_nm
+				, ST_ASBINARY(ST_TRANSFORM(geom.geom, 4326)) geometry
+			FROM
+				(
+				SELECT LEFT(mstr.sgg_cd, 2) ctpv_cd
+					, COUNT(rent.rent_no) cnt
+				FROM
+					dqvs.dvs_rac_mt_agency mstr
+				LEFT OUTER JOIN
+					dqvs.dvs_dqv_mt_rent rent
+				ON mstr.bzmn_sn = rent.bzmn_sn
+				WHERE NOT mstr.sgg_cd ISNULL
+				GROUP BY LEFT(mstr.sgg_cd, 2)
+				) AS t1
+			LEFT OUTER JOIN
+				dqvs.dvs_cmm_mt_sd geom
+			ON t1.ctpv_cd = geom.ctpv_cd
+			) AS t2
+	</select>
+	
+	<!-- 시군구 COUNT SQL -->
+	<sql id="sggLevel">
+		(
+		SELECT COUNT(*)/8
+		FROM
+			(
+			SELECT COUNT(rent.rent_no) tot_count
+			FROM
+				dqvs.dvs_rac_mt_agency mstr
+			LEFT OUTER JOIN
+				dqvs.dvs_dqv_mt_rent rent
+			ON mstr.bzmn_sn = rent.bzmn_sn
+			WHERE NOT mstr.sgg_cd ISNULL
+				AND LEFT(mstr.sgg_cd, 2) = LEFT(#{ctpvCd}, 2)
+			GROUP BY LEFT(mstr.sgg_cd, 5)
+			) AS t1
+		)
+	</sql>
+	
+	<!-- 시군구 데이터 및 폴리곤 -->
+	<select id="DetailMapData" resultMap="getSttsGeomResult">
+	/* 시군구 데이터 및 폴리곤 */
+		SELECT CASE WHEN <include refid="sggLevel" /> <![CDATA[ < ]]> 1
+					THEN (CASE WHEN t2.sn = '1' AND t2.tot_off != 0 THEN 'Level1' WHEN t2.sn = '2' AND t2.tot_off != 0 THEN 'Level2' 
+							   WHEN t2.sn = '3' AND t2.tot_off != 0 THEN 'Level3' WHEN t2.sn = '4' AND t2.tot_off != 0 THEN 'Level4'
+							   WHEN t2.sn = '5' AND t2.tot_off != 0 THEN 'Level5' WHEN t2.sn = '6' AND t2.tot_off != 0 THEN 'Level6' 
+							   WHEN t2.sn = '7' AND t2.tot_off != 0 THEN 'Level7' ELSE 'Level8' END)
+					ELSE (
+						 CASE WHEN t2.sn <![CDATA[ <= ]]> (<include refid="sggLevel" />) AND t2.tot_off != 0 THEN 'Level1'
+							WHEN t2.sn <![CDATA[ > ]]> (<include refid="sggLevel" />) AND t2.sn <![CDATA[ <= ]]> (<include refid="sggLevel" />*2) AND t2.tot_off != 0 THEN 'Level2'
+							WHEN t2.sn <![CDATA[ > ]]> (<include refid="sggLevel" />*2) AND t2.sn <![CDATA[ <= ]]> (<include refid="sggLevel" />*3) AND t2.tot_off != 0 THEN 'Level3'
+							WHEN t2.sn <![CDATA[ > ]]> (<include refid="sggLevel" />*3) AND t2.sn <![CDATA[ <= ]]> (<include refid="sggLevel" />*4) AND t2.tot_off != 0 THEN 'Level4'
+							WHEN t2.sn <![CDATA[ > ]]> (<include refid="sggLevel" />*4) AND t2.sn <![CDATA[ <= ]]> (<include refid="sggLevel" />*5) AND t2.tot_off != 0 THEN 'Level5'
+							WHEN t2.sn <![CDATA[ > ]]> (<include refid="sggLevel" />*5) AND t2.sn <![CDATA[ <= ]]> (<include refid="sggLevel" />*6) AND t2.tot_off != 0 THEN 'Level6'
+							WHEN t2.sn <![CDATA[ > ]]> (<include refid="sggLevel" />*6) AND t2.sn <![CDATA[ <= ]]> (<include refid="sggLevel" />*7) AND t2.tot_off != 0 THEN 'Level7'
+							ELSE 'Level8'
+							END 
+						)
+					END group_level
+			, t2.*
+		FROM 
+			(
+			SELECT ROW_NUMBER() OVER (ORDER BY t1.tot_off DESC) sn
+				, t1.*
+			FROM
+				(
+				SELECT (SELECT COUNT(rent.rent_no)FROM dqvs.dvs_rac_mt_agency mstr
+						LEFT OUTER JOIN dqvs.dvs_dqv_mt_rent rent ON mstr.bzmn_sn = rent.bzmn_sn 
+						WHERE LEFT(mstr.sgg_cd, 5) = geom.sgg_cd) tot_off
+					, geom.sgg_nm
+					, geom.sgg_cd
+					, ST_ASBINARY(ST_TRANSFORM(geom.geom, 4326)) geometry
+					, (SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_sd WHERE ctpv_cd 
+						= LEFT(
+							<if test="ctpvCd != null and ctpvCd != ''">#{ctpvCd}</if>
+							<if test="cmptncZoneCd != null and cmptncZoneCd != ''">#{cmptncZoneCd}</if>
+						, 2)) ctpv_nm
+				FROM 
+					dqvs.dvs_cmm_mt_sgg geom
+				) AS t1
+			<if test="ctpvCd != null and ctpvCd != ''">
+			WHERE LEFT(t1.sgg_cd, 2) = LEFT(#{ctpvCd}, 2)
+			</if>
+			<if test="cmptncZoneCd != null and cmptncZoneCd != ''">
+			WHERE LEFT(t1.sgg_cd, 5) = LEFT(#{cmptncZoneCd}, 5)
+			</if>
+			) AS t2
+	</select>
+	
+	<!-- 대여이력 차종별(기간) -->
+	<select id="rentCarmdlTime" parameterType="paraMap" resultType="resultMap">
+	/* 대여이력 차종별(기간) */
+		SELECT 1
+	</select>
+	
+	<!-- 대여이력 차종별(지역) -->
+	<select id="rentCarmdlArea" parameterType="paraMap" resultType="resultMap">
+	/* 대여이력 차종별(지역) */
+		SELECT 1
+	</select>
+	
+	<!-- 대여이력 현황 그리드(년단위) -->
+	<select id="rentHistTimeGrid" parameterType="paraMap" resultType="resultMap">
+	/* 대여이력 현황 그리드(년단위) */
+		SELECT COALESCE(m1.yr, '-') bs_year
+			, TO_CHAR(SUM(CASE WHEN m1.prd <![CDATA[ <= ]]> 7 THEN 1 ELSE 0 END), 'FM999,999,999') less_7
+			, TO_CHAR(SUM(CASE WHEN m1.prd <![CDATA[ >= ]]> 8 AND m1.prd <![CDATA[ <= ]]> 14 THEN 1 ELSE 0 END), 'FM999,999,999') less_14
+			, TO_CHAR(SUM(CASE WHEN m1.prd <![CDATA[ >= ]]> 15 AND m1.prd <![CDATA[ <= ]]> 21 THEN 1 ELSE 0 END), 'FM999,999,999') less_21
+			, TO_CHAR(SUM(CASE WHEN m1.prd <![CDATA[ >= ]]> 22 THEN 1 ELSE 0 END), 'FM999,999,999') more_21
+		FROM
+			(
+			SELECT TO_CHAR(rent.rent_bgng_dt, 'yyyy') yr
+				, EXTRACT(DAY FROM (rent.rent_end_dt-rent.rent_bgng_dt))+1 prd
+			FROM 
+				dqvs.dvs_dqv_mt_rent rent
+			WHERE NOT rent.rent_no ISNULL
+				AND NOT rent.rent_bgng_dt ISNULL
+			) AS m1
+		WHERE m1.yr <![CDATA[ >= ]]> #{yearStrt} AND m1.yr <![CDATA[ <= ]]> #{yearEnd}
+		GROUP BY m1.yr
+		ORDER BY m1.yr DESC 
+	</select>
+	
+	<!-- 대여이력 현황 그리드(시도) -->
+	<select id="rentHistGrid" parameterType="paraMap" resultType="resultMap">
+	/* 대여이력 현황 그리드(시도) */
+		SELECT *
+		FROM
+			(
+			SELECT COALESCE(sd.ctpv_nm, '시도 합계') sd_nm
+				, TO_CHAR(COALESCE(SUM(t.less_7), 0), 'FM999,999,999') less_7
+				, TO_CHAR(COALESCE(SUM(t.less_14), 0), 'FM999,999,999') less_14
+				, TO_CHAR(COALESCE(SUM(t.less_21), 0), 'FM999,999,999') less_21
+				, TO_CHAR(COALESCE(SUM(t.more_21), 0), 'FM999,999,999') more_21
+				, sd.ctpv_cd conn
+			FROM 
+				dqvs.dvs_cmm_mt_sd sd
+			LEFT OUTER JOIN
+				(
+				SELECT m1.sd_nm
+					, m1.sd_cd
+					, SUM(CASE WHEN m1.prd <![CDATA[ <= ]]> 7 THEN 1 ELSE 0 END) less_7
+					, SUM(CASE WHEN m1.prd <![CDATA[ >= ]]> 8 AND m1.prd <![CDATA[ <= ]]> 14 THEN 1 ELSE 0 END) less_14
+					, SUM(CASE WHEN m1.prd <![CDATA[ >= ]]> 15 AND m1.prd <![CDATA[ <= ]]> 21 THEN 1 ELSE 0 END) less_21
+					, SUM(CASE WHEN m1.prd <![CDATA[ >= ]]> 22 THEN 1 ELSE 0 END) more_21
+				FROM
+					(
+					SELECT rent.rent_no
+						, sd.ctpv_nm sd_nm
+						, sd.ctpv_cd sd_cd
+						, EXTRACT(DAY FROM (rent.rent_end_dt-rent.rent_bgng_dt))+1 prd
+					FROM 
+						dqvs.dvs_dqv_mt_rent rent
+					LEFT OUTER JOIN 
+						dqvs.dvs_rac_mt_agency agency
+					ON rent.bzmn_sn = agency.bzmn_sn
+					LEFT OUTER JOIN
+						dqvs.dvs_cmm_mt_sd sd
+					ON LEFT(agency.sgg_cd, 2) = sd.ctpv_cd 
+					WHERE NOT rent.rent_no ISNULL
+						AND NOT rent.rent_bgng_dt ISNULL
+					) AS m1
+				GROUP BY m1.sd_nm, m1.sd_cd
+				) AS t
+			ON sd.ctpv_cd = t.sd_cd
+			WHERE 1=1
+			<if test="ctpvCd != null and ctpvCd != ''">
+				AND sd.ctpv_cd = #{ctpvCd}
+			</if>
+			<if test="sggCd != null and sggCd != ''">
+				AND sd.ctpv_cd = LEFT(#{sggCd}, 2)
+			</if>
+			GROUP BY ROLLUP((sd.ctpv_nm, sd.ctpv_cd))
+			) AS t
+		ORDER BY t.conn
+	</select>
+	
+	<!-- 대여이력 현황 그리드(시군구) -->
+	<select id="agencyAreaDetailGrid" parameterType="paraMap" resultType="resultMap">
+	/* 대여이력 현황 그리드(시군구) */
+		SELECT COALESCE(m1.sgg_nm, '-') sgg_nm
+			, COALESCE(m1.sgg_cd, '-') sgg_cd
+			, TO_CHAR(SUM(CASE WHEN m1.prd <![CDATA[ <= ]]> 7 THEN 1 ELSE 0 END), 'FM999,999,999') less_7
+			, TO_CHAR(SUM(CASE WHEN m1.prd <![CDATA[ >= ]]> 8 AND m1.prd <![CDATA[ <= ]]> 14 THEN 1 ELSE 0 END), 'FM999,999,999') less_14
+			, TO_CHAR(SUM(CASE WHEN m1.prd <![CDATA[ >= ]]> 15 AND m1.prd <![CDATA[ <= ]]> 21 THEN 1 ELSE 0 END), 'FM999,999,999') less_21
+			, TO_CHAR(SUM(CASE WHEN m1.prd <![CDATA[ >= ]]> 22 THEN 1 ELSE 0 END), 'FM999,999,999') more_21
+			, LEFT(m1.sgg_cd, 2) conn
+		FROM
+			(
+			SELECT rent.rent_no
+				, sgg.sgg_nm 
+				, sgg.sgg_cd 
+				, EXTRACT(DAY FROM (rent.rent_end_dt-rent.rent_bgng_dt))+1 prd
+			FROM 
+				dqvs.dvs_dqv_mt_rent rent
+			LEFT OUTER JOIN 
+				dqvs.dvs_rac_mt_agency agency
+			ON rent.bzmn_sn = agency.bzmn_sn
+			LEFT OUTER JOIN
+				dqvs.dvs_cmm_mt_sgg sgg
+			ON LEFT(agency.sgg_cd, 5) = sgg.sgg_cd 
+			WHERE NOT rent.rent_no ISNULL
+				AND NOT rent.rent_bgng_dt ISNULL
+			<if test="ctpvCd != null and ctpvCd != ''">
+				AND LEFT(sgg.sgg_cd, 2) = #{ctpvCd}
+			</if>
+			<if test="sggCd != null and sggCd != ''">
+				AND sgg.sgg_cd = #{sggCd}
+			</if>
+			) AS m1
+			GROUP BY m1.sgg_nm, m1.sgg_cd
+			ORDER BY m1.sgg_cd
+	</select>
+	
+	<!-- 대여이력 월/기간별 통계(지역별) -->
+	<select id="mpChartArea" parameterType="paraMap" resultType="resultMap">
+	/* 대여이력 월/기간별 통계(지역별) */	
+		SELECT CONCAT(tmp_m.tmp_m, '월') m
+			, COALESCE(m2.less_7, 0) less_7
+			, COALESCE(m2.less_14, 0) less_14
+			, COALESCE(m2.less_21, 0) less_21
+			, COALESCE(m2.more_21, 0) more_21
+		FROM
+			(SELECT GENERATE_SERIES(1, 12)::TEXT tmp_m) tmp_m
+		LEFT OUTER JOIN
+			(
+			SELECT CASE WHEN LEFT(m1.m, 1) = '0' THEN RIGHT(m1.m, 1) ELSE m1.m END m
+				, SUM(CASE WHEN m1.prd <![CDATA[ <= ]]> 7 THEN 1 ELSE 0 END) less_7
+				, SUM(CASE WHEN m1.prd <![CDATA[ >= ]]> 8 AND m1.prd <![CDATA[ <= ]]> 14 THEN 1 ELSE 0 END) less_14
+				, SUM(CASE WHEN m1.prd <![CDATA[ >= ]]> 15 AND m1.prd <![CDATA[ <= ]]> 21 THEN 1 ELSE 0 END) less_21
+				, SUM(CASE WHEN m1.prd <![CDATA[ >= ]]> 22 THEN 1 ELSE 0 END) more_21
+			FROM
+				(
+				SELECT rent.rent_no
+					, TO_CHAR(rent.rent_bgng_dt, 'mm') m
+					, EXTRACT(DAY FROM (rent.rent_end_dt-rent.rent_bgng_dt))+1 prd
+				FROM 
+					dqvs.dvs_dqv_mt_rent rent
+				LEFT OUTER JOIN 
+					dqvs.dvs_rac_mt_agency agency
+				ON rent.bzmn_sn = agency.bzmn_sn
+				WHERE NOT rent.rent_no ISNULL
+					AND NOT rent.rent_bgng_dt ISNULL
+				<if test="ctpvCd != null and ctpvCd != ''">
+					AND LEFT(agency.sgg_cd, 2) = #{ctpvCd}
+				</if>
+				<if test="sggCd != null and sggCd != ''">
+					AND LEFT(agency.sgg_cd, 5) = #{sggCd}
+				</if>
+				) AS m1
+			GROUP BY m1.m
+			) AS m2
+		ON tmp_m.tmp_m = m2.m	
+		ORDER BY tmp_m::NUMERIC
+	</select>
+	
+	<!-- 대여이력 월/기간별 통계(기간별) -->
+	<select id="mpChartTime" parameterType="paraMap" resultType="resultMap">
+	/* 대여이력 월/기간별 통계(기간별) */
+		SELECT CONCAT(tmp_m.tmp_m, '월') m
+			, COALESCE(m2.less_7, 0) less_7
+			, COALESCE(m2.less_14, 0) less_14
+			, COALESCE(m2.less_21, 0) less_21
+			, COALESCE(m2.more_21, 0) more_21
+		FROM
+			(SELECT GENERATE_SERIES(1, 12)::TEXT tmp_m) tmp_m
+		LEFT OUTER JOIN
+			(
+			SELECT CASE WHEN LEFT(m1.m, 1) = '0' THEN RIGHT(m1.m, 1) ELSE m1.m END m
+				, SUM(CASE WHEN m1.prd <![CDATA[ <= ]]> 7 THEN 1 ELSE 0 END) less_7
+				, SUM(CASE WHEN m1.prd <![CDATA[ >= ]]> 8 AND m1.prd <![CDATA[ <= ]]> 14 THEN 1 ELSE 0 END) less_14
+				, SUM(CASE WHEN m1.prd <![CDATA[ >= ]]> 15 AND m1.prd <![CDATA[ <= ]]> 21 THEN 1 ELSE 0 END) less_21
+				, SUM(CASE WHEN m1.prd <![CDATA[ >= ]]> 22 THEN 1 ELSE 0 END) more_21
+			FROM
+				(
+				SELECT rent.rent_no
+					, TO_CHAR(rent.rent_bgng_dt, 'mm') m
+					, EXTRACT(DAY FROM (rent.rent_end_dt-rent.rent_bgng_dt))+1 prd
+				FROM 
+					dqvs.dvs_dqv_mt_rent rent
+				LEFT OUTER JOIN 
+					dqvs.dvs_rac_mt_agency agency
+				ON rent.bzmn_sn = agency.bzmn_sn
+				WHERE NOT rent.rent_no ISNULL
+					AND NOT rent.rent_bgng_dt ISNULL
+					AND TO_CHAR(rent.rent_bgng_dt, 'yyyy') <![CDATA[ >= ]]> #{yearStrt}
+					AND TO_CHAR(rent.rent_bgng_dt, 'yyyy') <![CDATA[ <= ]]> #{yearEnd}
+				) AS m1
+			GROUP BY m1.m
+			) AS m2
+		ON tmp_m.tmp_m = m2.m	
+		ORDER BY tmp_m::NUMERIC
+	</select>
+</mapper>

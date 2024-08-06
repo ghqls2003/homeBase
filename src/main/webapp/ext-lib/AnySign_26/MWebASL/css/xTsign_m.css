@@ -1,0 +1,474 @@
+
+/* xTsign css */
+body{font-family: 'Noto Sans KR', sans-serif;}
+a {color: #222;}
+/* h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {line-height: 1.25px;} */
+hr {border-color: #e1e1e1;}
+.no-transform { -webkit-transform: none !important; transform: none !important;}
+.no-scroll {overflow: hidden;}
+.no-scroll-x {overflow-x: hidden;}
+dl, ol, ul, dt, dd, p, a, li, img {margin:0; padding:0;}
+li {list-style:none;}
+fL {float: left;}
+fR {float: right;}
+radio {appearance: none}
+::-webkit-scrollbar {display: none !important;} /* chrome */
+.scrollT {overflow: scroll; -ms-overflow-style: none;} /* ie */
+img {-webkit-user-drag: none;}
+
+/*container CSS*/
+#xTsign .container {width: 450px; height: 578px; margin:0 auto;}
+
+/*popup CSS*/
+#xTsign .black_overlay {display: none; position: absolute; top: 0%; left: 0%; width: 100%; height: 572px; background-color: black; z-index:1001; -moz-opacity: 0.8; opacity:.50; filter: alpha(opacity=80);border-radius: 16px 16px 16px 16px;}
+#xTsign .white_content {display: none; position: absolute; top: 50%; left: 50%; width: 300px; min-height: auto; background-color: white; z-index:1002; overflow: hidden;
+                border-radius: 10px; transform: translate(-50%, -77%);}
+#xTsign .white_content .popupTop {line-height: 20px; border-bottom: 1px solid #c8cee7; padding:10px;}
+#xTsign .white_content .popupTop p {text-align: center; color: #394da5; font-size: 17px; font-weight: bold;}
+#xTsign .white_content .popupTop p.popStit {text-align: center; color: #777; font-size: 12px;}
+#xTsign .white_content li {padding: 10px 20px; border-bottom: 1px solid #e4e7f3;}
+#xTsign .white_content li:hover {background: #bccbfc;}
+#xTsign .white_content .active {background: #e4e7f3;}
+#xTsign .white_content li img {width: 10%; display: inline-block; vertical-align: middle; padding-right: 10px;}
+#xTsign .white_content li a {font-size: 15px; text-decoration: none; font-weight: bold; color: #666; margin-left: 5px;}
+
+#xTsign .white_content .popBomt {display: block;}
+#xTsign .white_content .popBomt span {display: block; float: left; width: 70%; background-color: #4a5db0; text-align: center; height: 52px;}
+#xTsign .white_content .popBomt span.cols {display: block; float: right; text-align: center; width: 30%; background-color: #ddd;}
+#xTsign .white_content .popBomt span a {display: block; text-decoration: none; margin-top: 15px; color: #fff; font-weight: bold;}
+#xTsign .white_content .popBomt span.cols a {color: #4a5db0;}
+
+@media (min-width: 1025px) and (max-width: 1280px) {#xTsign .white_content {top: 50%; left: 50%; width: 300px; min-height: auto;}}
+@media (min-width: 768px) and (max-width: 1024px) {#xTsign .white_content {top: 50%; left: 50%; width: 300px; height: auto;}}
+@media (min-width: 481px) and (max-width: 767px) {#xTsign .white_content {top: 50%; left: 50%; width: 300px; height: auto;}}
+
+/*Naver popup CSS*/
+#xTsign .black_overlay_naver {display: none; position: absolute; top: 0%; left: 0%; width: 100%; height: 100%; background-color: black; z-index:1001; -moz-opacity: 0.8; opacity:.50; filter: alpha(opacity=80);}
+#xTsign .white_content_naver {display: none; position: absolute; top: 64%; left: 50%; width: 100%; height: 100%; background-color: white; z-index:1002; overflow: hidden;
+                transform: translate(-50%, -64%);}
+#xTsign .white_content_naver .popupTop {padding: 15px 20px; line-height: 25px; font-size: 12px; height: 93%; overflow: auto; position: fixed;}
+#xTsign .white_content_naver .popupTop strong {display: block;}
+#xTsign .white_content_naver .popBomt {position: absolute; bottom: 0; width: 100%;}
+#xTsign .white_content_naver .popBomt span {display: block; float: left; width: 100%; background-color: #4a5db0; text-align: center; height: 52px;}
+#xTsign .white_content_naver .popBomt span a {display: block; text-decoration: none; color: #fff; font-weight: bold; padding-top: 14px;}
+
+/*Toss popup CSS*/
+#xTsign .black_overlay_toss {display: none; position: absolute; top: 0%; left: 0%; width: 100%; height: 100%; background-color: black; z-index:1001; -moz-opacity: 0.8; opacity:.50; filter: alpha(opacity=80);}
+#xTsign .white_content_toss {display: none; position: absolute; top: 64%; left: 50%; width: 100%; height: 100%; background-color: white; z-index:1002; overflow: hidden;
+                transform: translate(-50%, -64%);}
+#xTsign .white_content_toss .popupTop {padding: 15px 20px; line-height: 25px; font-size: 12px; height: 93%; overflow: auto; position: fixed;}
+#xTsign .white_content_toss .popupTop strong {display: block;}
+#xTsign .white_content_toss .popBomt {position: absolute; bottom: 0; width: 100%;}
+#xTsign .white_content_toss .popBomt span {display: block; float: left; width: 100%; background-color: #4a5db0; text-align: center; height: 52px;}
+#xTsign .white_content_toss .popBomt span a {display: block; text-decoration: none; color: #fff; font-weight: bold; padding-top: 14px;}
+
+/*Kakao Pay popup CSS*/
+#xTsign .black_overlay_kakaopay {display: none; position: absolute; top: 0%; left: 0%; width: 100%; height: 100%; background-color: black; z-index:1001; -moz-opacity: 0.8; opacity:.50; filter: alpha(opacity=80);}
+#xTsign .white_content_kakaopay {display: none; position: absolute; top: 64%; left: 50%; width: 100%; height: 100%; background-color: white; z-index:1002; overflow: hidden;
+                transform: translate(-50%, -64%);}
+#xTsign .white_content_kakaopay .popupTop {padding: 15px 20px; line-height: 25px; font-size: 12px; height: 93%; overflow: auto; position: fixed;}
+#xTsign .white_content_kakaopay .popupTop strong {display: block;}
+#xTsign .white_content_kakaopay .popBomt {position: absolute; bottom: 0; width: 100%;}
+#xTsign .white_content_kakaopay .popBomt span {display: block; float: left; width: 100%; background-color: #4a5db0; text-align: center; height: 52px;}
+#xTsign .white_content_kakaopay .popBomt span a {display: block; text-decoration: none; color: #fff; font-weight: bold; padding-top: 14px;}
+
+/*Kakao Talk popup CSS*/
+#xTsign .black_overlay_kakaotalk {display: none; position: absolute; top: 0%; left: 0%; width: 100%; height: 100%; background-color: black; z-index:1001; -moz-opacity: 0.8; opacity:.50; filter: alpha(opacity=80);}
+#xTsign .white_content_kakaotalk {display: none; position: absolute; top: 64%; left: 50%; width: 100%; height: 100%; background-color: white; z-index:1002; overflow: hidden;
+                transform: translate(-50%, -64%);}
+#xTsign .white_content_kakaotalk .popupTop {padding: 15px 20px; line-height: 25px; font-size: 12px; height: 93%; overflow: auto; position: fixed;}
+#xTsign .white_content_kakaotalk .popupTop strong {display: block;}
+#xTsign .white_content_kakaotalk .popBomt {position: absolute; bottom: 0; width: 100%;}
+#xTsign .white_content_kakaotalk .popBomt span {display: block; float: left; width: 100%; background-color: #4a5db0; text-align: center; height: 52px;}
+#xTsign .white_content_kakaotalk .popBomt span a {display: block; text-decoration: none; color: #fff; font-weight: bold; padding-top: 14px;}
+
+/*Pass popup CSS*/
+#xTsign .black_overlay_pass {display: none; position: absolute; top: 0%; left: 0%; width: 100%; height: 100%; background-color: black; z-index:1001; -moz-opacity: 0.8; opacity:.50; filter: alpha(opacity=80);}
+#xTsign .white_content_pass {display: none; position: absolute; top: 64%; left: 50%; width: 100%; height: 100%; background-color: white; z-index:1002; overflow: hidden;
+                transform: translate(-50%, -64%);}
+#xTsign .white_content_pass .popupTop {padding: 15px 20px; line-height: 25px; font-size: 12px; height: 93%; overflow: auto; position: fixed;}
+#xTsign .white_content_pass .popupTop strong {display: block;}
+#xTsign .white_content_pass .popBomt {position: absolute; bottom: 0; width: 100%;}
+#xTsign .white_content_pass .popBomt span {display: block; float: left; width: 100%; background-color: #4a5db0; text-align: center; height: 52px;}
+#xTsign .white_content_pass .popBomt span a {display: block; text-decoration: none; color: #fff; font-weight: bold; padding-top: 14px;}
+
+/*Payco popup CSS*/
+#xTsign .black_overlay_payco {display: none; position: absolute; top: 0%; left: 0%; width: 100%; height: 100%; background-color: black; z-index:1001; -moz-opacity: 0.8; opacity:.50; filter: alpha(opacity=80);}
+#xTsign .white_content_payco {display: none; position: absolute; top: 64%; left: 50%; width: 100%; height: 100%; background-color: white; z-index:1002; overflow: hidden;
+                transform: translate(-50%, -64%);}
+#xTsign .white_content_payco .popupTop {padding: 15px 20px; line-height: 25px; font-size: 12px; height: 93%; overflow: auto; position: fixed;}
+#xTsign .white_content_payco .popupTop strong {display: block;}
+#xTsign .white_content_payco .popBomt {position: absolute; bottom: 0; width: 100%;}
+#xTsign .white_content_payco .popBomt span {display: block; float: left; width: 100%; background-color: #4a5db0; text-align: center; height: 52px;}
+#xTsign .white_content_payco .popBomt span a {display: block; text-decoration: none; color: #fff; font-weight: bold; padding-top: 14px;}
+
+/*Shinhan popup CSS*/
+#xTsign .black_overlay_shinhan {display: none; position: absolute; top: 0%; left: 0%; width: 100%; height: 100%; background-color: black; z-index:1001; -moz-opacity: 0.8; opacity:.50; filter: alpha(opacity=80);}
+#xTsign .white_content_shinhan {display: none; position: absolute; top: 64%; left: 50%; width: 100%; height: 100%; background-color: white; z-index:1002; overflow: hidden;
+                transform: translate(-50%, -64%);}
+#xTsign .white_content_shinhan .popupTop {padding: 15px 20px; line-height: 25px; font-size: 12px; height: 93%; overflow: auto; position: fixed;}
+#xTsign .white_content_shinhan .popupTop strong {display: block;}
+#xTsign .white_content_shinhan .popBomt {position: absolute; bottom: 0; width: 100%;}
+#xTsign .white_content_shinhan .popBomt span {display: block; float: left; width: 100%; background-color: #4a5db0; text-align: center; height: 52px;}
+#xTsign .white_content_shinhan .popBomt span a {display: block; text-decoration: none; color: #fff; font-weight: bold; padding-top: 14px;}
+
+/*TAB CSS*/
+#xTsign ul.tabs {margin: 0; padding: 0; float: left; list-style: none; height: 32px; width: 100%;}
+#xTsign ul.tabs li {float: left; width: 50%; margin: 0; padding: 0; height: 50px; line-height: 55px; border-left: none; margin-bottom: -1px; overflow: hidden; position: relative; background: #4a5db0; text-align: center;}
+#xTsign ul.tabs li.active {background: #fff;}
+#xTsign ul.tabs li a {text-decoration: none; color: #000; display: block; font-size: 1.2em; padding: 0 20px; outline: none;}
+#xTsign html ul.tabs li.active, html ul.tabs li.active a:hover  {background: #fff;}
+#xTsign html ul.tabs li.active, html ul.tabs li.active a:hover  {background: #fff;}
+
+/*Container CSS*/
+#xTsign .tab_container {overflow-y: auto; height: 100%; background: #fff; z-index: 1001;}
+#xTsign .tab_container .tab_content {padding: 20px 20px 20px 20px; font-size: 1.2em; margin-bottom: 10%;}
+#xTsign .tab_container .tab_content .centerLine {padding:5px 0;}
+#xTsign .tab_container .tab_content>div p {display: inline-block; font-size: 15px; font-weight: bold; color: #2a3993;}
+/*.tab_container .tab_content>div span {float:right; width: 27px; height: 27px; background: url(../img/icons.png)no-repeat;}*/
+#xTsign .tab_container .tab_content .scrollT {}
+#xTsign .tab_container .tab_content .xTsignli {width:99%; height: 65px; display: block; margin-bottom: 5px; border-radius: 7px; background-color: #ebeffc; background-blend-mode: color-burn; border: 1px solid #bccbfc; outline:none;
+  -webkit-tap-highlight-color:rgba(0,0,0,0); -webkit-tap-highlight-color:transparent; cursor: pointer; line-height: 1.6rem;}
+#xTsign .tab_container .tab_content .xTsignliB {width:99%; height: 54px; display: block; margin-bottom: 5px; border-radius: 7px;
+                                   background-blend-mode: color-burn; background: #eee; border: 1px dashed #888;}
+#xTsign .tab_container .tab_content .xTsignli .borderSt {background-image: none; background: #f7f7f7; border: 1px dashed #cacaca;}
+#xTsign .tab_container .tab_content .xTsignli .borderSt img {display: inline-block; margin: 15px 7px 0px 135px; padding: 0; width: 25px;}
+#xTsign .tab_container .tab_content .xTsignli .borderSt a {font-size: 12px; color: #4a5db0; display: inline-block; padding-top: 20px;}
+#xTsign .tab_container .tab_content .iconTop {width:99%; height: 65px; display: inline-block; margin-bottom: 7px; border-radius: 7px; background: url(../img/icon_top.png) no-repeat; background-color: #ebeffc; background-blend-mode: color-burn; border: 1px solid #bccbfc; outline:none; -webkit-tap-highlight-color:rgba(0,0,0,0); -webkit-tap-highlight-color:transparent; background-position: 95% 45%;}
+/* #xTsign .tab_container .tab_content .banner {float: left; display: inline-block; vertical-align: middle;} */
+#xTsign .tab_container .tab_content .xTsignli img {padding: 15px 8px 10px 15px; float: left;}
+#xTsign .tab_container .tab_content a {font-size: 1.05rem; text-decoration: none; display: inline-block; vertical-align: middle; letter-spacing: 0.05remrem; font-weight: 400; cursor: pointer;}
+#xTsign .tab_container .tab_content .Atit {padding-top: 20px; font-weight: bold;}
+#xTsign .tab_container .tab_content .xTsignliTxt {display: block; text-align: center; font-size: 0.75rem; color: #666; padding-top: 19px;}
+#xTsign .tab_container .bottom_button {display: block; text-align: center; margin-top: -10px; bottom: 0; width: 100%; padding-top:10px; height: 44px; border-top: 1px solid #b2b2b2; position: absolute;}
+#xTsign .tab_container .bottom_button button.btn_border1 {background: #4a5db0; color:#fff; width: 97px; height: 30px; border:1px solid #4a5db0; border-radius: 20px;margin-right: 10px;}
+#xTsign .tab_container .bottom_button button.btn_border2 {background: #fff; color:#888; width: 97px; height: 30px; border:1px solid #b2b2b2; border-radius: 20px; font-weight: 600;}
+#xTsign .tab_container .bottom_button .symbol {width: 34px; height: 27px; background: url(../img/symbol_logo.png)no-repeat; position: absolute; right: 20px; bottom: 17px;}
+
+/* 네아로 Conent CSS*/
+/*
+#xTsign .tab_container .tab_content .naversign_con {width:99%; height:auto; background-color: #ebeffc; border-radius: 7px; position: relative; border: 1px solid #bccbfc; margin-left: 1px; outline:none; -webkit-tap-highlight-color:rgba(0,0,0,0); -webkit-tap-highlight-color:transparent;}
+#xTsign .tab_container .tab_content .naversign_con img {margin: 0 auto; display: block; padding:40px 20px;}
+#xTsign .tab_container .tab_content .naversign_con dl {padding: 20px 20px; line-height: 20px; color:#222;}
+#xTsign .tab_container .tab_content .naversign_con dt {font-size: 16px; color: #222; padding-bottom: 5px;}
+#xTsign .tab_container .tab_content .naversign_con dd {font-size: 13px;}
+#xTsign .tab_container .tab_content .naversign_con dd.loading {text-align: center; padding-top: 50px;}
+#xTsign .tab_container .tab_content .naversign_con .naver_Bot {position: absolute; left: 20px; bottom: 10px; width: 375px;}
+#xTsign .tab_container .tab_content .naversign_con .naver_Bot span {display: inline-block; margin-top: 7px; font-size: 11px;}
+#xTsign .tab_container .tab_content .naversign_con .naver_Bot button {float:right; background-color: #03cf5d; border:0; border-radius: 20px; color:#fff; font-size: 13px; font-weight: bold; letter-spacing: -1px; width:100px; height:30px;}
+#xTsign .tab_container .tab_content .naversign_con .use {width: 90%; margin: 0 20px; display: block; height: 110px;}
+#xTsign .tab_container .tab_content .naversign_con .use .onlineText {vertical-align: bottom; color:#0050ff; text-decoration: underline;}
+#xTsign .tab_container .tab_content .naversign_con .use_text {font-size: 13px; padding-bottom:15px;}
+#xTsign .tab_container .tab_content .naversign_con a {text-decoration: none; display: inline-block; vertical-align: middle; letter-spacing: 0.05remrem; font-weight: 400; cursor: pointer; font-size: 11px;}
+#xTsign .tab_container .tab_content .naversign_con .use .Retext {position: absolute; right: 15px; border: 1px solid #4a5db0; background: #4a5db0; font-size: 14px; color: #fff; padding: 7px; border-radius: 26px; width: 25%; text-align: center;}
+#xTsign .tab_container .tab_content .naversign_con .use .agBtn {position: absolute; left: 15px; background: #b7b7b7; border: 1px solid #b7b7b7; font-size: 14px; text-align: center;
+    border-radius: 26px; padding: 7px; color:#fff; width: 25%;}
+*/
+
+/* yessign Conent CSS*/
+#xTsign .tab_container .tab_content .yessign_con {width:99%; height:auto; background-color: #ebeffc; border-radius: 7px; position: relative; border: 1px solid #bccbfc; margin-left: 1px;}
+#xTsign .tab_container .tab_content .yessign_con img {margin: 0 auto; display: block; padding: 40px 20px;}
+#xTsign .tab_container .tab_content .yessign_con dl {padding: 20px 20px; line-height: 20px; color:#222;}
+#xTsign .tab_container .tab_content .yessign_con dt {font-size: 16px; color: #222; padding-bottom: 5px;}
+#xTsign .tab_container .tab_content .yessign_con dd {font-size: 13px;}
+#xTsign .tab_container .tab_content .yessign_con dd.loading {text-align: center; padding-top: 30px;}
+#xTsign .tab_container .tab_content .yessign_con dd.loading2 {text-align: center; padding-top: 25px;}
+#xTsign .tab_container .tab_content .yessign_con .use {width: 90%; margin: 0px 20px; display: block; height: 100px;}
+#xTsign .tab_container .tab_content .yessign_con .use_text {padding-top: 13px; font-size: 11px;}
+
+#xTsign .tab_container .tab_content .yessign_con .use a.naverBtn {border: 1px solid #4a5db0; background: #4a5db0; width: 90px; text-align: center;}
+#xTsign .tab_container .tab_content .yessign_con .use a.tossBtn {border: 1px solid #4a5db0; background: #4a5db0; width: 90px; text-align: center;}
+#xTsign .tab_container .tab_content .yessign_con .use a.kakaoPayBtn {border: 1px solid #4a5db0; background: #4a5db0; width: 90px; text-align: center;}
+#xTsign .tab_container .tab_content .yessign_con .use a.kakaoTalkBtn {border: 1px solid #4a5db0; background: #4a5db0; width: 90px; text-align: center;}
+#xTsign .tab_container .tab_content .yessign_con .use a.passBtn {border: 1px solid #4a5db0; background: #4a5db0; width: 90px; text-align: center;}
+#xTsign .tab_container .tab_content .yessign_con .use a.paycoBtn {border: 1px solid #4a5db0; background: #4a5db0; width: 90px; text-align: center;}
+#xTsign .tab_container .tab_content .yessign_con .use a.shinhanBtn {border: 1px solid #4a5db0; background: #4a5db0; width: 90px; text-align: center;}
+
+#xTsign .tab_container .tab_content .yessign_con .use .agBtn {position: absolute; right: 6px; width: 20%; background: #b7b7b7; border: 1px solid #b7b7b7; margin-right: 115px;font-family: 'Noto Sans KR', sans-serif; font-size: 14px; text-align: center; border-radius: 26px; padding: 7px; color:#fff;}
+
+#xTsign .tab_container .tab_content .yessign_con a {text-decoration: none; display: inline-block; vertical-align: middle; letter-spacing: 0.05remrem; font-weight: 400; cursor: pointer; font-size: 11px;font-family: 'Noto Sans KR', sans-serif;}
+#xTsign .tab_container .tab_content .yessign_con .use .onlineText {vertical-align: bottom; color:#0050ff; text-decoration: underline;}
+#xTsign .tab_container .tab_content .yessign_con .use .Retext {position: absolute; right: 10px; border: 1px solid #4a5db0; background: #4a5db0;font-family: 'Noto Sans KR', sans-serif; font-size: 14px; color: #fff; padding: 7px; border-radius: 26px; width: 25%; text-align: center;}
+
+/* 프로필 naver Conent CSS*/
+#xTsign .tab_container .tab_content .naversign_con {width:99%; height:auto; background-color: #ebeffc; border-radius: 7px; position: relative; border: 1px solid #bccbfc; margin-left: 1px; display: inline-block;}
+#xTsign .tab_container .tab_content .naversign_con p {padding: 10px 0px 10px 20px; font-size: 16px; color: #222;}
+#xTsign .tab_container .tab_content .naversign_con dl {padding: 0 19px; line-height: 20px; color:#222;}
+#xTsign .tab_container .tab_content .naversign_con dt {font-size: 13px; color:#4a5db0; font-weight: bold; width: 78px; display: inline-block; margin-top:10px;}
+#xTsign .tab_container .tab_content .naversign_con>div.consent {font-size: 10.5px; color:#222; padding: 14px 0px; text-align: left; padding-left: 2%;}
+#xTsign .tab_container .tab_content .naversign_con>div.consent>div {float: left;}
+#xTsign .tab_container .tab_content .naversign_con>div.consent span {color: #4a5db0; text-decoration: underline; display:inline-block; padding-left: 6px;}
+#xTsign .tab_container .tab_content .naversign_con dd {padding-bottom: 5px;}
+#xTsign .tab_container .tab_content .naversign_con dd input {border:1px solid #d8e0fb; width: 93%; height: 28px; border-radius: 23px; font-size: 12px; padding-left: 15px;}
+#xTsign .tab_container .tab_content .naversign_con dd input.s_box {width: 114px;}
+#xTsign .tab_container .tab_content .naversign_con dd input[type=radio] {width: 15px; height: 15px; vertical-align: middle; display: inline-block; margin-top: -1px; background: #4A5DAF;}
+#xTsign .tab_container .tab_content .naversign_con dd input[type=password] {font-size: 1rem; width: 20px;}
+#xTsign .tab_container .tab_content .naversign_con dd.loading {text-align: center; padding-top: 50px;}
+#xTsign .tab_container .tab_content .naversign_con .viewInp {display: inline-block; vertical-align: middle; margin-top: 0px; margin-right: 3px;appearance: auto;-moz-appearance: auto;-webkit-appearance: auto;}
+#xTsign .tab_container .tab_content .naversign_con .viewBtm {color: #4a5db0; font-size: 0.75rem; display: inline-block; vertical-align: 0; padding: 5px 8px; text-decoration: underline; font-weight: 400;}
+#xTsign .tab_container .tab_content .naversign_con .use {width: 90%; margin: 30px 20px; display: block; height: 50px;}
+#xTsign .tab_container .tab_content .naversign_con .use_text {padding-top: 12px; font-size: 11px; color: #444; position: absolute; left: 0;}
+#xTsign .tab_container .tab_content .naversign_con .use .onlineText {vertical-align: bottom; color:#0050ff; text-decoration: underline;}
+#xTsign .tab_container .tab_content .naversign_con a {text-decoration: none; display: inline-block; vertical-align: middle; letter-spacing: 0.05remrem; font-weight: 400; cursor: pointer; font-size: 11px;}
+#xTsign .tab_container .tab_content .naversign_con .use .Retext {position: absolute; right: 15px; border: 1px solid #4a5db0; background: #4a5db0; font-size: 14px; color: #fff; padding: 7px; border-radius: 26px; width: 25%; text-align: center;}
+#xTsign .tab_container .tab_content .naversign_con .use .agBtn {position: absolute; left: 15px; background: #b7b7b7; border: 1px solid #b7b7b7; font-size: 14px; text-align: center;
+    border-radius: 26px; padding: 7px; color:#fff; width: 25%;}
+
+/* toss Conent CSS*/
+#xTsign .tab_container .tab_content .tosssign_con {width:99%; height:auto; background-color: #ebeffc; border-radius: 7px; position: relative; border: 1px solid #bccbfc; margin-left: 1px; display: inline-block;}
+#xTsign .tab_container .tab_content .tosssign_con p {padding: 10px 0px 10px 20px; font-size: 16px; color: #222;}
+#xTsign .tab_container .tab_content .tosssign_con dl {padding: 0 19px; line-height: 20px; color:#222;}
+#xTsign .tab_container .tab_content .tosssign_con dt {font-size: 13px; color:#4a5db0; font-weight: bold; width: 78px; display: inline-block; margin-top:10px;}
+#xTsign .tab_container .tab_content .tosssign_con>div.consent {font-size: 10.5px; color:#222; padding: 14px 0px; text-align: left; padding-left: 2%;}
+#xTsign .tab_container .tab_content .tosssign_con>div.consent>div {float: left;}
+#xTsign .tab_container .tab_content .tosssign_con>div.consent span {color: #4a5db0; text-decoration: underline; display:inline-block; padding-left: 6px;}
+#xTsign .tab_container .tab_content .tosssign_con dd {padding-bottom: 5px;}
+#xTsign .tab_container .tab_content .tosssign_con dd input {border:1px solid #d8e0fb; width: 93%; height: 28px; border-radius: 23px; font-size: 12px; padding-left: 15px;}
+#xTsign .tab_container .tab_content .tosssign_con dd input.s_box {width: 114px;}
+#xTsign .tab_container .tab_content .tosssign_con dd input[type=radio] {width: 15px; height: 15px; vertical-align: middle; display: inline-block; margin-top: -1px; background: #4A5DAF;}
+#xTsign .tab_container .tab_content .tosssign_con dd input[type=password] {font-size: 1rem; width: 20px;}
+#xTsign .tab_container .tab_content .tosssign_con dd.loading {text-align: center; padding-top: 50px;}
+#xTsign .tab_container .tab_content .tosssign_con .viewInp {display: inline-block; vertical-align: middle; margin-top: 0px; margin-right: 3px;appearance: auto;-moz-appearance: auto;-webkit-appearance: auto;}
+#xTsign .tab_container .tab_content .tosssign_con .viewBtm {color: #4a5db0; font-size: 0.75rem; display: inline-block; vertical-align: 0; padding: 5px 8px; text-decoration: underline; font-weight: 400;}
+#xTsign .tab_container .tab_content .tosssign_con .use {width: 90%; margin: 30px 20px; display: block; height: 50px;}
+#xTsign .tab_container .tab_content .tosssign_con .use_text {padding-top: 12px; font-size: 11px; color: #444; position: absolute; left: 0;}
+#xTsign .tab_container .tab_content .tosssign_con .use a {position: absolute; right: 15px; border: 1px solid #4a5db0; background: #4a5db0; font-size: 14px; color: #fff; font-weight: bold; padding: 7px; border-radius: 26px; text-align: center; width: 25%;}
+
+/* Kakao Pay Conent CSS*/
+#xTsign .tab_container .tab_content .kakaopay_con {width:99%; height:auto; background-color: #ebeffc; border-radius: 7px; position: relative; border: 1px solid #bccbfc; margin-left: 1px; display: inline-block;}
+#xTsign .tab_container .tab_content .kakaopay_con p {padding: 10px 0px 10px 20px; font-size: 16px; color: #222;}
+#xTsign .tab_container .tab_content .kakaopay_con dl {padding: 0 19px; line-height: 20px; color:#444;}
+#xTsign .tab_container .tab_content .kakaopay_con dt {font-size: 13px; color:#4a5db0; font-weight: bold; width: 78px; display: inline-block; margin-top:10px;}
+#xTsign .tab_container .tab_content .kakaopay_con>div.consent {font-size: 10.5px; color:#222; padding: 14px 0px; text-align: left; padding-left: 2%;}
+#xTsign .tab_container .tab_content .kakaopay_con>div.consent>div {float: left;}
+#xTsign .tab_container .tab_content .kakaopay_con>div.consent span {color: #4a5db0; text-decoration: underline; display:inline-block; padding-left: 6px;}
+#xTsign .tab_container .tab_content .kakaopay_con dd {padding-bottom: 5px;}
+#xTsign .tab_container .tab_content .kakaopay_con dd input {border:1px solid #d8e0fb; width: 93%; height: 28px; border-radius: 23px; font-size: 12px; padding-left: 15px;}
+#xTsign .tab_container .tab_content .kakaopay_con dd input.s_box {width: 114px;}
+#xTsign .tab_container .tab_content .kakaopay_con dd input[type=radio] {width: 15px; height: 15px; vertical-align: middle; display: inline-block; margin-top: -1px; background: #4A5DAF;}
+#xTsign .tab_container .tab_content .kakaopay_con dd input[type=password] {font-size: 1rem; width: 20px;}
+#xTsign .tab_container .tab_content .kakaopay_con dd.loading {text-align: center; padding-top: 50px;}
+#xTsign .tab_container .tab_content .kakaopay_con .viewInp {display: inline-block; vertical-align: middle; margin-top: 0px; margin-right: 3px;appearance: auto;-moz-appearance: auto;-webkit-appearance: auto;}
+#xTsign .tab_container .tab_content .kakaopay_con .viewBtm {color: #4a5db0; font-size: 0.75rem; display: inline-block; vertical-align: 0; padding:5px 8px; text-decoration: underline; font-weight: 400;}
+#xTsign .tab_container .tab_content .kakaopay_con .use {width: 90%; margin: 30px 20px; display: block; height: 50px;}
+#xTsign .tab_container .tab_content .kakaopay_con .use_text {padding-top: 12px; font-size: 11px; color: #444; position: absolute; left: 0;}
+#xTsign .tab_container .tab_content .kakaopay_con .use a {position: absolute; right: 15px; border: 1px solid #4a5db0; background: #4a5db0; font-size: 14px; color: #fff; font-weight: bold; padding: 7px; border-radius: 26px; text-align: center; width: 25%;}
+
+/* Kakao Talk Conent CSS*/
+#xTsign .tab_container .tab_content .kakaotalk_con {width:99%; height:auto; background-color: #ebeffc; border-radius: 7px; position: relative; border: 1px solid #bccbfc; margin-left: 1px; display: inline-block;}
+#xTsign .tab_container .tab_content .kakaotalk_con p {padding: 10px 0px 10px 20px; font-size: 16px; color: #222;}
+#xTsign .tab_container .tab_content .kakaotalk_con dl {padding: 0 19px; line-height: 20px; color:#444;}
+#xTsign .tab_container .tab_content .kakaotalk_con dt {font-size: 13px; color:#4a5db0; font-weight: bold; width: 78px; display: inline-block; margin-top:10px;}
+#xTsign .tab_container .tab_content .kakaotalk_con>div.consent {font-size: 10.5px; color:#222; padding: 14px 0px; text-align: left; padding-left: 2%;}
+#xTsign .tab_container .tab_content .kakaotalk_con>div.consent>div {float: left;}
+#xTsign .tab_container .tab_content .kakaotalk_con>div.consent span {color: #4a5db0; text-decoration: underline; display:inline-block; padding-left: 6px;}
+#xTsign .tab_container .tab_content .kakaotalk_con dd {padding-bottom: 5px;}
+#xTsign .tab_container .tab_content .kakaotalk_con dd input {border:1px solid #d8e0fb; width: 93%; height: 28px; border-radius: 23px; font-size: 12px; padding-left: 15px;}
+#xTsign .tab_container .tab_content .kakaotalk_con dd input.s_box {width: 114px;}
+#xTsign .tab_container .tab_content .kakaotalk_con dd input[type=radio] {width: 15px; height: 15px; vertical-align: middle; display: inline-block; margin-top: -1px; background: #4A5DAF;}
+#xTsign .tab_container .tab_content .kakaotalk_con dd input[type=password] {font-size: 1rem; width: 20px;}
+#xTsign .tab_container .tab_content .kakaotalk_con dd.loading {text-align: center; padding-top: 50px;}
+#xTsign .tab_container .tab_content .kakaotalk_con .viewInp {display: inline-block; vertical-align: middle; margin-top: 0px; margin-right: 3px;appearance: auto;-moz-appearance: auto;-webkit-appearance: auto;}
+#xTsign .tab_container .tab_content .kakaotalk_con .viewBtm {color: #4a5db0; font-size: 0.75rem; display: inline-block; vertical-align: 0; padding:5px 8px; text-decoration: underline; font-weight: 400;}
+
+#xTsign .tab_container .tab_content .kakaotalk_con .use {width: 90%; margin: 30px 20px; display: block; height: 50px;}
+#xTsign .tab_container .tab_content .kakaotalk_con .use_text {padding-top: 12px; font-size: 11px; color: #444; position: absolute; left: 0;}
+/* #xTsign .tab_container .tab_content .kakaotalk_con .use a {position: absolute; right: 15px; border: 1px solid #4a5db0; background: #4a5db0; font-size: 14px; color: #fff; font-weight: bold; padding: 7px; border-radius: 26px; text-align: center; width: 25%;} */
+
+#xTsign .tab_container .tab_content .kakaotalk_con .use .onlineText {vertical-align: bottom; color:#0050ff; text-decoration: underline;}
+#xTsign .tab_container .tab_content .kakaotalk_con a {text-decoration: none; display: inline-block; vertical-align: middle; letter-spacing: 0.05remrem; font-weight: 400; cursor: pointer; font-size: 11px;}
+
+/* #xTsign .tab_container .tab_content .kakaotalk_con .use {width: 90%; margin: 0 20px; display: block; height: 110px;} */
+#xTsign .tab_container .tab_content .kakaotalk_con .use .onlineText {vertical-align: bottom; color:#0050ff; text-decoration: underline;}
+/* #xTsign .tab_container .tab_content .kakaotalk_con .use_text {font-size: 13px; padding-bottom:15px;} */
+#xTsign .tab_container .tab_content .kakaotalk_con a {text-decoration: none; display: inline-block; vertical-align: middle; letter-spacing: 0.05remrem; font-weight: 400; cursor: pointer; font-size: 11px;}
+#xTsign .tab_container .tab_content .kakaotalk_con .use .Retext {position: absolute; right: 15px; border: 1px solid #4a5db0; background: #4a5db0; font-size: 14px; color: #fff; padding: 7px; border-radius: 26px; width: 25%; text-align: center;}
+#xTsign .tab_container .tab_content .kakaotalk_con .use .agBtn {position: absolute; left: 15px; background: #b7b7b7; border: 1px solid #b7b7b7; font-size: 14px; text-align: center;
+    border-radius: 26px; padding: 7px; color:#fff; width: 25%;}
+
+/* PASS Conent CSS*/
+#xTsign .tab_container .tab_content .passsign_con {width:99%; height:auto; background-color: #ebeffc; border-radius: 7px; position: relative; border: 1px solid #bccbfc; margin-left: 1px; display: inline-block;}
+#xTsign .tab_container .tab_content .passsign_con p {padding: 10px 0px 10px 20px; font-size: 16px; color: #222;}
+#xTsign .tab_container .tab_content .passsign_con dl {padding: 0 19px; line-height: 20px; color:#444;}
+#xTsign .tab_container .tab_content .passsign_con dt {font-size: 13px; color:#4a5db0; font-weight: bold; width: 78px; display: inline-block; margin-top:10px;}
+#xTsign .tab_container .tab_content .passsign_con>div.consent {font-size: 10.5px; color:#222; padding: 14px 0px; text-align: left; padding-left: 2%;}
+#xTsign .tab_container .tab_content .passsign_con>div.consent>div {float: left;}
+#xTsign .tab_container .tab_content .passsign_con>div.consent span {color: #4a5db0; text-decoration: underline; display:inline-block; padding-left: 6px;}
+#xTsign .tab_container .tab_content .passsign_con dd {padding-bottom: 5px;}
+#xTsign .tab_container .tab_content .passsign_con dd input {border:1px solid #d8e0fb; width: 93%; height: 28px; border-radius: 23px; font-size: 12px; padding-left: 15px;}
+#xTsign .tab_container .tab_content .passsign_con dd input.s_box {width: 114px;}
+#xTsign .tab_container .tab_content .passsign_con dd input[type=radio] {width: 15px; height: 15px; vertical-align: middle; display: inline-block; margin-top: -1px; background: #4A5DAF;}
+#xTsign .tab_container .tab_content .passsign_con dd input[type=password] {font-size: 1rem; width: 20px;}
+#xTsign .tab_container .tab_content .passsign_con dd.loading {text-align: center; padding-top: 50px;}
+#xTsign .tab_container .tab_content .passsign_con .viewInp {display: inline-block; vertical-align: middle; margin-top: 0px; margin-right: 3px;appearance: auto;-moz-appearance: auto;-webkit-appearance: auto;}
+#xTsign .tab_container .tab_content .passsign_con .viewBtm {color: #4a5db0; font-size: 0.75rem; display: inline-block; vertical-align: 0; padding:5px 8px; text-decoration: underline; font-weight: 400;}
+#xTsign .tab_container .tab_content .passsign_con .use {width: 90%; margin: 30px 20px; display: block; height: 50px;}
+#xTsign .tab_container .tab_content .passsign_con .use_text {padding-top: 12px; font-size: 11px; color: #444; position: absolute; left: 0;}
+#xTsign .tab_container .tab_content .passsign_con .use a {position: absolute; right: 15px; border: 1px solid #4a5db0; background: #4a5db0; font-size: 14px; color: #fff; font-weight: bold; padding: 7px; border-radius: 26px; text-align: center; width: 25%;}
+
+/* PAYCO Conent CSS*/
+#xTsign .tab_container .tab_content .paycosign_con {width:99%; height:auto; background-color: #ebeffc; border-radius: 7px; position: relative; border: 1px solid #bccbfc; margin-left: 1px; display: inline-block;}
+#xTsign .tab_container .tab_content .paycosign_con p {padding: 10px 0px 10px 20px; font-size: 16px; color: #222;}
+#xTsign .tab_container .tab_content .paycosign_con dl {padding: 0 19px; line-height: 20px; color:#444;}
+#xTsign .tab_container .tab_content .paycosign_con dt {font-size: 13px; color:#4a5db0; font-weight: bold; width: 78px; display: inline-block; margin-top:10px;}
+#xTsign .tab_container .tab_content .paycosign_con>div.consent {font-size: 10.5px; color:#222; padding: 14px 0px; text-align: left; padding-left: 2%;}
+#xTsign .tab_container .tab_content .paycosign_con>div.consent>div {float: left;}
+#xTsign .tab_container .tab_content .paycosign_con>div.consent span {color: #4a5db0; text-decoration: underline; display:inline-block; padding-left: 6px;}
+#xTsign .tab_container .tab_content .paycosign_con dd {padding-bottom: 5px;}
+#xTsign .tab_container .tab_content .paycosign_con dd input {border:1px solid #d8e0fb; width: 93%; height: 28px; border-radius: 23px; font-size: 12px; padding-left: 15px;}
+#xTsign .tab_container .tab_content .paycosign_con dd input.s_box {width: 114px;}
+#xTsign .tab_container .tab_content .paycosign_con dd input[type=radio] {width: 15px; height: 15px; vertical-align: middle; display: inline-block; margin-top: -1px; background: #4A5DAF;}
+#xTsign .tab_container .tab_content .paycosign_con dd input[type=password] {font-size: 1rem; width: 20px;}
+#xTsign .tab_container .tab_content .paycosign_con dd.loading {text-align: center; padding-top: 50px;}
+#xTsign .tab_container .tab_content .paycosign_con .viewInp {display: inline-block; vertical-align: middle; margin-top: 0px; margin-right: 3px;appearance: auto;-moz-appearance: auto;-webkit-appearance: auto;}
+#xTsign .tab_container .tab_content .paycosign_con .viewBtm {color: #4a5db0; font-size: 0.75rem; display: inline-block; vertical-align: 0; padding:5px 8px; text-decoration: underline; font-weight: 400;}
+#xTsign .tab_container .tab_content .paycosign_con .use {width: 90%; margin: 30px 20px; display: block; height: 50px;}
+#xTsign .tab_container .tab_content .paycosign_con .use_text {padding-top: 12px; font-size: 11px; color: #444; position: absolute; left: 0;}
+#xTsign .tab_container .tab_content .paycosign_con .use a {position: absolute; right: 15px; border: 1px solid #4a5db0; background: #4a5db0; font-size: 14px; color: #fff; font-weight: bold; padding: 7px; border-radius: 26px; text-align: center; width: 25%;}
+
+/* SHINHAN Conent CSS*/
+#xTsign .tab_container .tab_content .shinhansign_con {width:99%; height:auto; background-color: #ebeffc; border-radius: 7px; position: relative; border: 1px solid #bccbfc; margin-left: 1px; display: inline-block;}
+#xTsign .tab_container .tab_content .shinhansign_con p {padding: 10px 0px 10px 20px; font-size: 16px; color: #222;}
+#xTsign .tab_container .tab_content .shinhansign_con dl {padding: 0 19px; line-height: 20px; color:#444;}
+#xTsign .tab_container .tab_content .shinhansign_con dt {font-size: 13px; color:#4a5db0; font-weight: bold; width: 78px; display: inline-block; margin-top:10px;}
+#xTsign .tab_container .tab_content .shinhansign_con>div.consent {font-size: 10.5px; color:#222; padding: 14px 0px; text-align: left; padding-left: 2%;}
+#xTsign .tab_container .tab_content .shinhansign_con>div.consent>div {float: left;}
+#xTsign .tab_container .tab_content .shinhansign_con>div.consent span {color: #4a5db0; text-decoration: underline; display:inline-block; padding-left: 6px;}
+#xTsign .tab_container .tab_content .shinhansign_con dd {padding-bottom: 5px;}
+#xTsign .tab_container .tab_content .shinhansign_con dd input {border:1px solid #d8e0fb; width: 93%; height: 28px; border-radius: 23px; font-size: 12px; padding-left: 15px;}
+#xTsign .tab_container .tab_content .shinhansign_con dd input.s_box {width: 114px;}
+#xTsign .tab_container .tab_content .shinhansign_con dd input[type=radio] {width: 15px; height: 15px; vertical-align: middle; display: inline-block; margin-top: -1px; background: #4A5DAF;}
+#xTsign .tab_container .tab_content .shinhansign_con dd input[type=password] {font-size: 1rem; width: 20px;}
+#xTsign .tab_container .tab_content .shinhansign_con dd.loading {text-align: center; padding-top: 50px;}
+#xTsign .tab_container .tab_content .shinhansign_con .viewInp {display: inline-block; vertical-align: middle; margin-top: 0px; margin-right: 3px;appearance: auto;-moz-appearance: auto;-webkit-appearance: auto;}
+#xTsign .tab_container .tab_content .shinhansign_con .viewBtm {color: #4a5db0; font-size: 0.75rem; display: inline-block; vertical-align: 0; padding:5px 8px; text-decoration: underline; font-weight: 400;}
+#xTsign .tab_container .tab_content .shinhansign_con .use {width: 90%; margin: 30px 20px; display: block; height: 50px;}
+#xTsign .tab_container .tab_content .shinhansign_con .use_text {padding-top: 12px; font-size: 11px; color: #444; position: absolute; left: 0;}
+#xTsign .tab_container .tab_content .shinhansign_con .use a {position: absolute; right: 15px; border: 1px solid #4a5db0; background: #4a5db0; font-size: 14px; color: #fff; font-weight: bold; padding: 7px; border-radius: 26px; text-align: center; width: 25%;}
+
+/* 공통버튼 CSS*/
+#xTsign .tab_container .footerBtn {position: fixed; bottom: 0; width: 100%; background-color: #4a5db0; text-align: center; padding: 1.25rem 0;}
+#xTsign .tab_container .footerBtn a {color: #fff; font-weight: bold;}
+
+#xTsign {
+    position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #fff;
+    z-index: 99999;
+	display: block;
+}
+
+.mobile-layout {
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+    background-color: #fff;
+}
+
+.xwup_cert_overlay {
+    display: none!important;
+    z-index: 999!important;
+}
+
+.xTsign-overlay {
+    content: "";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+}
+
+#xTsign .tab_container .tab_content ul li .icon-star {
+    float : right;
+    padding: 0px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-right: 15px;
+}
+
+#xTsign .use_text {color: #444;}
+
+#xTsign_sign,
+#xTsign_sign_cancel,
+#xTsign_sign_retry,
+#xTsign_sign_ok {
+    cursor: pointer;
+}
+/* anysign 재정의 */
+.xwup_cert_pop_anysign {
+    /* width: 450px!important;
+    top: 50px!important;
+    left: 0px!important; */
+    border-color: #fff!important;
+}
+
+/* Center the loader */
+#tab1_loader {
+    z-index: 1;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+	background: url(../img/loading_A.gif)no-repeat;
+	margin-top: 150px;
+}
+
+/*******************************************************************************
+	@media ~812px
+*******************************************************************************/
+@media all and (max-width:812px){
+    #xTsign .tab_container .tab_content .naversign_con>div.consent {}
+	#xTsign .tab_container .tab_content .tosssign_con>div.consent {}
+}
+
+/*******************************************************************************
+	@media 640~768px
+*******************************************************************************/
+@media all and (max-width:768px){
+    /* 네아로 */
+		#xTsign .tab_container .tab_content .naversign_con {margin-bottom: 5vh; height: 120vh;}
+}
+
+/*******************************************************************************
+	@media ~568px
+*******************************************************************************/
+
+@media all and (max-width:568px){
+    /* 네아로 */
+		#xTsign .tab_container .tab_content .naversign_con {margin-bottom: 5vh; height: auto;}
+}
+
+/*******************************************************************************
+	@media ~420px
+*******************************************************************************/
+@media all and (max-width:420px){
+    #xTsign .tab_container .tab_content .naversign_con>div.consent { padding-left: 2%;}
+	#xTsign .tab_container .tab_content .tosssign_con>div.consent { padding-left: 2%;}
+	#xTsign .tab_container .tab_content .kakaopay_con>div.consent { padding-left: 2%;}
+	#xTsign .tab_container .tab_content .kakaotalk_con>div.consent { padding-left: 2%;}
+	#xTsign .tab_container .tab_content .passsign_con>div.consent { padding-left: 2%;}
+	#xTsign .tab_container .tab_content .paycosign_con>div.consent { padding-left: 2%;}
+    #xTsign .tab_container .tab_content .shinhansign_con>div.consent { padding-left: 2%;}
+}
+
+/*******************************************************************************
+	@media ~320px
+*******************************************************************************/
+@media all and (max-width:320px){
+    #xTsign .tab_container .tab_content .naversign_con>div.consent {padding-left: 2%;}
+	#xTsign .tab_container .tab_content .tosssign_con>div.consent {padding-left: 2%;}
+	#xTsign .tab_container .tab_content .kakaopay_con>div.consent {padding-left: 2%;}
+	#xTsign .tab_container .tab_content .kakaotalk_con>div.consent {padding-left: 2%;}
+	#xTsign .tab_container .tab_content .passsign_con>div.consent {padding-left: 2%;}
+	#xTsign .tab_container .tab_content .paycosign_con>div.consent {padding-left: 2%;}
+    #xTsign .tab_container .tab_content .shinhansign_con>div.consent { padding-left: 2%;}
+    #xTsign .tab_container .tab_content .naversign_con dd input.s_box {display: block;}
+	#xTsign .tab_container .tab_content .naversign_con dd input[type=password] {display: inline-block;}
+	#xTsign .tab_container .tab_content .tosssign_con dd input.s_box {display: block;}
+	#xTsign .tab_container .tab_content .tosssign_con dd input[type=password] {display: inline-block;}
+}

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sys.menu">
+
+	<!-- 메뉴관리 목록 -->
+	<select id="selectMenuList" resultType="resultMap">
+		select *
+		from (
+		with recursive menu_list as
+		(
+		select
+			menu_cd,
+			menu_nm,
+			menu_expln,
+			menu_ordr,
+			up_menu_cd,
+			(select menu_nm from dqvs.dvs_cmm_mt_menu where menu_cd = dcmm.up_menu_cd) as up_menu_nm,
+			menu_url,
+			menu_level,
+			menu_key,
+			use_yn,
+			prvc_idntf_yn,
+			(case
+				when up_menu_cd = '' then 'folder'
+				else 'html'
+			end) as sprite
+		from
+			dqvs.dvs_cmm_mt_menu dcmm
+		where 1=1
+			<if test="menuDiv != null and menuDiv != ''">
+				and menu_cd like '%' || #{menuDiv} || '%'
+			</if>
+			and up_menu_cd = ''
+			and menu_level = '1'
+		union all
+		select
+			a.menu_cd,
+			a.menu_nm,
+			a.menu_expln,
+			a.menu_ordr,
+			a.up_menu_cd,
+			(select menu_nm from dqvs.dvs_cmm_mt_menu where menu_cd = a.up_menu_cd) as up_menu_nm,
+			a.menu_url,
+			a.menu_level,
+			a.menu_key,
+			a.use_yn,
+			a.prvc_idntf_yn,
+			(case
+				when A.up_menu_cd = '' then 'folder'
+				else 'html'
+			end) as sprite
+		from
+			dqvs.dvs_cmm_mt_menu A
+		join menu_list C on
+			C.menu_cd = A.up_menu_cd
+		)
+		select
+			*
+		from
+			menu_list
+		order by
+			up_menu_cd,
+			menu_level,
+			menu_ordr )as E
+	</select>
+
+	<!-- 등록 -->
+	<insert id="insertMenu" parameterType="paraMap">
+   		<selectKey resultType="map" keyColumn="menu_cd,menu_level" keyProperty="menuCd,menuLevel" order="BEFORE">
+				<choose>
+					<when test="upMenuCd != null and upMenuCd != '' and menuOrdr != 1">
+						select
+							max(substring(menu_cd, 0, 8))|| rpad((max(substring(menu_cd, 8, 1))::numeric+ 1)::text, 2, '0') as menu_cd,
+							max(menu_level) as menu_level
+						from
+							dqvs.dvs_cmm_mt_menu
+						where
+							menu_cd like '%' || #{menuDiv} || '%'
+							and up_menu_cd = #{upMenuCd}
+					</when>
+					<when test="upMenuCd != null and upMenuCd != '' and menuOrdr == 1">
+						select
+							max(substring(menu_cd, 0, 8))|| rpad((max(substring(menu_cd, 8, 1))::numeric+ 1)::text, 2, '0') as menu_cd,
+							2 as menu_level
+						from
+							dqvs.dvs_cmm_mt_menu
+						where
+							menu_cd like '%' || #{menuDiv} || '%'
+							and menu_cd = #{upMenuCd}
+					</when>
+					<otherwise>
+						select
+							max(substring(menu_cd, 0, 6))|| rpad(lpad((max(substring(menu_cd, 6, 2))::numeric+ 1)::text, 2, '0'), 4, '0') as menu_cd,
+							max(menu_level) as menu_level
+						from
+							dqvs.dvs_cmm_mt_menu
+						where
+							menu_cd like '%' || #{menuDiv} || '%'
+							and menu_level = '1'
+					</otherwise>
+				</choose>
+     	</selectKey>
+		INSERT INTO dqvs.dvs_cmm_mt_menu
+		(menu_cd, menu_nm, menu_ordr, up_menu_cd, menu_url, menu_level, use_yn, prvc_idntf_yn)
+		VALUES(#{menuCd}, #{menuNm}, #{menuOrdr}::numeric, #{upMenuCd}, #{menuUrl}, #{menuLevel}, #{useYn}, #{prvcIdntfYn})
+	</insert>
+
+	<!-- 수정 -->
+	<update id="updateMenu" parameterType="paraMap">
+		<if test="menuCd != null and menuCd != ''">
+			UPDATE dqvs.dvs_cmm_mt_menu
+			SET menu_nm=#{menuNm}, menu_url=#{menuUrl}, use_yn=#{useYn}, prvc_idntf_yn=#{prvcIdntfYn}
+			WHERE menu_cd=#{menuCd}
+		</if>
+	</update>
+
+	<!-- 정렬순서 변경 -->
+	<update id="updateMenuOrdr" parameterType="paraMap">
+     <selectKey resultType="int" keyProperty="maxMenuOrdr" order="BEFORE">
+     	<choose>
+			<when test="upMenuCd != null and upMenuCd != ''">
+				SELECT MAX(menu_ordr+1) AS menuOrdr
+		    	FROM dqvs.dvs_cmm_mt_menu
+				WHERE menu_cd like '%PMNU%'
+				AND SUBSTR(menu_cd,0,7) = SUBSTR(#{upMenuCd},0,7)
+				AND menu_level = 2
+			</when>
+			<otherwise>
+				SELECT MAX(menu_ordr+1) AS menuOrdr
+		    	FROM dqvs.dvs_cmm_mt_menu
+				WHERE menu_cd like '%PMNU%'
+				AND menu_level = 1
+			</otherwise>
+		</choose>
+     </selectKey>
+		UPDATE
+			dqvs.dvs_cmm_mt_menu
+		SET
+		<if test ='ordrKey == "위로"'>
+			menu_ordr = menu_ordr + 1
+		</if>
+		<if test ='ordrKey == "아래로"'>
+			menu_ordr = menu_ordr - 1
+		</if>
+		WHERE 1=1
+		<if test="upMenuCd != null and upMenuCd != ''">
+			and up_menu_cd = #{upMenuCd}
+		</if>
+		<if test="menuDiv != null and menuDiv != ''">
+			and menu_cd like '%' || #{menuDiv} || '%'
+		</if>
+		<if test="menuOrdr != null and menuOrdr != ''">
+			and menu_ordr = #{menuOrdr}
+			and #{maxMenuOrdr} <![CDATA[>]]> #{menuOrdr}
+		</if>
+	</update>
+
+	<update id="updateSub" parameterType="paraMap">
+		<if test="menuCd != null and menuCd != '' and menuOrdr != null and menuOrdr != ''">
+			UPDATE
+				dqvs.dvs_cmm_mt_menu
+			SET
+				menu_ordr = #{menuOrdr}
+			WHERE
+				menu_cd = #{menuCd}
+		</if>
+	</update>
+
+	<!-- 메뉴 삭제 -->
+	<update id="updateDeleteMenu" parameterType="paraMap">
+		<if test="menuCd != null and menuCd != ''">
+			UPDATE
+				dqvs.dvs_cmm_mt_menu
+			SET
+				use_yn = 'N'
+			WHERE
+				menu_cd = #{menuCd}
+		</if>
+	</update>
+
+	<!-- 하위메뉴 삭제 -->
+	<update id="updateDeleteMenuSub" parameterType="paraMap">
+		<if test="menuCd != null or menuCd != ''">
+			UPDATE
+				dqvs.dvs_cmm_mt_menu
+			SET
+				use_yn = 'N'
+			WHERE
+				up_menu_cd = #{menuCd}
+		</if>
+	</update>
+
+	<!-- 메뉴 순서 -->
+	<select id="selectMenuOrdr" resultType="int">
+		select count(*)+1 from dqvs.dvs_cmm_mt_menu
+		where menu_cd like '%' || #{menuDiv} || '%'
+		and up_menu_cd = #{upMenuCd}
+	</select>
+
+</mapper>

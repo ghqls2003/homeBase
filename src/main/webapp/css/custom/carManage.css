@@ -1,0 +1,36 @@
+@charset 'utf-8';
+
+.sub03 .searchWrd {width: 270px;}
+
+@media (max-width:1500px) {
+	.sub03 .selec_wr .mo_flex {flex-direction: inherit !important; align-items: normal;}
+}
+
+@media (max-width:970px) {
+	.sub03 .searchWrd {width: 140px;}
+	.bookmark-btn img {width: 20px !important;}
+}
+
+@media (max-width:800px) {
+	.sub03 .searchWrd {width: 100px;}
+	.bookmark-btn img {width: 20px !important;}
+}
+
+@media (max-width:720px) {
+	.sub03 .searchWrd {width: 100%;}
+	.bookmark-btn img {width: 20px !important;}
+}
+
+@media (max-width:640px) {
+	.sub03 .mSelect_box {width: 100%; padding-bottom: 8px;}
+	.sub03 .mSearchChk01 {margin-right: 50px;}
+	.sub03 .selec_wr ul.selec_box li.li_slec { width: 100%;  text-align: center;}
+	.bookmark-btn img {width: 20px !important;}
+}
+
+#liSlec_searchCol .k-input-value-text {
+	text-align: center !important;
+} 
+.bookmark-btn img {width: 30px;}
+
+#bookmarkOrder {margin-left:11px;}

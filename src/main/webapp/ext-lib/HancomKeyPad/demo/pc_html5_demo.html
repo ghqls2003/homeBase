@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta charset="utf-8" />
+	
+	<title>XecureKeypad No Install New Design Demo.</title>
+
+  	<script src="../js/xkeypad_config.js"></script>
+	<script src="../js/xkeypad_html5.js"></script>
+
+	<script type="text/JavaScript">
+ 	
+	/* 전역 변수 */
+	var gTestMode = 1;
+	var gXKeypadArray = new Array(2);
+	
+	gXKeypadArray[0] = new XKeypadHTML5 ();
+	gXKeypadArray[1] = new XKeypadHTML5 ();
+
+	/* login 함수 */
+ 	function login()
+  	{
+  		var form = document.XKForm;
+		var aXKInputValue1 = gXKeypadArray[0].get_input ();
+		var aXKInputValue2 = gXKeypadArray[1].get_input ();
+  		
+  		if (form.userid.value == "" || form.userid.value == null) {
+  			alert("아이디를 입력해주세요");
+  			return;
+  		}
+  		else if (form.userpasswd.value == "" || form.userpasswd.value == null) {
+  			alert("패스워드가 입력되지 않았습니다.");
+  			return;
+  		}
+  		else if (form.userpasswd2.value == "" || form.userpasswd2.value == null) {
+  			alert("패스워드가 입력되지 않았습니다.");
+  			return;
+  		}
+
+		alert ('password1 : ' + aXKInputValue1 + '\npassword2 : ' + aXKInputValue2);
+  	}
+
+	/* for test */
+	function changeOption(aOption) 
+	{	
+		if(aOption != 'type')
+			gTestMode = aOption;
+	}
+
+	/* for test 옵션별 분기 : 실제 사이트 적용시에는 실제 show 함수 호출 */
+ 	function showXecureKeypadTest(inputBox, index, maxInput) {
+		var name = "xk_dialog_" + index;
+		var spanId = name + "_button_span";
+		var aXKeypadSpan = document.getElementById(spanId);
+		
+		// 디폴트 "마우스 입력" 버튼 클릭하여 키패드 출력
+		if(gTestMode == 1) 
+		{
+			showXecureKeypadNormal(inputBox, index, maxInput);
+		}
+		// <input> 태그 클릭하여 키패드 출력
+		else if(gTestMode == 2)
+		{
+			if(aXKeypadSpan != null) // for test : option 1, 2 init 
+				aXKeypadSpan.parentNode.removeChild(aXKeypadSpan);
+			
+			showXecureKeypadNoButton (inputBox, index, maxInput);
+		}
+		// 커스텀 "마우스 입력" 버튼 클릭하여 키패드 출력
+		else if(gTestMode == 3)
+		{
+			showXecureKeypadCustomButton(inputBox, index, maxInput);	
+		}
+		
+	 }
+	
+	function callback(result)
+	{
+		// result
+		// 닫기 : XK_CLOSE
+		// 입력완료 : XK_ENTER
+		
+		console.log(result);
+	}
+	
+	/**
+	 * @case 1
+	 * - 디폴트 "마우스 입력" 버튼 생성
+	 * - 생성된 버튼 클릭하여 키패드 출력함
+	 */
+	function showXecureKeypadNormal (aInputBox, aIndex, aMaxInput)
+	{
+		var aXKDlgName = "xk_dialog_" + aIndex;
+		var aXKSpanID = aXKDlgName + "_button_span";
+		var aXKSpanLayer = document.getElementById(aXKSpanID);
+		var aKeyType = document.XKForm.XKTypeSelect.value;
+		var aPositionInfo = {
+			option : 1, // 절대 위치
+			left : 50, 
+			top : 250 	// null인 경우, 기본 출력 위치 
+		};
+		
+		if(aXKSpanLayer == null)
+		{
+			aXKSpanLayer = document.createElement("SPAN");
+			aXKSpanLayer.id = aXKSpanID ;
+			aInputBox.parentNode.appendChild(aXKSpanLayer);			
+		}	  
+				
+		gXKeypadArray[aIndex].initVirtualKeypadWithPosition(
+			aXKDlgName, 
+			aXKSpanLayer, 
+			aInputBox, 
+			130,  // 버튼 출력시 inputBox width
+			aKeyType,  // 키패드 자판 타입
+			aPositionInfo, 
+			aMaxInput
+		);
+		gXKeypadArray[aIndex].setCloseCallback(callback);
+	}
+	
+	/**
+	 * @case 2
+	 * - "마우스 입력" 버튼 생성하지 않고 키패드 출력함
+	 */
+	function showXecureKeypadNoButton (aInputBox, aIndex, aMaxInput)
+	{
+		var aPositionInfo = {
+			option : 2, //기본 출력 위치(input box 아래)기준으로 상대 위치
+			left : 50, 
+			top : 5
+		};
+		
+		var aResult = 0;
+		var aXKDlgName = "xk_dialog_" + aIndex;
+		var aKeyType = document.XKForm.XKTypeSelect.value
+		
+		gXKeypadArray[aIndex].initVirtualKeypadWithPosition(
+			aXKDlgName, 
+			null, 
+			aInputBox, 
+			0, 
+			aKeyType, 
+			aPositionInfo, 
+			aMaxInput
+		);
+
+		aResult = gXKeypadArray[aIndex].createKeypad();
+		
+		if(aResult == -1) alert("Not Initialized!");
+		else if(aResult == -2) alert("키패드가 실행중입니다.");
+	}
+	
+	/**
+	 * @case 3
+	 * - 커스텀 "마우스 입력" 버튼 생성
+	 * - 생성된 버튼 클릭하여 키패드 출력함
+	 */
+	function showXecureKeypadCustomButton (aInputBox, aIndex, aMaxInput)
+	{
+		var aResult = 0;
+		var aXKDlgName = "xk_dialog_" + aIndex;
+		var aXKSpanID = aXKDlgName + "_button_span";
+		var aXKSpanLayer = document.getElementById(aXKSpanID);
+		var aKeyType = document.XKForm.XKTypeSelect.value;
+		
+		if(aXKSpanLayer == null)
+		{
+			aXKSpanLayer = document.createElement("SPAN");
+			aXKSpanLayer.id = aXKSpanID ;
+			aInputBox.parentNode.appendChild(aXKSpanLayer);			
+		}	  
+		
+		var aXKButtonImg = document.getElementById(aXKDlgName+"_img");				
+		if(aXKButtonImg == null)
+		{
+			var aXKButtonImgLayer = document.createElement("IMG");
+		
+			aXKButtonImgLayer.src = "../img/button.png";	
+			aXKButtonImgLayer.setAttribute('id', aXKDlgName+"_img");
+			aXKButtonImgLayer.style.verticalAlign = 'middle';
+			
+			aXKSpanLayer.appendChild(aXKButtonImgLayer);
+		}
+			
+		gXKeypadArray[aIndex].initVirtualKeypadWithPosition(
+			aXKDlgName, 
+			null, 
+			aInputBox, 
+			0, 
+			aKeyType, 
+			aMaxInput
+			);
+
+		var showKeypad = function(e) {
+			aResult = gXKeypadArray[aIndex].createKeypad();
+			
+			if(aResult == -1) alert("Not Initialized!");
+			else if(aResult == -2) alert("키패드가 실행중입니다.");
+		};
+		
+		if(aXKButtonImgLayer.addEventListener) {
+			aXKButtonImgLayer.addEventListener("click", showKeypad, false);
+		}
+		else {
+			aXKButtonImgLayer.attachEvent("onclick", showKeypad);
+		}
+	}
+
+	</script>
+</head>
+
+<body>
+<fieldset >
+	<legend>HTML5 Version Sample</legend>
+  	<p></p>
+  	
+  	<div class="xwup_common">
+  	<form name="XKForm" method="post">
+	  	<label for="type">Select KeyPad Type</label>
+		<select name="XKTypeSelect">
+		  	<option value="qwerty" checked>Qwerty</option>
+		</select>
+ 		<p></p>
+  		
+  		<label for="type">Select Test Mode</label> <br>
+		<input type="radio" value="test1" name="XKOption" onclick="changeOption(1);" checked />마우스입력 버튼 출력<br>
+		<input type="radio" value="test3" name="XKOption" onclick="changeOption(2);"  />마우스입력버튼 사용안함<br>
+		<input type="radio" value="test2" name="XKOption" onclick="changeOption(3);"  />마우스입력 버튼 custom 출력<br>
+		<p></p>
+
+		<div>
+		<table>
+  			<tr>
+  				<td>
+			  		<label for="id">Login ID</label> 
+			  		<input type="text" name="userid" id="userid" title="id" value="softforumxk" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="xwup-passwd-field">
+			  		<label for="pass">Password</label>
+			  		<input type="password" title="password" style="width:130px;" readonly name="userpasswd" id="userpasswd" size="20" onClick="javascript:showXecureKeypadTest(this, 0, 0);"/>  
+			  		</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+			  		<label for="pass">Password2</label>
+			  		<input type="password" title="password" style="width:130px;" readonly name="userpasswd2" id="userpasswd2" size="20" onClick="javascript:showXecureKeypadTest(this, 1, 0);"/>  
+				</td>
+			</tr>
+			<tr>
+				<td>
+	  				<input type="button" value="Login" onClick="javascript:login();" />
+	  			</td>
+	 		</tr>
+  		</table>
+  		</div>
+   		<input type="hidden" name="xkinfosessionid" id="xkinfosessionid" />
+  		<input type="hidden" name="xkinfosectoken" id="xkinfosectoken" />
+  		<input type="hidden" name="xkinfoindexed" id="xkinfoindexed" />
+  		
+  		<input type="hidden" name="xkinfosessionid2" id="xkinfosessionid2" />
+  		<input type="hidden" name="xkinfosectoken2" id="xkinfosectoken2" />
+  		<input type="hidden" name="xkinfoindexed2" id="xkinfoindexed2" />
+  	</form>
+ 	<p></p>
+ 	</div>
+</fieldset>
+</body>
+</html>

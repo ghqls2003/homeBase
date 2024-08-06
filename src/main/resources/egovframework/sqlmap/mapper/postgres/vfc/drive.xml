@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vfc.drive">
+
+	<select id="selectCarList" resultType="resultMap">
+		select
+			T3.*
+		from
+			(
+			select
+				row_number() over() as rn,
+				T2.*
+			from
+				(
+				select
+					T1.*
+				from
+					(
+					select
+						vhcl_reg_no,
+						drmc.vin,
+						carmdl,
+						mdlyr,
+						vhcl_nm,
+						bzmn_sn,
+						engine_fom,
+						use_yn,
+						sgg_cd,
+						ownr_nm,
+						to_char(reg_dt,
+						'yyyy-mm-dd') as reg_dt,
+						fvrts.reg_yn
+					from
+						dqvs.dvs_rac_mt_car drmc
+					left join (
+						select
+							vin ,
+							mdfr_sn,
+							'Y' as reg_yn
+						from
+							dqvs.dvs_rac_mt_fvrts
+						where
+							mdfr_sn = #{userSn}::numeric ) as fvrts 
+						on drmc.vin = fvrts.vin
+					where
+						use_yn = 'Y'
+						<if test="carNum != '' and carNum != null">
+							and vhcl_reg_no like '%' || #{carNum} || '%'
+						</if>
+						<if test="crno != '' and crno != null">
+							and crno = #{crno}
+						</if>
+						 ) T1 
+					) T2
+					order by
+						case
+							when reg_yn = 'Y' then 0
+						else 1
+					end, vhcl_reg_no 
+		 		) T3
+			where
+				1 = 1
+				<if test="take != '' and take != null">
+					AND T3.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+				</if>
+				<if test="skip != '' and skip != null">
+					AND T3.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+				</if>
+			order by T3.rn asc
+	</select>
+
+	<select id="selectCarListCnt" resultType="int">
+		select count(*) from(
+		select
+			vhcl_reg_no,
+			vin,
+			carmdl,
+			mdlyr,
+			vhcl_nm,
+			bzmn_sn,
+			engine_fom,
+			use_yn,
+			sgg_cd,
+			ownr_nm,
+			reg_dt
+		from
+			dqvs.dvs_rac_mt_car
+		where use_yn='Y'
+			<if test="carNum != '' and carNum != null">
+				and vhcl_reg_no like '%' || #{carNum} || '%'
+			</if>
+			<if test="crno != '' and crno != null">
+				and crno = #{crno}
+			</if>
+		)a
+	</select>
+
+	<select id="selectVerifyCd" resultType="resultMap">
+		select cd, cd_nm from dqvs.dvs_cmm_mt_code where cd_group = 'verify_cd' and use_yn ='Y' and del_yn = 'N'
+		<if test="cd != '' and cd != null">
+			and cd = #{cd}
+		</if>
+	</select>
+
+	<select id="selectRentNo" resultType="resultMap">
+		select (((('R'::text || to_char(now(), 'YY'::text)) || '-'::text) || lpad(nextval(('seq_dvs_dqv_mt_rent_'::text || to_char(now(), 'YY'::text))::regclass)::text, 9, '0'::text))) as rentNo
+	</select>
+
+	<insert id="insertRentInfo">
+		INSERT INTO dqvs.dvs_dqv_mt_rent
+		(rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, dln, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip)
+		VALUES(#{rentno}, #{vin}, #{carNum}, #{carmdl}, #{modelYear}, #{vhclNm}, #{bzmnSn}, #{engineType}, #{useYn}, #{signguCd}, dqvs.pca_encrypt(#{num}, '150'), #{sn}, to_timestamp(#{startDt}, 'yyyymmdd'), to_timestamp(#{endDt}, 'yyyymmdd'), '1', '1', #{rgtrSn}::numeric, now()::timestamp, #{regIp})
+	</insert>
+
+	<insert id="insertRentHstryInfo">
+		<if test="rentno != null and rentno != ''">
+				INSERT INTO dqvs.dvs_dqv_hs_rent
+			<choose>
+				<when test="rgtrSn != null and rgtrSn != ''">
+					(rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, dln, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip)
+					select rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, dln, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip from dqvs.dvs_dqv_mt_rent
+				</when>
+				<otherwise>
+					(rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, dln, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip, rent_prcs_dt, mdfr_sn, mdfcn_dt, mdfcn_ip)
+					select rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, dln, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip, rent_prcs_dt, mdfr_sn, mdfcn_dt, mdfcn_ip from dqvs.dvs_dqv_mt_rent
+				</otherwise>
+			</choose>
+				WHERE rent_no = #{rentno}
+		</if>
+	</insert>
+
+	<update id="updateRentSttsCd">
+        <if test="rentno != null and rentno != ''">
+	        UPDATE dqvs.dvs_dqv_mt_rent
+			SET rent_prcs_dt=now()::timestamp, rent_stts_cd='2', mdfr_sn=#{mdfrSn}::numeric, mdfcn_dt=now()::timestamp, mdfcn_ip=#{mdfcnIp}
+			WHERE rent_no = #{rentno}
+		</if>
+    </update>
+
+    <select id="selectRentCnt" resultType="int">
+        with encDln as(select dqvs.pca_encrypt(#{num}, '150') as enc_d )
+		select
+			count(*)
+		from
+			dqvs.dvs_dqv_mt_rent, encDln
+		where
+			rent_prcs_dt <![CDATA[>]]> now()::timestamp + '-7 days'
+			and rent_stts_cd = '2'
+		<if test="num != '' and num != null">
+			and dln = encDln.enc_d
+		</if>
+	</select>
+
+	<!-- 차대번호  -->
+	<select id="selectVin" resultType="resultMap">
+		select vin from dqvs.dvs_rac_mt_car
+		where use_yn = 'Y'
+		<if test="carNum != '' and carNum != null">
+			and vhcl_reg_no = #{carNum}
+		</if>
+		limit 1
+	</select>
+
+	<!-- 결함정보  -->
+	<select id="selectDefectList" resultType="resultMap">
+		select * from(
+			select
+				row_number() over() as rn,
+				vin,
+				to_char(ocrn_dt, 'YYYY-MM-DD HH24:MI') as ocrn_dt,
+				defects_type_cd,
+				prcs_stts_cd
+			from dqvs.dvs_rac_mt_defect
+				where 1=1
+				<if test="vin != null and vin != ''">
+					and vin like '%' || rpad(#{vin}, 17) || '%'
+				</if>
+		) T
+		WHERE 1 = 1
+			<if test="take != '' and take != null">
+				AND T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+			</if>
+			<if test="skip != '' and skip != null">
+				AND T.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+			</if>
+		ORDER BY T.rn ASC
+	</select>
+
+	<select id="selectDefectListCnt" resultType="int">
+		select count(*) from(
+			select
+				row_number() over() as rn,
+				vin,
+				ocrn_dt,
+				defects_type_cd,
+				prcs_stts_cd
+			from dqvs.dvs_rac_mt_defect
+				where 1=1
+				<if test="vin != null and vin != ''">
+					and vin like '%' || rpad(#{vin}, 17) || '%'
+				</if>
+		) T
+	</select>
+
+    <insert id="insertEtcInfo">
+		<if test="rentno != null and rentno != ''">
+			INSERT INTO dqvs.dvs_dqv_hs_etc
+			(vrfc_hstry_sn, type_cd, rslt_cd, cn)
+			VALUES(#{sn}, #{typeCd}, #{rsltCd}, #{rentCnt})
+		</if>
+	</insert>
+
+    <select id="selectAreaCd" resultType="resultMap">
+		select cd, cd_nm from dqvs.dvs_cmm_mt_code where cd_group = 'area_cd' and use_yn ='Y' and del_yn = 'N' order by cd asc
+	</select>
+
+	<select id="selectCrno" resultType="resultMap">
+		<if test="bzmnSn != null and bzmnSn != ''">
+			select crno from dqvs.dvs_rac_mt_agency
+			where bzmn_sn = #{bzmnSn}
+		</if>
+	</select>
+
+<!--	해당 코드에 대한 공통코드 테이블에서 메시지 가져오기 -->
+	<select id="getRtnMsg" resultType="resultMap">
+		select cd, cd_nm
+		from dqvs.dvs_cmm_mt_code dcmc
+		where
+			cd_group ='vrfc_rslt'
+			and use_yn ='Y' and del_yn = 'N'
+		<if test="fRtnCd != null and fRtnCd != ''">
+			and cd = #{fRtnCd}
+		</if>
+	</select>
+
+	<!-- 운전자격이력 건수 -->
+	<select id="selectVfcHistCnt" parameterType="paraMap" resultType="int">
+	SELECT count(1) AS cnt
+	FROM dqvs.dvs_dqv_hs_verf AS ddhv
+	LEFT OUTER JOIN dqvs.v_intg_user_info AS viui  ON ddhv.rqstr_sn = viui.user_sn
+	LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn
+	where
+	1 = 1
+	<!-- 조회조건 -->
+	<if test="startDtTm != null and startDtTm != '' and endDtTm != null and endDtTm != ''">
+		AND vrfc_dmnd_dt <![CDATA[>=]]> #{startDtTm}::timestamp AND vrfc_dmnd_dt <![CDATA[<=]]> #{endDtTm}::timestamp
+	</if>
+	<if test="dln != null and dln != ''">
+		AND dln = dqvs.pca_encrypt(#{dln},'150')
+	</if>
+	</select>
+</mapper>

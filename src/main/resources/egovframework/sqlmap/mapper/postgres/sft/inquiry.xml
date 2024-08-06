@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sft.inquiry">
+
+    <!-- 문의사항 리스트 -->
+	<select id="inquiryList" resultType="map">
+	select t2.*
+from(
+		select
+			row_number() over(order by T.pst_sn desc) as rn,
+    CASE 
+        WHEN LENGTH(T.ogdp) <![CDATA[<=]]> 2 THEN 
+        CONCAT(
+        	LEFT(T.ogdp, 1), REPEAT('*', LENGTH(T.ogdp) - 1))
+        WHEN LENGTH(T.ogdp) <![CDATA[>=]]> 10 THEN 
+            CONCAT(
+                LEFT(T.ogdp, 3),
+                REPEAT('*', LENGTH(T.ogdp) - 6),
+                RIGHT(T.ogdp, 3)
+            )
+        ELSE 
+            CONCAT(
+                LEFT(T.ogdp, 1),
+                REPEAT('*', LENGTH(T.ogdp) - 2),
+                RIGHT(T.ogdp, 1) 
+            )
+    END AS masked_user_nm,
+    		t.reg_dt,
+    		t.pst_sn,
+			t.pst_ttl,
+			t.use_yn,
+			t.pst_type_cd,
+			t.atch_file_sn,
+			t.inq_cnt,
+			t.cd_nm,
+			t.cd,
+			t.cd_group,
+			t.menu_cd,    dcmcm.menu_cd AS dcmcm_menu_cd,
+    dcmcm.pst_sn AS dcmcm_pst_sn,
+    CASE
+        WHEN COUNT(dcmcm.pst_sn) > 0 THEN '답변완료'
+        ELSE '답변대기'
+    END AS comment_status,
+    COUNT(dcmcm.pst_sn) AS comment_count
+		from
+			(
+			select
+				dcmp.pst_sn,
+				dcmp.pst_ttl,
+				dcmp.use_yn,
+				dcmp.pst_type_cd,
+				to_char(dcmp.reg_dt,
+				'yyyy-mm-dd') as reg_dt,
+				dcmp.atch_file_sn,
+				dcmp.inq_cnt,
+				dcmc.cd_nm,
+				dcmc.cd,
+				dcmc.cd_group,
+				dcmp.menu_cd,
+				dcmp.ogdp
+			from
+				dqvs.dvs_cmm_mt_post as dcmp
+			left join dqvs.dvs_cmm_mt_code as dcmc
+		        on
+				dcmc.cd = dcmp.pst_type_cd
+				and dcmp.menu_cd = 'BBST02'
+				and dcmc.cd_group = 'pst_type_cd'
+			where
+				1 = 1
+				  <if test='searchSttsCd3 == "Q01"'>
+		                and dcmp.pst_type_cd = 'Q01'
+		            </if> 
+		            <if test='searchSttsCd3 == "Q02"'>
+		                and dcmp.pst_type_cd = 'Q02'
+		            </if> 
+		            <if test='searchSttsCd3 == "Q99"'>
+		                and dcmp.pst_type_cd = 'Q99'
+		            </if> 
+		            <if test='searchSttsCd == "Title"'>
+		                and dcmp.pst_ttl like '%' || #{search_wrd} || '%'
+		            </if>
+		             <if test='searchSttsCd == "Auth"'>
+		                and dcmp.ogdp like '%' || #{search_wrd} || '%'
+		            </if>
+<!-- 		             <if test='searchSttsCd == "" and searchSttsCd3 == "" '> -->
+<!-- 		                and dcmp.pst_ttl like '%' || #{search_wrd} || '%' -->
+<!-- 		            </if> -->
+		    ) T
+		left join dqvs.dvs_cmm_mt_cmnt as dcmcm on
+			dcmcm.menu_cd = T.menu_cd
+			and dcmcm.pst_sn = T.pst_sn
+		where
+			1 = 1
+		    <if test ='Auth != "K01" and Auth != "Z01"'>
+		    	and t.use_yn = 'Y'
+			</if>
+	    	and t.menu_cd = 'BBST02'
+		group by
+			T.pst_sn,
+			T.pst_ttl,
+			T.pst_type_cd,
+			T.reg_dt,
+			T.atch_file_sn,
+			T.inq_cnt,
+			T.cd_nm,
+			T.cd,
+			T.cd_group,
+			T.menu_cd,
+			dcmcm.menu_cd,
+			dcmcm.pst_sn,
+			t.ogdp,
+			t.use_yn
+			)t2
+			where 1=1 
+			<if test="take != '' and take != null">
+		        AND T2.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		    </if>
+		    <if test="skip != '' and skip != null">
+		        AND T2.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+		    </if>
+	</select>
+
+	<select id="inquiryListCnt" resultType="int">
+		select count(*) from (
+		select
+			row_number() over(order by T.pst_sn desc) as rn,
+    CASE 
+        WHEN LENGTH(T.ogdp) <![CDATA[<=]]> 2 THEN 
+        CONCAT(
+        	LEFT(T.ogdp, 1), REPEAT('*', LENGTH(T.ogdp) - 1))
+        WHEN LENGTH(T.ogdp) <![CDATA[>=]]> 10 THEN 
+            CONCAT(
+                LEFT(T.ogdp, 3),
+                REPEAT('*', LENGTH(T.ogdp) - 6),
+                RIGHT(T.ogdp, 3)
+            )
+        ELSE 
+            CONCAT(
+                LEFT(T.ogdp, 1),
+                REPEAT('*', LENGTH(T.ogdp) - 2),
+                RIGHT(T.ogdp, 1) 
+            )
+    END AS masked_user_nm,
+    		t.reg_dt,
+    		t.pst_sn,
+			t.pst_ttl,
+			t.use_yn,
+			t.pst_type_cd,
+			t.atch_file_sn,
+			t.inq_cnt,
+			t.cd_nm,
+			t.cd,
+			t.cd_group,
+			t.menu_cd,    dcmcm.menu_cd AS dcmcm_menu_cd,
+    dcmcm.pst_sn AS dcmcm_pst_sn,
+    CASE
+        WHEN COUNT(dcmcm.pst_sn) > 0 THEN '답변완료'
+        ELSE '답변대기'
+    END AS comment_status,
+    COUNT(dcmcm.pst_sn) AS comment_count
+		from
+			(
+			select
+				dcmp.pst_sn,
+				dcmp.pst_ttl,
+				dcmp.use_yn,
+				dcmp.pst_type_cd,
+				to_char(dcmp.reg_dt,
+				'yyyy-mm-dd') as reg_dt,
+				dcmp.atch_file_sn,
+				dcmp.inq_cnt,
+				dcmc.cd_nm,
+				dcmc.cd,
+				dcmc.cd_group,
+				dcmp.menu_cd,
+				dcmp.ogdp
+			from
+				dqvs.dvs_cmm_mt_post as dcmp
+			left join dqvs.dvs_cmm_mt_code as dcmc
+		        on
+				dcmc.cd = dcmp.pst_type_cd
+				and dcmp.menu_cd = 'BBST02'
+				and dcmc.cd_group = 'pst_type_cd'
+			where
+				1 = 1
+				  <if test='searchSttsCd3 == "Q01"'>
+		                and dcmp.pst_type_cd = 'Q01'
+		            </if> 
+		            <if test='searchSttsCd3 == "Q02"'>
+		                and dcmp.pst_type_cd = 'Q02'
+		            </if> 
+		            <if test='searchSttsCd3 == "Q99"'>
+		                and dcmp.pst_type_cd = 'Q99'
+		            </if> 
+		            <if test='searchSttsCd == "Title"'>
+		                and dcmp.pst_ttl like '%' || #{search_wrd} || '%'
+		            </if>
+		             <if test='searchSttsCd == "Auth"'>
+		                and dcmp.ogdp like '%' || #{search_wrd} || '%'
+		            </if>
+<!-- 		             <if test='searchSttsCd == "" and searchSttsCd3 == "" '> -->
+<!-- 		                and dcmp.pst_ttl like '%' || #{search_wrd} || '%' -->
+<!-- 		            </if> -->
+		    ) T
+		left join dqvs.dvs_cmm_mt_cmnt as dcmcm on
+			dcmcm.menu_cd = T.menu_cd
+			and dcmcm.pst_sn = T.pst_sn
+		where
+			1 = 1
+		    <if test ='Auth != "K01" and Auth != "Z01"'>
+		    	and t.use_yn = 'Y'
+			</if>
+	    	and t.menu_cd = 'BBST02'
+		group by
+			T.pst_sn,
+			T.pst_ttl,
+			T.pst_type_cd,
+			T.reg_dt,
+			T.atch_file_sn,
+			T.inq_cnt,
+			T.cd_nm,
+			T.cd,
+			T.cd_group,
+			T.menu_cd,
+			dcmcm.menu_cd,
+			dcmcm.pst_sn,
+			t.ogdp,
+			t.use_yn
+			)t2
+	</select>
+
+	<!-- 문의하기 상세정보(내용) -->
+	<select id="inquiryDetailInfo" resultType="map">
+	select
+		row_number() over(
+	order by
+		dcmp.pst_sn desc) as rn,
+		dcmp.pst_sn,
+		dcmc.cd_nm,
+		dcmp.pst_type_cd,
+		dcmf.atch_file_nm,		
+		dcmp.pst_ttl,
+		to_char(dcmp.reg_dt,
+		'yyyy-mm-dd') as reg_dt,
+		dcmp.atch_file_sn,
+		dcmp.inq_cnt,
+		dcmp.ogdp,
+		dcmp.pst_cn,
+		dcmp.cmnt_use_yn,
+		dcmp.atch_file_sn::text,
+		dcmp.use_yn,
+		dcmp.rgtr_sn
+	from
+		dqvs.dvs_cmm_mt_post as dcmp
+			LEFT JOIN (
+			SELECT
+				file_sn
+				, atch_file_nm
+			FROM dqvs.dvs_cmm_mt_file ) dcmf
+		ON dcmp.atch_file_sn = dcmf.file_sn
+		left join dqvs.dvs_cmm_mt_code as dcmc
+		on dcmc.cd = dcmp.pst_type_cd
+		where 1=1
+		and dcmc.cd_group = 'pst_type_cd'
+		and dcmp.menu_cd = 'BBST02' 
+		AND dcmp.pst_sn = #{pstSn}::numeric
+		<if test='Auth != "K01" and Auth != "Z01"'>
+			and dcmp.use_yn = 'Y' 
+		</if>
+	</select>
+
+	<!-- 공지사항 상세정보(내용 카운트) -->
+	<select id="inquiryDetailInfoCnt" resultType="int">
+		SELECT
+			max(pst_sn) as pst_sn
+		FROM
+			dqvs.dvs_cmm_mt_post
+		WHERE
+			menu_cd = 'BBST02'
+	</select>
+
+	<update id="updateinquiryCnt">
+		UPDATE
+			dqvs.dvs_cmm_mt_post
+		SET inq_cnt = #{inqCnt}+1
+		WHERE menu_cd = 'BBST02'
+			  AND pst_sn = #{pstSn}::numeric
+	</update>
+
+	<!-- 문의하기 상세정보(이전글이 없는 경우) -->
+	<select id="inquiryDetailNullPrevTitle" resultType="map">
+		SELECT
+		    next.pst_sn AS next_pst_sn
+		    , next.pst_ttl AS next_pst_ttl
+		    , NULL AS prev_pst_sn
+		    , NULL AS prev_pst_ttl
+		FROM
+		    dqvs.dvs_cmm_mt_post next
+		LEFT JOIN
+		    dqvs.dvs_cmm_mt_post prev
+		    ON next.menu_cd = prev.menu_cd
+		WHERE
+		    next.menu_cd = 'BBST02'
+		    AND next.pst_sn = #{nextPstSn}::numeric
+		    AND prev.pst_sn = 1
+	</select>
+
+	<!-- 공지사항 상세정보(다음글이 없는 경우) -->
+	<select id="inquiryDetailNullNextTitle" resultType="map">
+		SELECT
+		    NULL AS next_pst_sn
+		    , NULL AS next_pst_ttl
+		    , prev.pst_sn AS prev_pst_sn
+		    , prev.pst_ttl AS prev_pst_ttl
+		FROM
+		    dqvs.dvs_cmm_mt_post next
+		LEFT JOIN
+		    dqvs.dvs_cmm_mt_post prev
+		    ON next.menu_cd = prev.menu_cd
+		WHERE
+		    next.menu_cd = 'BBST02'
+		    AND next.pst_sn = 1
+		    AND prev.pst_sn = #{prevPstSn}::numeric
+	</select>
+
+    <select id="inquiryReply" resultType="map">
+	select
+			menu_cd,
+			pst_sn,
+			cmnt_sn,
+			wrtr_sn,
+			wrtr_nm,
+			cmnt_cn,
+			use_yn,
+			pswd,
+			atch_file_sn,
+			rgtr_sn,
+			reg_dt,
+			reg_ip,
+			mdfr_sn,
+			mdfcn_dt,
+			mdfcn_ip
+		from dqvs.dvs_cmm_mt_cmnt
+		where 1=1 
+		and pst_sn = #{pstSn}
+		and menu_cd = 'BBST02'
+	</select>
+	<select id="inquiryReplyCnt" resultType="int">
+	select
+			menu_cd,
+			pst_sn,
+			cmnt_sn,
+			wrtr_sn,
+			wrtr_nm,
+			cmnt_cn,
+			use_yn,
+			pswd,
+			atch_file_sn,
+			rgtr_sn,
+			reg_dt,
+			reg_ip,
+			mdfr_sn,
+			mdfcn_dt,
+			mdfcn_ip
+		from dqvs.dvs_cmm_mt_cmnt
+		where 1=1 
+		and pst_sn = #{pstSn}
+		and menu_cd = 'BBST02'
+
+	</select>
+	<insert id="insertInquiry"  parameterType="paraMap">
+	        		INSERT INTO dqvs.dvs_cmm_mt_post (
+		    menu_cd,
+		    pst_sn,
+		    pst_type_cd,
+		    pst_ttl,
+		    pst_cn,
+		    use_yn,
+		    cmnt_use_yn,
+		    pstg_bgng_dt,
+		    pstg_end_dt,
+		    pstg_user_sn,
+		    pswd,
+		    ogdp,
+		    eml_addr,
+		    mbl_telno,
+		    reg_ip,
+		    rgtr_sn,
+		    reg_dt,
+		    inq_cnt,
+		    atch_file_sn
+		)
+		VALUES (
+		    'BBST02',
+		 	(SELECT COALESCE(MAX(pst_sn), 0)+1 FROM dqvs.dvs_cmm_mt_post WHERE menu_cd = 'BBST02'),
+		    #{inquirySection},
+		    #{inquiryTitle},
+		    #{inquiryContent},
+		    'Y',
+		    'Y',
+		    NOW(), 
+		    TO_TIMESTAMP('20991231', 'YYYYMMDD'), 
+		    #{userSn}::numeric,
+		    dqvs.pca_encrypt(#{pswd}, '200'),
+		    #{ssoUserNm},
+		    #{ssoEmail},
+		    #{assiTelno},
+		    #{ClientIP},
+	        #{userSn}::numeric,
+	        now(),
+	        '0',
+	        #{inquiryFile}::numeric
+		 );
+    </insert>
+    
+    <!-- 자동화 공격 -->
+	<select id="atatcPrvnt" resultType="map">
+		SELECT 
+    (SELECT COUNT(*)
+     FROM dqvs.dvs_cmm_mt_post
+     WHERE menu_cd = 'BBST02'
+       AND rgtr_sn = #{userSn}::numeric
+       AND reg_dt <![CDATA[>=]]> (now() - interval '5 minutes')) AS logincount,
+    (CASE WHEN EXISTS (
+        SELECT 1
+        FROM dqvs.dvs_cmm_mt_post
+        WHERE menu_cd = 'BBST02'
+          AND rgtr_sn = #{userSn}::numeric
+          AND pst_cn = #{inquiryContent}
+          AND reg_dt <![CDATA[>=]]> (now() - interval '5 minutes')
+    ) THEN 1
+    ELSE 0
+    END) AS textcount
+	</select>
+    
+ 	<insert id="Insertreply"  parameterType="paraMap">
+		 insert into dqvs.dvs_cmm_mt_cmnt
+		 (
+		  menu_cd
+		 ,pst_sn 
+		 ,cmnt_sn
+		 ,wrtr_sn
+		 ,wrtr_nm
+		 ,cmnt_cn
+		 ,use_yn
+		 ,pswd
+		 ,atch_file_sn
+		 ,rgtr_sn
+		 ,reg_dt
+		 ,reg_ip
+		 ,mdfr_sn
+		 ,mdfcn_dt
+		 ,mdfcn_ip
+		 )
+		 values (
+		 	 'BBST02'
+		 	,#{pstSn}
+		 	,(SELECT COALESCE(MAX(cmnt_sn), 0)+1 FROM dqvs.dvs_cmm_mt_cmnt WHERE menu_cd = 'BBST02' and pst_sn = #{pstSn})
+		 	,#{userSn}::numeric
+		    ,#{ssoUserNm}
+		     ,#{replyWrite}
+		     ,'Y'
+		     ,null
+		     ,'1'
+		     ,#{userSn}::numeric
+		     ,CURRENT_TIMESTAMP
+		     ,#{ClientIP}
+		     ,#{userSn}::numeric
+		     ,CURRENT_TIMESTAMP
+		     ,'0'
+		     );
+    </insert>
+    
+     <select id="Comment" resultType="map">
+    	select j1.menu_cd,
+			   j1.pst_sn,
+			   j1.wrtr_sn as wrtrSn,
+			   j1.wrtr_nm,
+			   j1.cmnt_cn as pst_ttl,
+			   j1.cmnt_sn,
+			   to_char(j1.reg_dt, 'YYYY-MM-DD HH24:MI:SS') as reg_dt
+		from dqvs.dvs_cmm_mt_cmnt j1
+		where j1.menu_cd = 'BBST02'
+		and j1.use_yn ='Y'
+		and j1.pst_sn = #{pstSn}::numeric
+	ORDER BY j1.cmnt_sn desc;
+	</select>
+    
+    <select id="FileNm" resultType="map">
+	    select
+	    	file_sn,
+	    	atch_file_nm,
+	    	atch_file_path
+		from dqvs.dvs_cmm_mt_file
+		where 1=1
+		<if test="bzmnLicenseAtchSn != null and bzmnLicenseAtchSn != ''">
+			and file_sn = CAST(#{bzmnLicenseAtchSn} AS numeric)
+		</if>
+	</select>
+	<update id="updateReply">
+		UPDATE dqvs.dvs_cmm_mt_cmnt
+		SET 
+			cmnt_cn = #{updateWrite},
+			mdfcn_ip = #{mdfcnIp},
+			mdfcn_dt = Now()
+		WHERE 
+			use_yn ='Y'
+		 	AND pst_sn = #{pst_Sn}::numeric
+			AND mdfr_sn = #{mdfrSn}::numeric;
+    </update>
+
+    <update id="updateInquiry" parameterType="map">
+		    UPDATE dqvs.dvs_cmm_mt_post
+		    SET
+		        pst_type_cd = #{inquirySection},
+		        pst_ttl = #{inquiryTitle},
+		        pst_cn = #{inquiryContent},
+		        use_yn = 'Y', 
+		        cmnt_use_yn = 'N', 
+		        pstg_bgng_dt = NOW(), 
+		        pstg_end_dt = TO_TIMESTAMP('20231231', 'YYYYMMDD'), 
+		        pstg_user_sn = #{userSn}::numeric,
+		        reg_ip = #{mdfcnIp},
+		        rgtr_sn = #{UserSn}::numeric,
+		        reg_dt = NOW()
+		    <if test="inquiryFile != null">
+            	,atch_file_sn = #{inquiryFile}::numeric
+        	</if>
+		    WHERE
+		        menu_cd = 'BBST02'
+		    <if test ="Pst_Sn != '' and Pst_Sn != null">
+		        AND pst_sn = #{Pst_Sn}::numeric
+		    </if>
+	</update>
+    <update id="deleteInquiry" parameterType="map">
+		    UPDATE dqvs.dvs_cmm_mt_post
+		    SET
+		        use_yn = 'N'
+		    WHERE
+		        menu_cd = 'BBST02'
+		    <if test ="pstSn != '' and pstSn != null">
+		        AND pst_sn = #{pstSn}::numeric
+		    </if>
+	</update>
+    <update id="updateInquieryuseY" parameterType="map">
+		    UPDATE dqvs.dvs_cmm_mt_post
+		    SET
+		        use_yn = 'Y'
+		    WHERE
+		        menu_cd = 'BBST02'
+		    <if test ="pstSn != '' and pstSn != null">
+		        AND pst_sn = #{pstSn}::numeric
+		    </if>
+	</update>
+	    <update id="updateDeleteReply" parameterType="map">
+		UPDATE dqvs.dvs_cmm_mt_cmnt
+		SET use_yn = 'N'
+		WHERE 
+		cmnt_sn = (
+		    SELECT cmnt_sn
+		    FROM dqvs.dvs_cmm_mt_cmnt
+		    WHERE pst_sn = #{pst_Sn}::numeric
+		    ORDER BY cmnt_sn DESC
+		    LIMIT 1
+		)
+		and  pst_sn = #{pst_Sn}::numeric
+		AND mdfr_sn = #{mdfrSn}::numeric
+	</update>
+	<select id="DetailNoticeNullPrevTitle" resultType="map">
+		SELECT
+		    next.pst_sn AS next_pst_sn
+		    , next.pst_ttl AS next_pst_ttl
+		    , NULL AS prev_pst_sn
+		    , NULL AS prev_pst_ttl
+		FROM
+		    dvs_cmm_mt_post next
+		LEFT JOIN
+		    dvs_cmm_mt_post prev
+		    ON next.menu_cd = prev.menu_cd
+		WHERE
+		    next.menu_cd = 'BBST02'
+		    AND next.pst_sn = #{nextPstSn}::numeric
+		    AND prev.pst_sn = 1
+	</select>
+
+	<!-- 공지사항 상세정보(다음글이 없는 경우) -->
+	<select id="inquiryDetailTitle" resultType="map">
+			select prev_pst_sn, prev_pst_ttl, next_pst_sn, next_pst_ttl from(
+		select
+			pst_sn as next_pst_sn,
+			pst_ttl as next_pst_ttl
+		from dqvs.dvs_cmm_mt_post dcmp
+		join (
+			select
+				max(pst_sn) as prev_pst_sn
+			from dqvs.dvs_cmm_mt_post dcmp
+			where
+				menu_cd = 'BBST02'
+				and pst_sn <![CDATA[<]]> #{pstSn} 
+			<if test ='Auth != "K01" and Auth != "Z01"'>
+		    	and use_yn = 'Y'
+			</if>
+		) a on dcmp.pst_sn = a.prev_pst_sn
+		where
+			menu_cd = 'BBST02'
+			<if test ='Auth != "K01" and Auth != "Z01"'>
+		    	and use_yn = 'Y'
+			</if>
+			)a
+		full join
+		(select
+			pst_sn as prev_pst_sn,
+			pst_ttl as prev_pst_ttl
+		from dqvs.dvs_cmm_mt_post dcmp
+		join (
+			select
+				min(pst_sn) as next_pst_sn
+			from dqvs.dvs_cmm_mt_post dcmp
+			where
+				pst_sn <![CDATA[>]]> #{pstSn} 
+			and	menu_cd = 'BBST02'
+			<if test ='Auth != "K01" and Auth != "Z01"'>
+		    	and use_yn = 'Y'
+			</if>
+		) a on dcmp.pst_sn = a.next_pst_sn
+		where
+			menu_cd = 'BBST02'
+			)b on 1=1
+	</select>
+	<select id="checkPswd" resultType="map">
+		SELECT
+			pst_sn,
+			pswd
+		FROM
+		    dqvs.dvs_cmm_mt_post
+		WHERE 
+		   	menu_cd = 'BBST02'
+			<if test ="pswd != '' and pswd != null">
+		   	 	and pswd = dqvs.pca_encrypt(#{pswd}, '200')
+		    	and pst_sn = #{pst_Sn}::numeric			
+		    </if>
+	</select>
+</mapper>

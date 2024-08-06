@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-web>
+    <context-root>/</context-root>
+    <!-- 기타 설정을 추가할 수 있음 -->
+</jboss-web>

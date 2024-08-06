@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<md:EntitiesDescriptor ID="2100f28b9c29a46741dbd2663f05e29a5b23dc14"
+                       Name="DREAM" validUntil="2011-02-24T05:11:12.623Z"
+                       xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata">
+    <md:EntityDescriptor entityID="TS_IDP">
+        <md:IDPSSODescriptor>
+            <md:KeyDescriptor use="signing">
+                <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                    <ds:X509Data>
+                        <ds:X509Certificate>MIID6DCCA1GgAwIBAgIEAh8vCTANBgkqhkiG9w0BAQUFADBIMQswCQYDVQQGEwJrcjEQMA4GA1UE
+                            ChMHeWVzc2lnbjETMBEGA1UECxMKTGljZW5zZWRDQTESMBAGA1UEAxMJeWVzc2lnbkNBMB4XDTA0
+                            MTAzMTE1MDAwMFoXDTA1MTEwMTE0NTkwMFowbTELMAkGA1UEBhMCa3IxEDAOBgNVBAoTB3llc3Np
+                            Z24xETAPBgNVBAsTCHBlcnNvbmFsMQwwCgYDVQQLEwNTSEIxKzApBgNVBAMMIu2VnOyInO2YuCgp
+                            MDAyNjAxMzIwMDQwNjI1MDAwMDA4NTAwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMUdenFn
+                            f/yKmr4A7PHvVuhz9MCEu3q/oU6iV36pb1pYtSuAdB4iY+Xoy792euo7VySN5JLaGJ3Y7SxwnG8I
+                            78ggYoKo4gtVIpQ/EO2P1UV4FlY6RmY4GPRuMxxVuugu2tMmx76pBv4hQKAeK3kYenyzgpZvsQui
+                            4Fmv93gWKQPLAgMBAAGjggG4MIIBtDAfBgNVHSMEGDAWgBTi7G0s5X2bwJ6sAVN5upqPmoXZCzAd
+                            BgNVHQ4EFgQUkItG3XIGae2hyr1x7QDUNp7LfpIwDgYDVR0PAQH/BAQDAgbAMHkGA1UdIAEB/wRv
+                            MG0wawYJKoMajJpFAQEBMF4wLgYIKwYBBQUHAgIwIh4gx3QAIMd4yZ3BHLKUACCs9cd4x3jJncEc
+                            ACDHhbLIsuQwLAYIKwYBBQUHAgEWIGh0dHA6Ly93d3cueWVzc2lnbi5vci5rci9jcHMuaHRtMFgG
+                            A1UdEQRRME+gTQYJKoMajJpECgEBoEAwPgwJ7ZWc7Iic7Zi4MDEwLwYKKoMajJpECgEBATAhMAcG
+                            BSsOAwIaoBYEFPC0/1/ftkOeLcgtBqMBv1KQzTrTMFMGA1UdHwRMMEowSKBGoESGQmxkYXA6Ly8y
+                            MDMuMjMzLjkxLjM1OjM4OS9vdT1kcDJwMTE4Njcsb3U9TGljZW5zZWRDQSxvPXllc3NpZ24sYz1r
+                            cjA4BggrBgEFBQcBAQQsMCowKAYIKwYBBQUHMAGGHGh0dHA6Ly9vY3NwLnllc3NpZ24ub3JnOjQ2
+                            MTIwDQYJKoZIhvcNAQEFBQADgYEAk37g7Ye7uT9rZAyYo2wQDI4/XUoLKTuc603OWr3UHGU/U8uh
+                            SrXpXjZqg0hUVuz1FV+fNrcGWfuVxwr6+AZeDkn0SJ0Z9kj7mzktzXhSvZTzK0mATRhe9fdyWIWI
+                            E7F15e24gP58bGLt/DrCX8UoysHr/2eEr3JCOCP/p3QoivQ=</ds:X509Certificate>
+                    </ds:X509Data>
+                </ds:KeyInfo>
+            </md:KeyDescriptor>
+            <md:KeyDescriptor use="encryption">
+                <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                    <ds:X509Data>
+                        <ds:X509Certificate>MIID6DCCA1GgAwIBAgIEAh8vCTANBgkqhkiG9w0BAQUFADBIMQswCQYDVQQGEwJrcjEQMA4GA1UE
+                            ChMHeWVzc2lnbjETMBEGA1UECxMKTGljZW5zZWRDQTESMBAGA1UEAxMJeWVzc2lnbkNBMB4XDTA0
+                            MTAzMTE1MDAwMFoXDTA1MTEwMTE0NTkwMFowbTELMAkGA1UEBhMCa3IxEDAOBgNVBAoTB3llc3Np
+                            Z24xETAPBgNVBAsTCHBlcnNvbmFsMQwwCgYDVQQLEwNTSEIxKzApBgNVBAMMIu2VnOyInO2YuCgp
+                            MDAyNjAxMzIwMDQwNjI1MDAwMDA4NTAwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMUdenFn
+                            f/yKmr4A7PHvVuhz9MCEu3q/oU6iV36pb1pYtSuAdB4iY+Xoy792euo7VySN5JLaGJ3Y7SxwnG8I
+                            78ggYoKo4gtVIpQ/EO2P1UV4FlY6RmY4GPRuMxxVuugu2tMmx76pBv4hQKAeK3kYenyzgpZvsQui
+                            4Fmv93gWKQPLAgMBAAGjggG4MIIBtDAfBgNVHSMEGDAWgBTi7G0s5X2bwJ6sAVN5upqPmoXZCzAd
+                            BgNVHQ4EFgQUkItG3XIGae2hyr1x7QDUNp7LfpIwDgYDVR0PAQH/BAQDAgbAMHkGA1UdIAEB/wRv
+                            MG0wawYJKoMajJpFAQEBMF4wLgYIKwYBBQUHAgIwIh4gx3QAIMd4yZ3BHLKUACCs9cd4x3jJncEc
+                            ACDHhbLIsuQwLAYIKwYBBQUHAgEWIGh0dHA6Ly93d3cueWVzc2lnbi5vci5rci9jcHMuaHRtMFgG
+                            A1UdEQRRME+gTQYJKoMajJpECgEBoEAwPgwJ7ZWc7Iic7Zi4MDEwLwYKKoMajJpECgEBATAhMAcG
+                            BSsOAwIaoBYEFPC0/1/ftkOeLcgtBqMBv1KQzTrTMFMGA1UdHwRMMEowSKBGoESGQmxkYXA6Ly8y
+                            MDMuMjMzLjkxLjM1OjM4OS9vdT1kcDJwMTE4Njcsb3U9TGljZW5zZWRDQSxvPXllc3NpZ24sYz1r
+                            cjA4BggrBgEFBQcBAQQsMCowKAYIKwYBBQUHMAGGHGh0dHA6Ly9vY3NwLnllc3NpZ24ub3JnOjQ2
+                            MTIwDQYJKoZIhvcNAQEFBQADgYEAk37g7Ye7uT9rZAyYo2wQDI4/XUoLKTuc603OWr3UHGU/U8uh
+                            SrXpXjZqg0hUVuz1FV+fNrcGWfuVxwr6+AZeDkn0SJ0Z9kj7mzktzXhSvZTzK0mATRhe9fdyWIWI
+                            E7F15e24gP58bGLt/DrCX8UoysHr/2eEr3JCOCP/p3QoivQ=</ds:X509Certificate>
+                    </ds:X509Data>
+                </ds:KeyInfo>
+            </md:KeyDescriptor>
+            <md:SingleLogoutService Location="https://sso.kotsa.or.kr:8188/sso/IDPLogout.jsp"/>
+            <md:SingleSignOnService Location="https://sso.kotsa.or.kr:8188/sso/Request.jsp"/>
+        </md:IDPSSODescriptor>
+    </md:EntityDescriptor>
+
+    <!-- SP1  information-->
+	  <md:EntitiesDescriptor>
+        <!--<md:EntityDescriptor entityID="TS_DQVS">
+		<md:EntityDescriptor entityID="TS_DQVSDAEGUTEST">-->
+		<md:EntityDescriptor entityID="TS_DQVSDAEGU">
+            <md:SPSSODescriptor AuthnRequestsSigned="true" WantAssertionsSigned="true">
+                <md:KeyDescriptor use="signing">
+                    <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                        <ds:X509Data>
+                            <ds:X509Certificate>MIID6DCCA1GgAwIBAgIEAh8vCTANBgkqhkiG9w0BAQUFADBIMQswCQYDVQQGEwJrcjEQMA4GA1UE
+                            ChMHeWVzc2lnbjETMBEGA1UECxMKTGljZW5zZWRDQTESMBAGA1UEAxMJeWVzc2lnbkNBMB4XDTA0
+                            MTAzMTE1MDAwMFoXDTA1MTEwMTE0NTkwMFowbTELMAkGA1UEBhMCa3IxEDAOBgNVBAoTB3llc3Np
+                            Z24xETAPBgNVBAsTCHBlcnNvbmFsMQwwCgYDVQQLEwNTSEIxKzApBgNVBAMMIu2VnOyInO2YuCgp
+                            MDAyNjAxMzIwMDQwNjI1MDAwMDA4NTAwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMUdenFn
+                            f/yKmr4A7PHvVuhz9MCEu3q/oU6iV36pb1pYtSuAdB4iY+Xoy792euo7VySN5JLaGJ3Y7SxwnG8I
+                            78ggYoKo4gtVIpQ/EO2P1UV4FlY6RmY4GPRuMxxVuugu2tMmx76pBv4hQKAeK3kYenyzgpZvsQui
+                            4Fmv93gWKQPLAgMBAAGjggG4MIIBtDAfBgNVHSMEGDAWgBTi7G0s5X2bwJ6sAVN5upqPmoXZCzAd
+                            BgNVHQ4EFgQUkItG3XIGae2hyr1x7QDUNp7LfpIwDgYDVR0PAQH/BAQDAgbAMHkGA1UdIAEB/wRv
+                            MG0wawYJKoMajJpFAQEBMF4wLgYIKwYBBQUHAgIwIh4gx3QAIMd4yZ3BHLKUACCs9cd4x3jJncEc
+                            ACDHhbLIsuQwLAYIKwYBBQUHAgEWIGh0dHA6Ly93d3cueWVzc2lnbi5vci5rci9jcHMuaHRtMFgG
+                            A1UdEQRRME+gTQYJKoMajJpECgEBoEAwPgwJ7ZWc7Iic7Zi4MDEwLwYKKoMajJpECgEBATAhMAcG
+                            BSsOAwIaoBYEFPC0/1/ftkOeLcgtBqMBv1KQzTrTMFMGA1UdHwRMMEowSKBGoESGQmxkYXA6Ly8y
+                            MDMuMjMzLjkxLjM1OjM4OS9vdT1kcDJwMTE4Njcsb3U9TGljZW5zZWRDQSxvPXllc3NpZ24sYz1r
+                            cjA4BggrBgEFBQcBAQQsMCowKAYIKwYBBQUHMAGGHGh0dHA6Ly9vY3NwLnllc3NpZ24ub3JnOjQ2
+                            MTIwDQYJKoZIhvcNAQEFBQADgYEAk37g7Ye7uT9rZAyYo2wQDI4/XUoLKTuc603OWr3UHGU/U8uh
+                            SrXpXjZqg0hUVuz1FV+fNrcGWfuVxwr6+AZeDkn0SJ0Z9kj7mzktzXhSvZTzK0mATRhe9fdyWIWI
+                            E7F15e24gP58bGLt/DrCX8UoysHr/2eEr3JCOCP/p3QoivQ=
+							</ds:X509Certificate>
+                        </ds:X509Data>
+                    </ds:KeyInfo>
+                </md:KeyDescriptor>
+                <md:KeyDescriptor use="encryption">
+                    <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                        <ds:X509Data>
+                            <ds:X509Certificate>MIID6DCCA1GgAwIBAgIEAh8vCTANBgkqhkiG9w0BAQUFADBIMQswCQYDVQQGEwJrcjEQMA4GA1UE
+                            ChMHeWVzc2lnbjETMBEGA1UECxMKTGljZW5zZWRDQTESMBAGA1UEAxMJeWVzc2lnbkNBMB4XDTA0
+                            MTAzMTE1MDAwMFoXDTA1MTEwMTE0NTkwMFowbTELMAkGA1UEBhMCa3IxEDAOBgNVBAoTB3llc3Np
+                            Z24xETAPBgNVBAsTCHBlcnNvbmFsMQwwCgYDVQQLEwNTSEIxKzApBgNVBAMMIu2VnOyInO2YuCgp
+                            MDAyNjAxMzIwMDQwNjI1MDAwMDA4NTAwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMUdenFn
+                            f/yKmr4A7PHvVuhz9MCEu3q/oU6iV36pb1pYtSuAdB4iY+Xoy792euo7VySN5JLaGJ3Y7SxwnG8I
+                            78ggYoKo4gtVIpQ/EO2P1UV4FlY6RmY4GPRuMxxVuugu2tMmx76pBv4hQKAeK3kYenyzgpZvsQui
+                            4Fmv93gWKQPLAgMBAAGjggG4MIIBtDAfBgNVHSMEGDAWgBTi7G0s5X2bwJ6sAVN5upqPmoXZCzAd
+                            BgNVHQ4EFgQUkItG3XIGae2hyr1x7QDUNp7LfpIwDgYDVR0PAQH/BAQDAgbAMHkGA1UdIAEB/wRv
+                            MG0wawYJKoMajJpFAQEBMF4wLgYIKwYBBQUHAgIwIh4gx3QAIMd4yZ3BHLKUACCs9cd4x3jJncEc
+                            ACDHhbLIsuQwLAYIKwYBBQUHAgEWIGh0dHA6Ly93d3cueWVzc2lnbi5vci5rci9jcHMuaHRtMFgG
+                            A1UdEQRRME+gTQYJKoMajJpECgEBoEAwPgwJ7ZWc7Iic7Zi4MDEwLwYKKoMajJpECgEBATAhMAcG
+                            BSsOAwIaoBYEFPC0/1/ftkOeLcgtBqMBv1KQzTrTMFMGA1UdHwRMMEowSKBGoESGQmxkYXA6Ly8y
+                            MDMuMjMzLjkxLjM1OjM4OS9vdT1kcDJwMTE4Njcsb3U9TGljZW5zZWRDQSxvPXllc3NpZ24sYz1r
+                            cjA4BggrBgEFBQcBAQQsMCowKAYIKwYBBQUHMAGGHGh0dHA6Ly9vY3NwLnllc3NpZ24ub3JnOjQ2
+                            MTIwDQYJKoZIhvcNAQEFBQADgYEAk37g7Ye7uT9rZAyYo2wQDI4/XUoLKTuc603OWr3UHGU/U8uh
+                            SrXpXjZqg0hUVuz1FV+fNrcGWfuVxwr6+AZeDkn0SJ0Z9kj7mzktzXhSvZTzK0mATRhe9fdyWIWI
+                            E7F15e24gP58bGLt/DrCX8UoysHr/2eEr3JCOCP/p3QoivQ=</ds:X509Certificate>
+                        </ds:X509Data>
+                    </ds:KeyInfo>
+                </md:KeyDescriptor>
+
+               <!-- <md:SingleLogoutService index ="0" Location="https://rims.kotsa.or.kr/rims/sso/SPLogout.jsp"/>
+               <md:AssertionConsumerService index="0" Location="https://rims.kotsa.or.kr/rims/sso/Response.jsp"/> 
+			   <md:SingleLogoutService index ="0" Location="https://rims2.kotsa.or.kr/sso/SPLogout.jsp"/>
+               <md:AssertionConsumerService index="0" Location="https://rims2.kotsa.or.kr/sso/Response.jsp"/>
+			   -->
+			   <md:SingleLogoutService index ="0" Location="https://rims.kotsa.or.kr/sso/SPLogout.jsp"/>
+               <md:AssertionConsumerService index="0" Location="https://rims.kotsa.or.kr/sso/Response.jsp"/>
+            </md:SPSSODescriptor>
+        </md:EntityDescriptor>
+    </md:EntitiesDescriptor>
+</md:EntitiesDescriptor>

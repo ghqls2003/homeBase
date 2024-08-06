@@ -1,0 +1,92 @@
+@charset 'utf-8';
+
+/* 툴팁 */
+.tooltop_wr{display: flex;align-items: center;margin-top: 9px;}
+.tooltop_wr p.info{font-size: 1.4rem;line-height: 26px;color: #888888;}
+.tooltip { position: relative; display: block; }
+.tooltip button{vertical-align: text-top;}
+.tooltip button img{width: 18px;margin-left: 5px;}
+.tooltip .tooltiptext { display: none; border: 1px solid #DCE5EE; width: 1068px; line-height: 20px; font-size: 13px; background-color: #fff; color: #444; text-align: left; border-radius: 6px; padding: 8px 13px; position: absolute; z-index: 1; box-shadow: 2px 2px 5px #38465d1f; }
+.tooltiptext.on{ display: block; }
+.tooltip:hover .tooltiptext { display: block; }
+.tooltip:hover .tooltiptext span { font-weight: bold; }
+.tooltip .tooltip-right { top: -12px; left: 39px; }
+.tooltip .tooltip-top { width: 120px; bottom: 150%; left: 50%; margin-left: -60px; }
+.tooltip .tooltip-bottom { width: 120px; top: 150%; left: 50%; margin-left: -60px; }
+.sub03 .mo_tooltip{display: none;}
+
+.sub03 .searchWrd {width: 270px;}
+.sub03 .legend {display: flex; justify-content : end; align-items: center;}
+.sub03 .circle {width: 15px; height: 15px; border-radius: 50%; background-color: #000; margin: 0px 5px 0px 15px;}
+.sub03 .apCircle {width: 15px; height: 15px; border-radius: 50%;background-color: #ff3838; margin: 0px 5px 0px 15px; }
+.sub03 .aprv4 .k-input-value-text {color: #FF0000;}
+.sub03 .ap_btn {margin-left: 5px;}
+.sub03 .readOnlyRedText {color: #ff3838;}
+.sub03 .readOnlyGrayBtn {background-color: #f5f5f5;}
+.sub03 .readOnlyRedBtn {background-color: #ff3838; text-align: center; color: #f5f5f5;}
+.sub03 .readOnlyGrayBtn .k-picker-solid {background-color: #f5f5f5;}
+.sub03 .readOnlyGrayBtn .k-datepicker {background-color: #f5f5f5 !important;}
+.sub03 .readOnlyGrayBtn .k-input-button {background-color: #f5f5f5;}
+.sub03 .office-flex {display: flex;align-items: center;justify-content: flex-start;}
+.sub03 .insert_popup {background-color: #d8e5ff;  border-radius: 8px; padding: 10px 8px 10px 24px;}
+.sub03 .popup.detail_popup  button.ap_btn{background-color: #00127B;color: #fff;width: 92px;height: 32px;border-radius: 8px;line-height: 26px;font-weight: 500;text-align: center;}
+
+/* 삭제 버튼 */
+button.red_btn{width: 152px;height: 54px;background-color: #ff3838;border-radius: 8px;font-size: 1.8rem;line-height: 26px;color: #fff;}
+button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff3838;}
+
+@media (max-width:1500px) {
+	.sub03 .selec_wr .mo_flex {flex-direction: inherit !important; align-items: normal;}
+	.tooltip .tooltiptext{width: 500px;}
+}
+
+@media (max-width:970px) {
+	.sub03 .searchWrd {width: 140px;}
+}
+
+@media (max-width:800px) {
+	.sub03 .searchWrd {width: 100px;}
+	.tooltip .tooltiptext{width: 343px;}
+}
+
+@media (max-width:720px) {
+	.sub03 .searchWrd {width: 100%;}
+}
+
+@media (max-width:640px) {
+	.sub03 .popup.com_address01 .box{width: 529px;}
+	.tooltip .tooltiptext{width: 153px;}
+	
+	.sub03 .mSelect_box {padding: 20px 60px 0px;}
+	.sub03 .mSearchChk01 {margin-right: 50px;}
+}
+
+@media (max-width:550px) {
+    .sub03 .popup.com_address01 .box{width: 405px;height: 555px;}
+}
+
+@media (max-width:480px) {
+	.sub03 .popup.com_address01 .box{width: 350px;height: 508px;}
+}
+
+@media (max-width:420px) {
+ 	.sub03 .popup.com_address01 .box{height: 532px;}
+	
+    button.red_btn{width: 123px !important; height: 42px;}
+}
+
+@media (max-width:390px) {
+    .sub03 .popup.com_address01 .box{width: 320px;}
+}
+
+
+.textareaNone {
+	border: none !important;
+}
+.textareaNone:focus {
+	outline: none !important;
+}
+#compUser > div > div.content > div > div > div > div.k-grid-content.k-auto-scrollable > div,
+#compCar > div > div.content > div > div > div > div.k-grid-content.k-auto-scrollable > div {
+	justify-content: center;
+}

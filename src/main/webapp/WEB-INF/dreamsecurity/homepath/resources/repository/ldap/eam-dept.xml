@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<queryMap id="eam-dept">
+	
+	<insert id="addDept" parameterClass="java.util.HashMap">
+		<base>ou=#deptDn#,ou=org,ou=#siteName#</base>
+		<object-classes>
+			<object-class>top</object-class>
+			<object-class>eamDept</object-class>
+			<object-class>sidoOrg</object-class>
+		</object-classes>
+		<attributes>
+			<attribute alias="deptCode">cn</attribute>
+			<attribute alias="deptCode">ouCode</attribute>
+			<attribute alias="deptManagerId">eamManagerId</attribute>
+			<attribute alias="deptName">ou</attribute>
+			<attribute alias="status">status</attribute>
+			<attribute alias="order">ouOrder</attribute>
+			<attribute alias="parentDeptCode">parentOUCode</attribute>
+			<attribute alias="topDeptCode">topOUCode</attribute>
+			<attribute alias="division">ouDivision</attribute>
+			<attribute alias="level">ouLevel</attribute>
+			<attribute alias="deptFullName">orgFullName</attribute>
+			<attribute alias="createUserId">sidoAddUserId</attribute>
+			<attribute alias="createDate">sidoAddDate</attribute>
+			<attribute alias="createTime">sidoAddTime</attribute>
+		</attributes>
+	</insert>
+	
+	<select id="getDept" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>ou=org,ou=#siteName#</base>
+		<filter>(&amp;(objectclass=eamDept)(ouCode=#deptCode#))</filter>
+		<attributes>
+			<attribute alias="deptCode">ouCode</attribute>
+			<attribute alias="deptName">ou</attribute>
+			<attribute alias="parentDeptCode">parentOuCode</attribute>
+			<attribute alias="topDeptCode">topOuCode</attribute>
+			<attribute alias="division">ouDivision</attribute>
+			<attribute alias="level">ouLevel</attribute>
+			<attribute alias="deptFullName">orgFullName</attribute>
+			<attribute alias="order">ouOrder</attribute>
+			<attribute alias="managerId">eamManagerId</attribute>
+		</attributes>
+		<search-scope>SUB</search-scope>
+	</select>
+	
+	<select id="getSubOneDept" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>#deptDn#ou=org,ou=#siteName#</base>
+		<filter>(&amp;(objectclass=eamDept))</filter>
+		<attributes>
+			<attribute alias="deptCode">ouCode</attribute>
+			<attribute alias="deptName">ou</attribute>
+			<attribute alias="parentDeptCode">parentOuCode</attribute>
+			<attribute alias="topDeptCode">topOuCode</attribute>
+			<attribute alias="division">ouDivision</attribute>
+			<attribute alias="level">ouLevel</attribute>
+			<attribute alias="deptFullName">orgFullName</attribute>
+			<attribute alias="order">ouOrder</attribute>
+		</attributes>
+	</select>
+	
+	<select id="getSubDept" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>#deptDn#,ou=org,ou=#siteName#</base>
+		<filter>(&amp;(objectclass=eamDept))</filter>
+		<attributes>
+			<attribute alias="deptCode">ouCode</attribute>
+			<attribute alias="deptName">ou</attribute>
+			<attribute alias="parentDeptCode">parentOuCode</attribute>
+			<attribute alias="topDeptCode">topOuCode</attribute>
+			<attribute alias="division">ouDivision</attribute>
+			<attribute alias="level">ouLevel</attribute>
+			<attribute alias="deptFullName">orgFullName</attribute>
+			<attribute alias="order">ouOrder</attribute>
+		</attributes>
+		<search-scope>SUB</search-scope>
+	</select>
+	
+	<update id="modifyDept" parameterClass="java.util.HashMap">
+		<base>ou=#deptName#,ou=org,ou=#siteName#</base>
+		<attributes>
+			<attribute alias="userPassword">eamPassword</attribute>
+			<attribute alias="userName">displayName</attribute>
+			<attribute alias="homePhoneNumber">homePhone</attribute>
+			<attribute alias="homePostalAddress">homePostalAddress</attribute>
+			<attribute alias="mobilePhoneNumber">mobile</attribute>
+			<attribute alias="email">mail</attribute>
+			<attribute alias="officePhoneNumber">telephoneNumber</attribute>
+			<attribute alias="gender">gender</attribute>
+			<attribute alias="ssn">resiNumber</attribute>
+			<attribute alias="jobName">jobTitle</attribute>
+			<attribute alias="empNo">empNumber</attribute>
+			<attribute alias="dn">cn</attribute>
+			<attribute alias="userStatus">status</attribute>
+			<attribute alias="sidoChangeUserId">sidoChangeUserId</attribute>
+			<attribute alias="sidoChangeDate">sidoChangeDate</attribute>
+			<attribute alias="sidoChangeTime">sidoChangeTime</attribute>
+		</attributes>
+	</update>
+	
+	<delete id="removeDept" parameterClass="java.util.HashMap">
+		<base>#deptDn#,ou=org,ou=#siteName#</base>
+		<cascade>true</cascade>
+	</delete>
+	
+	<select id="selectDeptManager" parameterClass="java.util.HashMap">
+		<base>ou=#deptDn#,ou=org,ou=#siteName#</base>
+		<attributes>
+			<attribute alias="managerId">eamManagerId</attribute>
+		</attributes>
+	</select>
+	
+	<update id="modifyDeptManager" parameterClass="java.util.HashMap">
+		<base>#deptDn#,ou=org,ou=#siteName#</base>
+		<attributes>
+			<attribute alias="managerId">eamManagerId</attribute>
+			<attribute alias="sidoChangeUserId">sidoChangeUserId</attribute>
+			<attribute alias="sidoChangeDate">sidoChangeDate</attribute>
+			<attribute alias="sidoChangeTime">sidoChangeTime</attribute>
+		</attributes>
+	</update>
+	
+	<select id="getDeptOfManager" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>ou=org,ou=#siteName#</base>
+		<filter>(&amp;(objectclass=eamDept)(eamManagerId=#memberId#))</filter>
+		<attributes>
+			<attribute alias="deptCode">ouCode</attribute>
+			<attribute alias="deptName">ou</attribute>
+			<attribute alias="managerId">eamManagerId</attribute>
+		</attributes>
+		<search-scope>SUB</search-scope>
+	</select>
+	
+</queryMap>

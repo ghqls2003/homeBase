@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ma.main">
+
+
+	<resultMap id="getGeomResult" type="egovframework.rte.psl.dataaccess.util.EgovMap">
+		<result property="geometry" column="geometry"  javaType="_byte[]" />
+		<result property="rr" column="rr" />
+	</resultMap>
+
+	<select id="selectShpMap" resultMap="getGeomResult">
+	WITH ranked_offices AS (
+  SELECT ma.*,
+		 ROW_NUMBER() OVER (ORDER BY office_total DESC) as office_rank
+	FROM (
+		 SELECT	left(reg_cmptnc_cd, 2) as reg_cmptnc_cd
+		 	  ,	count(case when bzmn_se_cd = '1' then '주사업소' end) as main_office
+		 	  , count(case when bzmn_se_cd = '2' then '영업소' end) as business_office
+		 	  , COUNT(*) as office_total
+		   FROM dqvs.dvs_rac_mt_agency
+		  WHERE left(reg_cmptnc_cd, 2) IN ('11', '28', '50', '44', '26', '47', '27', '43', '41', '29', '52', '46', '51', '31', '48', '30', '36')
+		  and bsn_stts_cd = '0'
+		  GROUP BY left(reg_cmptnc_cd, 2)
+	   ) ma
+   )
+  SELECT sk.ctpv_cd
+  	   , r.main_office
+  	   , r.business_office
+  	   , r.office_total
+  	   , CASE
+		   WHEN r.office_rank <![CDATA[<=]]> 4 THEN 'Level1'
+		   WHEN r.office_rank <![CDATA[>]]> 4 AND r.office_rank <![CDATA[<=]]> 8 THEN 'Level2'
+		   WHEN r.office_rank <![CDATA[>]]> 8 AND r.office_rank <![CDATA[<=]]> 12 THEN 'Level3'
+		 ELSE 'Level4'
+	 END AS office_total_level
+	   , sk.ctpv_eng_nm
+	   , sk.ctpv_nm
+	   , ST_ASBINARY(ST_Transform(sk.geom, 4326)) as geometry
+    FROM dqvs.dvs_cmm_mt_sd sk
+    LEFT OUTER JOIN ranked_offices r ON sk.ctpv_cd = r.reg_cmptnc_cd
+    where left(sk.ctpv_cd, 2) IN ('11', '28', '50', '44', '26', '47', '27', '43', '41', '29', '52', '46', '51', '31', '48', '30', '36');
+	</select>
+	
+	<select id="selectHardCodeShpMap" resultMap="getGeomResult">
+	  WITH ranked_offices AS(
+	select parameter_vl as main_office, left(parameter_nm, 2) as ctpv_cd,  ROW_NUMBER() OVER (ORDER BY parameter_vl::numeric  DESC) as office_rank
+	from dqvs.dvs_cmm_mt_parameter
+	where parameter_sn in (14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30)
+	)
+	  SELECT 'Y' as check, sk.ctpv_cd
+  	   , r.main_office
+  	   , CASE
+		   WHEN r.office_rank <![CDATA[<=]]> 4 THEN 'Level1'
+		   WHEN r.office_rank <![CDATA[>]]> 4 AND r.office_rank <![CDATA[<=]]> 8 THEN 'Level2'
+		   WHEN r.office_rank <![CDATA[>]]> 8 AND r.office_rank <![CDATA[<=]]> 12 THEN 'Level3'
+		 ELSE 'Level4'
+	 END AS office_total_level
+	   , sk.ctpv_eng_nm
+	   , sk.ctpv_nm
+	   , ST_ASBINARY(ST_Transform(sk.geom, 4326)) as geometry
+    FROM dqvs.dvs_cmm_mt_sd sk
+    LEFT OUTER JOIN ranked_offices r ON sk.ctpv_cd = r.ctpv_cd
+    where left(sk.ctpv_cd, 2) IN ('11', '28', '50', '44', '26', '47', '27', '43', '41', '29', '52', '46', '51', '31', '48', '30', '36');
+	</select>
+	
+	<select id="agencyCheck" resultType="string">
+	 select parameter_vl
+   from dqvs.dvs_cmm_mt_parameter
+   where parameter_nm = 'agnt_yn'
+	</select>
+	
+	
+
+	<select id="searchTopNotice" resultType="map">
+	SELECT
+			tb1.*
+		FROM (
+			SELECT
+				row_number() over(ORDER BY pst_sn DESC) as rn
+				, pst_sn
+				, pst_ttl
+				, to_char(reg_dt, 'yyyy-mm-dd') as reg_dt
+				, atch_file_sn
+				, inq_cnt
+			FROM dqvs.dvs_cmm_mt_post
+			WHERE
+				menu_cd = 'BBST01'
+			and use_yn = 'Y'
+		) tb1
+		WHERE
+			1 = 1
+			and tb1.rn <![CDATA[<=]]> '3'
+			ORDER BY tb1.rn ASC
+	</select>
+
+	<select id="selectMenuInfo" parameterType="paraMap" resultType="resultMap">
+		WITH RECURSIVE re(menu_cd, menu_nm, up_menu_cd, menu_ordr, menu_url, depth, path, cycle) AS (
+			SELECT mi.menu_cd
+				 , mi.menu_nm
+				 , mi.up_menu_cd
+				 , mi.menu_ordr
+				 , mi.menu_url
+				 , 1
+				 , ARRAY[mi.menu_cd::TEXT]
+				 , FALSE
+			  FROM dqvs.dvs_cmm_mt_menu mi
+			  JOIN dqvs.dvs_cmm_rt_access ami ON mi.menu_cd = ami.menu_cd
+			 WHERE ami.use_yn = 'Y'
+			   AND mi.use_yn = 'Y'
+			   AND mi.menu_level = '1'
+			   AND ami.authrt_cd = #{authorId}
+			   AND mi.menu_cd != mi.up_menu_cd	/* 무한루프 방지 */
+			 UNION ALL
+			SELECT mi.menu_cd
+				 , mi.menu_nm
+				 , mi.up_menu_cd
+				 , mi.menu_ordr
+				 , mi.menu_url
+				 , re.depth + 1
+				 , ARRAY_APPEND(re.path, mi.menu_ordr::TEXT)
+				 , mi.menu_cd = ANY(re.path)
+			  FROM dqvs.dvs_cmm_mt_menu mi
+			  JOIN dqvs.dvs_cmm_rt_access ami ON mi.menu_cd = ami.menu_cd, re
+			 WHERE mi.up_menu_cd = re.menu_cd
+			   AND ami.use_yn = 'Y'
+			   AND mi.use_yn = 'Y'
+			   AND ami.authrt_cd = #{authorId}
+			   AND mi.menu_cd != mi.up_menu_cd	/* 무한루프 방지 */
+			   AND NOT cycle
+		)
+		SELECT *
+		  FROM re
+		 WHERE SUBSTR(menu_cd, 1, 4) = 'PMNU'
+		 ORDER BY path, menu_ordr;
+	</select>
+
+	<!-- URL에 대한 메뉴 코드 조회 -->
+	<select id="selectMenuCd" parameterType="paraMap" resultType="string">
+		SELECT menu_cd
+		  FROM dqvs.dvs_cmm_mt_menu
+		 WHERE use_yn = 'Y'
+		   AND menu_url = #{urlSr}
+	</select>
+
+	<!-- 전체 메뉴 URL 조회(권한무시) -->
+	<select id="selectAllMenu" resultType="resultMap">
+<!-- 	WITH RECURSIVE menu_recursive AS ( -->
+<!-- 	    SELECT menu_url, menu_cd, up_menu_cd, menu_level, menu_ordr -->
+<!-- 	    FROM dqvs.dvs_cmm_mt_menu -->
+<!-- 	    WHERE menu_level = 1 AND use_yn = 'Y' -->
+<!-- 	    UNION ALL -->
+<!-- 	    SELECT m.menu_url, m.menu_cd, m.up_menu_cd, m.menu_level, m.menu_ordr -->
+<!-- 	    FROM dqvs.dvs_cmm_mt_menu m -->
+<!-- 	    INNER JOIN menu_recursive mr ON mr.menu_cd = m.up_menu_cd -->
+<!-- 	    WHERE m.use_yn = 'Y' -->
+<!-- 	) -->
+<!-- 	SELECT menu_url FROM menu_recursive ORDER BY menu_level, menu_ordr; -->
+		SELECT menu_url
+		  FROM dqvs.dvs_cmm_mt_menu
+		 WHERE use_yn = 'Y'
+		 ORDER BY menu_level, menu_ordr
+	</select>
+
+	 <!-- 접속이력 -->
+    <insert id="insertUserConnLog">
+    	insert into  dvs_cmm_hs_sys(
+			user_sn
+		,	user_ip_addr
+		,	menu_cd
+		,	dmnd_url_addr
+		,	dmnd_type_cd
+		,	dwnld_rsn
+		,	req_hr
+		,	dmnd_dt
+		,   menu_type
+		,   inq_nocs
+		)values(
+		<choose>
+			<when test="userSn != null and userSn != ''">
+				#{userSn}
+			</when>
+			<otherwise>
+				'0'::numeric
+				<!-- . -->
+				
+				<!-- . -->
+			</otherwise>
+		</choose>
+			,	#{userIp}
+			,	#{menuId}
+			,   #{url}
+			,	#{typeCd}
+			,	#{excelDownReason}
+			,	#{excTime}
+			,	NOW()
+			,   #{menuType}
+			,   #{total}
+			);
+    </insert>
+	
+	
+	<select id="selectMainPopup" resultType="resultMap">
+	<!-- 공지사항 팝업 -->
+		SELECT
+			popup_sn
+			, popup_ttl
+			, popup_cn
+			, pstg_bgng_dt
+			, pstg_end_dt
+			, TO_CHAR(pstg_bgng_dt, 'YYYY-MM-DD') AS pstg_bgng_dt_char
+			, TO_CHAR(pstg_end_dt, 'YYYY-MM-DD') AS pstg_end_dt_char
+			, atch_file_sn
+			, COALESCE(dcmf.atch_file_nm, '-') AS atch_file_nm
+			, prsl_authrt_cd
+		FROM
+			dqvs.dvs_cmm_mt_popinfo dcmp
+		LEFT JOIN
+			dqvs.dvs_cmm_mt_file dcmf ON dcmp.atch_file_sn = dcmf.file_sn
+		WHERE
+			dcmp.del_yn = 'N'
+			AND dcmp.use_yn = 'Y'
+			AND CURRENT_TIMESTAMP BETWEEN pstg_bgng_dt AND pstg_end_dt
+			AND prsl_authrt_cd IS NOT NULL
+		ORDER BY popup_sn ASC
+	</select>
+
+
+	<select id="selectSvrStat" resultType="resultMap">
+		<!-- api 서버 상태 -->
+		SELECT
+			TO_CHAR(crtrtm, 'YYYY-MM-DD') AS crtrtm
+		,	COALESCE(chck_1, '-') AS chck_1
+		,	COALESCE(chck_2, '-') AS chck_2
+		,	COALESCE(chck_3, '-') AS chck_3
+		,	COALESCE(chck_4, '-') AS chck_4
+		,	COALESCE(chck_5, '-') AS chck_5
+		,	COALESCE(chck_6, '-') AS chck_6
+		,	rmrk
+		FROM
+			dvs_cmm_bs_svr_stat;
+	</select>
+</mapper>

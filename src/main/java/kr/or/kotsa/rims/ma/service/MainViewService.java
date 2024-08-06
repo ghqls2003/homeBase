@@ -1,0 +1,52 @@
+package kr.or.kotsa.rims.ma.service;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
+
+public interface MainViewService {
+
+	/**
+	 * 메인지도 조회
+	 * @return
+	 * @throws RimsException
+	 */
+	public List<Map<String, Object>> selectShpMap(Map<String, Object> paramsMap) throws RimsException;
+
+	/**
+	 * 공지사항 조회
+	 * @return
+	 * @throws RimsException
+	 */
+	public List<Map<String, Object>> searchTopNotice(Map<String, Object> paramsMap) throws RimsException;
+
+	/**
+     * 메뉴 조회
+     * @param paramsMap
+     * @return
+     * @throws MtisException
+     */
+    Map<String, Object> menuInfoList(HttpServletRequest request,Map<String, Object> paramsMap) throws RimsException;
+    
+    /**
+     * 현재 매뉴ID 조회
+     * @return
+     * @throws RimsException
+     */
+    public String selectMenuCd(Map<String, Object> paramsMap) throws RimsException;
+
+    /**
+   	 * 메인화면 팝업 조회
+     * @param authrtCd 
+   	 */
+   public List<Map<String, Object>> selectMainPopup(String authrtCd) throws RimsException ;
+
+   public Map<String, Object> selectSvrStat() throws RimsException ;
+
+
+
+
+}

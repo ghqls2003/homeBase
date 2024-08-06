@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<bean id="ldapConnectionPoolDigester" class="com.biz.app.common.digester.BizDigesterLoader" factory-method="getLoader">
+		<constructor-arg value="config/pooling/repository/ldap/ldap-pool-rules.xml"/>
+	</bean>
+
+	<bean id="ldapConnectionPool" class="com.biz.app.common.spring.BizLdapConnectionPoolLoader" factory-method="createLdapConnectionPool">
+		<constructor-arg ref="ldapConnectionPoolDigester"/>
+		<constructor-arg value="config/ldap-pool-config.xml"/>
+	</bean>
+	
+	<bean id="poolManager" class="com.biz.app.common.pooling.impl.BizObjectPoolManagerImpl" factory-method="getInstance">
+		<property name="poolMap">
+			<map>
+				<entry>
+					<key><value>REPOSITORY_POOL</value></key>
+					<ref bean="ldapConnectionPool"/>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="ldapQueryMapLoader" class="com.biz.app.common.spring.BizLdapQueryMapLoader" init-method="readLdapQueryMapConfigFile">
+		<constructor-arg value="resources/repository/ldap/ldap-maping-rules.xml"/>
+		<constructor-arg value="resources/repository/ldap/ldap-maps-config.xml"/>
+	</bean>
+	
+	<bean id="ldapQueryExecutor" class="com.biz.app.common.repository.ldap.BizLdapQueryExecutor">
+		<constructor-arg value="REPOSITORY_POOL"/>
+	</bean>
+
+</beans>

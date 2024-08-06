@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>datasource.properties</comment>
+	<entry key="namingProviderIP">localhost</entry>
+	<entry key="namingProviderPort">9101</entry>
+	<entry key="wasType">tomcat</entry>
+	<entry key="repositoryType">tsmob</entry>
+
+	<entry key="xk.onetime.session">true</entry>
+<entry key="xk.use.db.schema">false</entry>
+<entry key="xk.db.schema"></entry>
+
+<entry key="xcs.use.db.schema">false</entry>
+<entry key="xcs.db.schema"></entry>
+</properties>

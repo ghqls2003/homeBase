@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="api.apiview">
+
+
+	<select id="listApiview" parameterType="paraMap" resultType="resultMap">
+		select
+			t2.*,
+			concat(t2.co_nm, ' (' , t2.user_id, ')')as co_nmid
+			from(
+				SELECT 
+    			ROW_NUMBER() OVER (ORDER BY T1.dmnd_dt DESC) AS rn,
+			    sum(dsha.dmnd_cnt) as dmnd_cnt,
+			    sum(dsha.dmnd_dtl_cnt) as dmnd_dtl_cnt,
+			    drma.co_nm,
+			    CASE 
+			        WHEN t1.stts_cd = '1' THEN '신청'
+			        WHEN t1.stts_cd = '2' THEN '활용'
+			        WHEN t1.stts_cd = '3' THEN '반려'
+			        WHEN t1.stts_cd = '4' THEN '중지'
+			    END AS stts_cd_name,
+			    t1.api_nm,
+			    t1.*
+			FROM (
+			    SELECT 
+			        dams.user_sn,
+			        dcmu.bzmn_sn,
+			        dams.api_sn,
+			        dami.api_nm,
+			        dams.stts_cd,
+			        dams.dmnd_dt,
+			        dams.expry_ymd,
+			        dams.aprv_dt,
+			        dams.rjct_rsn,
+			        dams.rjct_user_sn,
+			        dams.rjct_dt,
+			        dcms.user_id
+			    FROM dqvs.dvs_api_mt_stts AS dams 
+			    LEFT JOIN dqvs.dvs_cmm_mt_user AS dcmu 
+			    ON dcmu.user_sn = dams.user_sn
+			    LEFT JOIN dqvs.dvs_api_mt_info AS dami 
+			    ON dami.api_sn = dams.api_sn
+				left join dqvs.dvs_cmm_mt_sso as dcms on
+				dcms.user_sn = dams.user_sn
+			     <choose>
+		            <when test='AuthCd.indexOf("Z") != -1 or AuthCd.indexOf("M") != -1 or AuthCd.indexOf("K") != -1 or AuthCd.indexOf("D") != -1'> <!-- 관리자/공단/국토부/개발자 -->
+		                 WHERE 1 = 1
+		            </when>
+		            <otherwise> <!-- 그 외는 로그인 당사자의 조회 건만 표시 -->
+		                 WHERE dams.user_sn = #{userSn}::numeric
+		            </otherwise>
+	        	</choose>
+			        <if test='searchSttsCd2 == "1"'>
+			            AND dams.stts_cd = '1'
+			        </if>
+			        <if test='searchSttsCd2 == "2"'>
+			            AND dams.stts_cd = '2'
+			        </if>
+			        <if test='searchSttsCd2 == "3"'>
+			            AND dams.stts_cd = '3'
+			        </if>
+			        <if test='searchSttsCd2 == "4"'>
+			            AND dams.stts_cd = '4'
+			        </if>
+			        <if test='searchSttsCd == "RCompanyId"'>
+			            AND dcms.user_id LIKE '%' || LOWER(#{searchReq}) || '%'
+			        </if>
+			        <if test='searchSttsCd == "APINm"'>
+			            AND dami.api_nm LIKE '%' || LOWER(#{searchReq}) || '%'
+			        </if>
+			) AS T1
+			LEFT JOIN (
+			    SELECT bzmn_sn, co_nm
+			    FROM dqvs.dvs_rac_mt_agency
+			    GROUP BY bzmn_sn, co_nm
+			) AS drma ON T1.bzmn_sn = drma.bzmn_sn
+			LEFT JOIN (
+			    SELECT user_sn as dd, api_sn, sum(dmnd_cnt) as dmnd_cnt, sum(dmnd_dtl_cnt) as dmnd_dtl_cnt
+			    FROM dqvs.dvs_sts_hs_apicnt
+			    GROUP BY user_sn, api_sn
+			) AS dsha ON T1.user_sn = dsha.dd AND T1.api_sn = dsha.api_sn
+				<if test='searchSttsCd == "RCompnay"'>
+		   			where drma.co_nm LIKE '%' || LOWER(#{searchReq}) || '%'
+				</if>
+			GROUP BY
+			t1.user_id,
+			drma.co_nm,
+			t1.stts_cd,
+			t1.api_nm,
+			t1.user_sn,
+			t1.bzmn_sn,
+			t1.api_sn,
+			t1.stts_cd,
+			t1.dmnd_dt,
+			t1.expry_ymd,
+			t1.aprv_dt,
+			t1.rjct_rsn,	
+			t1.rjct_user_sn,
+			t1.rjct_dt
+		)as T2
+			where 1=1		 
+		<if test="take != '' and take != null">
+		  	And RN <![CDATA[<=]]> (#{page} * #{take})
+		</if>
+		<if test="skip != '' and skip != null">
+			AND RN <![CDATA[>]]> #{skip}
+		</if>
+   </select>
+   		
+   <select id="listApiviewCnt" parameterType="paraMap" resultType="int">
+		select
+			count(t2.*)
+			from(
+				SELECT 
+    			ROW_NUMBER() OVER (ORDER BY T1.dmnd_dt DESC) AS rn,
+			    sum(dsha.dmnd_cnt) as dmnd_cnt,
+			    sum(dsha.dmnd_dtl_cnt) as dmnd_dtl_cnt,
+			    drma.co_nm,
+			    CASE 
+			        WHEN t1.stts_cd = '1' THEN '신청'
+			        WHEN t1.stts_cd = '2' THEN '활용'
+			        WHEN t1.stts_cd = '3' THEN '반려'
+			        WHEN t1.stts_cd = '4' THEN '중지'
+			    END AS stts_cd_name,
+			    t1.api_nm,
+			    t1.*
+			FROM (
+			    SELECT 
+			        dams.user_sn,
+			        dcmu.bzmn_sn,
+			        dams.api_sn,
+			        dami.api_nm,
+			        dams.stts_cd,
+			        dams.dmnd_dt,
+			        dams.expry_ymd,
+			        dams.aprv_dt,
+			        dams.rjct_rsn,
+			        dams.rjct_user_sn,
+			        dams.rjct_dt,
+			        dcms.user_id
+			    FROM dqvs.dvs_api_mt_stts AS dams 
+			    LEFT JOIN dqvs.dvs_cmm_mt_user AS dcmu 
+			    ON dcmu.user_sn = dams.user_sn
+			    LEFT JOIN dqvs.dvs_api_mt_info AS dami 
+			    ON dami.api_sn = dams.api_sn
+				left join dqvs.dvs_cmm_mt_sso as dcms on
+				dcms.user_sn = dams.user_sn
+			     <choose>
+		            <when test='AuthCd.indexOf("Z") != -1 or AuthCd.indexOf("M") != -1 or AuthCd.indexOf("K") != -1 or AuthCd.indexOf("D") != -1'> <!-- 관리자/공단/국토부/개발자 -->
+		                 WHERE 1 = 1
+		            </when>
+		            <otherwise> <!-- 그 외는 로그인 당사자의 조회 건만 표시 -->
+		                 WHERE dams.user_sn = #{userSn}::numeric
+		            </otherwise>
+	        	</choose>
+			        <if test='searchSttsCd2 == "1"'>
+			            AND dams.stts_cd = '1'
+			        </if>
+			        <if test='searchSttsCd2 == "2"'>
+			            AND dams.stts_cd = '2'
+			        </if>
+			        <if test='searchSttsCd2 == "3"'>
+			            AND dams.stts_cd = '3'
+			        </if>
+			        <if test='searchSttsCd2 == "4"'>
+			            AND dams.stts_cd = '4'
+			        </if>
+			        <if test='searchSttsCd == "RCompanyId"'>
+			            AND dcms.user_id LIKE '%' || LOWER(#{searchReq}) || '%'
+			        </if>
+			        <if test='searchSttsCd == "APINm"'>
+			            AND dami.api_nm LIKE '%' || LOWER(#{searchReq}) || '%'
+			        </if>
+			) AS T1
+			LEFT JOIN (
+			    SELECT bzmn_sn, co_nm
+			    FROM dqvs.dvs_rac_mt_agency
+			    GROUP BY bzmn_sn, co_nm
+			) AS drma ON T1.bzmn_sn = drma.bzmn_sn
+			LEFT JOIN (
+			    SELECT user_sn as dd, api_sn, sum(dmnd_cnt) as dmnd_cnt, sum(dmnd_dtl_cnt) as dmnd_dtl_cnt
+			    FROM dqvs.dvs_sts_hs_apicnt
+			    GROUP BY user_sn, api_sn
+			) AS dsha ON T1.user_sn = dsha.dd AND T1.api_sn = dsha.api_sn
+				<if test='searchSttsCd == "RCompnay"'>
+		   			where drma.co_nm LIKE '%' || LOWER(#{searchReq}) || '%'
+				</if>
+			GROUP BY
+			t1.user_id,
+			drma.co_nm,
+			t1.stts_cd,
+			t1.api_nm,
+			t1.user_sn,
+			t1.bzmn_sn,
+			t1.api_sn,
+			t1.stts_cd,
+			t1.dmnd_dt,
+			t1.expry_ymd,
+			t1.aprv_dt,
+			t1.rjct_rsn,	
+			t1.rjct_user_sn,
+			t1.rjct_dt
+		)as T2
+    </select>
+    		
+    <select id="detaillistView" resultType="map">
+		SELECT 
+			    G1.*,
+			    CONCAT(agency2.co_nm, '(', G1.userId_2, ')') AS co_nm_user_id2
+			FROM (
+			    SELECT 
+			        T.*,
+			        CONCAT(agency.co_nm, '(', T.user_id, ')') AS co_nm_user_id,
+			        dcmu2.bzmn_sn AS bzmn_sn_2,
+			        dcmu3.user_id  AS userId_2
+			    FROM (
+			        SELECT 
+			            ROW_NUMBER() OVER (ORDER BY dahr.dmnd_dt DESC) AS RN,
+			            dahr.user_sn,
+			            dahr.dmnd_dt,
+			            dahr.rqstr_sn,
+			            dcms.user_id,
+			            dahr.dmnd_ymd,
+			            dcmc.cd_expln,
+			            CASE
+			                WHEN dahr.dln IS NULL THEN NULL
+			                WHEN LENGTH(dahr.dln) <![CDATA[<=]]>  4 THEN dahr.dln
+			                ELSE '*******' || SUBSTRING(dahr.dln, 8)
+			            END AS dln,
+			            dahr.dmnd_cnt,
+			            CASE
+			                WHEN dahr.user_sn = dahr.rqstr_sn THEN '플래폼'
+			                ELSE '대여자'
+			            END AS user_type,
+			            dahr.dmnd_rslt_cd,
+			            dcmu.bzmn_sn AS bzmn_sn_1
+			        FROM 
+			            dqvs.dvs_api_hs_req AS dahr
+			        LEFT JOIN 
+			            dqvs.dvs_cmm_mt_sso AS dcms ON dcms.user_sn = dahr.rqstr_sn
+			        LEFT JOIN 
+			            dqvs.dvs_cmm_mt_user AS dcmu ON dcmu.user_sn = dahr.rqstr_sn
+			        LEFT JOIN 
+            			dqvs.dvs_cmm_mt_code AS dcmc ON dcmc.cd = dahr.dmnd_rslt_cd    
+							<choose>
+						        <when test='AuthCd.indexOf("Z") != -1 or AuthCd.indexOf("M") != -1 or AuthCd.indexOf("K") != -1 or AuthCd.indexOf("D") != -1'> <!-- 관리자/공단/국토부/개발자 -->
+						             WHERE 1 = 1
+						        </when>
+						        <when test='AuthCd.indexOf("G") != -1'> <!-- 지자체 : 관할지역 내 사업자의 사용자 -->
+						             WHERE dahr.user_sn = #{userSn}::numeric
+						        </when>
+						        <when test='AuthCd.equals("S01")'> <!-- 주사무소관리자면 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
+						             WHERE dahr.rqstr_sn = #{userSn}::numeric
+						        </when>
+						        <when test='AuthCd.equals("S02")'> <!-- 영업소관리자면 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시 -->
+						             WHERE dahr.rqstr_sn = #{userSn}::numeric
+						        </when>
+						        <when test='AuthCd.equals("S03")'> <!-- 영업소관리자면 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시 -->
+						             WHERE dahr.rqstr_sn = #{userSn}::numeric
+						        </when>
+						        <when test='AuthCd.equals("S04")'> <!-- 영업소관리자면 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시 -->
+						             WHERE dahr.user_sn = #{userSn}::numeric
+						        </when>
+						        <otherwise> <!-- 그 외는 로그인 당사자의 조회 건만 표시 -->
+						             WHERE dahr.rqstr_sn = #{userSn}::numeric
+						        </otherwise>
+						    </choose>
+			        		and cd_group = 'dmnd_rslt_cd'
+					        AND TO_DATE(dahr.dmnd_ymd, 'YYYYMMDD') = #{endPicker02}::DATE
+					        AND dahr.api_sn = #{apiSn}
+			        ORDER BY 
+			            dahr.dmnd_dt DESC
+			    ) T
+			    LEFT JOIN 
+			        dqvs.dvs_rac_mt_agency AS agency ON t.bzmn_sn_1 = agency.bzmn_sn
+			    LEFT JOIN 
+			        dqvs.dvs_cmm_mt_user AS dcmu2 ON T.user_sn = dcmu2.user_sn
+			    LEFT JOIN 
+			        dqvs.dvs_cmm_mt_sso AS dcmu3 ON T.user_sn = dcmu3.user_sn
+			) G1
+			LEFT JOIN 
+			    dqvs.dvs_rac_mt_agency AS agency2 ON G1.bzmn_sn_2 = agency2.bzmn_sn
+					<if test="take != '' and take != null">
+					  WHERE RN <![CDATA[<=]]> (#{page} * #{take})
+					</if>
+					<if test="skip != '' and skip != null">
+					AND RN <![CDATA[>]]> #{skip}
+					</if>	
+    </select>
+    <select id="detaillistViewCnt" resultType="int">
+    	select count(*) from (
+			SELECT T.*
+				FROM (
+				    SELECT 
+				        ROW_NUMBER() OVER (ORDER BY dahr.dmnd_dt DESC) AS RN,
+				        dahr.user_sn,
+				        dahr.dmnd_dt
+				    FROM dqvs.dvs_api_hs_req as dahr
+				    WHERE
+   				        dahr.dmnd_dt <![CDATA[>=]]> TO_DATE(#{startPicker02}, 'YYYYMMDD')
+				        AND dahr.dmnd_dt <![CDATA[<]]> TO_DATE(#{endPicker02}, 'YYYYMMDD') + INTERVAL '1 day'    
+				        <if test="userSn != '' and userSn != null">
+					        AND dahr.user_sn = #{userSn}::numeric
+				        </if>
+				        <if test="apiSn != '' and apiSn != null">
+				        	AND dahr.api_sn = #{apiSn}
+				        </if> 
+
+				    ORDER BY dahr.dmnd_dt DESC
+				) T
+			WHERE 1 = 1
+		) a
+    </select>	
+    
+    <select id="apiSttsViewCnt" resultType="int">
+		select
+				count(*)
+			from
+				(
+					SELECT
+		   		    count(dahr.stts_cd),
+				    CASE
+				        WHEN dahr.stts_cd ='1' THEN '신청'
+				        WHEN dahr.stts_cd = '2' THEN '활용'
+				        WHEN dahr.stts_cd = '3' THEN '반려'
+				        ELSE '중지'
+				    END AS status
+				FROM
+				    dqvs.dvs_api_mt_stts dahr
+				JOIN dqvs.dvs_api_mt_info dami ON dahr.api_sn = dami.api_sn
+				WHERE
+				    dahr.user_sn = #{UserSn}::numeric
+				    AND dahr.dmnd_dt BETWEEN TO_DATE(#{startPicker02}, 'yyyy-mm-dd') AND TO_DATE(#{endPicker02}, 'yyyy-mm-dd')+1
+			        	<if test='searchSttsCd2 == "신청"'>
+				            AND dahr.stts_cd = '1'
+				        </if>
+				        <if test='searchSttsCd2 == "활용"'>
+				            AND dahr.stts_cd = '2'
+				        </if>
+				        <if test='searchSttsCd2 == "반려"'>
+				            AND dahr.stts_cd = '3'
+				        </if>
+				        <if test='searchSttsCd2 == "중지"'>
+				            AND dahr.stts_cd = '4'
+				        </if>
+				group by dahr.stts_cd 
+			) a
+    </select>	
+	<select id= "apiSttsView" parameterType="paraMap" resultType="resultMap">
+
+		SELECT
+   		    count(dahr.stts_cd),
+		    CASE
+		        WHEN dahr.stts_cd ='1' THEN '신청'
+		        WHEN dahr.stts_cd = '2' THEN '활용'
+		        WHEN dahr.stts_cd = '3' THEN '반려'
+		        ELSE '중지'
+		    END AS status
+		FROM
+		    dqvs.dvs_api_mt_stts dahr
+		JOIN dqvs.dvs_api_mt_info dami ON dahr.api_sn = dami.api_sn
+		    <choose>
+	            <when test='AuthCd.indexOf("Z") != -1 or AuthCd.indexOf("M") != -1 or AuthCd.indexOf("K") != -1 or AuthCd.indexOf("D") != -1'> <!-- 관리자/공단/국토부/개발자 -->
+	                 WHERE 1 = 1
+	            </when>
+	            <when test='AuthCd.indexOf("G") != -1'> <!-- 지자체 : 관할지역 내 사업자의 사용자 -->
+	                 WHERE dahr.user_sn = #{userSn}::numeric
+	            </when>
+	            <when test='AuthCd.equals("S01")'> <!-- 주사무소관리자면 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
+	                 WHERE dahr.user_sn = #{userSn}::numeric
+	            </when>
+	            <when test='AuthCd.equals("S02")'> <!-- 영업소관리자면 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시 -->
+	                 WHERE dahr.user_sn = #{userSn}::numeric
+	            </when>
+	            <otherwise> <!-- 그 외는 로그인 당사자의 조회 건만 표시 -->
+	                 WHERE dahr.user_sn = #{userSn}::numeric
+	            </otherwise>
+        	</choose>
+	        AND LOWER(dami.api_nm) LIKE '%' || LOWER(#{searchReq}) || '%'
+	        	<if test='searchSttsCd2 == "신청"'>
+		            AND dahr.stts_cd = '1'
+		        </if>
+		        <if test='searchSttsCd2 == "활용"'>
+		            AND dahr.stts_cd = '2'
+		        </if>
+		        <if test='searchSttsCd2 == "반려"'>
+		            AND dahr.stts_cd = '3'
+		        </if>
+		        <if test='searchSttsCd2 == "중지"'>
+		            AND dahr.stts_cd = '4'
+		        </if>
+		group by dahr.stts_cd 
+		    
+	</select>
+	<!-- 기간 연장 -->
+	<update id="updateUseExtendApi">
+		UPDATE dqvs.dvs_api_mt_stts
+		SET expry_ymd = TO_CHAR((TO_DATE(expry_ymd, 'YYYYMMDD') + INTERVAL '1 year'), 'YYYYMMDD')
+		WHERE 
+				<if test ="apiSn != '' and apiSn != null">
+		 			api_sn = #{apiSn}::numeric;
+			    </if>
+    </update>
+    		<!-- 사용 중지 -->
+    <update id="updateStopApiUse">
+      		UPDATE dqvs.dvs_api_mt_stts
+     		  SET stts_cd= 4 
+			where
+				<if test ="apiSn != '' and apiSn != null">
+					 api_sn = #{apiSn}::numeric
+			    </if>
+    </update>
+    <update id="updateApiReUse">
+      		UPDATE dqvs.dvs_api_mt_stts
+     		  SET stts_cd= 1 
+			where
+				<if test ="apiSn != '' and apiSn != null">
+					api_sn = #{apiSn}::numeric
+				</if>
+				<if test ="UserSn != '' and UserSn != null">
+					and user_sn = #{UserSn}::numeric
+			    </if>	
+
+    </update>
+    
+</mapper>

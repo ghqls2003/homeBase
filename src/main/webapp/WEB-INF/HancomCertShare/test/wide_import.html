@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>XecureCertShare Demo</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="cache-control" content="no-cache">
+<!-- <meta http-equiv="expires" content="0"> -->
+
+<link rel='stylesheet' type='text/css' href='../XecureCertShare/css/xcs_common.css' />
+<script language='javascript' src='../xecure_cs.js'></script>
+
+<script>
+	var gEnableDownload = true;
+	var gInstallCheckCount = 0;	
+
+	function install_callback (aResult)
+	{
+		switch (aResult)
+		{
+			case "XecureCertShare_NEED_INSTALL" : 	// 설치되지 않은 상태 
+			case "XecureCertShare_NEED_UPDATE" :	// 낮은 버전이 설치된 상태
+				if (gEnableDownload == true)
+				{
+					// 플랫폼별 파일 다운로드 처리 필요. 
+					window.location = XecureCertShare.mPlatform.aInstallPath; 
+					alert ('프로그램 설치가 필요합니다.');
+					gEnableDownload = false;
+				}
+				
+				if (gInstallCheckCount >= 5) // InstallCheck 횟수 설정.
+				{
+					alert ('프로그램 설치 후 다시 접속해 주세요.');
+				}
+				else
+				{
+					// InstallCheck 재시도.
+					setTimeout (function () {
+						gInstallCheckCount++;
+						XecureCertShare_installCheck (install_callback);
+					}, 1000);
+				}
+				
+				break;
+		}
+	}
+
+	XecureCertShareStart (true); //XFree (인자값 IgnoreInstallPage)
+	XecureCertShare_installCheck (install_callback);
+
+</script>
+</head>
+
+<body>
+	<div id="content" class="xcs_wide">
+	<h4 class="sub_tt">인증서 가져오기</h4>
+	<fieldset>
+		<legend>인증서 가져오기 입력폼</legend>
+		<div id="xcsImportDialog"></div>
+		<script type="text/javascript">
+			XecureCertShare.mDivInsertOption = 1;
+			XecureCertShare.SetUITarget(document.getElementById("xcsImportDialog"));
+			var setXCSImport = setInterval (function () {
+				if (XecureCertShare.mXCSXFree.mModuleLoad == true)
+				{
+					XecureCertShare.XCSImport();
+					clearInterval (setXCSImport);
+				}
+			}, 200);
+		</script>
+	</fieldset>
+	</div>
+</body>
+</html>

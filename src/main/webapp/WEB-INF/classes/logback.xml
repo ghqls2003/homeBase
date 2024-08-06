@@ -1,0 +1,24 @@
+<configuration>
+ <appender name="stout" class="ch.qos.logback.core.ConsoleAppender">
+  	<encoder>
+		<Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+	</encoder>
+	<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+		<level>DEBUG</level>
+	</filter>
+ </appender>
+ <appender name="rolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	<Append>true</Append>
+	<File>/home/seongkyu/was/apache-tomcat-8.5.4/webapps/ROOT/log/xkp.log</File>
+	<encoder>
+		<Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+	</encoder>
+	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+		<fileNamePattern>/home/seongkyu/was/apache-tomcat-8.5.4/webapps/ROOT/log/xkp.%d{yyyy-MM-dd}.log</fileNamePattern>
+	</rollingPolicy>
+ </appender>
+ <root level="DEBUG">
+	<appender-ref ref="stout"/>
+	<appender-ref ref="rolling"/>
+ </root>
+</configuration>

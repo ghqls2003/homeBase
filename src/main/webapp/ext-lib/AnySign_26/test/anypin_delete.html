@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="cache-control" content="no-cache">
+
+<script type="text/javascript" src="../anyPinInterface.js"></script>
+
+<!-- XecureKeyPad Plugin -->
+<script type="text/javascript" src="../XecureKeypad/js/xkeypad_config.js"></script>
+<script type="text/javascript" src="../XecureKeypad/js/xkeypad_html5_pin.js"></script>
+
+<!-- Pattern UI -->
+<link href="../patternLock/patternLock.css"  rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../patternLock/patternLockjQuery-1.12.4.js"></script>
+<script type="text/javascript" src="../patternLock/patternLock_min.js"></script>
+
+<style>
+.header-title {
+	border-bottom: 7px solid #4b5869;
+	cursor: pointer;
+}
+.logo {
+	width: 103px;
+	height: 36px;
+	background-position: 0 0;
+	background: url(../AnyPin/img/sp_com.png) no-repeat;
+}
+
+.visual_a {
+	border-bottom: 2px solid #ebebeb;
+	height: 81px;
+	padding-top: 58px;
+	text-align: center;
+}
+
+.visual_a h1 {
+	color: #4b5869;
+}
+
+.blank {
+	width: 300px;
+	height: 50px;
+	background: #fff;
+}
+
+.wrap {
+	width: 90%;
+	margin: 0 auto;
+}
+
+.visual_a h2 {
+	display: inline-block;
+	overflow: hidden;
+	font-size: 1px;
+	background: url(../AnyPin/img/sp_com2.png) no-repeat;
+	background-position: 0 -212px;
+	width: 219px;
+	height: 48px;
+	color: #fff;
+}
+
+#regist_step {
+	text-align: center;
+	font-size: 14px;
+	display: none;
+}
+
+#link_list {
+	margin-top: 10px;
+	text-align: center;
+	display: none;
+}
+
+.a-area {
+	color: #404249;
+	border-bottom: 1px solid black;
+	text-decoration: none;
+}
+.a-area:hover {
+	text-decoration: none;
+}
+.a-area:visited {
+	text-decoration: none;
+}
+</style>
+</head>
+<script>
+function goHome () {
+	location.href = 'anypin_delete.html';
+}
+
+function goRegistStep () {
+	location.href = 'anypin_regist.html';
+}
+
+function delete_callback (aResult) {
+}
+
+function delete_err_callback (aResult) {
+	if (aResult.code == AnyPin.mErrorCode.APN_ERROR_STORAGE_PIN_NOT_EXIST) {
+		document.getElementById("regist_step").style.display = "block";
+		document.getElementById("link_list").style.display = "none";
+	} else {
+		alert(aResult.msg);
+	}
+}
+
+function getPinIDList_err_callback (aResult) {
+	alert(aResult.msg);
+}
+
+function getPinIDList_callback (aResult) {
+	if (aResult > 0) {
+		AnyPin.UI.load('delete', delete_callback, delete_err_callback);
+		document.getElementById("link_list").style.display = "block";
+	} else {
+		document.getElementById("regist_step").style.display = "block";
+	}
+}
+
+function init() {
+	AnyPin.InitAnyPin();
+	AnyPin.GetPinIDList("", 16, getPinIDList_callback, getPinIDList_err_callback);
+}
+</script>
+<body onload="init();">
+<div class="wrap">
+	<div class="header-title" onclick="goHome();"><h1 class="logo"></h1></div>
+	<div class="visual_a">
+		<h2></h2>
+	</div>
+	<div class="blank"></div>
+	<div id="anypin" class="anypin_common">
+	</div>
+	<div id="regist_step">
+		편리한 로그인을 위해 PIN 인증을 이용해보세요.<br><br>
+		<a href="#" onclick="goRegistStep();">등록하기</a>
+	</div>
+	<div id="link_list">
+		<a href="./anypin_login.html" class="a-area" style="margin-right:40px">핀 인증</a>
+		<a href="./anypin_change.html" class="a-area">핀 변경</a>
+	</div>
+</div>
+</body>
+</html>

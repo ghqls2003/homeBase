@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ma.search">
+<!-- 문의사항 리스트 -->
+	<select id="inquiryList" resultType="map">
+		select
+			T.*,
+			dcmcm.menu_cd as dcmcm_menu_cd,
+			dcmcm.pst_sn as dcmcm_pst_sn,
+			case
+				when COUNT(dcmcm.pst_sn) <![CDATA[>]]> 0 then '답변완료'
+				else '답변대기'
+			end as comment_status,
+			COUNT(dcmcm.pst_sn) as comment_count
+		from
+			(
+			select
+				row_number() over(
+				order by dcmp.pst_sn desc) as rn,
+				dcmp.pst_sn,
+				dcmp.pst_cn,
+				dcmp.pst_ttl,
+				dcmp.pst_type_cd,
+				to_char(dcmp.reg_dt,
+				'yyyy-mm-dd') as reg_dt,
+				dcmp.atch_file_sn,
+				dcmp.inq_cnt,
+				dcmc.cd_nm,
+				dcmc.cd,
+				dcmc.cd_group,
+				dcmp.menu_cd,
+				dcmp.ogdp,
+				dcmp.use_yn
+			from
+				dqvs.dvs_cmm_mt_post as dcmp
+			left join dqvs.dvs_cmm_mt_code as dcmc
+		        on
+				dcmc.cd = dcmp.pst_type_cd
+			where 
+				dcmp.menu_cd = 'BBST02'
+				and dcmc.cd_group = 'pst_type_cd'
+				and dcmp.use_yn = 'Y' 
+				<if test="searchSttsCd == 'pst_ttl'">
+					and (pst_ttl LIKE '%' || #{search_wrd} || '%')
+				</if>
+				<if test="searchSttsCd == 'pst_cn'">
+					and (pst_cn LIKE '%' || #{search_wrd} || '%')
+				</if>
+				<if test="headerSearch != '' and headerSearch != null">
+					and (pst_ttl LIKE '%' || #{headerSearch} || '%' or pst_cn LIKE '%' || #{headerSearch} || '%')
+				</if>
+		    ) T
+		left join dqvs.dvs_cmm_mt_cmnt as dcmcm on
+			dcmcm.menu_cd = T.menu_cd
+			and dcmcm.pst_sn = T.pst_sn
+		where
+			1 = 1
+		    <if test="take != '' and take != null">
+		        AND t.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		    </if>
+		    <if test="skip != '' and skip != null">
+		        AND t.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+		    </if>
+		group by
+			T.rn,
+			T.pst_sn,
+			T.pst_ttl,
+			T.pst_type_cd,
+			T.reg_dt,
+			T.atch_file_sn,
+			T.inq_cnt,
+			T.cd_nm,
+			T.pst_cn,
+			T.cd,
+			T.cd_group,
+			T.menu_cd,
+			dcmcm.menu_cd,
+			dcmcm.pst_sn,
+			t.ogdp,
+			t.use_yn
+		order by
+			T.reg_dt DESC
+	</select>
+
+	<select id="inquiryListCnt" resultType="int">
+		select count(*) from (
+		select
+			T.*,
+			dcmcm.menu_cd as dcmcm_menu_cd,
+			dcmcm.pst_sn as dcmcm_pst_sn,
+			case
+				when COUNT(dcmcm.pst_sn) <![CDATA[>]]> 0 then '답변완료'
+				else '답변대기'
+			end as comment_status,
+			COUNT(dcmcm.pst_sn) as comment_count
+		from
+			(
+			select
+				row_number() over(
+				order by dcmp.pst_sn desc) as rn,
+				dcmp.pst_sn,
+				dcmp.pst_cn,
+				dcmp.pst_ttl,
+				dcmp.pst_type_cd,
+				to_char(dcmp.reg_dt,
+				'yyyy-mm-dd') as reg_dt,
+				dcmp.atch_file_sn,
+				dcmp.inq_cnt,
+				dcmc.cd_nm,
+				dcmc.cd,
+				dcmc.cd_group,
+				dcmp.menu_cd,
+				dcmp.ogdp
+			from
+				dqvs.dvs_cmm_mt_post as dcmp
+			left join dqvs.dvs_cmm_mt_code as dcmc
+		        on
+				dcmc.cd = dcmp.pst_type_cd
+			where
+				dcmp.menu_cd = 'BBST02'
+				and dcmc.cd_group = 'pst_type_cd'
+				and dcmp.use_yn = 'Y' 
+				<if test="searchSttsCd == 'pst_ttl'">
+					and (pst_ttl LIKE '%' || #{search_wrd} || '%')
+				</if>
+				<if test="searchSttsCd == 'pst_cn'">
+					and (pst_cn LIKE '%' || #{search_wrd} || '%')
+				</if>
+				<if test="headerSearch != '' and headerSearch != null">
+					and (pst_ttl LIKE '%' || #{headerSearch} || '%' or pst_cn LIKE '%' || #{headerSearch} || '%')
+				</if>
+		    ) T
+		left join dqvs.dvs_cmm_mt_cmnt as dcmcm on
+			dcmcm.menu_cd = T.menu_cd
+			and dcmcm.pst_sn = T.pst_sn
+		where
+			1 = 1
+		    <if test="take != '' and take != null">
+		        AND t.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		    </if>
+		    <if test="skip != '' and skip != null">
+		        AND t.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+		    </if>
+		group by
+			T.rn,
+			T.pst_cn,
+			T.pst_sn,
+			T.pst_ttl,
+			T.pst_type_cd,
+			T.reg_dt,
+			T.atch_file_sn,
+			T.inq_cnt,
+			T.cd_nm,
+			T.cd,
+			T.cd_group,
+			T.menu_cd,
+			dcmcm.menu_cd,
+			dcmcm.pst_sn,
+			t.ogdp
+		order by
+			T.rn asc
+		) T
+	</select>
+	
+	<select id="NoticeList" resultType="map">
+		SELECT T.* FROM (
+		SELECT
+			row_number() over(ORDER BY pst_sn DESC) as rn
+			, pst_sn
+			, pst_cn
+			, pst_ttl
+			, to_char(reg_dt, 'yyyy-mm-dd') as reg_dt
+			, atch_file_sn
+			, inq_cnt
+		FROM dvs_cmm_mt_post
+		where menu_cd = 'BBST01'
+				and use_yn = 'Y' 
+				<if test="searchSttsCd == 'pst_ttl'">
+					and (pst_ttl LIKE '%' || #{search_wrd} || '%')
+				</if>
+				<if test="searchSttsCd == 'pst_cn'">
+					and (pst_cn LIKE '%' || #{search_wrd} || '%')
+				</if>
+				<if test="headerSearch != '' and headerSearch != null">
+					and (pst_ttl LIKE '%' || #{headerSearch} || '%' or pst_cn LIKE '%' || #{headerSearch} || '%')
+				</if>
+		) T
+		WHERE 1 = 1
+			<if test="take != '' and take != null">
+				AND T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+			</if>
+			<if test="skip != '' and skip != null">
+				AND T.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+			</if>
+		ORDER BY T.reg_dt DESC
+	</select>
+
+	<select id="NoticeListCnt" resultType="int">
+		select count(*) from (
+		SELECT
+			row_number() over(ORDER BY pst_sn DESC) as rn
+			, pst_sn
+			, pst_cn
+			, pst_ttl
+			, to_char(reg_dt, 'yyyy-mm-dd') as reg_dt
+			, atch_file_sn
+			, inq_cnt
+		FROM dvs_cmm_mt_post
+		where menu_cd = 'BBST01'
+				and use_yn = 'Y' 
+				<if test="searchSttsCd == 'pst_ttl'">
+					and (pst_ttl LIKE '%' || #{search_wrd} || '%')
+				</if>
+				<if test="searchSttsCd == 'pst_cn'">
+					and (pst_cn LIKE '%' || #{search_wrd} || '%')
+				</if>
+				<if test="headerSearch != '' and headerSearch != null">
+					and (pst_ttl LIKE '%' || #{headerSearch} || '%' or pst_cn LIKE '%' || #{headerSearch} || '%')
+				</if>
+						) T
+	</select>
+	
+		<select id="FAQList" resultType="map">
+		SELECT T.* FROM (
+		SELECT
+			row_number() over(ORDER BY pst_sn DESC) as rn
+			, pst_sn
+			, pst_ttl
+			, pst_cn
+			, to_char(reg_dt, 'yyyy-mm-dd') as reg_dt
+			, atch_file_sn
+			, (select cd_nm from dvs_cmm_mt_code dcmc where cd_group = 'faq_type_cd' and cd = pst_type_cd)
+		FROM dvs_cmm_mt_post
+		where menu_cd = 'BBST03'
+			and use_yn = 'Y' 
+				<if test="searchSttsCd == 'pst_ttl'">
+					and (pst_ttl LIKE '%' || #{search_wrd} || '%')
+				</if>
+				<if test="searchSttsCd == 'pst_cn'">
+					and (pst_cn LIKE '%' || #{search_wrd} || '%')
+				</if>
+				<if test="headerSearch != '' and headerSearch != null">
+					and (pst_ttl LIKE '%' || #{headerSearch} || '%' or pst_cn LIKE '%' || #{headerSearch} || '%')
+				</if>
+						) T
+		WHERE 1 = 1
+			<if test="take != '' and take != null">
+				AND T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+			</if>
+			<if test="skip != '' and skip != null">
+				AND T.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+			</if>
+		ORDER BY T.reg_dt DESC
+	</select>
+
+	<select id="FAQListCnt" resultType="int">
+		select count(*) from (
+		SELECT
+			row_number() over(ORDER BY pst_sn DESC) as rn
+			, pst_sn
+			, pst_ttl
+			, pst_cn
+			, to_char(reg_dt, 'yyyy-mm-dd') as reg_dt
+			, atch_file_sn
+			, pst_type_cd
+		FROM dvs_cmm_mt_post
+		where menu_cd = 'BBST03'
+			and use_yn = 'Y' 
+				<if test="searchSttsCd == 'pst_ttl'">
+					and (pst_ttl LIKE '%' || #{search_wrd} || '%')
+				</if>
+				<if test="searchSttsCd == 'pst_cn'">
+					and (pst_cn LIKE '%' || #{search_wrd} || '%')
+				</if>
+				<if test="headerSearch != '' and headerSearch != null">
+					and (pst_ttl LIKE '%' || #{headerSearch} || '%' or pst_cn LIKE '%' || #{headerSearch} || '%')
+				</if>
+		) T
+	</select>
+	
+
+	<!-- 공지사항 상세정보(내용) -->
+	<select id="inquiryDetailInfo" resultType="map">
+	select
+		row_number() over(
+	order by
+		dcmp.pst_sn desc) as rn,
+		dcmp.pst_sn,
+		dcmf.atch_file_nm,		
+		dcmp.pst_ttl,
+		to_char(dcmp.reg_dt,
+		'yyyy-mm-dd') as reg_dt,
+		dcmp.atch_file_sn,
+		dcmp.inq_cnt,
+		dcmp.ogdp,
+		dcmp.pst_cn,
+		dcmp.cmnt_use_yn,
+		dcmp.atch_file_sn::text
+	from
+		dqvs.dvs_cmm_mt_post as dcmp
+			LEFT JOIN (
+			SELECT
+				file_sn
+				, atch_file_nm
+			FROM dqvs.dvs_cmm_mt_file ) dcmf
+		ON dcmp.atch_file_sn = dcmf.file_sn
+		where
+		dcmp.menu_cd = 'BBST02' 
+		AND dcmp.pst_sn = #{pstSn}::numeric
+	</select>
+
+	<!-- 공지사항 상세정보(내용 카운트) -->
+	<select id="inquiryDetailInfoCnt" resultType="int">
+		SELECT
+			max(pst_sn) as pst_sn
+		FROM
+			dvs_cmm_mt_post
+		WHERE
+			menu_cd = 'BBST02'
+	</select>
+
+	<update id="updateinquiryCnt">
+		UPDATE
+			dqvs.dvs_cmm_mt_post
+		SET inq_cnt = #{inqCnt}+1
+		WHERE menu_cd = 'BBST02'
+			  AND pst_sn = #{pstSn}::numeric
+	</update>
+
+	<!-- 문의하기 상세정보(이전글이 없는 경우) -->
+	<select id="inquiryDetailNullPrevTitle" resultType="map">
+		SELECT
+		    next.pst_sn AS next_pst_sn
+		    , next.pst_ttl AS next_pst_ttl
+		    , NULL AS prev_pst_sn
+		    , NULL AS prev_pst_ttl
+		FROM
+		    dqvs.dvs_cmm_mt_post next
+		LEFT JOIN
+		    dqvs.dvs_cmm_mt_post prev
+		    ON next.menu_cd = prev.menu_cd
+		WHERE
+		    next.menu_cd = 'BBST02'
+		    AND next.pst_sn = #{nextPstSn}::numeric
+		    AND prev.pst_sn = 1
+	</select>
+
+	<!-- 공지사항 상세정보(다음글이 없는 경우) -->
+	<select id="inquiryDetailNullNextTitle" resultType="map">
+		SELECT
+		    NULL AS next_pst_sn
+		    , NULL AS next_pst_ttl
+		    , prev.pst_sn AS prev_pst_sn
+		    , prev.pst_ttl AS prev_pst_ttl
+		FROM
+		    dqvs.dvs_cmm_mt_post next
+		LEFT JOIN
+		    dqvs.dvs_cmm_mt_post prev
+		    ON next.menu_cd = prev.menu_cd
+		WHERE
+		    next.menu_cd = 'BBST02'
+		    AND next.pst_sn = 1
+		    AND prev.pst_sn = #{prevPstSn}::numeric
+	</select>
+
+	<!-- 공지사항 상세정보(이전글, 다음글 제목) -->
+	<select id="inquiryDetailTitle" resultType="map">
+		SELECT
+		    next.pst_sn AS next_pst_sn
+		    , next.pst_ttl AS next_pst_ttl
+		    , prev.pst_sn AS prev_pst_sn
+		    , prev.pst_ttl AS prev_pst_ttl
+		FROM
+		    dqvs.dvs_cmm_mt_post next
+		LEFT JOIN
+		    dqvs.dvs_cmm_mt_post prev
+		    ON next.menu_cd = prev.menu_cd
+		WHERE
+		    next.menu_cd = 'BBST02'
+		    AND next.pst_sn = #{nextPstSn}::numeric
+		    AND prev.pst_sn = #{prevPstSn}::numeric
+	</select>
+
+    <select id="inquiryReply" resultType="map">
+	select
+			menu_cd,
+			pst_sn,
+			cmnt_sn,
+			wrtr_sn,
+			wrtr_nm,
+			cmnt_cn,
+			use_yn,
+			pswd,
+			atch_file_sn,
+			rgtr_sn,
+			reg_dt,
+			reg_ip,
+			mdfr_sn,
+			mdfcn_dt,
+			mdfcn_ip
+		from dqvs.dvs_cmm_mt_cmnt
+		where 1=1 
+		and pst_sn = #{pstSn}
+		and menu_cd = 'BBST02'
+	</select>
+	<select id="inquiryReplyCnt" resultType="int">
+	select
+			menu_cd,
+			pst_sn,
+			cmnt_sn,
+			wrtr_sn,
+			wrtr_nm,
+			cmnt_cn,
+			use_yn,
+			pswd,
+			atch_file_sn,
+			rgtr_sn,
+			reg_dt,
+			reg_ip,
+			mdfr_sn,
+			mdfcn_dt,
+			mdfcn_ip
+		from dqvs.dvs_cmm_mt_cmnt
+		where 1=1 
+		and pst_sn = #{pstSn}
+		and menu_cd = 'BBST02'
+
+	</select>
+	<insert id="insertInquiry"  parameterType="paraMap">
+		INSERT INTO dqvs.dvs_cmm_mt_post (
+		    menu_cd,
+		    pst_sn,
+		    pst_type_cd,
+		    pst_ttl,
+		    pst_cn,
+		    use_yn,
+		    cmnt_use_yn,
+		    pstg_bgng_dt,
+		    pstg_end_dt,
+		    pstg_user_sn,
+		    pswd,
+		    ogdp,
+		    eml_addr,
+		    mbl_telno,
+		    reg_ip,
+		    rgtr_sn,
+		    reg_dt,
+		    inq_cnt,
+		    atch_file_sn
+		)
+		VALUES (
+		    'BBST02',
+		    (SELECT 
+		        CASE
+		            WHEN menu_cd = 'BBST02' THEN COALESCE(MAX(pst_sn), 0) + 1
+		            ELSE (SELECT COALESCE(MAX(pst_sn), 0) FROM dqvs.dvs_cmm_mt_post WHERE menu_cd = 'BBST02' and pst_sn = 4)
+		        END
+		     FROM dqvs.dvs_cmm_mt_post
+		     WHERE menu_cd = 'BBST02'
+		     GROUP BY menu_cd),
+		    '#{inquirySection}',
+		    '#{inquiryTitle}',
+		    '#{inquiryContent}',
+		    'Y',
+		    'Y',
+		    NOW(), 
+		    TO_TIMESTAMP('20991231', 'YYYYMMDD'), 
+		    #{userSn}::numeric,
+		    null,
+		    '#{ssoUserNm}',
+		    '#{ssoEmail}',
+		    '#{assiTelno}',
+		    '#(ClientIP)',
+	        #{userSn}::numeric,
+	        now(),
+	        '0',
+	        #{inquiryFile}::numeric
+		 );
+    </insert>
+ <insert id="Insertreply"  parameterType="paraMap">
+		 insert into dqvs.dvs_cmm_mt_cmnt
+		 (
+		  menu_cd
+		 ,pst_sn
+		 ,cmnt_sn
+		 ,wrtr_sn
+		 ,wrtr_nm
+		 ,cmnt_cn
+		 ,use_yn
+		 ,pswd
+		 ,atch_file_sn
+		 ,rgtr_sn
+		 ,reg_dt
+		 ,reg_ip
+		 ,mdfr_sn
+		 ,mdfcn_dt
+		 ,mdfcn_ip
+		 )
+		 values (
+		 	 'BBST02'
+		 	,#{pstSn}
+		 	,(SELECT COALESCE(MAX(cmnt_sn), 0)+1 FROM dqvs.dvs_cmm_mt_cmnt WHERE menu_cd = 'BBST02' and pst_sn = #{pstSn})
+		 	,#{userSn}::numeric
+		    ,'#{ssoUserNm}'
+		     ,'#{replyWrite}'
+		     ,'Y'
+		     ,null
+		     ,'1'
+		     ,#{userSn}::numeric
+		     ,CURRENT_TIMESTAMP
+		     ,#{ClientIP}
+		     ,#{userSn}::numeric
+		     ,CURRENT_TIMESTAMP
+		     ,'0'
+		     );
+    </insert>
+    
+     <select id="Comment" resultType="map">
+    	select j1.menu_cd,
+			   j1.pst_sn,
+			   j1.wrtr_sn as rn,
+			   j1.wrtr_nm,
+			   j1.cmnt_cn as pst_ttl,
+			   j1.cmnt_sn,
+			   to_char(j1.reg_dt, 'YYYY-MM-DD HH24:MI:SS') as reg_dt
+		from dqvs.dvs_cmm_mt_cmnt j1
+		where j1.menu_cd = 'BBST02'
+		and j1.pst_sn = #{pstSn}::numeric
+	ORDER BY j1.cmnt_sn desc;
+	</select>
+    
+    <select id="FileNm" resultType="map">
+	    select
+	    	file_sn,
+	    	atch_file_nm,
+	    	atch_file_path
+		from dqvs.dvs_cmm_mt_file
+		where 1=1
+		<if test="bzmnLicenseAtchSn != null and bzmnLicenseAtchSn != ''">
+			and file_sn = CAST(#{bzmnLicenseAtchSn} AS numeric)
+		</if>
+	</select>
+	    <select id="menuShow" resultType="map">
+			 SELECT 
+			    DCMM.menu_cd,
+			    DCMM.menu_nm,
+			    DCMM.up_menu_cd,
+			    substring(DCMM.up_menu_cd FROM 1 FOR 4) as upmenu2,
+			    (
+			        SELECT menu_nm
+			        FROM dqvs.dvs_cmm_mt_menu DCMM2
+			        WHERE DCMM2.menu_cd = DCMM.up_menu_cd
+			    ) AS upMenu,
+			    DCMM.menu_url,
+			    DCMM.menu_expln,
+			    DCMM.menu_ordr,
+			    DCMM.up_menu_cd,
+			    DCMM.menu_level,
+			    DCMM.menu_key,
+			    DCMM.use_yn
+			FROM 
+			    dqvs.dvs_cmm_mt_menu DCMM
+			WHERE 1=1
+			and DCMM.use_yn = 'Y'
+			and menu_level = 2
+			and DCMM.menu_url is not null
+			and menu_nm LIKE '%' || #{search_wrd} || '%'
+			and  substring(DCMM.up_menu_cd FROM 1 FOR 4) = 'PMNU'
+	</select>
+</mapper>

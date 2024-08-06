@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<queryMap id="sample2">
+	
+	<select id="getData" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>ou=applications,ou=pmi,ou=#siteName#,o=Government Of Korea,C=KR</base>
+		<filter>(&amp;(objectclass=eamappl)(cn=APPL*))</filter>
+		<attributes>
+			<attribute>cn</attribute>
+			<attribute>eamName</attribute>
+		</attributes>
+		<search-scope>ONE</search-scope>
+	</select>
+	
+	<select id="getData2" parameterClass="" resultClass="">
+		<base>ou=applications,ou=pmi,ou=#siteName#,o=Government Of Korea,C=KR</base>
+		<filter>(&amp;(objectclass=eamappl)(cn=APPL*))</filter>
+		<attributes>
+			<attribute>cn</attribute>
+			<attribute>eamName</attribute>
+		</attributes>
+		<search-scope>ONE</search-scope>
+	</select>
+	
+</queryMap>

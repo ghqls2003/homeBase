@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mas>
+	<mode>dev</mode>
+	
+	<admin-console enable="false">
+	</admin-console>
+	
+	<repository type="ldap" isSync="false">
+		<base-dn>o=Government of Korea\,c=KR</base-dn>
+<!--		<base-dn>o=성남시</base-dn>-->
+		<connection-pool external="true">
+			<name>REPOSITORY_POOL</name>
+		</connection-pool>
+		<sync>
+			<repository-type>DB</repository-type>
+			<pool-name>SYNC_DB</pool-name>
+		</sync>
+	</repository>
+	
+	<service>
+		<eam enable="false">
+			<application-preload site-name="KINS">true</application-preload>
+		</eam>
+		
+		<sso>
+			<policy enable="false">
+				<source-attribute>
+					PW_NOT_AFTER, PW_CHANGE_WARN, PASSWORD_HISTORY_SAVE, PASSWORD_MIN_LENGTH, PASSWORD_MISMATCH_ALLOW,
+					DUMMY_1, DUMMY_2, DUMMY_3, DUMMY_4, DUMMY_5
+				</source-attribute>
+				<target-attribute>
+					PW_NOT_AFTER, PW_CHANGE_WARN, PW_HISTORY_SAVE, PW_MIN_LENGTH, PW_MISMATCH_ALLOW,
+					DUMMY_1, DUMMY_2, DUMMY_3, DUMMY_4, DUMMY_5
+				</target-attribute>
+			</policy>
+			<application-info enable="true">
+				<source-attribute>
+					applicationName, applicationType, applicationUrl, applicationLoginPage, applicationActionPage, applicationMenu, TIMESTAMP
+				</source-attribute>
+				<target-attribute>
+					NAME, TYPE, URL, LOGINPAGE, EXEC, MENU, TIMESTAMP
+				</target-attribute>
+			</application-info>
+			<default-application enable="false"></default-application>
+			<user>
+				<source-attribute>
+					ID, NAME, DEPT_CODE, DEPT_NAME, SSN, LAST_CHANGE_PASSWORD_TIME, TIMESTAMP, NOT_AFTER
+				</source-attribute>
+				<target-attribute>
+					ID, NAME, DEPT_CODE, DEPT_NAME, SSN, LAST_CHANGE_PASSWORD_TIME, TIMESTAMP, NOT_AFTER
+				</target-attribute>
+			</user>
+			
+			<db-logging enable="false" logout-enable="false">
+				<log-appender-name>jdbc1</log-appender-name>
+				<columns>
+					<column>FROM_SYSTEM</column>
+					<column>USER_ID</column>
+					<column>USER_IP</column>
+					<column>ACCESS_TIME</column>
+				</columns>
+				<logout-sql>
+					UPDATE
+						TBL_LOGGING
+					SET
+						LOGOUT_TIME = TO_CHAR(SYSDATE\, 'YYYYMMDDHH24MISS')
+					WHERE
+						SESSION_ID = :SESSION_ID
+						AND USER_ID = :USER_ID
+						AND USER_IP = :USER_IP
+				</logout-sql>
+			</db-logging>
+		</sso>
+		
+		<manager>
+			<in-charset>UTF-8</in-charset>
+		</manager>
+	</service>
+	
+	<object-pool auto-loading="true">
+		<ldap name="REPOSITORY_POOL" load-complete="false">
+			<digester-rule-file>config/pooling/repository/ldap/ldap-pool-rules.xml</digester-rule-file>
+			<config-file>config/pooling/repository/ldap/ldap-pool-config.xml</config-file>
+		</ldap>
+
+		<db name="" load-complete="false">
+			<xml-parser>org.apache.crimson.parser.XMLReaderImpl</xml-parser>
+<!--			<xml-parser>org.apache.xerces.parsers.SAXParser</xml-parser> -->
+			<jdbc-driver>oracle.jdbc.driver.OracleDriver</jdbc-driver>
+			<config-file>/config/pooling/repository/db/db-pool-config.jocl</config-file>
+		</db>
+
+		<db name="" load-complete="false">
+			<xml-parser>org.apache.crimson.parser.XMLReaderImpl</xml-parser>
+			<jdbc-driver>oracle.jdbc.driver.OracleDriver</jdbc-driver>
+			<config-file>/config/pooling/repository/db/sync-db-pool-config.jocl</config-file>
+		</db>
+	</object-pool>
+	
+	<query-map>
+		<ldap name="REPOSITORY_POOL" load-complete="false">
+			<root-dn>o=Government of Korea\,c=KR</root-dn>
+<!--			<root-dn>o=성남시</root-dn>-->
+			<digester-rule-file>resources/repository/ldap/ldap-mapping-rules.xml</digester-rule-file>
+			<config-file>resources/repository/ldap/ldap-maps-config.xml</config-file>
+		</ldap>
+		
+		<db name="" load-complete="false">
+			<config-file>resources/repository/db/ibatis/sql-map-config.xml</config-file>
+		</db>
+		
+		<db name="SYNC_DB" load-complete="false">
+			<config-file>resources/repository/db/ibatis/sync-sql-map-config.xml</config-file>
+		</db>
+	</query-map>
+
+	<dao>
+		<login>
+			<db-ibatis>
+				<class>com.biz.app.common.repository.dao.ibatis.BizLoginDaoImpl</class>
+			</db-ibatis>
+			<ldap>
+				<class>com.biz.app.common.repository.dao.ldap.BizLoginDaoImpl</class>
+			</ldap>
+		</login>
+		<eam-manager>
+			<db-ibatis>
+				<class>com.biz.app.common.repository.dao.ibatis.BizEamManagerDaoImpl</class>
+			</db-ibatis>
+			<ldap>
+				<class>com.biz.app.common.repository.dao.ldap.BizEamManagerDaoImpl</class>
+			</ldap>
+		</eam-manager>
+		<eam-sync>
+			<db-ibatis>
+				<class>com.biz.app.common.repository.dao.ibatis.BizEamSyncDaoImpl</class>
+			</db-ibatis>
+			<ldap>
+				<class>com.biz.app.common.repository.dao.ldap.BizEamSyncDaoImpl</class>
+			</ldap>
+		</eam-sync>
+	</dao>
+	
+</mas>

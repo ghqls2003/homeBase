@@ -1,0 +1,1012 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sys.cmpnyManage">
+
+	<!-- 주 사업자등록번호 -->
+	<select id="Brno" resultType="String">
+        SELECT DISTINCT agency.brno
+		FROM
+			dqvs.dvs_rac_mt_agency agency
+		<choose>
+			<when test="bzmnSn != null and bzmnSn != ''">
+				WHERE agency.bzmn_sn = #{bzmnSn}
+			</when>
+			<otherwise>
+				WHERE agency.bzmn_sn ISNULL
+			</otherwise>
+		</choose>
+    </select>
+
+	<!-- 검색/등록팝업 옵션 - 시도(전체) -->
+	<select id="CtpvNm" resultType="map">
+	/* 시도(전체) */
+        SELECT DISTINCT LPAD(stdg_cd, 2) ctpv_cd
+        	, ctpv_nm
+		FROM
+			dqvs.dvs_cmm_mt_area
+		WHERE mtnabn_yn = 'Y'
+		<if test="regCmptncCd != null and regCmptncCd != ''">
+			AND stdg_cd = #{regCmptncCd}
+		</if>
+		ORDER BY ctpv_cd
+    </select>
+
+    <!-- 검색/등록팝업 옵션 - 시군구(전체) -->
+	<select id="SggNm" resultType="map">
+        SELECT DISTINCT stdg_cd
+        	, sgg_nm
+		FROM 
+			dqvs.dvs_cmm_mt_area
+		WHERE mtnabn_yn = 'Y' AND sgg_nm != ''
+		<if test="ctpvCd != null and ctpvCd != ''">
+			AND stdg_cd LIKE CONCAT(#{ctpvCd}, '%')
+		</if>
+		<if test="regCmptncCd != null and regCmptncCd != ''">
+			AND stdg_cd = #{regCmptncCd}
+		</if>
+		ORDER BY stdg_cd
+    </select>
+    
+    <!-- 등록팝업 - 기본정보 (등록지역, 등록지차체) -->
+	<select id="Area" resultType="map">
+        SELECT ctpv_nm
+        	, sgg_nm
+		FROM
+			dqvs.dvs_cmm_mt_area
+		WHERE stdg_cd = #{stdgCd}
+		ORDER BY stdg_cd
+    </select>
+
+    <!-- 등록팝업 - 기본정보 (상위 사업자번호) -->
+	<select id="UpBrno" resultType="map">
+        SELECT DISTINCT
+			bzmn_sn,
+			co_nm,
+			CONCAT(co_nm, '(', brno, ')') AS up_brno
+		FROM dqvs.dvs_rac_mt_agency AS t1
+		WHERE bzmn_se_cd = '1'
+			AND bsn_stts_cd = '0'
+    </select>
+
+    <!-- 검색옵션 - 승인상태(전체) -->
+	<select id="AprvStts" resultType="map">
+        select
+			cd, cd_nm
+		from dqvs.dvs_cmm_mt_code
+		where cd_group = 'aprv_stts_cd'
+			  and use_yn != 'N'
+			  and cd <![CDATA[<=]]> '3'
+		order by cd
+    </select>
+
+    <!-- 검색옵션 - 영업상태(전체) -->
+	<select id="searchBsnStts" resultType="map">
+        SELECT cd.cd
+        	, cd.cd_nm
+		FROM 
+			dqvs.dvs_cmm_mt_code cd
+		WHERE cd.cd_group = 'bsn_stts_cd'
+			AND cd.use_yn != 'N'
+		<if test="sttsInsertCont != null and sttsInsertCont != '' and sttsInsertCont == 'sttsDrop'">
+			AND cd.cd != '3'
+		</if>
+		ORDER BY cd.cd
+    </select>
+
+    <!-- 검색옵션 - 권한(전체) -->
+	<select id="authSelected" resultType="map">
+        SELECT cd.cd
+        	, cd.cd_nm
+		FROM 
+			dqvs.dvs_cmm_mt_code cd
+		WHERE cd_group = 'offc_type_cd'
+			AND use_yn != 'N'
+		ORDER BY cd.cd
+    </select>
+    
+    <!-- 사업자 관리 목록 SQL -->
+    <sql id="CompanyManageInfoSql">
+    (
+		SELECT ROW_NUMBER() OVER(ORDER BY T3.bzmn_sn) rn
+			, T3.*
+		FROM
+			(
+			SELECT t2.bzmn_sn
+<!-- 				, COALESCE((SELECT COUNT(ust.user_sn) FROM dqvs.dvs_cmm_mt_user ust WHERE ust.bzmn_sn = t2.bzmn_sn AND acnt_stts_cd NOT IN('5', '6') AND aprv_stts_cd = '2'), 0) user_cnt -->
+				, user_cnt.user_cnt
+			  	, co_nm
+			  	, bzmn_se_cd
+				, (SELECT cd_nm FROM dqvs.dvs_cmm_mt_code WHERE cd_group = 'bzmn_se_cd' AND cd = bzmn_se_cd) bzmn_se_cd_nm
+			  	, brno
+			  	, up_brno
+			  	, crno
+			  	, aprv_stts_cd
+				, (SELECT cd_nm FROM dqvs.dvs_cmm_mt_code WHERE cd_group = 'aprv_stts_cd' AND cd = aprv_stts_cd) aprv_stts_cd_nm
+			  	, bsn_stts_cd
+				, (SELECT cd_nm FROM dqvs.dvs_cmm_mt_code WHERE cd_group = 'bsn_stts_cd' AND cd = bsn_stts_cd) bsn_stts_cd_nm
+				, (SELECT cd_nm FROM dqvs.dvs_cmm_mt_code WHERE cd_group = 'aprv_dmnd_cd' AND cd = aprv_dmnd_cd) aprv_dmnd_nm
+				, (SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) ctpv_nm
+				, (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) sgg_nm
+			  	, road_nm_addr
+			  	, telno
+			  	, sgg_cd
+				, CONCAT(
+					(SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = reg_cmptnc_cd), ' ',
+					(SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = reg_cmptnc_cd)) jurisdiction
+				, CONCAT(
+				    (SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd), ' ',
+				    (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd)) locgov			  		
+			  	, reg_cmptnc_cd
+			  	, aprv_dmnd_cd
+			  	, mdfcn_dt
+			  	, del_yn
+			FROM 
+				(
+			    SELECT bzmn_sn, co_nm, bzmn_se_cd, brno, up_brno, crno, aprv_stts_cd, bsn_stts_cd, road_nm_addr, dqvs.pca_decrypt(telno, '150') telno, mdfcn_dt, sgg_cd, reg_cmptnc_cd, aprv_dmnd_cd, del_yn
+				FROM dqvs.dvs_rac_mt_agency
+			    UNION ALL
+			    SELECT req.bzmn_sn, req.co_nm, req.bzmn_se_cd, req.brno, req.up_brno, req.crno, req.aprv_stts_cd, req.bsn_stts_cd, req.road_nm_addr, dqvs.pca_decrypt(req.telno, '150'), req.mdfcn_dt, req.sgg_cd, reg_cmptnc_cd, req.aprv_dmnd_cd, del_yn
+			    FROM (SELECT bzmn_sn, MAX(dmnd_sn) AS dmnd_sn FROM dqvs.dvs_rac_mt_request WHERE (closed_yn ISNULL OR closed_yn != 'Y' OR closed_yn = '') GROUP BY bzmn_sn) AS T1
+			    INNER JOIN dqvs.dvs_rac_mt_request req ON T1.bzmn_sn = req.bzmn_sn AND T1.dmnd_sn = req.dmnd_sn
+			  	) AS t2
+			LEFT JOIN
+				(
+			    SELECT ust.bzmn_sn
+			    	, COUNT(ust.*) user_cnt
+				FROM
+			    	dqvs.dvs_cmm_mt_user ust
+				WHERE ust.acnt_stts_cd NOT IN ('6', '5')
+			    	AND ust.aprv_stts_cd = '2'
+				GROUP BY ust.bzmn_sn
+			    ) AS user_cnt
+			ON t2.bzmn_sn = user_cnt.bzmn_sn
+			WHERE 1=1
+			<choose>
+			    <when test='searchChk == "jurisdiction" and regCmptncCd != "" and regCmptncCd != null and authrtCd != "S01"' >
+			        AND reg_cmptnc_cd LIKE CONCAT(#{regCmptncCd}, '%')
+			    </when>
+			    <when test='searchChk == "location" and regCmptncCd != "" and regCmptncCd != null'>
+			        AND sgg_cd LIKE CONCAT(#{regCmptncCd}, '%')
+			    </when>
+			</choose>
+			<if test='delYn != "" and delYn != null'>
+				AND del_yn = 'Y'
+			</if>
+			<if test='searchAprvStts != "" and searchAprvStts != null'>
+				AND aprv_stts_cd = #{searchAprvStts}
+			</if>
+			<if test='searchBsnStts != "" and searchBsnStts != null'>
+				AND bsn_stts_cd = #{searchBsnStts}
+			</if> 
+			<if test="authSelected != null and authSelected != ''">
+				AND bzmn_se_cd = #{authSelected}
+			</if>
+			<if test='bzmnSn != "" and bzmnSn != null'>
+				AND (bzmn_sn LIKE '%'|| #{bzmnSn} ||'%' OR up_brno LIKE '%'|| #{bzmnSn} ||'%')
+			</if>
+			<if test='searchWrd != "" and searchWrd != null'>
+				<choose>
+					<when test='selectCond.equals("1")'>
+						AND co_nm LIKE '%'|| #{searchWrd} ||'%'
+					</when>
+					<when test='selectCond.equals("2")'>
+						AND brno LIKE '%'|| #{searchWrd} ||'%'
+					</when> 
+					<when test='selectCond.equals("3")'>
+						AND crno LIKE '%'|| #{searchWrd} ||'%'
+					</when>
+				</choose>
+			</if> 
+			) AS T3
+	) AS T4
+    </sql>
+
+    <!-- 사업자 관리 목록 그리드 -->
+    <select id="CompanyManageInfo" resultType="map">
+    	SELECT *
+    	FROM
+    		<include refid="CompanyManageInfoSql" />
+		<if test="take != '' and take != null">
+			WHERE T4.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		</if>
+		<if test="skip != '' and skip != null">
+			AND T4.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+		</if>
+	</select>
+
+    <!-- 사업자 관리 목록 카운트 -->
+	<select id="CompanyManageInfoCnt" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			<include refid="CompanyManageInfoSql" />
+	</select>
+ 
+	<!-- 마스터 테이블 -->
+	<select id="CmpnyMasterInfo" resultType="map">
+	/* master data */
+		SELECT t.*
+			, (
+			  SELECT DISTINCT CONCAT(MAX(co_nm), '(', TRIM(brno), ')') 
+			  FROM 
+			  	dqvs.dvs_rac_mt_agency 
+			  WHERE 1=1 
+			  	AND bzmn_sn = t.up_brno GROUP BY brno
+			  ) up_brno_nm
+		FROM
+			(
+			SELECT bzmn_sn
+				, co_nm
+				, offi_sn
+				, rprsv_nm
+				, brno
+				, up_brno
+				, bzmn_se_cd
+				, biz_strt_day
+				, bsn_stts_cd
+				, crno
+				, reg_cmptnc_cd
+				, bzmn_license_atch_sn::TEXT
+				, cocs_atch_sn::TEXT
+				, (SELECT cd FROM dqvs.dvs_cmm_mt_code WHERE cd_group = 'aprv_stts_cd' AND cd = aprv_stts_cd) aprv_stts_cd
+				, (SELECT cd_nm FROM dqvs.dvs_cmm_mt_code WHERE cd_group = 'aprv_stts_cd' AND cd = aprv_stts_cd) aprv_stts_cd_nm
+				, (SELECT LEFT(stdg_cd, 2) FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) ctpv_cd
+				, (SELECT stdg_cd FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) sgg_cd
+				, (
+				  SELECT DISTINCT ctpv_nm 
+				  FROM 
+				  	dqvs.dvs_cmm_mt_area 
+				  WHERE (stdg_cd = reg_cmptnc_cd OR (stdg_cd ISNULL OR stdg_cd = ''))
+					AND (stdg_cd ISNULL OR stdg_cd = '' OR stdg_cd LIKE CONCAT(SUBSTRING(COALESCE(reg_cmptnc_cd, NULL), 1, 2), '%'))
+				  ) cmptncCdCtpvNm
+				, (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = reg_cmptnc_cd) cmptncCdSggNm
+				, (SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) ctpv_nm
+				, (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) sgg_nm
+				, (SELECT cd_nm FROM dqvs.dvs_cmm_mt_code WHERE cd_group = 'bsn_stts_cd' AND cd = bsn_stts_cd) bsn_stts_nm
+				, (SELECT cd_nm FROM dqvs.dvs_cmm_mt_code WHERE cd_group = 'bzmn_se_cd' AND cd = bzmn_se_cd) bzmn_se_nm
+				, road_nm_addr
+				, road_nm_daddr
+				, lotno_addr
+				, lotno_daddr
+				, garage_road_nm_addr
+				, garage_road_nm_daddr
+				, bsn_stts_mdfcn_dt
+				, dqvs.pca_decrypt(telno, '150') telno
+				, vhcl_reg_noh
+				, car_noh
+				, van_noh
+				, oper_bgng_dt
+				, oper_end_dt
+				, elcty_car_noh
+				, elcty_van_noh
+				, CASE WHEN lat ISNULL THEN 0 ELSE lat END lat
+				, CASE WHEN lot ISNULL THEN 0 ELSE lot END lot
+				, rmrk
+				, mdfcn_rsn
+				, autzr_sn
+				, TO_CHAR(aprv_dmnd_dt, 'YYYY-MM-DD HH24:MI:SS.MS') aprv_dmnd_dt
+				, TO_CHAR(aprv_dt, 'YYYY-MM-DD HH24:MI:SS.MS') aprv_dt
+				, aprv_dmnd_cd
+			FROM
+				dqvs.dvs_rac_mt_agency
+			) AS t
+		<if test="bzmnSn != null and bzmnSn != ''">
+			WHERE bzmn_sn = #{bzmnSn}
+		</if>
+	</select>
+
+	<!-- 마스터 요청 테이블 -->
+	<select id="CmpnyRequestInfo" resultType="map">
+	/* request data */
+		SELECT t.*
+			, (
+			  SELECT DISTINCT CONCAT(MAX(co_nm), '(', TRIM(brno), ')')
+			  FROM
+				dqvs.dvs_rac_mt_agency
+			  WHERE 1=1
+				AND bzmn_sn = t.up_brno
+			  GROUP BY brno
+			  ) up_brno_nm
+		FROM 
+			(
+			SELECT bzmn_sn
+				, co_nm
+				, dmnd_sn
+				, offi_sn
+				, rprsv_nm
+				, brno
+				, up_brno
+				, bzmn_se_cd
+				, biz_strt_day
+				, bsn_stts_cd
+				, crno
+				, reg_cmptnc_cd
+				, bzmn_license_atch_sn::TEXT
+				, cocs_atch_sn::TEXT
+				, (SELECT cd FROM dqvs.dvs_cmm_mt_code WHERE cd_group = 'aprv_stts_cd' AND cd = aprv_stts_cd) aprv_stts_cd
+				, (SELECT cd_nm FROM dqvs.dvs_cmm_mt_code WHERE cd_group = 'aprv_stts_cd' AND cd = aprv_stts_cd) aprv_stts_cd_nm
+				, (SELECT LEFT(stdg_cd, 2) FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) ctpv_cd
+				, (SELECT stdg_cd FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) sgg_cd
+				, (
+				  SELECT DISTINCT ctpv_nm 
+				  FROM 
+				  	dqvs.dvs_cmm_mt_area 
+				  WHERE (stdg_cd = reg_cmptnc_cd OR (stdg_cd ISNULL OR stdg_cd = ''))
+					AND (stdg_cd ISNULL OR stdg_cd = '' OR stdg_cd LIKE CONCAT(SUBSTRING(COALESCE(reg_cmptnc_cd, NULL), 1, 2), '%'))
+				 ) cmptncCdCtpvNm
+				, (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = reg_cmptnc_cd) cmptncCdSggNm
+				, (SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) ctpv_nm
+				, (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd) sgg_nm
+				, (SELECT cd_nm FROM dqvs.dvs_cmm_mt_code WHERE cd_group = 'bsn_stts_cd' AND cd = bsn_stts_cd) bsn_stts_nm
+				, (SELECT cd_nm FROM dqvs.dvs_cmm_mt_code WHERE cd_group = 'bzmn_se_cd' AND cd = bzmn_se_cd) bzmn_se_nm
+				, road_nm_addr
+				, road_nm_daddr
+				, lotno_addr
+				, lotno_daddr
+				, garage_road_nm_addr
+				, garage_road_nm_daddr
+				, bsn_stts_mdfcn_dt
+				, dqvs.pca_decrypt(telno, '150') telno
+				, vhcl_reg_noh
+				, car_noh
+				, van_noh
+				, oper_bgng_dt
+				, oper_end_dt
+				, elcty_car_noh
+				, elcty_van_noh
+				, CASE WHEN lat ISNULL THEN 0 ELSE lat END lat
+				, CASE WHEN lot ISNULL THEN 0 ELSE lot END lot
+				, rmrk
+				, mdfcn_rsn
+				, autzr_sn
+				, TO_CHAR(aprv_dmnd_dt, 'YYYY-MM-DD HH24:MI:SS.MS') aprv_dmnd_dt
+				, TO_CHAR(aprv_dt, 'YYYY-MM-DD HH24:MI:SS.MS') aprv_dt
+				, aprv_dmnd_cd
+				, closed_yn
+			FROM
+				dqvs.dvs_rac_mt_request
+			WHERE bzmn_sn = #{bzmnSn}
+			ORDER BY dmnd_sn DESC
+			LIMIT 1
+			) AS t
+	</select>
+
+	<!-- 사업소종류 검색조건 -->
+	<select id="BzmnSe" resultType="map">
+        SELECT cd
+        	, cd_nm
+        FROM dqvs.dvs_cmm_mt_code
+        WHERE cd_group = 'bzmn_se_cd'
+        ORDER BY cd
+    </select>
+
+    <!-- 파일명 -->
+    <select id="FileNm" resultType="map">
+	    select
+	    	file_sn,
+	    	atch_file_nm
+		from dqvs.dvs_cmm_mt_file
+		where 1=1
+		<if test="bzmnLicenseAtchSn != null and bzmnLicenseAtchSn != ''">
+			and file_sn = CAST(#{bzmnLicenseAtchSn} AS numeric)
+		</if>
+		<if test="cocsAtchSn != null and cocsAtchSn != ''">
+			and file_sn = CAST(#{cocsAtchSn} AS numeric)
+		</if>
+	</select>
+
+	<!-- 마스터 등록 -->
+	<insert id="insertCmpny">
+		INSERT INTO dqvs.dvs_rac_mt_agency (
+					bzmn_sn, bzmn_se_cd, offi_sn, up_brno, brno, crno, reg_cmptnc_cd, co_nm, rprsv_nm, biz_strt_day, sgg_cd, road_nm_addr,
+					lotno_addr, garage_road_nm_addr, bsn_stts_cd, bsn_stts_mdfcn_dt, telno, vhcl_reg_noh, car_noh,
+					van_noh, oper_bgng_dt, oper_end_dt, elcty_car_noh, elcty_van_noh, lat, lot,
+					bzmn_license_atch_sn, aprv_stts_cd, rmrk, rgtr_sn, reg_dt, reg_ip, cocs_atch_sn, road_nm_daddr, lotno_daddr,
+					garage_road_nm_daddr, mdfr_sn, mdfcn_dt, mdfcn_ip, autzr_sn, aprv_dmnd_dt, aprv_dt
+				)
+		VALUES(
+			CASE
+				WHEN #{bzmnSn}::varchar IS NULL THEN (SELECT 'RCC'||lpad(nextval('seq_cmmn_mt_cmpny')::text, 7, '0')::varchar)
+				ELSE #{bzmnSn}::varchar
+			END, #{bzmnSeCd}, #{offiSn}, #{upBrno}, #{brno}, #{crno}, #{regCmptncCd}, #{coNm}, #{rprsvNm}, #{bizStrtDay}, #{sggCd}, #{roadNmAddr},
+				 #{lotnoAddr}, #{garageRoadNmAddr}, #{bsnSttsCd}, #{bsnSttsMdfcnDt}, dqvs.pca_encrypt(#{telno}, '150'), #{vhclRegCntom}::numeric,
+				 #{sednCarNoh}::numeric, #{passVhcleNoh}::numeric, #{operBgngDt}, #{operEndDt}, #{elecSednCarNoh}::numeric,
+				 #{elecPassVhcleNoh}::numeric, #{lat}::numeric, #{lot}::numeric, #{bzmnLicenseAtchSn}::numeric, #{aprvSttsCd},
+				 #{rmrk}, #{rgtrSn}::numeric, now()::timestamp, #{regIp}, #{cocosAtchSn}::numeric, #{roadNmDaddr}, #{lotnoDaddr},
+				 #{garageRoadNmDaddr}, #{rgtrSn}::numeric, now()::timestamp, #{regIp}, #{autzrSn}::numeric, #{aprvDmndDt}::timestamp, now()::timestamp
+			)
+	</insert>
+
+	<!-- 히스토리 등록 -->
+	<insert id="insertCmpnyHs">
+		INSERT INTO dqvs.dvs_rac_hs_agency (
+					bzmn_sn, bzmn_se_cd, offi_sn, up_brno, brno, crno, reg_cmptnc_cd, co_nm, rprsv_nm, biz_strt_day, sgg_cd, road_nm_addr,
+					lotno_addr, garage_road_nm_addr, bsn_stts_cd, bsn_stts_mdfcn_dt, telno, vhcl_reg_noh, car_noh,
+					van_noh, oper_bgng_dt, oper_end_dt, elcty_car_noh, elcty_van_noh, lat, lot,
+					bzmn_license_atch_sn, aprv_stts_cd, rmrk, rgtr_sn, reg_dt, reg_ip, cocs_atch_sn, road_nm_daddr,
+					lotno_daddr, garage_road_nm_daddr, autzr_sn, aprv_dmnd_dt, aprv_dt, mdfcn_rsn
+				)
+		VALUES(
+				#{bzmnSn}, #{bzmnSeCd}, #{offiSn}, #{upBrno}, #{brno}, #{crno}, #{regCmptncCd}, #{coNm}, #{rprsvNm}, #{bizStrtDay},
+				#{sggCd}, #{roadNmAddr}, #{lotnoAddr}, #{garageRoadNmAddr}, #{bsnSttsCd}, #{bsnSttsMdfcnDt},
+				dqvs.pca_encrypt(#{telno}, '150'), #{vhclRegCntom}::NUMERIC, #{sednCarNoh}::NUMERIC, #{passVhcleNoh}::NUMERIC, #{operBgngDt},
+				#{operEndDt}, #{elecSednCarNoh}::NUMERIC, #{elecPassVhcleNoh}::NUMERIC, #{lat}::NUMERIC, #{lot}::NUMERIC,
+				#{bzmnLicenseAtchSn}::NUMERIC, #{aprvSttsCd}, #{rmrk}, #{rgtrSn}::NUMERIC, now()::TIMESTAMP, #{regIp},
+				#{cocosAtchSn}::NUMERIC, #{roadNmDaddr}, #{lotnoDaddr}, #{garageRoadNmDaddr},
+				#{autzrSn}::NUMERIC, #{aprvDmndDt}::TIMESTAMP, #{aprvDt}::TIMESTAMP, #{mdfcnRsn}
+			   )
+	</insert>
+
+
+
+	<!-- 마스터 요청 등록 -->
+	<insert id="insertRequestCmpny">
+		INSERT INTO dqvs.dvs_rac_mt_request (
+					bzmn_sn, bzmn_se_cd, offi_sn, up_brno, brno, crno, reg_cmptnc_cd, co_nm, rprsv_nm, biz_strt_day, sgg_cd, road_nm_addr,
+					lotno_addr, garage_road_nm_addr, bsn_stts_cd, bsn_stts_mdfcn_dt, telno, vhcl_reg_noh, car_noh,
+					van_noh, oper_bgng_dt, oper_end_dt, elcty_car_noh, elcty_van_noh, lat, lot,
+					bzmn_license_atch_sn, aprv_stts_cd, rmrk, rgtr_sn, reg_dt, reg_ip, cocs_atch_sn, road_nm_daddr,
+					lotno_daddr, garage_road_nm_daddr, autzr_sn, aprv_dmnd_dt, aprv_dt, mdfcn_rsn, rqstr_sn, aprv_dmnd_cd
+				)
+		VALUES(
+				#{bzmnSn}, #{bzmnSeCd}, #{offiSn}, #{upBrno}, #{brno}, #{crno}, #{regCmptncCd}, #{coNm}, #{rprsvNm}, #{bizStrtDay},
+				#{sggCd}, #{roadNmAddr}, #{lotnoAddr}, #{garageRoadNmAddr}, #{bsnSttsCd}, #{bsnSttsMdfcnDt},
+				dqvs.pca_encrypt(#{telno}, '150'), #{vhclRegCntom}::numeric, #{sednCarNoh}::numeric, #{passVhcleNoh}::numeric, #{operBgngDt},
+				#{operEndDt}, #{elecSednCarNoh}::numeric, #{elecPassVhcleNoh}::numeric, #{lat}::numeric, #{lot}::numeric,
+				#{bzmnLicenseAtchSn}::numeric, #{aprvSttsCd}, #{rmrk}, #{rgtrSn}::numeric, now()::timestamp, #{regIp},
+				#{cocosAtchSn}::numeric, #{roadNmDaddr}, #{lotnoDaddr}, #{garageRoadNmDaddr},
+				#{autzrSn}::numeric, #{aprvDmndDt}::timestamp, #{aprvDt}::timestamp, #{mdfcnRsn}, #{rqstrSn}::numeric, #{aprvDmndCd}
+			   )
+	</insert>
+
+	<!-- 마스터 수정 -->
+	<update id="updateCmpny">
+	    UPDATE dqvs.dvs_rac_mt_agency
+	    SET bzmn_se_cd = #{bzmnSeCd},
+	    	offi_sn = #{offiSn},
+	    	up_brno = #{upBrno},
+	        brno = #{brno},
+	        crno = #{crno},
+	        reg_cmptnc_cd = #{regCmptncCd},
+	        co_nm = #{coNm},
+	        rprsv_nm = #{rprsvNm},
+	        biz_strt_day = #{bizStrtDay},
+	        sgg_cd = #{sggCd},
+	        road_nm_addr = #{roadNmAddr},
+	        lotno_addr = #{lotnoAddr},
+	        garage_road_nm_addr = #{garageRoadNmAddr},
+	        bsn_stts_cd = #{bsnSttsCd},
+	        bsn_stts_mdfcn_dt = #{bsnSttsMdfcnDt},
+	        telno = dqvs.pca_encrypt(#{telno}, '150'),
+	        vhcl_reg_noh = CAST(#{vhclRegCntom} AS numeric),
+	        car_noh = CAST(#{sednCarNoh} AS numeric),
+	        van_noh = CAST(#{passVhcleNoh} AS numeric),
+	        oper_bgng_dt = #{operBgngDt},
+	        oper_end_dt = #{operEndDt},
+	        elcty_car_noh = CAST(#{elecSednCarNoh} AS numeric),
+	        elcty_van_noh = CAST(#{elecPassVhcleNoh} AS numeric),
+	        lat = CAST(#{lat} AS numeric),
+	        lot = CAST(#{lot} AS numeric),
+	        bzmn_license_atch_sn = CAST(#{bzmnLicenseAtchSn} AS numeric),
+	        mdfcn_rsn = #{mdfcnRsn},
+	        aprv_stts_cd = #{aprvSttsCd},
+	        rmrk = #{rmrk},
+	        mdfr_sn = CAST(#{rgtrSn} AS numeric),
+	        mdfcn_dt = now()::timestamp,
+	        mdfcn_ip = #{regIp},
+	        cocs_atch_sn = CAST(#{cocosAtchSn} AS numeric),
+	        road_nm_daddr = #{roadNmDaddr},
+	        lotno_daddr = #{lotnoDaddr},
+	        garage_road_nm_daddr = #{garageRoadNmDaddr},
+	        autzr_sn = CAST(#{autzrSn} AS numeric),
+	        aprv_dmnd_dt = #{aprvDmndDt}::timestamp,
+	        aprv_dt = #{aprvDt}::timestamp
+	    WHERE bzmn_sn = #{bzmnSn}
+	</update>
+
+    <!-- agency테이블에 해당 일련번호 조회 : agency테이블에 해당하는 사업자등록번호만 업데이트하기 -->
+	<select id="choiceBrno" parameterType="paraMap" resultType="resultMap">
+		select dqvs.fn_get_cdnm('bsn_stts_cd',bsn_stts_cd) as bsn_stts_nm ,*
+		from dqvs.dvs_rac_mt_agency
+		where bzmn_sn = #{bzmnSn}
+	</select>
+	<!--openAPI를 이용한 사업자등록정보 상태 업데이트: agency 테이블-->
+	<update id="updateCmpnyBrnoToAgency">
+		UPDATE dqvs.dvs_rac_mt_agency
+		SET
+			bsn_stts_cd = #{bsnSttsCd},
+			bsn_stts_mdfcn_dt = #{bsnSttsMdfcnDt},
+			mdfcn_dt = now()::timestamp,
+			mdfcn_rsn = '영업상태 API 업데이트',
+			mdfr_sn = CAST(#{rgtrSn} AS numeric),
+			mdfcn_ip = #{regIp}
+		WHERE bzmn_sn = #{bzmnSn}
+	</update>
+
+
+	<!-- 폐업시, 사용자 계정 중지 -->
+	<update id="stopUser">
+		UPDATE dqvs.dvs_cmm_mt_user
+		SET acnt_stts_cd = '4'
+			, mdfr_sn = #{mdfrSn}::NUMERIC
+			, mdfcn_dt = NOW()
+			, mdfcn_ip = #{mdfcnIp}
+		WHERE bzmn_sn = #{bzmnSn}
+	</update>
+
+	<!-- 요청일련번호 조회 -->
+	<select id="DmndSn" resultType="String">
+		select max(dmnd_sn)
+		from dqvs.dvs_rac_mt_request
+		where bzmn_sn = #{bzmnSn}
+	</select>
+
+	<!-- 마스터 요청 업데이트 (반려시) -->
+	<update id="updateRequestCompanion">
+		update dqvs.dvs_rac_mt_request
+		set aprv_stts_cd = #{aprvSttsCd},
+			rjct_dt = now()::timestamp,
+			rjct_rsn = #{rjctRsn},
+			rjct_user_sn = CAST(#{rgtrSn} AS numeric),
+			mdfr_sn = CAST(#{rgtrSn} AS numeric),
+			mdfcn_dt = now()::timestamp,
+			mdfcn_ip = #{regIp},
+			mdfcn_rsn = #{rjctRsn}
+		<if test='bzmnSn != "" and bzmnSn != null and dmndSn != "" and dmndSn != null'>
+			where bzmn_sn = #{bzmnSn} and dmnd_sn = CAST(#{dmndSn} AS numeric)
+		</if>
+	</update>
+
+	<!-- 마스터 업데이트 (반려시) -->
+	<update id="updateCmpnyCompanion">
+		update dqvs.dvs_rac_mt_agency
+		set mdfr_sn = CAST(#{mdfrSn} AS numeric),
+			mdfcn_dt = now()::timestamp,
+			mdfcn_ip = #{mdfcnIp}
+		<if test='bzmnSn != "" and bzmnSn != null'>
+			where bzmn_sn = #{bzmnSn}
+		</if>
+	</update>
+
+	<!-- 마스터 요청 업데이트 (반려확인시) -->
+	<update id="updateRequestCompanionChk">
+		update dqvs.dvs_rac_mt_request
+		set mdfr_sn = CAST(#{mdfrSn} AS numeric),
+			mdfcn_dt = now()::timestamp,
+			mdfcn_ip = #{mdfcnIp},
+			closed_yn = 'Y'
+		<if test='bzmnSn != "" and bzmnSn != null and dmndSn != "" and dmndSn != null'>
+			where bzmn_sn = #{bzmnSn} and dmnd_sn = CAST(#{dmndSn} AS numeric)
+		</if>
+	</update>
+	
+	<!-- 마스터 삭제 -->
+	<update  id="deleteCmpny">
+		<if test='bzmnSn != "" and bzmnSn != null'>
+			UPDATE dqvs.dvs_rac_mt_agency
+			SET del_yn = #{delYn}
+				, mdfr_sn = #{mdfrSn}::NUMERIC
+				, mdfcn_dt = NOW()
+				, mdfcn_ip = #{mdfcnIp}
+			WHERE bzmn_sn = #{bzmnSn}
+<!-- 			DELETE FROM dqvs.dvs_rac_mt_agency -->
+<!-- 			WHERE bzmn_sn= #{bzmnSn} -->
+		</if>
+	</update> 
+
+	<!-- 마스터 요청 삭제(임시테이블) -->
+	<delete id="deleteRequestCmpny">
+		<if test='bzmnSn != "" and bzmnSn != null'>
+			DELETE FROM dqvs.dvs_rac_mt_request
+			WHERE bzmn_sn= #{bzmnSn}
+		</if>
+	</delete>
+
+	<!-- 히스토리 삭제 -->
+	<delete id="deleteHistoryCmpny">
+		<if test='bzmnSn != "" and bzmnSn != null'>
+			DELETE FROM dqvs.dvs_rac_hs_agency
+			WHERE bzmn_sn= #{bzmnSn}
+		</if>
+	</delete>
+
+	<!-- 해당 주사업소가 가진 영업소의 갯수 등록시 영업소 번호 -->
+	<select id="OffiSn" resultType="int">
+		SELECT
+			COALESCE(MAX(NULLIF(offi_sn, '')::INTEGER) + 1, 1) AS offi_sn
+		FROM
+			(
+			SELECT
+				bzmn_sn,
+				bzmn_se_cd,
+				offi_sn,
+				up_brno,
+				brno,
+				co_nm
+			FROM
+				dqvs.dvs_rac_mt_agency
+			WHERE up_brno = #{upBrno}
+			) AS T1
+	</select>
+
+	<!-- 사업소 현황 SQL -->
+	<sql id="OfficeDetailInfoSql">
+	(
+		SELECT mstr.bzmn_sn
+			, mstr.bzmn_se_cd
+			, (SELECT cd.cd_nm FROM dqvs.dvs_cmm_mt_code cd WHERE cd.cd_group = 'bzmn_se_cd' AND cd.cd = mstr.bzmn_se_cd) bzmn_se_cd_nm
+			, mstr.co_nm
+			, mstr.rprsv_nm
+			, mstr.reg_cmptnc_cd
+			, (SELECT area.ctpv_nm FROM dqvs.dvs_cmm_mt_area area WHERE area.stdg_cd = mstr.reg_cmptnc_cd) cmptncCdCtpvNm
+			, mstr.sgg_cd
+			, (SELECT area.sgg_nm FROM dqvs.dvs_cmm_mt_area area WHERE area.stdg_cd = mstr.reg_cmptnc_cd) cmptncCdSggNm
+			, mstr.brno
+			, mstr.crno
+			, mstr.aprv_stts_cd
+			, (SELECT cd.cd_nm FROM dqvs.dvs_cmm_mt_code cd WHERE cd.cd_group = 'aprv_stts_cd' AND cd.cd = mstr.aprv_stts_cd) aprv_stts_cd_nm
+			, mstr.bsn_stts_cd
+			, (SELECT cd.cd_nm FROM dqvs.dvs_cmm_mt_code cd WHERE cd.cd_group = 'bsn_stts_cd' AND cd.cd = mstr.bsn_stts_cd) bsn_stts_cd_nm
+			, dqvs.pca_decrypt(telno, '150') telno
+			, mstr.biz_strt_day
+			, COALESCE(mstr.road_nm_addr, '') road_nm_addr 
+			, COALESCE(mstr.road_nm_daddr, '') road_nm_daddr
+			, mstr.garage_road_nm_addr
+			, COALESCE(mstr.garage_road_nm_daddr, '') garage_road_nm_daddr
+		FROM
+			dqvs.dvs_rac_mt_agency mstr
+		WHERE 1=1
+		<if test='bzmnSn != "" and bzmnSn != null'>
+			AND mstr.up_brno = #{bzmnSn}
+		</if>
+		<if test='upBzmn != "" and upBzmn != null'>
+			AND mstr.bzmn_sn = #{upBzmn}
+		</if>
+	) AS T
+	</sql>
+
+	<!-- 사업소 현황 -->
+	<select id="OfficeDetailInfo" resultType="map">
+	/* 사업소 현황 */
+		SELECT *
+		FROM
+			<include refid="OfficeDetailInfoSql" />
+	</select>
+	
+	<!-- 사업소 현황 카운트 -->
+	<select id="OfficeDetailInfoCnt" resultType="int">
+	/* 사업소 현황 카운트 */
+		SELECT
+			COUNT(*) as offi_sn
+		FROM
+			<include refid="OfficeDetailInfoSql" />
+	</select>
+	
+	<!-- 사용자 현황 SQL -->
+	<sql id="UserCmpSql">
+	(
+		SELECT ROW_NUMBER() OVER(ORDER BY t2.user_sn) sn
+			, t2.*
+		FROM 
+			(
+			SELECT t1.user_sn
+				, COALESCE(t1.bzmn_sn, '-') bzmn_sn
+				, COALESCE(t1.authrt_nm, '-') authrt_nm
+				, COALESCE(t1.user_id, t1.ci, '-') user_id
+				, COALESCE(t1.user_nm, t1.digi_nm, '-') user_nm
+				, t1.stts_cd
+				, TO_CHAR(reg_dt, 'YYYY-MM-DD') reg_dt
+				, TO_CHAR(last_lgn_dt, 'YYYY-MM-DD') last_lgn_dt
+			FROM
+				(
+				SELECT main.user_sn
+					, main.bzmn_sn
+					, (SELECT auth.authrt_nm FROM dqvs.dvs_cmm_mt_auth auth WHERE auth.authrt_cd = main.authrt_cd)
+					, (SELECT sso.user_id FROM dqvs.dvs_cmm_mt_sso sso WHERE sso.user_sn = main.user_sn)
+					, (SELECT op.ci FROM dqvs.dvs_cmm_mt_onepass op WHERE op.user_sn = main.user_sn)
+					, (SELECT sso.user_nm FROM dqvs.dvs_cmm_mt_sso sso WHERE sso.user_sn = main.user_sn)
+					, (SELECT op.user_nm FROM dqvs.dvs_cmm_mt_onepass op WHERE op.user_sn = main.user_sn) digi_nm
+					, CASE WHEN acnt_stts_cd = '1' THEN (SELECT cd.cd_nm FROM dqvs.dvs_cmm_mt_code cd WHERE cd_group = 'aprv_stts_cd' AND cd.cd = aprv_stts_cd)
+						   ELSE (SELECT cd.cd_nm FROM dqvs.dvs_cmm_mt_code cd WHERE cd_group = 'acnt_stts_cd' AND cd=acnt_stts_cd)
+						   END stts_cd
+					, main.reg_dt
+					, main.last_lgn_dt 
+				FROM
+					dqvs.dvs_cmm_mt_user main
+				WHERE main.acnt_stts_cd NOT IN ('6', '5')
+			    	AND main.aprv_stts_cd = '2'
+				<if test="bzmnSn != null and bzmnSn != ''">
+					AND main.bzmn_sn = #{bzmnSn}
+				</if>
+				) AS t1
+			) AS t2
+	) AS T
+	</sql>
+	
+	<!-- 사용자 현황 -->
+	<select id="UserCmp" parameterType="paraMap" resultType="resultMap">
+	/* 사용자 현황 */
+	SELECT *
+	FROM 
+		<include refid="UserCmpSql" />
+	<if test="take != '' and take != null">
+		WHERE T.sn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+	</if>
+	<if test="skip != '' and skip != null">
+		AND T.sn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+	</if>
+	</select>
+	
+	<!-- 사용자 현황 카운트 -->
+	<select id="UserCmpCnt" parameterType="paraMap" resultType="int">
+	/* 사용자 현황 카운트 */
+	SELECT COUNT(*)
+	FROM
+		<include refid="UserCmpSql" />
+	</select>
+
+	<!-- 차량 현황 SQL -->
+	<sql id="findCarCmpSql">
+	(
+		SELECT ROW_NUMBER() OVER(ORDER BY t1.vhcl_reg_no) sn
+			, t1.*
+		FROM
+			(
+			SELECT COALESCE(car.bzmn_sn, '-') bzmn_sn
+				, COALESCE(car.vhcl_reg_no, '-') vhcl_reg_no
+				, COALESCE(car.vin, '-') vin 
+				, COALESCE(car.carmdl, '-') carmdl
+				, COALESCE(car.vhcl_nm, '-') vhcl_nm
+				, COALESCE(car.mdlyr, '-') model_year
+				, COALESCE(car.use_yn, '-') use_yn
+				, COALESCE(car.stts_cd, '-') sttscd
+				, COALESCE(defect.defects_type_cd, '-') defects_type_cd
+				, COALESCE(defect.prcs_stts_cd, '-') prcs_stts_cd
+				, COALESCE(TO_CHAR(car.reg_dt, 'YYYY-MM-DD'), '-') reg_dt
+			FROM 
+				dqvs.dvs_rac_mt_car car
+			LEFT OUTER JOIN
+				dqvs.dvs_rac_mt_defect defect
+			ON car.vin = defect.vin
+<!-- 			<if test="crno != null and crno != ''"> -->
+			WHERE car.crno = #{crno}
+<!-- 			</if> -->
+			) AS t1
+	) AS T
+	</sql>
+	
+	<!-- 차량 현황 -->
+	<select id="findCarCmp" parameterType="paraMap" resultType="resultMap">
+	/* 차량 현황 */
+	SELECT *
+	FROM 
+		<include refid="findCarCmpSql" />
+	<if test="take != '' and take != null">
+		WHERE T.sn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+	</if>
+	<if test="skip != '' and skip != null">
+		AND T.sn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+	</if>
+	</select>
+	
+	<!-- 차량 현황 카운트 -->
+	<select id="findCarCmpCnt" parameterType="paraMap" resultType="int">
+	/* 차량 현황 카운트 */
+	SELECT COUNT(*)
+	FROM
+		<include refid="findCarCmpSql" />
+	</select>
+	
+	<!-- 엑셀다운로드(사업자관리목록) SQL -->
+	<sql id="excelByCompanyManageInfoSql">
+	(
+		SELECT T3.*
+		FROM 
+			(
+			SELECT ROW_NUMBER() OVER(ORDER BY t.bzmn_sn) rn
+				, COALESCE(t.bzmn_sn, '-') bzmn_sn
+				, COALESCE(user_cnt.user_count, 0) user_cnt
+				, COALESCE(t.co_nm, '-') co_nm
+				, COALESCE(t.rprsv_nm, '-') rprsv_nm
+				, COALESCE(t.brno, '-') brno
+				, COALESCE(t.crno, '-') crno
+				, COALESCE(t.bzmn_se_cd, '-') bzmn_se_cd
+				, COALESCE((SELECT cd.cd_nm FROM dqvs.dvs_cmm_mt_code cd WHERE cd.cd_group = 'bzmn_se_cd' AND cd.cd = t.bzmn_se_cd), '-') bzmn_se_cd_nm
+				, COALESCE(t.up_brno, '-') up_brno
+				, COALESCE((
+					SELECT CONCAT(CASE WHEN mstr.co_nm ISNULL OR TRIM(mstr.co_nm) = '' THEN '-' ELSE mstr.co_nm END
+								, CASE WHEN mstr.brno ISNULL OR TRIM(mstr.brno) = '' THEN '(-)' ELSE CONCAT('(', TRIM(mstr.brno), ')') END
+						)
+					FROM dqvs.dvs_rac_mt_agency mstr
+					WHERE mstr.bzmn_sn = t.up_brno
+					), '-') up_brno_nm
+				, TO_CHAR(t.reg_dt, 'YYYY-MM-DD') reg_dt
+				, COALESCE(t.reg_cmptnc_cd, '-') reg_cmptnc_cd
+				, COALESCE(t.sgg_cd, '-') sgg_cd
+				, CONCAT((SELECT area.ctpv_nm FROM dqvs.dvs_cmm_mt_area area WHERE area.stdg_cd = t.reg_cmptnc_cd), ' ',
+						(SELECT area.sgg_nm FROM dqvs.dvs_cmm_mt_area area WHERE area.stdg_cd = t.reg_cmptnc_cd)) jurisdiction
+				, CONCAT((SELECT area.ctpv_nm FROM dqvs.dvs_cmm_mt_area area WHERE area.stdg_cd = t.sgg_cd), ' ',
+				        (SELECT area.sgg_nm FROM dqvs.dvs_cmm_mt_area area WHERE area.stdg_cd = t.sgg_cd)) locgov
+				, COALESCE(lot::TEXT, '-') lot
+				, COALESCE(lat::TEXT, '-') lat
+				, COALESCE(CONCAT(t.road_nm_addr, ' ', t.road_nm_daddr), '-') road_nm_addr
+				, COALESCE(CONCAT(t.lotno_addr, ' ', t.lotno_daddr), '-') lotno_addr
+				, COALESCE(CONCAT(t.garage_road_nm_addr, ' ', t.garage_road_nm_daddr), '-') garage_road_nm_addr
+				, COALESCE(t.aprv_stts_cd, '-') aprv_stts_cd
+				, (SELECT cd.cd_nm FROM dqvs.dvs_cmm_mt_code cd WHERE cd.cd_group = 'aprv_stts_cd' AND cd.cd = t.aprv_stts_cd) aprv_stts_cd_nm
+				, COALESCE(t.bsn_stts_cd, '-') bsn_stts_cd
+				, (SELECT cd.cd_nm FROM dqvs.dvs_cmm_mt_code cd WHERE cd.cd_group = 'bsn_stts_cd' AND cd.cd = t.bsn_stts_cd) bsn_stts_cd_nm
+				, COALESCE(t.telno, '-') telno
+				, CASE WHEN t.oper_bgng_dt != '' AND t.oper_end_dt != '' THEN CONCAT(t.oper_bgng_dt, ' ~ ', t.oper_end_dt)
+					   ELSE '' 
+					   END oper_dt
+				, COALESCE(t.vhcl_reg_noh::TEXT, '-') vhcl_reg_noh
+				, COALESCE(t.car_noh::TEXT, '-') car_noh
+				, COALESCE(t.van_noh::TEXT, '-') van_noh
+				, COALESCE(t.elcty_car_noh::TEXT, '-') elcty_car_noh
+				, COALESCE(t.elcty_van_noh::TEXT, '-') elcty_van_noh
+				, COALESCE(t.rmrk, '-') rmrk
+				, t.del_yn
+			FROM
+				(
+				SELECT ROW_NUMBER() OVER (PARTITION BY bzmn_sn ORDER BY mdfcn_dt DESC) AS rn
+					, bzmn_sn, co_nm, rprsv_nm, brno, crno, bzmn_se_cd, up_brno, reg_dt, reg_cmptnc_cd, sgg_cd, lot, lat, road_nm_addr, road_nm_daddr
+					, lotno_addr, lotno_daddr, garage_road_nm_addr, garage_road_nm_daddr, aprv_stts_cd, bsn_stts_cd, telno, oper_bgng_dt, oper_end_dt
+					, vhcl_reg_noh, car_noh, van_noh, elcty_car_noh, elcty_van_noh, rmrk, mdfcn_dt, del_yn
+				FROM
+					(
+				    SELECT bzmn_sn, co_nm, rprsv_nm, brno, crno, bzmn_se_cd, up_brno, reg_dt, reg_cmptnc_cd, sgg_cd, lot, lat, road_nm_addr, road_nm_daddr
+				    	, lotno_addr, lotno_daddr, garage_road_nm_addr, garage_road_nm_daddr, aprv_stts_cd, bsn_stts_cd, dqvs.pca_decrypt(telno, '150') telno, oper_bgng_dt, oper_end_dt
+				    	, vhcl_reg_noh, car_noh, van_noh, elcty_car_noh, elcty_van_noh, rmrk, mdfcn_dt, del_yn
+				    FROM 
+				    	dqvs.dvs_rac_mt_agency
+				    UNION ALL
+				    SELECT req.bzmn_sn, req.co_nm, req.rprsv_nm, req.brno, req.crno, req.bzmn_se_cd, req.up_brno, req.reg_dt, req.reg_cmptnc_cd, req.sgg_cd
+				    	, req.lot, req.lat, req.road_nm_addr, req.road_nm_daddr, req.lotno_addr, req.lotno_daddr, req.garage_road_nm_addr, req.garage_road_nm_daddr
+				    	, req.aprv_stts_cd, req.bsn_stts_cd, dqvs.pca_decrypt(req.telno, '150'), req.oper_bgng_dt, req.oper_end_dt, req.vhcl_reg_noh, req.car_noh, req.van_noh
+				    	, req.elcty_car_noh, req.elcty_van_noh, req.rmrk, req.mdfcn_dt, del_yn
+				    FROM 
+				    	(
+				      	SELECT bzmn_sn, MAX(dmnd_sn) AS dmnd_sn
+				      	FROM 
+				      		dqvs.dvs_rac_mt_request
+				      	WHERE closed_yn ISNULL OR closed_yn != 'Y' OR closed_yn = ''
+						GROUP BY bzmn_sn
+				    	) T1
+				    INNER JOIN 
+				    	dqvs.dvs_rac_mt_request req 
+				    ON T1.bzmn_sn = req.bzmn_sn AND T1.dmnd_sn = req.dmnd_sn
+				  	) AS T2
+				) AS t
+			LEFT JOIN
+			    (
+				SELECT ust.bzmn_sn
+			    	, COUNT(ust.*) user_count
+				FROM
+			    	dqvs.dvs_cmm_mt_user ust
+				WHERE ust.acnt_stts_cd NOT IN ('6', '5')
+			    	AND ust.aprv_stts_cd = '2'
+				GROUP BY ust.bzmn_sn
+			    ) AS user_cnt
+			ON t.bzmn_sn = user_cnt.bzmn_sn
+				WHERE 1=1
+				<choose>
+				    <when test='searchChk == "jurisdiction" and regCmptncCd != "" and regCmptncCd != null and authrtCd != "S01"'>
+				        AND reg_cmptnc_cd LIKE CONCAT(#{regCmptncCd}, '%')
+				    </when>
+				    <when test='searchChk == "location" and regCmptncCd != "" and regCmptncCd != null'>
+				        AND sgg_cd LIKE CONCAT(#{regCmptncCd}, '%')
+				    </when>
+				</choose>
+				<if test='searchAprvStts != "" and searchAprvStts != null'>
+					AND aprv_stts_cd = #{searchAprvStts}
+				</if>
+				<if test='searchBsnStts != "" and searchBsnStts != null'>
+					AND bsn_stts_cd = #{searchBsnStts}
+				</if>
+				<if test="authSelected != null and authSelected != ''">
+					AND t.bzmn_se_cd = #{authSelected}
+				</if> 
+				<if test='bzmnSn != "" and bzmnSn != null'>
+					AND (t.bzmn_sn LIKE CONCAT('%', #{bzmnSn}, '%') OR ( t.rn = 1 AND t.up_brno LIKE CONCAT('%', #{bzmnSn}, '%') ) )
+				</if>
+				<if test='searchWrd != "" and searchWrd != null'>
+					AND (brno LIKE CONCAT('%', #{searchWrd}, '%') OR co_nm LIKE CONCAT('%', #{searchWrd}, '%'))
+				</if>
+				<if test='delYn != "" and delYn != null'>
+					AND del_yn = #{delYn} 
+				</if>
+			)T3
+	) AS T
+	</sql>
+
+    <!-- 엑셀다운로드(사업자관리목록) -->
+    <select id="excelByCompanyManageInfo" resultType="map">
+    /* 엑셀다운로드(사업자관리목록) */
+    	SELECT *
+		FROM
+			<include refid="excelByCompanyManageInfoSql" />
+		<if test="take != '' and take != null">
+			AND T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		</if>
+		<if test="skip != '' and skip != null">
+			AND T.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+		</if>
+		ORDER BY T.rn ASC
+	</select>
+	
+	<!-- 엑셀다운로드(사업자관리목록) 카운트 -->
+	<select id="excelByCompanyManageInfoCnt" resultType="int">
+	/* 엑셀다운로드(사업자관리목록) 카운트 */
+		SELECT
+			COUNT(*)
+		FROM
+			<include refid="excelByCompanyManageInfoSql" />
+	</select>
+
+	<!-- 이관팝업-지자체조회 -->
+	<select id="AreaNm" resultType="String">
+		SELECT
+		    CASE
+		        WHEN sgg_nm IS NOT NULL THEN CONCAT(ctpv_nm, ' ', sgg_nm)
+		        ELSE ctpv_nm
+		    END AS combined_name
+		FROM
+		    dqvs.dvs_cmm_mt_area
+		<if test="regCmptncCd != '' and regCmptncCd != null">
+			WHERE stdg_cd = #{regCmptncCd}
+		</if>
+	</select>
+
+	<!-- 상세팝업-이관요청 여부 (요청여부) -->
+	<select id="RequestCnt" resultType="int">
+		SELECT COUNT(rqst.*)
+		FROM 
+			dqvs.dvs_rac_mt_request rqst
+		WHERE rqst.aprv_stts_cd = '1'
+			AND rqst.aprv_dmnd_cd = '3'
+		<if test="bzmnSn != '' and bzmnSn != null">
+			AND rqst.bzmn_sn = #{bzmnSn}
+		</if>
+	</select>
+
+	<!-- 상세팝업-이관요청여부 (마스터 여부) -->
+	<select id="CmpnyCnt" resultType="int">
+		SELECT COUNT(mstr.*)
+		FROM
+			dqvs.dvs_rac_mt_agency mstr
+		WHERE mstr.aprv_stts_cd = '2'
+		<if test="bzmnSn != '' and bzmnSn != null">
+			AND mstr.bzmn_sn = #{bzmnSn}
+		</if>
+	</select>
+
+	<!-- 상세팝업-이관요청 여부 (반려여부) -->
+	<select id="CompanionCnt" resultType="int">
+		SELECT COUNT(rqst.*)
+		FROM
+			dqvs.dvs_rac_mt_request rqst
+		WHERE rqst.aprv_stts_cd = '3'
+			AND rqst.aprv_dmnd_cd = '3'
+			AND (rqst.closed_yn ISNULL OR rqst.closed_yn != 'Y' OR rqst.closed_yn = '')
+		<if test="bzmnSn != '' and bzmnSn != null">
+			AND rqst.bzmn_sn = #{bzmnSn}
+		</if>
+	</select>
+	
+	<!-- 관할지 수정 시, 사용자 관할코드 수정 -->
+	<select id="updateUserCmptnc" resultType="int">
+		UPDATE dqvs.dvs_cmm_mt_user
+		SET cmptnc_zone_cd = #{regCmptncCd}
+			, mdfr_sn = #{rgtrSn}::NUMERIC
+	        , mdfcn_dt = NOW()::TIMESTAMP
+	        , mdfcn_ip = #{regIp}
+		WHERE bzmn_sn = #{bzmnSn}
+	</select>
+<!--	회사상태 업데이트 호출 serviceKey 조회 -->
+	<select id="selectServicekey" resultType="String">
+		select parameter_vl as serviceKey
+		from dvs_cmm_mt_parameter
+		where parameter_nm = #{serviceKey};
+	</select>
+</mapper>

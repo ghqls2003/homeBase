@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="myPage">
+
+	<select id="myInfo" parameterType="paraMap" resultType="resultMap">
+	<!-- 사용자 정보 조회 -->
+		select
+			cmu.user_sn,
+			coalesce(sso.user_id, onepass."ci", '-') as user_id,
+			coalesce(sso.user_nm, onepass.user_nm, '-') as user_nm,
+			coalesce(dqvs.pca_decrypt(sso.mbl_telno, '150'), dqvs.pca_decrypt(onepass.mbl_telno, '150'), '-') as mbl_telno,
+			coalesce(sso.eml_addr, onepass.eml_addr, '-') as eml_addr,
+			ogdp_nm,
+			ogdp_dept_nm,
+			dqvs.pca_decrypt(assi_telno, '150') as assi_telno,
+			cmptnc_zone_cd,
+			authrt_cd,
+			(select concat(ctpv_nm, ' ', sgg_nm)  from dqvs.dvs_cmm_mt_area where stdg_cd = cmptnc_zone_cd) stdg_nm,
+			(select authrt_nm from dqvs.dvs_cmm_mt_user u left join dqvs.dvs_cmm_mt_auth a on u.authrt_cd = a.authrt_cd where u.user_sn = #{userSn}::numeric) authrt_nm,
+			agency.co_nm,
+			case
+		        when cmu.user_sn in (select user_sn from dqvs.dvs_cmm_mt_sso) then 'sso'
+		        when cmu.user_sn in (select user_sn from dqvs.dvs_cmm_mt_onepass) then 'onepass'
+		        else '-'
+		    end as user_login_path,
+			cert.cert_yn,
+			to_char(cert.cert_dt, 'YYYY-MM-DD HH24:MI') as cert_dt
+		from
+			dqvs.dvs_cmm_mt_user cmu
+		left join dqvs.dvs_cmm_mt_cert cert on
+			cert.user_sn = cmu.user_sn
+		left join dqvs.dvs_cmm_mt_onepass onepass on
+			onepass.user_sn = cmu.user_sn
+		left join dqvs.dvs_cmm_mt_sso sso on
+			sso.user_sn = cmu.user_sn
+		left join dqvs.dvs_rac_mt_agency agency on
+			agency.bzmn_sn = cmu.bzmn_sn
+		where cmu.user_sn = #{userSn}::numeric
+		order by cert.cert_dt desc
+	</select>
+
+	<!-- 검증이력 조회 -->
+	<select id="listView" parameterType="paraMap" resultType="resultMap">
+	select * from (
+		SELECT ROW_NUMBER() OVER(order by vrfc_dmnd_dt desc) AS SN,
+			T.*,
+	       (SELECT dcmc.cd_nm
+	        FROM dqvs.dvs_cmm_mt_code dcmc
+	        WHERE dcmc.cd_group = 'verify_cd' AND dcmc.cd = T.res_cd) AS res_nm
+			FROM (
+			    SELECT CASE
+		               WHEN TI.vrfc_cn ~ '^{.*}$' THEN (TI.vrfc_cn::jsonb ->> 'body')::jsonb ->> 'f_rtn_code'
+		               ELSE NULL
+		           END AS res_cd,
+		           vrfc_hstry_sn,
+		           rqstr_sn,
+		           (SELECT user_nm
+		            FROM (
+		                SELECT uu1.user_sn, COALESCE(uu2.user_nm, uu3.user_nm) AS user_nm
+		                FROM (
+		                    SELECT DISTINCT user_sn
+		                    FROM (
+		                        SELECT user_sn
+		                        FROM dqvs.dvs_cmm_mt_sso
+		                        UNION ALL
+		                        SELECT user_sn
+		                        FROM dqvs.dvs_cmm_mt_onepass
+		                    ) AS uu
+		                ) AS uu1
+		                LEFT OUTER JOIN dqvs.dvs_cmm_mt_sso AS uu2 ON (uu1.user_sn = uu2.user_sn)
+		                LEFT OUTER JOIN dqvs.dvs_cmm_mt_onepass AS uu3 ON (uu1.user_sn = uu3.user_sn)
+		                ORDER BY user_sn
+		            ) uut
+		            WHERE uut.user_sn = TI.rqstr_sn
+		           ) AS rqstr_nm,
+		           '*******' || SUBSTRING(dqvs.pca_decrypt(dln, '150'), 8) AS dln,
+		           lcns_asort_cd,
+		           CASE lcns_asort_cd
+		               WHEN '11' THEN '1종대형'
+		               WHEN '12' THEN '1종보통'
+		               WHEN '13' THEN '1종소형'
+		               WHEN '14' THEN '대형견인'
+		               WHEN '15' THEN '구난차'
+		               WHEN '16' THEN '소형견인'
+		               WHEN '32' THEN '2종보통'
+		               WHEN '33' THEN '2종소형'
+		               WHEN '38' THEN '원동기'
+		               ELSE lcns_asort_cd
+		           END AS lcns_type,
+		           TO_CHAR(vrfc_dmnd_dt, 'YYYY-MM-DD HH24:MI:SS') vrfc_dmnd_dt,
+		           TO_CHAR(rent_bgng_dt, 'YYYY-MM-DD HH24:MI:SS') rent_bgng_dt,
+		           rent_end_dt,
+		           CASE vrfc_mthd
+		               WHEN '1' THEN '직접입력'
+		               WHEN '2' THEN 'OCR'
+		               WHEN '3' THEN '모바일면허증'
+		               WHEN '4' THEN 'API'
+		           END AS vrfc_mthd,
+		           vrfc_rslt,
+		           vrfc_cn,
+		           prcs_se
+			    FROM dqvs.dvs_dqv_hs_verf TI
+			    where 1=1
+			    <if test="dt != '' and dt != null">
+					and vrfc_dmnd_dt <![CDATA[>=]]> to_date(#{dt}, 'yyyy-mm-dd') and vrfc_dmnd_dt <![CDATA[<=]]> to_date(#{dt}, 'yyyy-mm-dd')+1
+				</if>
+			) T
+			WHERE rqstr_sn = #{userSn}::numeric
+			ORDER BY SN ASC
+		) C
+		where 1=1
+		<if test="take != '' and take != null">
+			AND C.SN <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		</if>
+		<if test="skip != '' and skip != null">
+			AND C.SN <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+		</if>
+	</select>
+
+		<!-- 검증이력 건수 조회 -->
+    <select id="listViewCnt" resultType="int">
+	    /* 검증이력 건수 조회 */
+		SELECT count(*) AS cnt
+		FROM dqvs.dvs_dqv_hs_verf TI
+		where rqstr_sn = #{userSn}::numeric
+		<if test="dt != '' and dt != null">
+			and vrfc_dmnd_dt <![CDATA[>=]]> to_date(#{dt}, 'yyyy-mm-dd') and vrfc_dmnd_dt <![CDATA[<=]]> to_date(#{dt}, 'yyyy-mm-dd')+1
+		</if>
+    </select>
+
+	<update id="updateMyInfo">
+       UPDATE dqvs.dvs_cmm_mt_user
+        SET mdfcn_dt=now()::timestamp,
+        	assi_telno=dqvs.pca_encrypt(#{assiTelno}, '150')
+		where user_sn = #{userSn}::numeric
+	</update>
+
+	<update id="updateMyWithdraw">
+       UPDATE dqvs.dvs_cmm_mt_user
+        SET mdfcn_dt=now()::timestamp,
+        	acnt_stts_cd = '6'
+		where user_sn = #{userSn}::numeric
+	</update>
+
+	<select id="selectApiStts" resultType="resultMap">
+		select user_sn, stts_cd, issu_dt from dqvs.dvs_api_mt_key
+		WHERE 1=1
+		<if test="userSn != '' and userSn != null">
+			and user_sn = #{userSn}::numeric
+		</if>
+		order by issu_dt desc
+	</select>
+
+	<update id="updateApiKey">
+        UPDATE dqvs.dvs_api_mt_key
+        SET stts_cd='4'
+		where user_sn = #{userSn}::numeric
+	</update>
+
+	<update id="updateApiStts">
+        UPDATE dqvs.dvs_api_mt_stts
+        SET stts_cd='4'
+		where user_sn = #{userSn}::numeric
+	</update>
+
+</mapper>

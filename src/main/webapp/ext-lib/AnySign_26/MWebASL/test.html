@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title>Browser Certificate CertRelay Test</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="cache-control" content="no-cache">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta http-equiv="Expires" content="-1">
+	<meta http-equiv="Pragma" content="no-cache">
+
+<style type="text/css">
+<!--
+form			{margin:0px 0px 0px 0px;}
+input.largebtn	{ width: 500px; }
+input.mediumbtn	{ width: 300px; }
+input.smallbtn	{ width: 150px; }
+h1, h2, h3, h4  { margin:0;}
+h3              { font-size:13pt; background-color:#EEE;}
+.test			{border:1px dashed gray; width:100%}
+.test td		{font-size: 9pt;color: #333333;background: #EEEEEE;text-align: center;}
+select.combo	{width:150px; font-size: 9pt;color: #333333;;}
+.inputtext		{width: 100%;}
+.inputtextarea	{width: 100%;word-break:break-all;}
+.inputbutton	{width: 100%;height: 100%; border:1px solid #d3d3d3; margin:2px; padding:1px;}
+.inputcheck		{width: 14px;height: 14px;}
+legend			{text-indent: -9999em}
+-->
+</style>
+<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+document.write("<script type=\"text/javascript\" src=\"" + "../anySign4PCInterface.js" + "?version=" + new Date().getTime() + "\"></scr"+"ipt>");
+</script>
+
+<!-- XecureKeypad -->
+<!--script src="../XecureKeypad/js/xkeypad_config.js"></script>
+<script src="../XecureKeypad/js/xkeypad_mobile.js"></script-->
+<!-- transkey -->
+<!--script type="text/javascript" src="../transkey_mobile/transkey.js"></script>
+<link rel="stylesheet" type="text/css" href="../transkey_mobile/transkey.css"/--> 
+
+<script type="text/javascript">
+var s = '';
+s += '-----BEGIN CERTIFICATE-----\n';
+s += 'MIIDGTCCAoKgAwIBAgIEBo53lTANBgkqhkiG9w0BAQQFADBhMQswCQYDVQQGEwJL\n';
+s += 'UjELMAkGA1UECBMCYWExCzAJBgNVBAcTAmFhMQswCQYDVQQKEwJhYTELMAkGA1UE\n';
+s += 'CxMCYWExCzAJBgNVBAMTAmFhMREwDwYJKoZIhvcNAQkBFgJhYTAeFw0wMTA3MTgw\n';
+s += 'MDAwMDBaFw0wNjA3MTcwNDE4MDBaMGcxCzAJBgNVBAYTAktSMQwwCgYDVQQIEwNp\n';
+s += 'aWkxDDAKBgNVBAcTA2lpaTEMMAoGA1UEChMDaWlpMQwwCgYDVQQLEwNpaWkxDDAK\n';
+s += 'BgNVBAMTA2lpaTESMBAGCSqGSIb3DQEJARYDaWlpMIGfMA0GCSqGSIb3DQEBAQUA\n';
+s += 'A4GNADCBiQKBgQCzSWuMplCOF2v/RGL6xENjTH5SFMXKlcJbnebTm1ZuENjc5KHo\n';
+s += 'fW6t89qkHznyHlllWwVSv8bNm5u6TK5fNFY4RC95cU8jqAVK0oFRLRjkDAfoMVV1\n';
+s += 'fD5eoXmN6fyZWtLgiHXQ9evISBP62UkT5KjQ86dDKo2Dg53XFVyKI+ksAwIDAQAB\n';
+s += 'o4HXMIHUMGoGCWCGSAGG+EIBDQRdFltZb3VyIENlcnRpZmljYXRlIGlzIGR1ZSB1\n';
+s += 'cHRvIDEgeWVhci4gWW91IGhhdmUgdG8gcmVpc3N1ZSB5b3VyIGNlcnRpZmljYXRl\n';
+s += 'IGJlZm9yZSBpdCBleHBpcmVzMCIGCWCGSAGG+EIBAgQVFhN3d3cuc29mdGZvcnVt\n';
+s += 'LmNvLmtyMBEGCWCGSAGG+EIBAQQEAwIAgDAvBglghkgBhvhCAgUEIhYgZDQxZDhj\n';
+s += 'ZDk4ZjAwYjIwNGU5ODAwOTk4ZWNmODQyN2UwDQYJKoZIhvcNAQEEBQADgYEAPeWZ\n';
+s += 'SPTLWtdsNNrztq//3agTQImdn2Yrds5Rhf1Y2FZ+sXdZvPLBy3+p1eh4zy0IVyjm\n';
+s += 'AioAO9U//TuZfeHlOs6ffsBc87D3BaBH0CUdQxaPy99AtUrVnGxNjJ3QjSesiPxf\n';
+s += 'kcIPWgTrDozCmSKh0lr8MKzB0PpML7gpLkE6ZNQ=\n';
+s += '-----END CERTIFICATE-----\n';
+s += '';
+
+function SignDataCMS_callback (data) {
+	document.getElementById ("form_SignDataCMS").aResult.value = data;
+}
+
+function DeleteCertificatePassword_callback (aResult)
+{
+	alert(aResult);
+}
+
+function SignDataCMSWithSerial_callback (aResult)
+{
+	document.getElementById ("form_SignDataCMSWithSerial").aResult.value = aResult;
+}
+
+function SignDataWithVID_callback (aResult)
+{
+	document.getElementById ("form_SignDataWithVID").aSignedMsg.value = aResult;
+	send_vid_info(SignDataWithVID_UserCallback);
+}
+
+function SignDataWithVID_UserCallback (aResultVid)
+{
+	document.getElementById ("form_SignDataWithVID").aVidMsg.value = aResultVid;
+}
+
+function SignDataWithVID_Serial_callback (aResult)
+{
+	document.getElementById ("form_SignDataWithVID_Serial").aSignedMsg.value = aResult;
+	AnySign.GetVidInfo(SignDataWithVID_Serial_UserCallback);
+}
+
+function SignDataWithVID_Serial_UserCallback (aResultVid)
+{
+	document.getElementById ("form_SignDataWithVID_Serial").aVidMsg.value = aResultVid;
+}
+
+send_vid_info = function (aUserCallback)
+{
+	/*------------------------------------------------------------------------
+	 * Should have a function(aUserCallback)
+	 *----------------------------------------------------------------------*/
+	return AnySign.GetVidInfo (aUserCallback, GetVidInfo_ErrCallback);
+}
+
+function enableOpenCert()
+{
+	AnySign.mOpenCertEnable =! AnySign.mOpenCertEnable;
+	document.getElementById("Enable_OpenCert").value = AnySign.mOpenCertEnable;
+}
+
+function enableXecureKeypadMobile()
+{
+	AnySign.mXecureKeyPadMobileEnable =! AnySign.mXecureKeyPadMobileEnable;
+	document.getElementById("Enable_XecureKeypadMobile").value = AnySign.mXecureKeyPadMobileEnable;
+}
+
+function enableTranskeyMobile()
+{
+	AnySign.mTransKeyMobileEnable =! AnySign.mTransKeyMobileEnable;
+	document.getElementById("Enable_TranskeyMobile").value = AnySign.mTransKeyMobileEnable;
+}
+
+function sumCheckbox (aCheckbox)
+{
+	var aIter;
+	var aTotal = 0;
+
+	for (aIter = 0;aIter < aCheckbox.length;aIter++)
+	{
+		if (aCheckbox[aIter].checked)
+			aTotal += parseInt (aCheckbox[aIter].value);
+	}
+	return aTotal;
+}
+
+function initForm ()
+{
+	document.getElementById("Enable_OpenCert").value = AnySign.mOpenCertEnable;
+	document.getElementById("Enable_XecureKeypadMobile").value = AnySign.mXecureKeyPadMobileEnable;
+	document.getElementById("Enable_TranskeyMobile").value = AnySign.mTransKeyMobileEnable;
+
+	// form_SignDataCMS
+	document.getElementById ("form_SignDataCMS").aPlain.value = "이 내용이 전자서명됩니다.";
+	document.getElementById ("form_SignDataCMS").aLimitedTrial.value = AnySign.mLimitedTrial;
+
+	// form_SignDataCMSWithSerial
+	document.getElementById ("form_SignDataCMSWithSerial").aPlain.value = "이 내용이 전자서명됩니다.";
+	document.getElementById ("form_SignDataCMSWithSerial").aLimitedTrial.value = AnySign.mLimitedTrial;
+
+	// form_SignDataWithVID
+	document.getElementById ("form_SignDataWithVID").aPlain.value = "이 내용이 전자서명됩니다.";
+	document.getElementById ("form_SignDataWithVID").aCert.value = s;
+	document.getElementById ("form_SignDataWithVID").aLimitedTrial.value = AnySign.mLimitedTrial;
+
+	// form_SignDataWithVID_Serial
+	document.getElementById ("form_SignDataWithVID_Serial").aPlain.value = "이 내용이 전자서명됩니다.";
+	document.getElementById ("form_SignDataWithVID_Serial").aCert.value = s;
+	document.getElementById ("form_SignDataWithVID_Serial").aLimitedTrial.value = AnySign.mLimitedTrial;
+}
+</script>
+<body onload="initForm();" leftmargin="0" topmargin="0" style="padding-top:0px; padding-left:0px;">
+<p>
+	<table width="100%" align='center' border="0" cellspacing="0" cellpadding="0" height="100%">
+		<!-- Header -->
+		<tr>
+			<td>
+				<div id="xecure_header" />
+			</td>
+		</tr>
+
+		<!-- Body -->
+		<tr>
+			<td valign="top">
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<!-- contents start -->
+						<td>
+							<!-- CENTER START -->
+							<table width="100%" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td>
+										 <table class="test">
+											<tr>
+												<td width="694" colspan="3"><h4>MobileWeb 설정</h4></td>
+											</tr>
+											<tr>
+												<td width="208" colspan="1">OpenCert 사용 유무</td>
+												<td width="486" >
+													<input id="Enable_OpenCert" type="button" style="width:100%" onclick="enableOpenCert(this);">
+												</td>
+											</tr>
+											<tr>
+												<td width="208" colspan="1">XecureKeypad Mobile 사용 유무</td>
+												<td width="486" >
+													<input id="Enable_XecureKeypadMobile" type="button" style="width:100%" onclick="enableXecureKeypadMobile(this);">
+												</td>
+											</tr>
+											<tr>
+												<td width="208" colspan="1">Transkey Mobile	사용 유무</td>
+												<td width="486" >
+													<input id="Enable_TranskeyMobile" type="button" style="width:100%" onclick="enableTranskeyMobile(this);">
+												</td>
+											</tr>
+										</table>
+
+										<br>
+										<h3 id="5" style="background-color:#fff">SignDataCMS</h3>
+										<form id="form_SignDataCMS" name="form_SignDataCMS" method="post" action="#">
+										<table class="test">
+											<tr>
+												<td width="50" rowspan="4">Input</td>
+											</tr>
+											<tr>
+												<td>aPlain</td>
+												<td><textarea class="inputtextarea" name="aPlain" rows="2"></textarea></td>
+											</tr>
+											<tr>
+												<td>aOption</td>
+												<td style="text-align:left;">
+													<input type="checkbox" class="inputcheck" name="aOption" value="0" checked disabled="true"/>
+													0x00000000 : 기본 서명<br/>
+													<input type="checkbox" class="inputcheck" name="aOption" value="256" checked/>
+													0x00000100 : 출력 값을 Base64로 <br/>
+													<input type="checkbox" class="inputcheck" name="aOption" value="512" checked/>
+													0x00000200 : 서명 시간 추가 (SignedAttributes)<br/>
+												</td>
+											</tr>
+											<tr>
+												<td>aLimitedTrial</td>
+												<td><input type="text" class="inputtext" name="aLimitedTrial"/></td>
+											</tr>
+											<tr>
+												<td>Run</td>
+												<td colspan="6">
+													<input type="button" class="inputbutton" style="height:auto;" value="AnySign.SignDataCMS"
+													onClick="AnySign.SignDataCMS (AnySign.mXgateAddress,
+																					AnySign.mCAList.value,
+																					this.form.aPlain.value,
+																					sumCheckbox (this.form.aOption),
+																					'',
+																					this.form.aLimitedTrial.value,
+																					SignDataCMS_callback);"/>
+													<br/>
+													<input type="button" class="inputbutton" style="height:auto;" value="AnySign.DeleteCertificatePassword" 
+													onClick="AnySign.DeleteCertificatePassword (DeleteCertificatePassword_callback);"/>
+													<br/>
+												</td>
+											</tr>
+											<tr>
+												<td>Output</td>
+												<td colspan="2">
+													<textarea class="inputtextarea" id="output_id1" name="aResult" rows="7"></textarea>
+												</td>
+											</tr>
+											<tr>
+												<td>Send</td>
+												<td colspan="2">
+													<button onClick="this.form.action='../test/sign_result1.jsp';this.form.submit();">서버로 전송</button>
+												</td>
+											</tr>
+											<tr>
+												<td>Reset</td>
+												<td colspan="2">
+													<button onClick="this.form.aResult.value='';return false;">결과값 삭제</button>
+												</td>
+											</tr>
+										</table>
+										</form>
+										<br/>
+
+										<h3 id="5" style="background-color:#fff">SignDataCMSWithSerial</h3>
+										<form id="form_SignDataCMSWithSerial" name="form_SignDataCMSWithSerial" method="post" action="#">
+										<table class="test">
+											<tr>
+												<td width="50" rowspan="5">Input</td>
+											</tr>
+											<tr>
+												<td>aSerial</td>
+												<td><input type="text" class="inputtext" name="aSerial"/></td>
+											</tr>
+											<tr>
+												<td>aPlain</td>
+												<td><textarea class="inputtextarea" name="aPlain" rows="2"></textarea></td>
+											</tr>
+											<tr>
+												<td>aOption</td>
+												<td style="text-align:left;">
+													<input type="checkbox" class="inputcheck" name="aOption" value="0" checked disabled="true"/>
+													0x00000000 : 기본 서명<br/>
+													<input type="checkbox" class="inputcheck" name="aOption" value="256" checked/>
+													0x00000100 : 출력 값을 Base64로 <br/>
+													<input type="checkbox" class="inputcheck" name="aOption" value="512" checked/>
+													0x00000200 : 서명 시간 추가 (SignedAttributes)<br/>
+												</td>
+											</tr>
+											<tr>
+												<td>aLimitedTrial</td>
+												<td><input type="text" class="inputtext" name="aLimitedTrial"/></td>
+											</tr>
+											<tr>
+												<td>Run</td>
+												<td colspan="6">
+													<input type="button" class="inputbutton" style="height:auto;" value="AnySign.SignDataCMSWithSerial"
+													onClick="AnySign.SignDataCMSWithSerial (AnySign.mXgateAddress.value,
+																							AnySign.mCAList.value,
+																							this.form.aSerial.value,
+																							2000,
+																							this.form.aPlain.value,
+																							sumCheckbox (this.form.aOption),
+																							'',
+																							this.form.aLimitedTrial.value,
+																							SignDataCMSWithSerial_callback);"/>
+													<br/>
+													<input type="button" class="inputbutton" style="height:auto;" value="Sign_with_serial"
+													onClick="Sign_with_serial (this.form.aSerial.value,
+																			   2000,
+																			   this.form.aPlain.value,
+																			   sumCheckbox (this.form.aOption),
+																			   SignDataCMSWithSerial_callback);"/>
+													<br/>
+												</td>
+											</tr>
+											<tr>
+												<td>Output</td>
+												<td colspan="2">
+													<textarea class="inputtextarea" id="output_id1" name="aResult" rows="7"></textarea>
+												</td>
+											</tr>
+											<tr>
+												<td>Send</td>
+												<td colspan="2">
+													<button onClick="this.form.action='../test/sign_result1.jsp';this.form.submit();">서버로 전송</button>
+												</td>
+											</tr>
+											<tr>
+												<td>Reset</td>
+												<td colspan="2">
+													<button onClick="this.form.aResult.value='';return false;">결과값 삭제</button>
+												</td>
+											</tr>
+										</table>
+										</form>
+										<br/>
+
+										<h3 id="6" style="background-color:#fff">SignDataWithVID</h3>
+										<form id="form_SignDataWithVID"  method=post action='../test/sign_result3.jsp'>
+										<table class="test">
+											<tr>
+												<td width="50" rowspan="6">Input</td>
+											</tr>
+											</tr>
+											<tr>
+												<td>aPlain</td>
+												<td><textarea class="inputtext" name="aPlain" rows="2"></textarea></td>
+											</tr>
+											<tr>
+												<td>aCert</td>
+												<td><textarea class="inputtext" name="aCert" rows="7"></textarea></td>
+											</tr>
+											<tr>
+												<td>aOption</td>
+												<td style="text-align:left;">
+													<strong>(공통 옵션)</strong></br>
+													<input type="checkbox" class="inputcheck" name="aOption" value="0" checked disabled="true"/>
+													0 : 기본 서명<br/>
+													<input type="checkbox" class="inputcheck" name="aOption" value="8" checked/>
+													8 : <strong>WEB(aIdn)</strong>으로 부터 직접 VID를 입력받는다  <strong>(VID입력창 뜨지 않음)</strong><br/>
+													<input type="checkbox" class="inputcheck" name="aOption" value="256" checked/>
+													0x00000100 : 출력 값을 Base64로 <br/>
+												</td>
+											</tr>
+											<tr>
+												<td>aIdn</td>
+												<td><input type="text" class="inputtext" name="aIdn"/></td>
+											</tr>
+											<tr>
+												<td>aLimitedTrial</td>
+												<td><input type="text" class="inputtext" name="aLimitedTrial"/></td>
+											</tr>
+											<tr>
+												<td>Run</td>
+												<td colspan="2">
+													<input type="button" class="inputbutton" style="height:auto;" value="AnySign.SignDataWithVID"
+													onClick="AnySign.SignDataWithVID (AnySign.mXgateAddress,
+																					AnySign.mCAList,
+																					this.form.aPlain.value,
+																					sumCheckbox (this.form.aOption),
+																					'',
+																					this.form.aLimitedTrial.value,
+																					this.form.aIdn.value,
+																					this.form.aCert.value,
+																					SignDataWithVID_callback);"/>
+													<br/>
+													<input type="button" class="inputbutton" style="height:auto;" value="Sign_with_vid_web" 
+													onClick="Sign_with_vid_web (sumCheckbox (this.form.aOption), 
+																				this.form.aPlain.value, 
+																				this.form.aIdn.value, 
+																				this.form.aCert.value,
+																				SignDataWithVID_callback);"/>
+												</td>
+											</tr>
+											<tr>
+												<td>Output</td>
+												<td colspan="2">
+													<textarea class="inputtext" name="aSignedMsg" rows="7"></textarea>
+												</td>
+											</tr>
+											<tr>
+												<td>VID Output</td>
+												<td colspan="2">
+													<textarea class="inputtext" name="aVidMsg" rows="7"></textarea>
+												</td>
+											</tr>
+											<tr>
+												<td>Send</td>
+												<td colspan="3" height="25"><input type=submit value="서버로전송">
+												</td>
+											</tr>
+											<tr>
+												<td>Reset</td>
+												<td colspan="2">
+													<button onClick="this.form.aSignedMsg.value='';this.form.aVidMsg.value='';return false;">결과값 삭제</button>
+												</td>
+											</tr>
+										</form>
+										</table>
+										<br/>
+
+										<h3 id="7" style="background-color:#fff">SignDataWithVID_Serial</h3>
+										<form id="form_SignDataWithVID_Serial" method=post action='../test/sign_result3.jsp' >
+										<table class="test">
+											<tr>
+												<td width="50" rowspan="7">Input</td>
+											</tr>
+											<tr>
+												<td>aSerial</td>
+												<td><input type="text" class="inputtext" name="aSerial"/></td>
+											</tr>
+											<tr>
+												<td>aPlain</td>
+												<td><textarea class="inputtext" name="aPlain" rows="2"></textarea></td>
+											</tr>
+											<tr>
+												<td>aCert</td>
+												<td><textarea class="inputtext" name="aCert" rows="7"></textarea></td>
+											</tr>
+											<tr>
+												<td>aOption</td>
+												<td style="text-align:left;">
+													<strong>(공통 옵션)</strong></br>
+													<input type="checkbox" class="inputcheck" name="aOption" value="0" checked disabled="true"/>
+													0 : 기본 서명<br/>
+													<input type="checkbox" class="inputcheck" name="aOption" value="8" checked/>
+													8 : <strong>WEB(aIdn)</strong>으로 부터 직접 VID를 입력받는다  <strong>(VID입력창 뜨지 않음)</strong><br/>
+													<input type="checkbox" class="inputcheck" name="aOption" value="256" checked/>
+													0x00000100 : 출력 값을 Base64로 <br/>
+												</td>
+											</tr>
+											<tr>
+												<td>aIdn</td>
+												<td><input type="text" class="inputtext" name="aIdn"/></td>
+											</tr>
+											<tr>
+												<td>aLimitedTrial</td>
+												<td><input type="text" class="inputtext" name="aLimitedTrial"/></td>
+											</tr>
+											<tr>
+												<td>Run</td>
+												<td colspan="2">
+													<input type="button" class="inputbutton" style="height:auto;" value="AnySign.SignDataWithVID_Serial"
+													onClick="AnySign.SignDataWithVID_Serial (AnySign.mXgateAddress,
+																							 AnySign.mCAList,
+																							 this.form.aSerial.value,
+																							 2000,
+																							 this.form.aPlain.value,
+																							 sumCheckbox (this.form.aOption),
+																							 '',
+																							 this.form.aLimitedTrial.value,
+																							 this.form.aIdn.value, 
+																							 this.form.aCert.value,
+																							 SignDataWithVID_Serial_callback);"/>
+												</td>
+											</tr>
+											<tr>
+												<td>Output</td>
+												<td colspan="2">
+													<textarea class="inputtext" name="aSignedMsg" rows="7"></textarea>
+												</td>
+											</tr>
+											<tr>
+												<td>Vid Output</td>
+												<td colspan="2">
+													<textarea class="inputtext" name="aVidMsg" rows="7"></textarea>
+												</td>
+											</tr>
+											<tr>
+												<td>Send</td>
+												<td colspan="3" height="25"><input type=submit value="서버로전송">
+												</td>
+											</tr>
+											<tr>
+												<td>Reset</td>
+												<td colspan="2">
+													<button onClick="this.form.aSignedMsg.value='';this.form.aVidMsg.value='';return false;">결과값 삭제</button>
+												</td>
+											</tr>
+										</form>
+										</table>
+										<br/>
+
+									</td>
+								</tr>
+							</table>
+							<!-- CENTER END -->
+						</td>
+						<!-- contents end -->
+					</tr>
+				</table>
+			</td>
+		</tr>
+
+		<!-- Footer -->
+		<tr>
+			<td>
+				<div id="xecure_footer" />
+			</td>
+		</tr>
+	</table>
+
+</body>
+</html>

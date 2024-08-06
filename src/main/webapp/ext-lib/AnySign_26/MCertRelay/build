@@ -1,0 +1,56 @@
+#!/bin/bash
+
+export ROOT=$PWD
+
+function showCommand ()
+{
+	echo ""
+	echo "[1] merge export.js"
+	echo "[2] merge import.js"
+	echo "[3] merge all(export, import)"
+	echo "[q] Exit"
+}
+
+function doCommand ()
+{
+	case $1 in
+		1 ) merge_export 
+			;;
+		2 ) merge_import
+			;;
+		3) merge_export
+		   merge_import
+		   ;;
+		'q' | 'Q' ) echo "";;
+		* ) echo "Unknown Command";;
+	esac
+
+	echo ""
+	echo "finished!"
+}
+
+function merge_export()
+{
+	cat /dev/null > $PWD/js/export_relay.js
+
+	cat $PWD/js/common.js >> $PWD/js/export_relay.js
+	cat $PWD/js/export.js >> $PWD/js/export_relay.js
+
+}
+
+function merge_import()
+{
+	cat /dev/null > $PWD/js/import_relay.js
+
+	cat $PWD/js/common.js >> $PWD/js/import_relay.js
+	cat $PWD/js/import.js >> $PWD/js/import_relay.js
+}
+
+if [ -z $1 ]; then
+	showCommand
+	echo "Select Command :"
+	read command
+	doCommand $command
+else
+	doCommand 2 $1
+fi

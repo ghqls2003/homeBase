@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+<!--
+	<properties url="file:///f:/eclipse/hira/jakarta-test/config/db.properties"/>
+-->
+<!--
+	cacheModelsEnabled : SqlMapClient 를 위한 모든 캐쉬모델을 가능하게 하거나 가능하지 않게 한다. 이것은 디버깅시 도움이 된다. 기본값 : true
+	enhancementEnabled : 향상된 늦은(lazy)로딩처럼 최적화된 자바빈즈 속성 접근을 위해 런타임시 바이트코드 향상을 가능하게 한다. 기본값 : false
+	lazyLoadingEnabled : SqlMapClient 를 위한 모든 늦은(lazy)로딩을 가능하게 하거나 가능하지 않게 한다. 이것은 디버깅시 도움이 된다. 기본값 : true
+	maxRequests : 한꺼번에 SQL문을 수행할수 있는 쓰레드의 수이다. 기본값 : 512
+	maxSessions : maxTransaction보다 같거나 커야 하고 maxRequests보다 작아야 한다. 기본값 : 128
+	maxTransactions :꺼번에 SqlMapClient.startTransaction()에 들어갈수 있는 쓰레드의 최대갯수이다. 기본값 : 32
+-->
+
+  	<settings
+  		cacheModelsEnabled="true"
+		enhancementEnabled="true"
+		lazyLoadingEnabled="true"
+		maxRequests="32"
+		maxSessions="10"
+		maxTransactions="5"
+		useStatementNamespaces="true"
+	/>
+
+  	<sqlMap resource="resources/repository/db/ibatis/eam-sync.xml"/>
+  	
+</sqlMapConfig>

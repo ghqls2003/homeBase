@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AnyPIN & FacePhi Authentication</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="cache-control" content="no-cache">
+<meta name="viewport" content="width=device-width">
+
+<script type="text/javascript" src="../AnyPin/lib/xcryptoCore_min.js"></script>
+<script type="text/javascript" src="../AnyPin/lib/xcrypto_min.js"></script>
+
+<script type="text/javascript" src="../anyPinInterface.js"></script>
+
+<!-- FacePhi -->
+<script type="text/javascript" src="../FacePhi/FPhiUserControl/FPhiUserControl.js"></script>
+
+<script type="text/javascript">
+
+var keyIndex = 0;
+var ExtractionFinished = false;
+
+function init()
+{
+	var form = document.form_auth;
+	var pinidlist = form.pinidlist;
+	
+	var userCallback = function(result) {
+		if(result) {
+			var aResult = result.split("$");
+			for(var i in aResult) {
+				var op = document.createElement("option");
+				var aId = aResult[i].split("|");
+				op.text = aId[0];
+				op.value = aResult[i];
+				pinidlist.options.add(op);
+				
+				if(i == 0) SelectPinID(aResult[i]);
+			}
+		}
+		
+		SetPinElement();
+	}
+	
+	var errCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.InitAnyPin();
+	AnyPin.GetPinIDList(null, 3, userCallback, errCallback);
+}
+
+</script>
+</head>
+<body onload="init();">
+
+<h1>AnyPIN & FacePhi Authentication</h1>
+
+<hr>
+
+<script type="text/javascript">
+
+function SelectPinID(value)
+{
+	var form = document.form_auth;
+	var userinfo = value.split("|");
+	
+	form.userid.value = userinfo[0];
+	form.nickname.value = userinfo[1];
+	
+	if(userinfo[2] == 0) {
+		form.inputType.value = "General input";
+	} else if(userinfo[2] == 13) {
+		form.inputType.value = "XecureKeypad";
+	} else if(userinfo[2] == 17) {
+		form.inputType.value = "Pattern";
+	} else if(userinfo[2] == 18) {
+		form.inputType.value = "FacePhi";
+	} else {
+		form.inputType.value = userinfo[2];
+	}
+}
+
+function SetPinElement()
+{
+	var SetPinOkFunc = function (result) {
+		if(result == true) {
+			document.getElementById("facePhiResult").innerText = "ExtractionFinished : success";
+			ExtractionFinished = true;
+		} else {
+			document.getElementById("facePhiResult").innerText = "ExtractionFinished : fail";
+		}
+	}
+	
+	var SetPinCloseFunc = function () {
+		document.getElementById("facePhiResult").innerText = "CancelledDetected";
+		alert("close")
+	}
+	
+	var SetPinErrorFunc = function (result) {
+		var aErrMsg = "[" + result.code + "] " + result.msg;
+		document.getElementById("facePhiResult").innerText = "ExceptionCaptured : " + aErrMsg;
+		alert(aErrMsg)
+	}
+	
+	keyIndex = AnyPin.SetPinElement("18", "facePhiDiv", SetPinOkFunc, SetPinCloseFunc, SetPinErrorFunc, 0);
+}
+
+function SignPin()
+{
+	var plain = "facephi test!";
+	
+	var form = document.form_auth;
+	var userid = form.userid.value;
+	var output = form.output;
+	
+	if(!ExtractionFinished) {
+		alert("not ExtractionFinished")
+		return;
+	}
+	
+	var SignPinUserCallback = function(result) {
+		output.value = result;
+		
+		var userCallback = function() {};
+		var errCallback = function() {};
+		AnyPin.EndSession(userid, userCallback, errCallback);
+	}
+	
+	var SignPinErrCallback = function(result) {
+		if(result.remainCount) {
+			alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n') + " 남은 횟수: " + result.remainCount);
+		} else {
+			alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+		}
+	}
+	
+	var InitSessionUserCallback = function(result) {
+		
+		AnyPin.SignPin(userid, keyIndex, plain, 0, SignPinUserCallback, SignPinErrCallback);
+	}
+	
+	var InitSessionErrCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.InitSession(userid, 0, InitSessionUserCallback, InitSessionErrCallback);
+}
+
+function DeleteAllPin()
+{
+	var plain = "facephi test!";
+	
+	var form = document.form_auth;
+	var userid = form.userid.value;
+	var output = form.output;
+	
+	if(!ExtractionFinished) {
+		alert("not ExtractionFinished")
+		return;
+	}
+	
+	var DeleteAllPinUserCallback = function(result) {
+		output.value = result;
+		
+		var userCallback = function() {};
+		var errCallback = function() {};
+		AnyPin.EndSession(userid, userCallback, errCallback);
+	}
+	
+	var DeleteAllPinErrCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	var InitSessionUserCallback = function(result) {
+		
+		AnyPin.DeleteAllPin(userid, keyIndex, 0, DeleteAllPinUserCallback, DeleteAllPinErrCallback);
+	}
+	
+	var InitSessionErrCallback = function(result) {
+		alert("[" + result.code + "] " +result.msg.replace(/\\n/g, '\r\n'));
+	}
+	
+	AnyPin.InitSession(userid, 0, InitSessionUserCallback, InitSessionErrCallback);
+}
+
+</script>
+
+<form id="form_auth" name="form_auth" action="#">
+	<table>
+		<tr>
+			<td>PinIDList</td>
+			<td><select name="pinidlist" onchange="SelectPinID(this.value)"></select></td>
+		</tr>
+		<tr>
+			<td>userid</td>
+			<td><input type="text" name="userid" size="60"/></td>
+		</tr>
+		<tr>
+			<td>nickname</td>
+			<td><input type="text" name="nickname" size="60"/></td>
+		</tr>
+		<tr>
+			<td>inputType</td>
+			<td><input type="text" name="inputType" size="60"/></td>
+		</tr>
+		<tr>
+			<td colspan="2">facePhiDiv</td>
+		</tr>
+		<tr>
+			<td colspan="2" align="center">
+				<table>
+					<tr>
+						<td><div id="facePhiDiv" style="border:1px solid #dfdfdf;margin:auto;"></div></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>facePhiResult</td>
+			<td><span id="facePhiResult"></span></td>
+		</tr>
+		<tr>
+			<td>run</td>
+			<td>
+				<input type="button" value="SignPin" onclick="SignPin()"/>
+				<input type="button" value="DeleteAllPin" onclick="DeleteAllPin()"/>
+			</td>
+		</tr>
+		<tr>
+			<td>output</td>
+			<td><textarea name="output" cols="60" rows="4"></textarea></td>
+		</tr>
+	</table>
+</form>
+<br>
+
+</body>
+</html>

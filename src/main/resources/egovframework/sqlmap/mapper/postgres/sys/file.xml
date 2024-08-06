@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sys.file">
+
+	<!-- 파일 관리 그리드 -->
+	<select id="nomalFileList" resultType="resultMap">
+		SELECT
+		T.rn,
+		T.file_sn,
+		T.encrypt_yn,
+		T.actl_file_nm,
+		T.atch_file_nm,
+		T.atch_file_sz,
+		T.atch_file_path,
+		to_char(T.reg_dt,'YYYY-MM-DD')as reg_dt,
+		T.reg_ip,
+		T.rgtr_id,
+		to_char(T.mdfcn_dt,'YYYY-MM-DD')as mdfcn_dt,
+		T.mdfcn_ip,
+		T.mdfcn_id
+		FROM (
+		select row_number() over(order by reg_dt desc ) as rn,*
+		from (
+		(
+		select 'E' as encrypt_yn,
+		t00.file_sn ,
+		t00.actl_file_nm,
+		t00.atch_file_nm,
+		t00.atch_file_sz,
+		t00.atch_file_path,
+		t00.reg_dt,
+		t00.reg_ip,
+		(select coalesce (viui.sso_user_id,viui.onepass_ci,'-') from dqvs.v_intg_user_info AS viui where t00.rgtr_sn =viui.user_sn  ) as rgtr_id,
+		t00.mdfcn_dt,
+		t00.mdfcn_ip,
+		(select coalesce (viui.sso_user_id,viui.onepass_ci,'-') from dqvs.v_intg_user_info AS viui where t00.mdfr_sn  =viui.user_sn  ) as mdfcn_id
+		FROM dqvs.dvs_cmm_mt_intrlcnsfile t00
+		)
+		union all
+		(
+		select 'N' as encrypt_yn,
+		t00.file_sn ,
+		t00.actl_file_nm,
+		t00.atch_file_nm,
+		t00.atch_file_sz,
+		t00.atch_file_path,
+		t00.reg_dt,
+		t00.reg_ip,
+		(select coalesce (viui.sso_user_id,viui.onepass_ci,'-') from dqvs.v_intg_user_info AS viui where t00.rgtr_sn =viui.user_sn  ) as rgtr_id,
+		t00.mdfcn_dt,
+		t00.mdfcn_ip,
+		(select coalesce (viui.sso_user_id,viui.onepass_ci,'-') from dqvs.v_intg_user_info AS viui where t00.mdfr_sn  =viui.user_sn  ) as mdfcn_id
+		FROM dqvs.dvs_cmm_mt_file t00
+		)
+		) as a
+		where
+		1=1
+		<if test='fileEncryYn != null and fileEncryYn != ""'>
+			<choose>
+				<when test="fileEncryYn == 'NE'">
+					and a.encrypt_yn in('N','E')
+				</when>
+				<otherwise>
+					and a.encrypt_yn = #{fileEncryYn}
+				</otherwise>
+			</choose>
+		</if>
+		<if test='actlFlnm != null and actlFlnm != ""'>
+			and a.actl_file_nm  Like '%' ||  #{actlFlnm} || '%'
+		</if>
+		<if test='startDt != null and startDt != "" and endDt != "" and endDt != ""'>
+			AND a.reg_dt <![CDATA[>=]]>to_timestamp(#{startDt}, 'yyyy-mm-dd') AND a.reg_dt  <![CDATA[<= ]]>to_timestamp(#{endDt}, 'yyyy-mm-dd') + interval '1 days'
+		</if>
+		) T
+		WHERE 1 = 1
+		<if test="take != '' and take != null">
+			AND T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		</if>
+		<if test="skip != '' and skip != null">
+			AND T.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+		</if>
+		ORDER BY T.rn ASC
+	</select>
+
+	<!-- 파일 관리 그리드(건수) -->
+	<select id="nomalFileListCnt" resultType="int">
+		SELECT count(*)
+		FROM (
+		select row_number() over(order by reg_dt desc ) as rn,*
+		from (
+		(
+		select 'E' as encrypt_yn,
+		t00.actl_file_nm,
+		t00.atch_file_nm,
+		t00.atch_file_sz,
+		t00.atch_file_path,
+		t00.reg_dt,
+		t00.reg_ip,
+		(select coalesce (viui.sso_user_id,viui.onepass_ci,'-') from dqvs.v_intg_user_info AS viui where t00.rgtr_sn =viui.user_sn  ) as rgtr_id,
+		t00.mdfcn_dt,
+		t00.mdfcn_ip,
+		(select coalesce (viui.sso_user_id,viui.onepass_ci,'-') from dqvs.v_intg_user_info AS viui where t00.mdfr_sn  =viui.user_sn  ) as mdfcn_id
+		FROM dqvs.dvs_cmm_mt_intrlcnsfile t00
+		)
+		union all
+		(
+		select 'N' as encrypt_yn,
+		t00.actl_file_nm,
+		t00.atch_file_nm,
+		t00.atch_file_sz,
+		t00.atch_file_path,
+		t00.reg_dt,
+		t00.reg_ip,
+		(select coalesce (viui.sso_user_id,viui.onepass_ci,'-') from dqvs.v_intg_user_info AS viui where t00.rgtr_sn =viui.user_sn  ) as rgtr_id,
+		t00.mdfcn_dt,
+		t00.mdfcn_ip,
+		(select coalesce (viui.sso_user_id,viui.onepass_ci,'-') from dqvs.v_intg_user_info AS viui where t00.mdfr_sn  =viui.user_sn  ) as mdfcn_id
+		FROM dqvs.dvs_cmm_mt_file t00
+		)
+		) as a
+		where
+		1=1
+		<if test='fileEncryYn != null and fileEncryYn != ""'>
+			<choose>
+				<when test="fileEncryYn == 'NE'">
+					and a.encrypt_yn in('N','E')
+				</when>
+				<otherwise>
+					and a.encrypt_yn = #{fileEncryYn}
+				</otherwise>
+			</choose>
+		</if>
+		<if test='actlFlnm != null and actlFlnm != ""'>
+			and a.actl_file_nm  Like '%' ||  #{actlFlnm} || '%'
+		</if>
+		<if test='startDt != null and startDt != "" and endDt != "" and endDt != ""'>
+			AND a.reg_dt <![CDATA[>=]]>to_timestamp(#{startDt}, 'yyyy-mm-dd') AND a.reg_dt  <![CDATA[<= ]]>to_timestamp(#{endDt}, 'yyyy-mm-dd') + interval '1 days'
+		</if>
+		) T
+	</select>
+
+
+
+</mapper>

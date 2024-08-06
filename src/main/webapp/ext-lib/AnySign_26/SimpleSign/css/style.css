@@ -1,0 +1,211 @@
+
+/* Style */
+
+a {color: #777;}
+a:hover {color: #444;}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {line-height: 1.25px;}
+hr {border-color: #e1e1e1;}
+.no-transform { -webkit-transform: none !important; transform: none !important;}
+.no-scroll {overflow: hidden;}
+.no-scroll-x {overflow-x: hidden;}
+dl, ol, ul, dt, dd, p, a, li, img {margin:0; padding:0;}
+li {list-style:none;}
+fL {float: left;}
+fR {float: right;}
+radio {appearance: none}
+
+
+
+
+/*container CSS*/
+#wrapper .container {width: 450px; height: 578px; margin:0 auto; margin-top: 60px;}
+
+/*popup CSS*/
+.black_overlay{display: none; position: absolute; top: 0%; left: 0%; width: 100%; height: 100%; background-color: #5f5f5f; z-index:999998; -moz-opacity: 0.8; opacity:.50; filter: alpha(opacity=80);}
+.white_content {display: none; position: absolute; top: 25%; left: 25%;  min-height: auto; background-color: white; z-index:999999; overflow: hidden;
+                border-radius: 10px;}
+.white_content .popupTop {line-height: 20px; border-bottom: 1px solid #c8cee7; padding:10px;}
+.white_content .popupTop p {text-align: center; color: #394da5; font-size: 15px; font-weight: bold;}
+.white_content .popupTop p.popStit {text-align: center; color: #777; font-size: 12px;}
+.white_content li {padding: 10px 20px; border-bottom: 1px solid #e4e7f3;}
+.white_content li:hover {background: #e4e7f3;}
+.white_content .active {background: #e4e7f3;}
+.white_content li img {width: 10%; display: inline-block; vertical-align: middle;}
+.white_content li a {font-size: 13px; text-decoration: none; font-weight: bold; color: #666; margin-left: 5px;}
+.white_content .popBomt {
+	display: block;}
+.white_content .popBomt span {display: block; float: left; width: 70%; background-color: #4a5db0; text-align: center; height: 62px;}
+.white_content .popBomt span.cols {display: block; float: right; text-align: center; width: 30%; background-color: #ddd;}
+.white_content .popBomt span a {display: block; text-decoration: none; margin-top: 15px; color: #fff; font-weight: bold;}
+.white_content .popBomt span.cols a {color: #4a5db0;}
+/*
+@media (min-width: 1025px) and (max-width: 1280px) {.white_content {top: 21%; left: 38%; width: 25%; min-height: auto;}}
+@media (min-width: 768px) and (max-width: 1024px) {.white_content {top: 21%; left: 33%; width: 34%; height: auto;}}
+@media (min-width: 481px) and (max-width: 767px) {.white_content {top: 21%; left: 30%; width: 40%; height: auto;}}
+*/
+
+/*TAB CSS*/
+
+ul.tabs {margin: 0; padding: 0; float: left; list-style: none; height: 32px; width: 100%;}
+ul.tabs li {float: left; width: 50%; margin: 0; padding: 0; height: 50px; line-height: 55px; border-left: none; margin-bottom: -1px; overflow: hidden; position: relative; background: #dee6fe; text-align: center;}
+ul.tabs li a {text-decoration: none; color: #000; display: block; font-size: 1.2em; padding: 0 20px; outline: none;}
+ul.tabs li a:hover {background: #dee6fe; cursor: pointer;}
+html ul.tabs li.active, html ul.tabs li.active a:hover  {background: #fff;}
+html ul.tabs li.active, html ul.tabs li.active a:hover  {background: #fff;}
+
+/*Container CSS*/
+.tab_container {overflow: hidden; clear: both; float: left; width: 100%; background: #fff; height: 540px; border-radius: 16px;}
+.tab_container .tab_content {padding: 15px 20px; font-size: 1.2em;}
+.tab_container .tab_content>div>img {padding-top: 20px;}
+.tab_container .tab_content .centerLine {padding:15px 0;}
+.tab_container .tab_content>div p {display: inline-block; font-size: 15px; font-weight: bold; color: #4a5db0;}
+/*.tab_container .tab_content>div span {float:right; width: 27px; height: 27px; background: url(../img/icons.png)no-repeat;}*/
+.tab_container .tab_content ul li {width: 410px; height: 55px; display: block; margin-bottom: 7px; border-radius: 7px; /*background: url(../img/icon_x.png)385px 23px no-repeat; */
+                                   background-color: #f1f4fd; background-blend-mode: color-burn; border: 1px solid #dee6fe;}
+.tab_container .tab_content ul li.borderSt {background-image: none; background: #f7f7f7; border: 1px dashed #cacaca;}
+.tab_container .tab_content ul li.borderSt img {display: inline-block; margin: 15px 7px 0px 135px; padding: 0; width: 25px;}
+.tab_container .tab_content ul li.borderSt a {font-size: 12px; color: #4a5db0; display: inline-block; padding-top: 20px;}
+.tab_container .tab_content ul li.iconTop {width: 410px; height: 55px; display: inline-block; margin-bottom: 7px; border-radius: 7px; background: url(../img/icon_top.png)385px 23px no-repeat;
+                                          background-color: #f1f4fd; background-blend-mode: color-burn;}
+.tab_container .tab_content ul li img {float: left; display: inline-block; vertical-align: middle; padding: 0px 20px;}
+.tab_container .tab_content ul li a {font-size: 17px; font-weight: bold; text-decoration: none; font-family: 'Nanum Gothic', sans-serif; display: inline-block; vertical-align: middle; padding-top: 13px;}
+.tab_container .bottom_button {display: block; text-align: center; margin-top: -10px; position: relative; padding-top:10px; height: 50px;}
+.tab_container .bottom_button button.btn_border1 {background: #4a5db0; color:#fff; width: 97px; height: 30px; border:1px solid #4a5db0; border-radius: 20px;}
+.tab_container .bottom_button button.btn_border2 {background: #fff; color:#4a5db0; width: 97px; height: 30px; border:1px solid #bbb; border-radius: 20px;}
+.tab_container .bottom_button .symbol {width: 34px; height: 27px; background: url(../img/symbol_logo.png)no-repeat; position: absolute; top:13px; right: 20px;}
+
+/* Naver Conent CSS*/
+.tab_container .tab_content .naversign_con {width:410px; height:241px; background-color: #f1f4fd; border-radius: 7px; position: relative;}
+.tab_container .tab_content .naversign_con dl {padding: 20px 20px; line-height: 20px; color:#444;}
+.tab_container .tab_content .naversign_con dt {font-size: 16px; font-weight: bold; padding-bottom: 5px;}
+.tab_container .tab_content .naversign_con dd {font-size: 12px;}
+.tab_container .tab_content .naversign_con dd.loading {text-align: center; padding-top: 50px;}
+.tab_container .tab_content .naversign_con .naversign_Bot {position: absolute; left: 20px; bottom: 10px; width: 375px;}
+.tab_container .tab_content .naversign_con .naversign_Bot span {display: inline-block; margin-top: 7px; font-size: 11px;}
+.tab_container .tab_content .naversign_con .naversign_Bot button {float:right; background-color: #03cf5d; border:0; border-radius: 20px; color:#fff; font-size: 13px; font-weight: bold; letter-spacing: -1px;
+                                                            width:100px; height:30px;}
+
+/* yessign Conent CSS*/
+.tab_container .tab_content .yessign_con {width:410px; height:241px; background-color: #f1f4fd; border-radius: 7px; position: relative;}
+.tab_container .tab_content .yessign_con dl {padding: 20px 20px; line-height: 20px; color:#444;}
+.tab_container .tab_content .yessign_con dt {font-size: 16px; font-weight: bold; padding-bottom: 5px;}
+.tab_container .tab_content .yessign_con dd {font-size: 12px;}
+.tab_container .tab_content .yessign_con dd.loading {text-align: center; padding-top: 50px;}
+.tab_container .tab_content .yessign_con .yessign_Bot {position: absolute; left: 20px; bottom: 10px; width: 375px;}
+.tab_container .tab_content .yessign_con .yessign_Bot span {display: inline-block; margin-top: 7px; font-size: 11px;}
+.tab_container .tab_content .yessign_con .yessign_Bot button {float:right; background-color: #ba0121; border:0; border-radius: 20px; color:#fff; font-size: 13px; font-weight: bold; letter-spacing: -1px;
+                                                            width:100px; height:30px;}
+
+/* toss Conent CSS*/
+.tab_container .tab_content .toss_con {width:410px; height:241px; background-color: #f1f4fd; border-radius: 7px; position: relative;}
+.tab_container .tab_content .toss_con p {padding: 10px 0px 10px 20px; font-size: 16px; font-weight: bold; color: #444;}
+.tab_container .tab_content .toss_con dl {padding: 0 20px; line-height: 20px; color:#444;}
+.tab_container .tab_content .toss_con dt {font-size: 13px; color:#4a5db0; font-weight: bold; float: left; width: 80px; display: inline-block; margin-top:10px;}
+.tab_container .tab_content .toss_con>div.consent {width: 100%; font-size: 10.5px; color:#444; padding: 14px 12px;}
+.tab_container .tab_content .toss_con>div.consent span {color: #4a5db0; text-decoration: underline; display:inline-block; padding-left: 6px;}
+.tab_container .tab_content .toss_con dd {font-size: 12px; padding-bottom: 5px;}
+.tab_container .tab_content .toss_con dd input {border:1px solid #d8e0fb; width: 270px; height: 28px; border-radius: 23px; font-size: 12px; padding-left: 15px;}
+.tab_container .tab_content .toss_con dd input.s_box {width: 150px;}
+.tab_container .tab_content .toss_con dd input[type=radio] {width: 15px; height: 15px; vertical-align: middle; display: inline-block; margin-top: -1px; background: #4A5DAF;}
+.tab_container .tab_content .toss_con dd.loading {text-align: center; padding-top: 50px;}
+.tab_container .tab_content .toss_con .viewInp {display: inline-block; vertical-align: middle; margin-top: -3px; margin-right: 3px;}
+.tab_container .tab_content .toss_con .viewBtm {color: #4a5db0; padding: 0 7px;}
+.tab_container .tab_content .toss_con .use {position: absolute; bottom: 0; width: 90%; margin: 0 0 8px 20px;}
+.tab_container .tab_content .toss_con .use_text {padding-left: 0px; padding-top: 12px; font-size: 11px; color: #4A5DAF;}
+.tab_container .tab_content .toss_con .use button {position: absolute; right: 0; border: 1px solid #0050ff; background: #0050ff; font-size: 14px; color: #fff; font-weight: bold; padding: 7px; border-radius: 26px;}
+
+
+/* kakao Conent CSS*/
+.tab_container .tab_content .kakaosign_con {width:410px; height:241px; background-color: #f1f4fd; border-radius: 7px; position: relative;}
+.tab_container .tab_content .kakaosign_con dl {padding: 20px 20px; line-height: 20px; color:#444;}
+.tab_container .tab_content .kakaosign_con dt {font-size: 16px; font-weight: bold; padding-bottom: 5px;}
+.tab_container .tab_content .kakaosign_con dd {font-size: 12px;}
+.tab_container .tab_content .kakaosign_con dd.loading {text-align: center; padding-top: 50px;}
+.tab_container .tab_content .kakaosign_con .kakaosign_Bot {position: absolute; left: 20px; bottom: 10px; width: 375px;}
+.tab_container .tab_content .kakaosign_con .kakaosign_Bot span {display: inline-block; margin-top: 7px; font-size: 11px;}
+.tab_container .tab_content .kakaosign_con .kakaosign_Bot button {float:right; background-color: #ba0121; border:0; border-radius: 20px; color:#fff; font-size: 13px; font-weight: bold; letter-spacing: -1px;
+                                                            width:100px; height:30px;}
+
+
+/* pass Conent CSS*/
+.tab_container .tab_content .passsign_con {width:410px; height:241px; background-color: #f1f4fd; border-radius: 7px; position: relative;}
+.tab_container .tab_content .passsign_con dl {padding: 20px 20px; line-height: 20px; color:#444;}
+.tab_container .tab_content .passsign_con dt {font-size: 16px; font-weight: bold; padding-bottom: 5px;}
+.tab_container .tab_content .passsign_con dd {font-size: 12px;}
+.tab_container .tab_content .passsign_con dd.loading {text-align: center; padding-top: 50px;}
+.tab_container .tab_content .passsign_con .passsign_Bot {position: absolute; left: 20px; bottom: 10px; width: 375px;}
+.tab_container .tab_content .passsign_con .passsign_Bot span {display: inline-block; margin-top: 7px; font-size: 11px;}
+.tab_container .tab_content .passsign_con .passsign_Bot button {float:right; background-color: #ba0121; border:0; border-radius: 20px; color:#fff; font-size: 13px; font-weight: bold; letter-spacing: -1px;
+                                                            width:100px; height:30px;}
+
+/* .wrapper-sign-layout {
+    opacity: 0;
+} */
+
+.wrapper-shadow {
+    content: "";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+}
+
+/* wrapper를 이동하기위한 설정 */
+#wrapper {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 99999;
+}
+.tab_container .tab_content ul li .icon-close {
+    float : right;
+    padding: 22px;
+    cursor: pointer;
+}
+.ce-sign,
+.ce-sign-ok {
+    cursor: pointer;
+}
+.ce-sign-cancel{
+    cursor: pointer;
+}
+
+
+/* anysign 재정의 */
+/* .xwup_cert_pop_anysign {
+    width: 450px!important;
+    top: 110px!important;
+    left: 0px!important;
+    border-color: #fff!important;
+} */
+
+/* Center the loader */
+/* #loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 80px;
+    height: 80px;
+    margin: -76px 0 0 -76px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+} */

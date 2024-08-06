@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<queryMap id="eam-user">
+	
+	<select id="getUser" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>uid=#userId#,ou=people,ou=#siteName#</base>
+		<attributes>
+			<attribute alias="userId">uid</attribute>
+			<attribute alias="deptCode">ouCode</attribute>
+		</attributes>
+	</select>
+	
+	<insert id="addUser" parameterClass="java.util.HashMap">
+		<base>uid=#userId#,ou=people,ou=#siteName#</base>
+		<object-classes>
+			<object-class>top</object-class>
+			<object-class>eamUser</object-class>
+			<object-class>sidoUser</object-class>
+		</object-classes>
+		<attributes>
+			<attribute alias="userPassword">eamPassword</attribute>
+			<attribute alias="userName">displayName</attribute>
+			<attribute alias="homePhoneNumber">homePhone</attribute>
+			<attribute alias="homePostalAddress">homePostalAddress</attribute>
+			<attribute alias="mobilePhoneNumber">mobile</attribute>
+			<attribute alias="email">mail</attribute>
+			<attribute alias="officePhoneNumber">telephoneNumber</attribute>
+			<attribute alias="gender">gender</attribute>
+			<attribute alias="ssn">resiNumber</attribute>
+			<attribute alias="jobName">jobTitle</attribute>
+			<attribute alias="empNo">empNumber</attribute>
+			<attribute alias="dn">cn</attribute>
+			<attribute alias="userStatus">status</attribute>
+			<attribute alias="deptCode">ouCode</attribute>
+			<attribute alias="deptName">ou</attribute>
+			<attribute alias="parentDeptCode">parentOUCode</attribute>
+			<attribute alias="topDeptCode">topOUCode</attribute>
+ 			<attribute alias="deptFullName">orgFullName</attribute>
+			<attribute alias="userFullName">userFullName</attribute>
+			<attribute alias="createUserId">sidoAddUserId</attribute>
+			<attribute alias="createDate">sidoAddDate</attribute>
+			<attribute alias="createTime">sidoAddTime</attribute>
+			<attribute alias="lastPasswordChangeTime">eamLastChangePwTime</attribute>
+		</attributes>
+	</insert>
+	
+	<update id="modifyUser" parameterClass="java.util.HashMap">
+		<base>uid=#userId#,ou=people,ou=#siteName#</base>
+		<attributes>
+			<attribute alias="userPassword">eamPassword</attribute>
+			<attribute alias="userName">displayName</attribute>
+			<attribute alias="homePhoneNumber">homePhone</attribute>
+			<attribute alias="homePostalAddress">homePostalAddress</attribute>
+			<attribute alias="mobilePhoneNumber">mobile</attribute>
+			<attribute alias="email">mail</attribute>
+			<attribute alias="officePhoneNumber">telephoneNumber</attribute>
+			<attribute alias="gender">gender</attribute>
+			<attribute alias="ssn">resiNumber</attribute>
+			<attribute alias="jobName">jobTitle</attribute>
+			<attribute alias="empNo">empNumber</attribute>
+			<attribute alias="dn">cn</attribute>
+			<attribute alias="userStatus">status</attribute>
+			<attribute alias="userFullName">userFullName</attribute>
+			<attribute alias="sidoChangeUserId">sidoChangeUserId</attribute>
+			<attribute alias="sidoChangeDate">sidoChangeDate</attribute>
+			<attribute alias="sidoChangeTime">sidoChangeTime</attribute>
+		</attributes>
+	</update>
+	
+	<delete id="removeUser" parameterClass="java.util.HashMap">
+		<base>uid=#userId#,ou=people,ou=#siteName#</base>
+	</delete>
+	
+	<select id="getDeptMembers" parameterClass="java.util.HashMap" resultClass="java.util.HashMap">
+		<base>ou=people,ou=#siteName#</base>
+		<filter>(&amp;(objectclass=eamUser)(ouCode=#deptCode#))</filter>
+		<attributes>
+			<attribute alias="memberId">uid</attribute>
+		</attributes>
+		<search-scope>SUB</search-scope>
+	</select>
+	
+	<update id="modifyDeptCode" parameterClass="java.util.HashMap">
+		<base>uid=#memberId#,ou=people,ou=#siteName#</base>
+		<attributes>
+			<attribute alias="deptName">ou</attribute>
+			<attribute alias="deptCode">ouCode</attribute>
+			<attribute alias="parentDeptCode">parentOuCode</attribute>
+			<attribute alias="sidoChangeUserId">sidoChangeUserId</attribute>
+			<attribute alias="sidoChangeDate">sidoChangeDate</attribute>
+			<attribute alias="sidoChangeTime">sidoChangeTime</attribute>
+		</attributes>
+	</update>
+	
+	<update id="removeDeptCode" parameterClass="java.util.HashMap">
+		<base>uid=#memberId#,ou=people,ou=#siteName#</base>
+		<attributes>
+			<attribute alias="deptName">ou</attribute>
+			<attribute alias="deptCode">ouCode</attribute>
+			<attribute alias="parentDeptCode">parentOuCode</attribute>
+			<attribute alias="sidoChangeUserId">sidoChangeUserId</attribute>
+			<attribute alias="sidoChangeDate">sidoChangeDate</attribute>
+			<attribute alias="sidoChangeTime">sidoChangeTime</attribute>
+		</attributes>
+	</update>
+	
+</queryMap>

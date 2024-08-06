@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>xcs.properties</comment>
+	<entry key="xcs.ca.certificate">/WEB-INF/cert/root_cert.der</entry>
+	<entry key="xcs.server.certificate">/WEB-INF/cert/server_cert.der</entry>
+	<entry key="xcs.server.key">/WEB-INF/cert/server_priv.key</entry>
+	<entry key="xcs.server.keypassword">ya/0VQFgDKqe6IyK8Jmq1Q==</entry>
+	<entry key="xcs.hash.keep.second">300</entry>
+	<entry key="xcs.session.keep.second">300</entry>
+	<entry key="xcs.audit.use">off</entry>
+	<entry key="xcs.audit.keep.day">90</entry>
+	<entry key="xcs.error.use">off</entry>
+	<entry key="xcs.error.keep.day">90</entry>
+</properties>

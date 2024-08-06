@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<queryMapConfig>
+	<queryMap resource="resources/repository/ldap/ldap-sample.xml"/>
+	<queryMap resource="resources/repository/ldap/ldap-sample2.xml"/>
+	<queryMap resource="resources/repository/ldap/sso-login.xml"/>
+	<queryMap resource="resources/repository/ldap/eam-application.xml"/>
+	<queryMap resource="resources/repository/ldap/eam-user.xml"/>
+	<queryMap resource="resources/repository/ldap/eam-dept.xml"/>
+	<queryMap resource="resources/repository/ldap/eam-role.xml"/>
+	<queryMap resource="resources/repository/ldap/eam-policy.xml"/>
+</queryMapConfig>

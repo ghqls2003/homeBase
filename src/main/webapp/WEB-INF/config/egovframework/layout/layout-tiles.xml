@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+
+	<definition name="default"
+		template="/WEB-INF/views/cmm/layout/rms_default_layout.jsp"><!-- preparer="MenuPreparer" -->
+		<put-attribute name="header" value="/WEB-INF/views/cmm/layout/header.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/cmm/layout/footer.jsp" />
+	</definition>
+
+	<definition name="mm/login"
+		template="/WEB-INF/views/mm/login.jsp">
+	</definition>
+
+	<!-- 지도화면 -->
+	<definition name="MAP.vm/*"
+		template="/WEB-INF/views/cmm/layout/rms_default_layout.jsp">
+		<put-attribute name="gnb"
+			value="/WEB-INF/views/cmm/layout/vm_rms_gnb.jsp" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/vm/{1}.jsp" />
+	</definition>
+
+	<!-- 로그인 전 공지사항 접근 -->
+	<definition name="bd/noticeListBefore"
+		template="/WEB-INF/views/cmm/layout/before.jsp">
+		<put-attribute name="body"
+			value="/WEB-INF/views/bd/noticeList.jsp" />
+	</definition>
+
+	<!-- 2차인증 -->
+	<definition name="mm/secondAuth"
+		template="/WEB-INF/views/cmm/layout/empty.jsp">
+		<put-attribute name="body"
+			value="/WEB-INF/views/mm/secondAuth.jsp" />
+	</definition>
+
+	<!-- 리포트 -->
+	<definition name="rm/retcfmReport"
+		template="/WEB-INF/views/cmm/layout/rms_report.jsp">
+		<put-attribute name="body"
+			value="/WEB-INF/views/rm/retcfmReport.jsp" />
+	</definition>
+	<definition name="vm/trnsprtplanReport"
+		template="/WEB-INF/views/cmm/layout/rms_report.jsp">
+		<put-attribute name="body"
+			value="/WEB-INF/views/vm/trnsprtplanReport.jsp" />
+	</definition>
+	<definition name="vm/cntrlHistReport"
+		template="/WEB-INF/views/cmm/layout/rms_report.jsp">
+		<put-attribute name="body"
+			value="/WEB-INF/views/vm/cntrlHistReport.jsp" />
+	</definition>
+    <definition name="sh/acdntReport"
+        template="/WEB-INF/views/cmm/layout/rms_report.jsp">
+        <put-attribute name="body"
+            value="/WEB-INF/views/sh/acdntReport.jsp" />
+    </definition>
+    <definition name="vfc/rentalReport"
+        template="/WEB-INF/views/cmm/layout/rms_report.jsp">
+        <put-attribute name="body"
+            value="/WEB-INF/views/vfc/rentalReport.jsp" />
+    </definition>
+    <definition name="vfc/reRentalReport"
+        template="/WEB-INF/views/cmm/layout/rms_report.jsp">
+        <put-attribute name="body"
+            value="/WEB-INF/views/vfc/reRentalReport.jsp" />
+    </definition>
+
+    <!-- 소프트웨어 설치 -->
+	<definition name="cmmn/software" template="/WEB-INF/views/cmm/layout/empty.jsp">
+		<put-attribute name="body"
+			value="/WEB-INF/views/ma/software.jsp" />
+	</definition>
+
+	<!-- 대쉬보드 -->
+	<definition name="DASHBOARD/vm/*"
+		template="/WEB-INF/views/cmm/layout/rms_default_layout.jsp">
+		<put-attribute name="gnb"
+			value="/WEB-INF/views/cmm/layout/dashBoard_rms_gnb.jsp" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/vm/{1}.jsp" />
+	</definition>
+
+    <definition name="ERROR/*" template="/WEB-INF/views/cmm/layout/empty.jsp">
+         <put-attribute name="body" value="/WEB-INF/views/err/{1}.jsp"/>
+    </definition>
+
+   	<definition name="mip/profile"
+			template="" >
+	</definition>
+
+	<definition name="mip/error"
+			template="" >
+	</definition>
+
+	<definition name="*" extends="default">
+		<put-attribute name="body"
+			value="/WEB-INF/views/{1}.jsp" />
+	</definition>
+
+	<definition name="*/*" extends="default">
+		<put-attribute name="body"
+			value="/WEB-INF/views/{1}/{2}.jsp" />
+	</definition>
+
+	<definition name="*/*/*" extends="default">
+		<put-attribute name="body"
+			value="/WEB-INF/views/{1}/{2}/{3}.jsp" />
+	</definition>
+
+	<definition name="*/*/*/*" extends="default">
+		<put-attribute name="body"
+			value="/WEB-INF/views/{1}/{2}/{3}/{4}.jsp" />
+	</definition>
+
+</tiles-definitions>
