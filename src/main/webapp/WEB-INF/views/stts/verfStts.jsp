@@ -5,6 +5,7 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath }" />
 
 <script src="${contextPath}/js/stts/verfStts.js"></script>
+<script src="https://unpkg.com/jszip/dist/jszip.min.js"></script>
 
 <script>
 	var authrtCd        = "${authrtCd}";
@@ -33,6 +34,35 @@
 }
 .sub05_01 .select button.selected {
 	background-color: #364BC6; color: #fff;
+}
+
+/* 종합표출 테이블 */
+.tg  {
+	border-collapse:collapse;border-spacing:0;
+}
+.tg td {
+	border-color:black;
+	border-style:solid;
+	border-width:1px;
+ 	overflow:hidden;
+ 	padding:10px 5px;
+ 	word-break:normal;
+ }
+.tg .tg-qodv {
+	background-color:#f5f8fe;
+	border-color:#c1cadf;
+	text-align:center;
+}
+.tg .tg-dh8m {
+	border-color:#c1cadf;
+	text-align:center;
+}
+.tg .tg-vq54 {
+	border-color:#f5f8fe;
+	text-align:center;
+}
+.tg .darker {
+	background-color: #e4e8f0;
 }
 </style>
 
@@ -130,25 +160,71 @@
 			<!-- 결과별 그리드 -->
 			<div id="resultCmp" class="contBox rmCond" style="display: none;">
 	           	<div class="nameBox" style="display: flex; justify-content: space-between;">
-	               	<h4 class="name">운전자격 확인 사업자별 통계</h4>
+	               	<h4 class="name">운전자격 확인 사업자/결과별 종합</h4>
+				</div>
+				<div style="width: 100%; overflow: auto;">
+					<table class="tg">
+						<thead>
+							<tr>
+							    <td class="tg-qodv" rowspan="2" style="width: 60px;">총 건수</td>
+							    <td class="tg-qodv" rowspan="2" style="width: 60px;">정상</td>
+							    <td class="tg-qodv" rowspan="2" style="width: 60px;">비정상<br>(전체)</td>
+							    <td class="tg-qodv darker" rowspan="4" style="width: 70px;">비정상<br/>항목상세<br></td>
+							    <td class="tg-qodv darker">면허정보없음</td>
+							    <td class="tg-qodv darker">재발급된면허</td>
+							    <td class="tg-qodv darker">분실된면허</td>
+							    <td class="tg-qodv darker">사망취소된면허</td>
+							    <td class="tg-qodv darker">취소된면허</td>
+							    <td class="tg-qodv darker">정지된면허</td>
+							    <td class="tg-qodv darker">기간중취소면허</td>
+							    <td class="tg-qodv darker">기간중정지면허</td>
+							</tr>
+							<tr>
+								<td id="cd01" class="tg-dh8m"></td>
+							    <td id="cd02" class="tg-dh8m"></td>
+							    <td id="cd03" class="tg-dh8m"></td>
+							    <td id="cd04" class="tg-dh8m"></td>
+							    <td id="cd11" class="tg-dh8m"></td>
+							    <td id="cd12" class="tg-dh8m"></td>
+							    <td id="cd13" class="tg-dh8m"></td>
+							    <td id="cd14" class="tg-dh8m"></td>
+							</tr>
+							<tr>
+							    <td id="cd_tot" class="tg-dh8m" rowspan="2"></td>
+							    <td id="cd_nrml" class="tg-dh8m" rowspan="2"></td>
+							    <td id= "cd_ab_nrml" class="tg-dh8m" rowspan="2"></td>
+							    <td class="tg-qodv darker">정보불일치(이름)</td>
+							    <td class="tg-qodv darker">정보불일치(생년월일)</td>
+							    <td class="tg-qodv darker">정보불일치(암호일련번호)</td>
+							    <td class="tg-qodv darker">정보불일치(종별)</td>
+							    <td class="tg-qodv darker">필수값누락(대여기간)</td>
+							    <td class="tg-qodv darker">암호화안된면허</td>
+							    <td class="tg-qodv darker">검증실패</td>
+							    <td class="tg-vq54"></td>
+							</tr>
+							<tr>
+							    <td id="cd21" class="tg-dh8m"></td>
+							    <td id="cd22" class="tg-dh8m"></td>
+							    <td id="cd23" class="tg-dh8m"></td>
+							    <td id="cd24" class="tg-dh8m"></td>
+							    <td id="cd25" class="tg-dh8m"></td>
+							    <td id="cd31" class="tg-dh8m"></td>
+							    <td id="cd51" class="tg-dh8m"></td>
+							    <td class="tg-vq54"></td>
+							</tr>
+						</thead>
+					</table>
+				</div>
+	           	<div class="nameBox" style="display: flex; justify-content: space-between;">
+	               	<h4 class="name">운전자격 확인 사업자/결과별 상세</h4>
 	               	<div style="display: flex; align-items: center;">
 		                <button class="download-btn excelDownBtn" type="button" onClick="javaScript:$statistics.event.excelDown(event);">
 	                        <img src="/images/sub/ico_down.png" alt="다운로드아이콘">다운로드
 	                    </button>
 	               	</div>
 				</div>
-	            <div id="verfResult-grid" class="" style="width: 100%; margin: 0px;"></div>
+	            <div id="verfResult-grid"  style="width: 100%; margin: 0px;"></div>
 			</div>
-<!-- 			<br /> -->
-<!-- 			<div class="contBox"> -->
-<!-- 	           	<div class="nameBox"> -->
-<!-- 	               	<h4 class="name">운전자격 확인 결과</h4> -->
-<!-- 				</div> -->
-<!-- 	            <div id="" class="cont stack_cht_wr"> -->
-<!-- 	               <div id="verf-chart" class="stack_cht" style="width: 100%; height: 300px; margin: 0px;"></div> -->
-<!-- 	               <div id="null-verf-chart" style="font-size: 16px; display: none; text-align: center;">데이터가 없습니다.</div> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
 		</div>
 	</div>
 </div>

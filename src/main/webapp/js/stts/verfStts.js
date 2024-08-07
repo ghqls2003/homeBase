@@ -26,6 +26,7 @@
     var today = new Date();
 	var year = today.getFullYear();
 	var month = today.getMonth()+1;
+	var toYear = year;
 	var toMonth = year+"-"+(month < 10 ? "0"+month : month);
     
     $(document).ready(function() {
@@ -73,7 +74,6 @@
 				},
                 excel: { allPages: true },
                 excelExport : function(e){
-					
 					if($("#verf-grid").data("kendoGrid").dataSource.total() == 0) {
 						e.preventDefault();
 						alert("데이터가 없어 다운로드를 할 수 없습니다.");
@@ -136,7 +136,6 @@
 							options.companyNm  = resultExcelcmpNm;
 							options.monthDt        = resultExcelMonth;
 							options.ymdVal           = resultExcelYmdVal;
-							console.log(options)
 							return JSON.stringify(options);
 						}
 					},
@@ -150,10 +149,9 @@
 					serverSorting: false,
 					autoBind: false,
 				},
-				/* crosstab으로 c00~c51까지 컬럼 표현 */
 				columns: [
-					{"field": "sn", "title": "순번", locked: true, "template": "#: sn#", "width": "60px;"},
-					{"field": "coNm", "title": "사업자명", locked: true, "template": "#= coNm#", "width": "270px;"},
+					{"field": "sn", "title": "순번", /*locked: true,*/ "template": "#: sn#", "width": "60px;"},
+					{"field": "coNm", "title": "사업자명", /*locked: true,*/ "template": "#= coNm#", "width": "270px;"},
 					{"field": "cd00", "title": "정상", "template": "#if(cd00 == 0){#<div class='grayRDiv'>#= FormatNumber(cd00)#</div>#}"
 																+"else {##= FormatNumber(cd00)##}#", "width": "120px;"},
 					{"field": "cd01", "title": "면허정보없음", "template": "#if(cd01 == 0){#<div class='grayRDiv'>#= FormatNumber(cd01)#</div>#}"
@@ -203,6 +201,23 @@
 				resizable: true,
 				selectable: "row",
 				dataBound: function(e) {
+					/* 총괄표 주입 */
+					var params = {};
+					params.verfMthd       = resultExcelMthd;
+					params.auth               = resultExcelAuth;
+					params.companyNm  = resultExcelcmpNm;
+					params.monthDt        = resultExcelMonth;
+					params.ymdVal           = resultExcelYmdVal;
+					ajax(true, contextPath + '/stts/verfStts/verfResult', 'body', '처리중입니다.', params, function(data) {
+						var data = data.data[data.data.length-1];
+						$("#cd_tot").text(FormatNumber(data.tot)); $("#cd_nrml").text(FormatNumber(data.cd00)); $("#cd_ab_nrml").text(FormatNumber(data.tot-data.cd00));
+						$("#cd01").text(FormatNumber(data.cd01)); $("#cd02").text(FormatNumber(data.cd02)); $("#cd03").text(FormatNumber(data.cd03));
+						$("#cd04").text(FormatNumber(data.cd04)); $("#cd11").text(FormatNumber(data.cd11)); $("#cd12").text(FormatNumber(data.cd12));
+						$("#cd13").text(FormatNumber(data.cd13)); $("#cd14").text(FormatNumber(data.cd14)); $("#cd21").text(FormatNumber(data.cd21)); 
+						$("#cd22").text(FormatNumber(data.cd22)); $("#cd23").text(FormatNumber(data.cd23)); $("#cd24").text(FormatNumber(data.cd24));
+						$("#cd25").text(FormatNumber(data.cd25)); $("#cd31").text(FormatNumber(data.cd31)); $("#cd51").text(FormatNumber(data.cd51));
+					});
+					
 //					kendo.ui.progress($(document.body), false);  
 //					$(".grayRDiv").parent().css("background-color", "lightgray");
 					$(".excelDownBtn").attr("disabled", false);
@@ -384,11 +399,7 @@
 			if(event.target.closest("#timeMonth") != null) {
 				$("#verf-grid").data("kendoGrid").saveAsExcel();
 			} else if(event.target.closest("#resultCmp") != null) {
-				if($("#verfResult-grid").data("kendoGrid").dataSource.total() == 1) {
-					alert("데이터가 없어 다운로드를 할 수 없습니다.");
-				} else {
-					$("#verfResult-grid").data("kendoGrid").saveAsExcel();
-				}
+				$("#verfResult-grid").data("kendoGrid").saveAsExcel();
 			}
 		},
 		
@@ -559,7 +570,8 @@
 					$("#verfResult-grid").empty();
 					
 					// 결과별 조건 초기화
-					$("#verfResultDatePick").val(toMonth);
+					$("#verfResultDateType").val('1');
+					$("#verfResultDatePick").val(toYear);
 					$("#verfResultMthd").data("kendoDropDownList").select(0);
 					$("#authSelected").data("kendoDropDownList").select(0);
 					$("#verfOfCompany").val('');

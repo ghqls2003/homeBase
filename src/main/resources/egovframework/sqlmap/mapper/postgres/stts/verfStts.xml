@@ -140,19 +140,25 @@
 		LEFT OUTER JOIN
 			dqvs.dvs_rac_mt_agency agency
 		ON hs.bzmn_sn = agency.bzmn_sn
+		WHERE 1=1
 		<if test="monthDt != null and monthDt != ''">
 			<choose>
 				<when test='ymdVal.equals("1")'>
+					AND EXTRACT(YEAR FROM hs.dt) = #{monthDt}::NUMERIC
 				</when>
 				<when test='ymdVal.equals("2")'>
 					AND hs.dt::DATE BETWEEN CONCAT(#{monthDt}, '-01')::DATE AND CONCAT(#{monthDt}, '-01')::DATE + INTERVAL '1 month' - INTERVAL '1 second'
 				</when>
 				<when test='ymdVal.equals("3")'>
+					AND hs.dt::DATE = #{monthDt}::DATE
 				</when>
 			</choose>
 		</if>
 		<if test="verfMthd != null and verfMthd != ''">
 			AND hs.vrfc_mthd = #{verfMthd}
+		</if>
+		<if test ="auth != null and auth != ''">
+			AND agency.bzmn_se_cd = #{auth} 
 		</if>
 		<if test="companyNm != null and companyNm != ''">
 			AND agency.co_nm LIKE '%'||#{companyNm}||'%'
