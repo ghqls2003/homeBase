@@ -22,9 +22,9 @@ public interface VerfSttsService {
 	public Map<String, Object> verfResult(Map<String, Object> paramsMap) throws RimsException;
 	
 	/**
-	 * 검증결과드롭다운
+	 * 권한 드롭다운(사업자별)
 	 * @return
 	 * @throws RimsException
 	 */
-	public List<Map<String, Object>> verfResultDrop(Map<String, Object> paramsMap) throws RimsException;
+	public List<Map<String, Object>> authSelected(Map<String, Object> paramsMap) throws RimsException;
 }

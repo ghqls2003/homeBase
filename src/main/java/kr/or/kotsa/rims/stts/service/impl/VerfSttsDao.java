@@ -35,12 +35,12 @@ public class VerfSttsDao extends CmmnAbstractMapper {
 	}
 	
 	/**
-	 * 검증결과드롭다운
+	 * 권한 드롭다운(사업자별)
 	 * @param paramsMap
 	 * @return List<Map<String, Object>>
 	 * @throws RimsException
 	 */
-	public List<Map<String, Object>> verfResultDrop(Map<String, Object> paramsMap)throws RimsException {
-		return selectList("stts.verfStts.verfResultDrop", paramsMap);
+	public List<Map<String, Object>> authSelected(Map<String, Object> paramsMap)throws RimsException {
+		return selectList("stts.verfStts.authSelected", paramsMap);
 	}
 }

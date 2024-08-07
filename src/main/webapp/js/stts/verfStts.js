@@ -17,10 +17,11 @@
     	excelMthd = null,
     	excelDateResult = null;
     
-    var resultExcelDrop = null,
+    var resultExcelMthd = null,
+    	resultExcelAuth = null, 
     	resultExcelcmpNm = null, 
-    	resultExcelcarReg = null, 
-    	resultExcelMonth = null;
+    	resultExcelMonth = null,
+    	resultExcelYmdVal = null;
     	
     var today = new Date();
 	var year = today.getFullYear();
@@ -106,14 +107,15 @@
 		/**
 		 * @name         : verfResutlGrid
 		 * @description  : 자격검증 사업자별 통계
-		 * @date         : 2024. 02. 07
+		 * @date         : 2024. 08. 07
 		 * @author       : 김경룡
 		 */
 		verfResutlGrid: function() {
-			resultExcelDrop   = $("#verfResultDrop").val();
+			resultExcelMthd   = $("#verfResultMthd").val();
+			resultExcelAuth = $("#authSelected").val();
 			resultExcelcmpNm  = $("#verfOfCompany").val();
-			resultExcelcarReg = $("#temporaryNum").val();
 			resultExcelMonth  = $("#verfResultDatePick").val();
+			resultExcelYmdVal = $("#verfResultDateType").val();
 			
 			$("#verfResult-grid").kendoGrid({
 				dataSource: {
@@ -129,10 +131,12 @@
 							}
 						},
 						parameterMap: function(options) {
-							options.resultType   = resultExcelDrop;
-							options.companyNm    = resultExcelcmpNm;
-							options.carReg       = resultExcelcarReg;
-							options.monthDt      = resultExcelMonth;
+							options.verfMthd       = resultExcelMthd;
+							options.auth               = resultExcelAuth;
+							options.companyNm  = resultExcelcmpNm;
+							options.monthDt        = resultExcelMonth;
+							options.ymdVal           = resultExcelYmdVal;
+							console.log(options)
 							return JSON.stringify(options);
 						}
 					},
@@ -258,57 +262,68 @@
 				dataTextField: "cd_nm",
 				dataValueField: "cd",
 				dataSource: [
-					{"cd": "1", "cd_nm": "연"},
+					{"cd": "1", "cd_nm": "년"},
 					{"cd": "2", "cd_nm": "월"},
 					{"cd": "3", "cd_nm": "일"}
 				],
 				value: "cd",
 				change: function() {
 					var val = this.value();
+					var dp = $("#verfResultDatePick").data("kendoDatePicker");
 					if(val == '1') {
-						$("#verfResultDatePick").kendoDatePicker({
-							value: new Date(),
+						dp.setOptions({
 							format: "yyyy",
 							parseFormats: ["yyyy"],
-							min: new Date('2023-01-01'),
-							max: new Date(),
 							start: "decade",
 			    			depth: "decade"
 						});
+						dp.wrapper.css("width", "100px");
+						$("#verfResultDatePick").attr("readonly", true);
 					} else if(val == '2') {
-						$("#verfResultDatePick").kendoDatePicker({}).setOptions({
+						dp.setOptions({
 							format: "yyyy-MM",
 							parseFormats: ["yyyy-MM"],
 							start: "year",
 			    			depth: "year"
 						});
+						dp.wrapper.css("width", "130px");
+						$("#verfResultDatePick").attr("readonly", true);
 					} else if(val == '3') {
-						
+						dp.setOptions({
+							format: "yyyy-MM-dd",
+							parseFormats: ["yyyy-MM-dd"],
+							start: "month",
+			    			depth: "month"
+						});
+						dp.wrapper.css("width", "150px");
+						$("#verfResultDatePick").attr("readonly", true);
 					}
 				}	
 			});
 			
-			// 결과별 검증결과
-			ajax(false, contextPath+'/stts/verfStts/verfResultDrop', 'body', '처리중입니다.', {}, function (data) {
-				$("#verfResultDrop").kendoDropDownList({
+			// 결과별 검증방법
+			$("#verfResultMthd").kendoDropDownList({
+				optionLabel: "전체",
+				dataTextField: "cdNm",
+				dataValueField: "cd",
+				dataSource: [
+					{"cd": "1", "cdNm": "직접입력"},
+					{"cd": "2", "cdNm": "OCR"},
+					{"cd": "3", "cdNm": "모바일면허증"},
+					{"cd": "4", "cdNm": "API"},
+				],
+				value: "cd"
+			});
+			
+			// 권한
+			ajax(true, contextPath + '/stts/verfStts/authSelected', 'body', '처리중입니다.', {}, function(data) {
+				$("#authSelected").kendoDropDownList({
 					optionLabel: "전체",
 					dataTextField: "cdNm",
 					dataValueField: "cd",
 					dataSource: data,
 					value: "cd"
 				});
-			});
-			
-			// 임시번호판 유무
-			$("#temporaryNum").kendoDropDownList({
-				optionLabel: "(임시번호포함)전체",
-				dataTextField: "cd_nm",
-				dataValueField: "cd",
-				dataSource: [
-					{"cd": 1, "cd_nm": "99임9999 조회 "},
-					{"cd": 0, "cd_nm": "99임9999 미포함"}
-				],
-				value: "cd"
 			});
 		}
     };
@@ -351,6 +366,7 @@
 				start: "decade",
     			depth: "decade"
 			}).width(10);
+			$("#verfResultDatePick").attr("readonly", true);
 
 			excelDateResult = $("#verfResultDatePick").val();	
 		}
@@ -512,10 +528,11 @@
 			
 			// 결과별
 			$("#searchResultBtn").on("click", function() {
-				resultExcelDrop   = $("#verfResultDrop").val();
+				resultExcelMthd   = $("#verfResultMthd").val();
 				resultExcelcmpNm  = $("#verfOfCompany").val();
-				resultExcelcarReg = $("#temporaryNum").val();
+				resultExcelAuth = $("#authSelected").val();
 				resultExcelMonth  = $("#verfResultDatePick").val();
+				resultExcelYmdVal  = $("#verfResultDateType").val();
 				
 				excelDateResult = $("#verfResultDatePick").val();
 				
@@ -543,8 +560,8 @@
 					
 					// 결과별 조건 초기화
 					$("#verfResultDatePick").val(toMonth);
-					$("#verfResultDrop").data("kendoDropDownList").select(0);
-					$("#temporaryNum").data("kendoDropDownList").select(0);
+					$("#verfResultMthd").data("kendoDropDownList").select(0);
+					$("#authSelected").data("kendoDropDownList").select(0);
 					$("#verfOfCompany").val('');
 					
 					$statistics.event.verfCountData();
