@@ -103,18 +103,18 @@
 					<div class="mo_flex">
 		            	<ul class="selec_box">
 		            		<li class="li_slec">
-			                	<label for="verfResultDateType" style="display: none;">연월일</label>
+			                	<label for="verfResultDateType">기준 : </label>
 			                	<input id="verfResultDateType" class="ymd" aria-label="연월일" style="width: 80px;" />
 			                	<label for="verfResultDatePick" style="display: none;">조회날짜</label>
-			                	<input id="verfResultDatePick" class="date_pic" title="datepicker" aria-label="조회날짜" style="width: 130px;"/>
+			                	<input id="verfResultDatePick" class="date_pic" title="datepicker" aria-label="조회날짜" style="height: 40px; width: 100px;"/>
 		                	</li>
 		                	<li class="li_slec" style="display: flex; align-items: center">
-			                	<label for="verfResultDrop" style="width: 110px;">검증결과 : </label>
-			                	<input id="verfResultDrop" class="verfResultDrop" aria-label="검증결과" placeholder="검증결과" />
+			                	<label for="verfResultMthd" style="width: 110px;">검증방법 : </label>
+			                	<input id="verfResultMthd" class="verfResultMthd" aria-label="검증방법" placeholder="검증방법" />
 		                	</li>
 		                	<li class="li_slec" style="display: flex; align-items: center">
-			                	<label for="temporaryNum" style="width: 110px;">임시번호 : </label>
-			                	<input id="temporaryNum" class="temporaryNum" aria-label="임시번호판유무" placeholder="임시번호판유무" />
+			                	<label for="authSelected" style="width: 60px;">권한 : </label>
+			                	<input id="authSelected" class="authSelected" aria-label="권한" placeholder="권한" />
 		                	</li>
 		                	<li class="li_slec" style="display: flex; align-items: center">
 		                    	<label for="verfOfCompany" style="width: 100px;">사업자명 : </label>

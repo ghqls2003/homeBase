@@ -78,12 +78,12 @@ public class verfSttsController extends CmmnAbstractServiceImpl {
 		return verfResult;
 	}
 	
-	// 검증결과 드롭다운
-	@RequestMapping("verfStts/verfResultDrop")
+	// 권한 드롭다운(사업자별)
+	@RequestMapping("verfStts/authSelected")
 	@ResponseBody
-	public Object verfResultDrop(@RequestBody Map<String, Object> paramsMap) throws RimsException {
-		List<Map<String, Object>> verfResultDrop = verfSttsService.verfResultDrop(paramsMap);
+	public Object authSelected(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		List<Map<String, Object>> authSelected = verfSttsService.authSelected(paramsMap);
 		
-		return verfResultDrop;
+		return authSelected;
 	}
 }

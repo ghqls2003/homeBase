@@ -46,12 +46,12 @@ public class VerfSttsServiceImpl extends CmmnAbstractServiceImpl implements Verf
     }
     
     /**
-     * 검증결과드롭다운
+     * 권한 드롭다운(사업자별)
      * @return
      * @throws RimsException
      */
     @Override
-    public List<Map<String, Object>> verfResultDrop(Map<String, Object> paramsMap) throws RimsException {
-    	return verfSttsDao.verfResultDrop(paramsMap);
+    public List<Map<String, Object>> authSelected(Map<String, Object> paramsMap) throws RimsException {
+    	return verfSttsDao.authSelected(paramsMap);
     }
 }

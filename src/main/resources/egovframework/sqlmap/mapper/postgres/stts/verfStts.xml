@@ -140,21 +140,23 @@
 		LEFT OUTER JOIN
 			dqvs.dvs_rac_mt_agency agency
 		ON hs.bzmn_sn = agency.bzmn_sn
-		WHERE 1=1
 		<if test="monthDt != null and monthDt != ''">
-			AND hs.dt::DATE BETWEEN CONCAT(#{monthDt}, '-01')::DATE AND CONCAT(#{monthDt}, '-01')::DATE + INTERVAL '1 month' - INTERVAL '1 second'
-		</if> 
+			<choose>
+				<when test='ymdVal.equals("1")'>
+				</when>
+				<when test='ymdVal.equals("2")'>
+					AND hs.dt::DATE BETWEEN CONCAT(#{monthDt}, '-01')::DATE AND CONCAT(#{monthDt}, '-01')::DATE + INTERVAL '1 month' - INTERVAL '1 second'
+				</when>
+				<when test='ymdVal.equals("3")'>
+				</when>
+			</choose>
+		</if>
+		<if test="verfMthd != null and verfMthd != ''">
+			AND hs.vrfc_mthd = #{verfMthd}
+		</if>
 		<if test="companyNm != null and companyNm != ''">
 			AND agency.co_nm LIKE '%'||#{companyNm}||'%'
 		</if>
-		<choose>
-			<when test="carReg != null and carReg != '' and carReg == 0">
-				AND (hs.vhcl_reg_no != '99임9999' OR hs.vhcl_reg_no ISNULL)
-			</when>
-			<when test="carReg != null and carReg != '' and carReg == 1">
-				AND hs.vhcl_reg_no = '99임9999' 
-			</when>
-		</choose>
 		) AS t 
 	WHERE 1=1
 	GROUP BY ROLLUP((t.bzmn, t.co_nm))
@@ -306,15 +308,15 @@
 			<include refid="verfResultSql" />
 	</select>
 	
-	<!-- 검증결과다롭다운 -->
-	<select id="verfResultDrop" parameterType="paraMap" resultType="resultMap">
-	/* 검증결과 드롭다운 */
+	<!-- 권한 드롭다운(사업자별) -->
+	<select id="authSelected" parameterType="paraMap" resultType="resultMap">
+	/* 권한 드롭다운(사업자별) */
 		SELECT cd.cd
-			, cd.cd_nm 
+        	, cd.cd_nm
 		FROM 
-			dqvs.dvs_cmm_mt_code cd 
-		WHERE cd.cd_group = 'verify_cd' 
-			AND cd.cd NOT IN('06', '15', 'test')
+			dqvs.dvs_cmm_mt_code cd
+		WHERE cd_group = 'offc_type_cd'
+			AND use_yn != 'N'
 		ORDER BY cd.cd
 	</select>
 	
