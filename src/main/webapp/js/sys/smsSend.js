@@ -929,25 +929,31 @@
 				var target = $('.chkSend_popup .k-grid-norecords').length;
 				if ($('#send').hasClass('view')) {//그룹
 					if(target===0){
-						var kendoDate = $smsSend.event.parseKendoDateTime($('#msg_reserv_time').val());
-						if (kendoDate > now) {
+						if ($('#check_send_date').text()!='즉시 전송') {
+							var kendoDate = $smsSend.event.parseKendoDateTime($('#msg_reserv_time').val());
+							if (kendoDate > now) {
+								$smsSend.event.groupReceiver();
+							} else {
+								alert("발송 희망 시각을 다시 설정해주세요.");
+							}
+						}else{
 							$smsSend.event.groupReceiver();
-						} else {
-							alert("발송 희망 시각을 다시 설정해주세요.");
 						}
 					} else {
 						alert('수신자가 없습니다.');
 					}
-					
 				} else {// 개별
 					var kendoDate = $smsSend.event.parseKendoDateTime($('#indivMsg_reserv_time').val());
-					if (kendoDate > now) {
+					if ($('#check_send_date').text()!='즉시 전송') {
+						if (kendoDate > now) {
+							$smsSend.event.indivReceiver();
+						} else {
+							alert("발송 희망 시각을 다시 설정해주세요.");
+						}
+					}else{
 						$smsSend.event.indivReceiver();
-					} else {
-						alert("발송 희망 시각을 다시 설정해주세요.");
 					}
 				}
-				
 		    });
 
 			$(".excelDownBtn").on("click", function() {

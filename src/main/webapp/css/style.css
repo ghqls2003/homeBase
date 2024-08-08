@@ -1505,6 +1505,7 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
 .indivSelec_popup .indivReceiver_lists_wrap .cont_header h5 {font-size: 1.8rem;}
 .indivSelec_popup .indivSelec_lists {margin-bottom: 30px;}
 .indivSelec_popup .scrollBar02::-webkit-scrollbar {height: 7px;}
+.indivSelec_popup #searchBox {height: 36px;}
 /* 문자 확인 */
 .chkSend_popup .box .content {padding: 38px 37px 0px 37px; height: 460px;}
 .chkSend_popup .content .cont_inner {display: flex; gap: 24px; height: 100%;}
@@ -1640,7 +1641,8 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
     .indivSelec_popup .box {width: 350px;}
     .indivSelec_popup #receiver_send_condition02 {height: 30px;}
     .indivSelec_popup .selec_wr ul.selec_box { flex-wrap: wrap;}
-    .indivSelec_popup .k-picker-solid {width: 98px !important;;}
+    .indivSelec_popup .k-picker-solid {width: 98px !important;}
+    .indivSelec_popup #searchBox {height: 30px;}
 }
 @media (max-width: 390px) {
 	.sub04 .selec_wr ul.selec_box li .k-picker-solid{border-radius: 8px;background-color: #fff;}

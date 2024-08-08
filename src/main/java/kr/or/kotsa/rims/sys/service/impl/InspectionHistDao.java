@@ -22,4 +22,29 @@ public class InspectionHistDao extends CmmnAbstractMapper {
 		return insert("sys.inspectionHist.insertInspectionHist", paramsMap);
 	}
 
+	public int insertFile(Map<String, Object> paramsMap) {
+		return insert("sys.inspectionHist.insertFile", paramsMap);
+	}
+
+	public List<Map<String, Object>> ctpvNm(Map<String, Object> paramsMap) {
+		return selectList("sys.inspectionHist.CtpvNm", paramsMap);
+	}
+
+	public List<Map<String, Object>> sggNm(Map<String, Object> paramsMap) {
+		return selectList("sys.inspectionHist.SggNm", paramsMap);
+	}
+
+	public List<Map<String, Object>> bsnStts(Map<String, Object> paramsMap) {
+		return selectList("sys.inspectionHist.BsnStts", paramsMap);
+	}
+
+	public List<Map<String, Object>> selectAuth(Map<String, Object> paramsMap) {
+		return selectList("sys.inspectionHist.selectAuth", paramsMap);
+	}
+
+	public int updateInspectionHist(Map<String, Object> paramsMap) {
+		return update("sys.inspectionHist.updateInspectionHist", paramsMap);
+	}
+
+
 }

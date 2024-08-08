@@ -2,6 +2,62 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sys.inspectionHist">
 	
+	<!-- 검색/등록팝업 옵션 - 시도(전체) -->
+	<select id="CtpvNm" resultType="map">
+	/* 시도(전체) */
+        SELECT DISTINCT LPAD(stdg_cd, 2) ctpv_cd
+        	, ctpv_nm
+		FROM
+			dqvs.dvs_cmm_mt_area
+		WHERE mtnabn_yn = 'Y'
+		<if test="regCmptncCd != null and regCmptncCd != ''">
+			AND stdg_cd = #{regCmptncCd}
+		</if>
+		ORDER BY ctpv_cd
+    </select>
+
+    <!-- 검색/등록팝업 옵션 - 시군구(전체) -->
+	<select id="SggNm" resultType="map">
+        SELECT DISTINCT stdg_cd
+        	, sgg_nm
+		FROM 
+			dqvs.dvs_cmm_mt_area
+		WHERE mtnabn_yn = 'Y' AND sgg_nm != ''
+		<if test="ctpvCd != null and ctpvCd != ''">
+			AND stdg_cd LIKE CONCAT(#{ctpvCd}, '%')
+		</if>
+		<if test="regCmptncCd != null and regCmptncCd != ''">
+			AND stdg_cd = #{regCmptncCd}
+		</if>
+		ORDER BY stdg_cd
+    </select>
+    
+    <!-- 검색옵션 - 영업상태(전체) -->
+	<select id="BsnStts" resultType="map">
+        SELECT cd.cd
+        	, cd.cd_nm
+		FROM 
+			dqvs.dvs_cmm_mt_code cd
+		WHERE cd.cd_group = 'bsn_stts_cd'
+			AND cd.use_yn != 'N'
+		<if test="sttsInsertCont != null and sttsInsertCont != '' and sttsInsertCont == 'sttsDrop'">
+			AND cd.cd != '3'
+		</if>
+		ORDER BY cd.cd
+    </select>
+    
+    <!-- 검색옵션 - 권한(전체) -->
+	<select id="selectAuth" resultType="map">
+        SELECT cd.cd
+        	, cd.cd_nm
+		FROM 
+			dqvs.dvs_cmm_mt_code cd
+		WHERE cd_group = 'offc_type_cd'
+			AND use_yn != 'N'
+		ORDER BY cd.cd
+    </select>
+	
+	
 	<sql id="InspectionHistInfoSql">
 		(
 		SELECT ROW_NUMBER() OVER(ORDER BY T1.co_nm DESC) rn
@@ -27,16 +83,49 @@
 				, agency.brno
 				, agency.crno
 				, agency.rprsv_nm
-				, agency.bzmn_se_cd
+				,(select
+					cd_nm
+				from
+					dqvs.dvs_cmm_mt_code
+				where
+					cd_group = 'bzmn_se_cd'
+					and cd = bzmn_se_cd) bzmn_se_cd
 				, agency.co_nm
 				, agency.road_nm_addr
 				, agency.bsn_stts_cd
 				, agency.bsn_stts_mdfcn_dt
 				, dqvs.pca_decrypt(agency.telno, '150') as agency_telno
+				, CONCAT( (
+					select
+						ctpv_nm
+					from
+						dqvs.dvs_cmm_mt_area
+					where
+						stdg_cd = agency.reg_cmptnc_cd),
+					' ',
+					(
+					select
+						sgg_nm
+					from
+						dqvs.dvs_cmm_mt_area
+					where
+						stdg_cd = agency.reg_cmptnc_cd)) jurisdiction
 			from dqvs.dvs_spv_hs_inspctn inspctn
 			left join dqvs.dvs_rac_mt_agency agency on agency.bzmn_sn = inspctn.bzmn_sn
 			) as T1
 			WHERE 1 = 1
+			<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
+				and T1.reg_cmptnc_cd like #{cmptncZoneCd} || '%'
+			</if>
+			<if test='authrtCd != "" and authrtCd != null'>
+				AND T1.bzmn_se_cd = #{authrtCd}
+			</if>
+			<if test='bsnSttsCd != "" and bsnSttsCd != null'>
+				AND T1.bsn_stts_cd = #{bsnSttsCd}
+			</if> 
+			<if test="rslt != null and rslt != ''">
+				AND T1.rslt = #{rslt}
+			</if>
 			ORDER BY rn asc
 		)as T2
 	</sql>
@@ -67,8 +156,6 @@
 				(bzmn_sn
 				, reg_cmptnc_cd
 				, exmnr
-				, exmnr2
-				, exmnr3
 				, jbgd
 				, ogdp
 				, telno
@@ -78,51 +165,30 @@
 				, chck_plc
 				, sign_yn
 				, rslt
-				, prcs_yn
-				, fileatchsn
 				)
-			VALUES
-				(
-				#{vin},
-				#{vhclRegNo},
-				<if test="carmdl != '' and carmdl != null">
-				#{carmdl},
-				</if>
-				<if test="modelYear != '' and modelYear != null">
-				#{modelYear},
-				</if>
-				<if test="vhclNm != '' and vhclNm != null">
-				#{vhclNm},
-				</if>
-				<if test="bzmnSn != '' and bzmnSn != null">
-				#{bzmnSn},
-				</if>
-				<if test="engineType != '' and engineType != null">
-				#{engineType},
-				</if>
-				'Y',
-				<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
-				#{cmptncZoneCd},
-				</if>
-				#{rentBgngDt}::timestamp,
-				#{rentEndDt}::timestamp,
-				now(),
-				'2',
-				#{userSn}::numeric,
-				now()::timestamp,
-				<choose>
-					<when test="atchFileSn != '' and atchFileSn != null">
-						#{lcnsIdntfCd},
-						#{atchFileSn},
-					</when>
-					<otherwise>
-						#{lcnsIdntfCd},
-					</otherwise>
-				</choose>
-				#{IP}
-				)
+			SELECT 
+				bzmn_sn
+				, reg_cmptnc_cd
+				, #{exmnr}
+				, #{jbgd}
+				, #{ogdp}
+				, #{telno}
+				, #{chckArtcl}
+				, #{etcArtcl}
+				, #{chckCn}
+				, #{chckPlc}
+				, #{signYn}
+				, #{rslt}
+			FROM dqvs.dvs_rac_mt_agency
+			where bzmn_sn = #{brno}
 	</insert>
 	
+	<insert id="insertFile">
+		INSERT INTO dqvs.dvs_spv_hs_inspctn
+		(bzmn_sn, fileatchsn)
+		values
+		(#{bzmnSn}, #{fileatchsn})
+	</insert>
 	
 	
 

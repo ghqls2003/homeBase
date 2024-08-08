@@ -1,5 +1,6 @@
 package kr.or.kotsa.rims.sys.service;
 
+import java.util.List;
 import java.util.Map;
 
 public interface InspectionHistService {
@@ -8,4 +9,18 @@ public interface InspectionHistService {
 
 	public int insertInspectionHist(Map<String, Object> paramsMap);
 
+	public int insertFile(Map<String, Object> paramsMap);
+
+	public List<Map<String, Object>> ctpvNm(Map<String, Object> paramsMap);
+
+	public List<Map<String, Object>> sggNm(Map<String, Object> paramsMap);
+
+	public List<Map<String, Object>> bsnStts(Map<String, Object> paramsMap);
+
+	public List<Map<String, Object>> selectAuth(Map<String, Object> paramsMap);
+
+	public int updateInspectionHist(Map<String, Object> paramsMap);
+
+
 }
+ 

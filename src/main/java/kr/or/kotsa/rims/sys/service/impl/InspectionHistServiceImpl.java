@@ -32,4 +32,35 @@ public class InspectionHistServiceImpl extends CmmnAbstractServiceImpl implement
 	public int insertInspectionHist(Map<String, Object> paramsMap) {
 		return inspectionHistDao.insertInspectionHist(paramsMap);
 	}
+
+	@Override
+	public int insertFile(Map<String, Object> paramsMap) {
+		return inspectionHistDao.insertFile(paramsMap);
+	}
+
+	@Override
+	public List<Map<String, Object>> ctpvNm(Map<String, Object> paramsMap) {
+		return inspectionHistDao.ctpvNm(paramsMap);
+	}
+
+	@Override
+	public List<Map<String, Object>> sggNm(Map<String, Object> paramsMap) {
+		return inspectionHistDao.sggNm(paramsMap);
+	}
+
+	@Override
+	public List<Map<String, Object>> bsnStts(Map<String, Object> paramsMap) {
+		return inspectionHistDao.bsnStts(paramsMap);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAuth(Map<String, Object> paramsMap) {
+		return inspectionHistDao.selectAuth(paramsMap);
+	}
+
+	@Override
+	public int updateInspectionHist(Map<String, Object> paramsMap) {
+		return inspectionHistDao.updateInspectionHist(paramsMap);
+	}
+
 }

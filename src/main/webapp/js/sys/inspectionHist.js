@@ -9,9 +9,99 @@
 		$inspectionHist.event.setUIEvent();
 	});
 	
+	var excelDownArc = {};
+	
 	$inspectionHist.ui = {
 		pageLoad: function() {
 			$inspectionHist.ui.inspectionHistInfo();
+			$inspectionHist.ui.search();
+			
+		},
+		
+		// 검색옵션
+		search: function() {
+			var param = {};
+			
+			ajax(true, contextPath+'/sys/inspectionHist/ctpvNm', 'body', '처리중입니다.', param, function (data) {
+				$('#searchCtpvNm').kendoDropDownList({
+		            optionLabel: "시도(전체)",
+		            dataTextField: "ctpv_nm",
+		            dataValueField: "ctpv_cd",
+		            dataSource: data,
+					value : "ctpv_cd",
+					change: function() {
+						if(this.value() == '') {
+							$('#searchSggNm').data("kendoDropDownList").setDataSource(null);
+						} else {
+						    param.ctpvCd = this.value();
+							ajax(true, contextPath+'/sys/inspectionHist/sggNm', 'body', '처리중입니다.', param, function (data) {
+								$('#searchSggNm').kendoDropDownList({
+						            optionLabel: "시군구(전체)",
+						            dataTextField: "sgg_nm",
+						            dataValueField: "stdg_cd",
+						            dataSource: data,
+									value : "stdg_cd"
+						        });
+							});
+						}
+					}
+		        });
+			});
+			
+			// 시구군
+			$('#searchSggNm').kendoDropDownList({
+	            optionLabel: "시군구(전체)",
+	            dataSource: {}
+	        });
+	        
+			// 권한
+			ajax(false, contextPath + '/sys/inspectionHist/selectAuth', 'body', '처리중입니다.', param, function(data) {
+				$("#searchAuthrtCd").kendoDropDownList({
+	              optionLabel: "권한(전체)",
+	              dataTextField: "cd_nm",
+	              dataValueField: "cd",
+	              dataSource: data,
+	              value: "cd_nm"
+				});
+			});
+			
+			// 영업상태
+			ajax(true, contextPath+'/sys/inspectionHist/bsnStts', 'body', '처리중입니다.', {}, function (data) {
+				$('#searchBsnSttsCd').kendoDropDownList({
+		            optionLabel: "영업상태(전체)",
+		            dataTextField: "cd_nm",
+		            dataValueField: "cd",
+		            dataSource: data,
+					value : "cd_nm"
+		        });
+			});	
+			
+			
+			//지도점검결과
+			var rsltData = [
+				{ cd: "합격" },
+				{ cd: "불합격" }
+			];
+			
+			$("#searchRslt").kendoDropDownList({
+				optionLabel: "지도점검결과(전체)",
+				dataTextField: "cd",
+				dataValueField: "cd",
+				dataSource: rsltData,
+			});
+			
+			$("#regRslt").kendoDropDownList({
+				dataTextField: "cd",
+				dataValueField: "cd",
+				dataSource: rsltData,
+			});
+			
+			$("#detailRslt").kendoDropDownList({
+				dataTextField: "cd",
+				dataValueField: "cd",
+				dataSource: rsltData,
+			});
+			
 		},
 		
 		inspectionHistInfo: function() {
@@ -29,23 +119,12 @@
 							}
 						},
 						parameterMap: function(options) {
-							//var param = $inspectionHist.event.filter();
-//							if(param.regCmptncCd.substring(2, param.regCmptncCd.length) == '00000000') {
-//								options.regCmptncCd = param.regCmptncCd.substring(0, 2);
-//							} else {
-//								options.regCmptncCd = param.regCmptncCd;
-//							}
-//							options.bzmnSn         = param.bzmnSn;
-//							options.brno           = param.brno;
-//							options.stdgCd         = param.regCmptncCd;
-//							options.searchAprvStts = param.searchAprvStts;
-//							options.searchBsnStts  = param.searchBsnStts;
-//							options.authSelected   = param.authSelected;
-//							options.selectCond     = param.selectCond;
-//							options.searchWrd      = param.searchWrd;
-//							options.searchChk      = param.searchChk;
-//							options.authrtCd       = authrtCd;
-//							options.delYn            = param.delYn;
+							var sgg = $("#searchSggNm").val();
+							
+							options.cmptncZoneCd = sgg;
+							options.authrtCd     = $('#searchAuthrtCd').val();
+							options.bsnSttsCd    = $('#searchBsnSttsCd').val();
+							options.rslt         = $('#searchRslt').val();
 							
 							return JSON.stringify(options);
 						}
@@ -62,7 +141,7 @@
 				},
 				columns: [
 					{ field: "rn", title: "순번", width: "30px", template: "#: rn #", sortable: false },
-					{ field: "", title: "관할지역", width: "50px", sortable: true },
+					{ field: "jurisdiction", title: "관할지역", width: "50px", template: "#= jurisdiction != null ? jurisdiction : '-' #", sortable: true },
 					{ field: "exmnr", title: "조사원", width: "30px", template: "#= exmnr != null ? exmnr : '-' #", sortable: true },
 					{ field: "coNm", title: "회사명", width: "30px", template: "#= coNm != null ? coNm : '-' #", sortable: true },
 					{ field: "bzmnSeCd", title: "권한", width: "30px", template: "#= bzmnSeCd != null ? bzmnSeCd : '-' #", sortable: true },
@@ -70,8 +149,7 @@
 					{ field: "crno", title: "법인번호", width: "50px", template: "#= crno != null ? crno : '-' #", sortable: true },
 					{ field: "rslt", title: "결과", width: "30px", template: "#= rslt != null ? rslt : '-' #", sortable: true },
 					{ field: "roadNmAddr", title: "주소", width: "100px", template: "#= roadNmAddr != null ? roadNmAddr : '-' #", sortable: true },
-					{ field: "", title: "결과서", width: "30px", sortable: true },
-					{ field: "prcsYn", title: "후속처리여부", width: "30px", template: "#= prcsYn != null ? prcsYn : '-' #", sortable: true },
+					{ title: "결과서", width: "30px", exportable: false, template: "<button class='gray_btn' style='width: 70px;height: 30px;' onclick='javascript:$inspectionHist.event.issued(`#:bzmnSn#`);'>발급</button>" },
 				],
 				navigatable: true,
 				scrollable: true,
@@ -120,10 +198,6 @@
 	
 	$inspectionHist.event = {
 		setUIEvent: function() {
-			// 엑셀다운로드버튼
-			$(".excelDownBtn").on("click", function() {
-				$inspectionHist.ui.excelDown();
-			});
 
 			// 등록 팝업 X, 닫기 버튼
 			$(".insertClose").on("click", function() {
@@ -136,10 +210,14 @@
 				grid.dataSource.read();
 			});
 			
+			$("#searchBtn").on("click", function() {
+                $("#inspectionHistGrid").data("kendoGrid").dataSource.page(1);
+            });
+			
 			// 등록팝업 버튼
 			$(".insertPopupBtn").on("click", function() {
 				//$inspectionHist.ui.insertSearch(); // 등록팝업
-				$(".file_register_popup").addClass("view");
+				$(".register_popup").addClass("view");
 //				$("body").css("overflow", "hidden");
 //				if (authrtCd === 'G01') {
 //					var params = { stdgCd: getCmptncZoneCd };
@@ -151,13 +229,55 @@
 			});
 			
 			//직접입력 팝업
-			$(".directInsertBtn").on("click", function() {
+			$(".directPopupBtn").on("click", function() {
 				$(".register_popup").addClass("view");
 			});
+			
+			$(".directInsertBtn").on("click", function() {
+            	$inspectionHist.event.insertDirectReg();
+        	});
+
+			$(".excelDownBtn").on("click", function() {
+            	$inspectionHist.event.excelDownBtn();
+        	});
+        	
+//        	$(".insertBtn").on("click", function() {
+//				$inspectionHist.event.insertFile();
+//			});
+			
+			$('#fileBtn').on("click", function() {
+				$("#fileUpload").click();
+				$("#fileUpload").change(function() {
+					var ext = $("#fileUpload").val().split(".").pop().toLowerCase();
+					var files = ["jpg", "jpeg", "gif", "png", "pdf"];
+
+					if (ext.length > 0) {
+						if ($.inArray(ext, files) == -1) {
+							alert("첨부파일 형식을 다시 확인해주세요. \n 첨부가능 확장자 : jpg, jpeg, gif, png, pdf");
+							$("#fileUpload").val("");
+							$("#fileNm").val("");
+							return false;
+						} else {
+							var file = $(this).prop("files")[0]; // 선택된 파일 가져오기
+							var fileName = file.name; // 파일명 가져오기
+							$("#fileNm").val(fileName); // 파일명을 사업자등록증 input 태그에 설정
+							//bzFileCkd = true;
+						}
+					}
+				});
+			});
+			
+//			$("#updateBtn").on("click",function(){
+//			    $inspectionHist.event.setUpdateParam();
+//			});
+
+			
+        	
+        	
 		},
 		
 		detailInfoPopup: function(data) {
-			var brno = !data.brno ? '-' : toCorporateNumFormat(data.brno);
+			var brno = !data.brno ? '-' : toBizrnoNumFormat(data.brno);
 			$('#detailBrno').val(brno);
 			$('#detailExmnr').val(data.exmnr);
 			$('#detailJbgd').val(data.jbgd);
@@ -172,6 +292,8 @@
 			$('#detailTelno').val(data.telno);
 			$('#detailRprsvNm').val(data.rprsvNm);
 			$('#detailChckCn').val(data.chckCn);
+			$('#detailChckPlc').val(data.chckPlc);
+			$('#detailJurisdiction').val(data.jurisdiction);
 			
 			
 			
@@ -192,6 +314,114 @@
 //
 //			$("#detailInfoPopup").addClass("view");
 		},
+		
+		insertDirectReg: function(){
+			var params ={};
+			var insertBrno = $('#regBrno').val();
+			var brno = insertBrno.replace(/[^0-9]/g, "");
+			params.exmnr = $("#regExmnr").val();
+			params.jbgd = $("#regJbgd").val();
+			params.ogdp = $("#regOgdp").val();
+			params.telno = $("#regtelno").val();
+			params.chckArtcl = $("#regChckArtcl").val();
+			params.etcArtcl = $("#regEtcArtcl").val();
+			params.chckCn = $("#regChckCn").val();
+			params.brno = brno;
+			params.chckPlc = $("#regChckPlc").val();
+			params.rslt = $("#regRslt").val();
+			params.signYn = $("#regSignYn").val();
+
+			if(params.brno == null || params.brno == ''){
+				alert("사업자번호를 등록해 주세요");
+			}else{
+				ajax(true, contextPath + '/sys/inspectionHist/insertInspectionHist', 'body', '확인인중입니다.', params, function (data) {
+					alert("등록을 성공하셨습니다");
+					$("#directInsertPopup").removeClass("view");
+			        $("#inspectionHistGrid").data("kendoGrid").dataSource.page(1);
+			    });
+			}
+		},
+		
+		insertFile: function(){
+			var params ={};
+			params.bzmnSn = 'RCC0002277';
+			var fileNm = $('#fileNm').val();
+			
+			if (fileNm == null || fileNm == "") {
+				alert("첨부파일은 필수입니다");
+				return;
+			}
+			
+			if (fileNm != '') {
+				if (confirm("등록 하시겠습니까?")) {
+					var formData = new FormData();
+					formData.append('files', document.getElementById('fileUpload').files[0]);
+		
+					fileAjax(contextPath + "/cmmn/fileUpload", formData, function(response) {
+						if (response != null) {
+							params.fileatchsn = nvl(response.fileSn, 0);
+							$inspectionHist.event.insertReg(params);
+						}
+					});
+				}
+			} 
+		},
+		
+		// 등록
+		insertReg: function(params) {
+			ajax(true, contextPath + '/sys/inspectionHist/insertFile', 'body', '처리중입니다.', params, function(data) {
+				//alert(data.message);
+				$(".file_register_popup").removeClass("view");
+				location.reload();
+			});
+		},
+		
+		issued: function(bzmnSn){
+			var params = {}
+
+			params.bzmnSn = bzmnSn;
+
+			if (bzmnSn == null || bzmnSn == '')
+				alert('결과서를 발급할 수 없습니다.');
+			else {
+				popupReport(contextPath + '/sys/inspectionReport', params);
+			}
+
+		},
+		
+		excelDownBtn: function() {
+			var totalRowCount = $("#inspectionHistGrid").data("kendoGrid").dataSource.total();
+			if(totalRowCount == 0) {
+				alert("데이터가 존재하지 않습니다.");
+			} else {
+				if(Object.keys(excelDownArc).length === 0) {
+				}
+				excelDown("/sys/inspectionHist/excelDown", excelDownArc, "inspectionHist", totalRowCount);
+			}
+			
+			
+        },
+
+		setUpdateParam : function(){
+			var params ={};
+			params.exmnr = $("#detailExmnr").val();
+			params.jbgd = $("#detailJbgd").val();
+			params.ogdp = $("#detailOgdp").val();
+			params.telno = $("#detailtelno").val();
+			params.chckArtcl = $("#detailChckArtcl").val();
+			params.etcArtcl = $("#detailEtcArtcl").val();
+			params.chckCn = $("#detailChckCn").val();
+			params.chckPlc = $("#detailChckPlc").val();
+			params.rslt = $("#detailRslt").val();
+			params.signYn = $("#detailSignYn").val();
+
+			ajax(true, contextPath + '/sys/inspectionHist/updateInspectionHist', 'body', '확인인중입니다.', params, function (data) {
+				alert("수정되었습니다");
+		    });
+		},
+
+		
+		
 	}
 	
 }(window, document, jQuery));

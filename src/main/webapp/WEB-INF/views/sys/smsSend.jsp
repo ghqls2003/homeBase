@@ -67,7 +67,7 @@
 			                    </ul>
 			                    <ul class="selec_box">
 			                        <li class="li_slec">
-			                            <label for="send_slec_01" hidden>전체</label>
+			                            <label for="send_slec_01" hidden>전체(삭제계정 제외)</label>
 			                            <input type="text" id="searchType" class="searchType" aria-label="전체" placeholder="전체">
 			                        </li>
 			                    </ul>
@@ -311,7 +311,21 @@
 		                                            </li>
 		                                        </ul>
 		                                        <ul class="selec_box">
-		                                            <li class="li_slec">
+						                            <li class="li_slec">
+						                           	    <div class="dropdown">
+						                           	    	<label for="searchOtherCondition"></label>
+		                                                    <input id="searchOtherCondition">
+						                           	    </div>
+						                            </li>
+						                        </ul>
+		                                        <ul class="selec_box">
+						                            <li class="li_slec">
+							                            <label for="searchBox" hidden>검색 내용</label>
+		                                                    <input id="searchBox" class="input" aria-label="검색어 내용" placeholder="검색어를 입력하세요.">
+						                            </li>
+						                        </ul>
+		                                        <ul class="selec_box">
+		                                            <!-- <li class="li_slec">
 		                                                <div class="selec_flex">
 		                                                    <div class="dropdown">
 		                                                        <label for="searchOtherCondition"></label>
@@ -320,7 +334,7 @@
 		                                                    <label for="searchBox" hidden>검색 내용</label>
 		                                                    <input id="searchBox" class="input" aria-label="검색어 내용" placeholder="검색어를 입력하세요.">
 		                                                </div>
-		                                            </li>
+		                                            </li> -->
 		                                            <li class="li_slec">
 		                                                <input type="checkbox" name="receiverExceptTel" id="receiver_except_tel" >
 		                                                <label for="receiver_except_tel">유선전화 제외</label>
