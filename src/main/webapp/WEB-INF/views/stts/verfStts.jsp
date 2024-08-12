@@ -10,8 +10,6 @@
 <script>
 	var authrtCd        = "${authrtCd}";
 	var cmptncZoneCd    = "${cmptncZoneCd}";
-	var bzmnSn          = "${bzmnSn}";
-	var upBzmnSn        = "${upBzmnSn}";
 </script>
 
 <style>
@@ -87,7 +85,7 @@
 			
 			<!-- 시간별통계/검증결과통계 탭버튼 -->
 			<div class="select">
-				<button class="select-btn tmDv selected">시간/월별</button>
+				<button class="select-btn tmDv selected">시간별</button>
 				<button class="select-btn rmDv">사업자/결과별</button>
 			</div>
 			<br />
@@ -104,8 +102,8 @@
 		                </ul>
 		            	<ul class="selec_box">
 		                	<li class="li_slec" style="display: flex; align-items: center">
-		                    	<label for="checkMthd" style="width: 110px;">검증수단 : </label>
-		                        <input type="text" id="checkMthd" class="checkMthd" aria-label="검증수단" placeholder="검증방법" />
+		                    	<label for="checkMthd" style="width: 110px;">검증방법 : </label>
+		                        <input type="text" id="checkMthd" class="checkMthd" aria-label="검증방법" placeholder="검증방법" />
 							</li>
 						</ul>
 					</div>

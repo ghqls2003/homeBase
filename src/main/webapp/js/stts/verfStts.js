@@ -12,16 +12,13 @@
     
     var dayColumns = [];
     var verfCountData = [];
+    var verfCountDataAb = [];
+    var verfCountDataTot = [];
     
-    var excelDate = null,
-    	excelMthd = null,
-    	excelDateResult = null;
+    var excelDate = null, excelMthd = null, excelDateResult = null;
     
-    var resultExcelMthd = null,
-    	resultExcelAuth = null, 
-    	resultExcelcmpNm = null, 
-    	resultExcelMonth = null,
-    	resultExcelYmdVal = null;
+    var resultExcelMthd = null, resultExcelAuth = null, resultExcelcmpNm = null, resultExcelMonth = null,
+    	resultExcelYmdVal = null, resultExcelCmptncCd = null, resultExcelAuthrtCd = null;
     	
     var today = new Date();
 	var year = today.getFullYear();
@@ -42,7 +39,7 @@
 		$statistics.event.enterKey();
 		
 		// 테스트중
-		$(".rmDv").click();
+//		$(".rmDv").click();
     });
     
     $statistics.ui = {
@@ -91,7 +88,9 @@
 								if(sheet.rows[i].cells[j].value > 999) {
 									sheet.rows[i].cells[j].value = FormatNumber(sheet.rows[i].cells[j].value);
 								} else {
-									sheet.rows[i].cells[j].value = sheet.rows[i].cells[j].value.toString();
+									if(typeof (sheet.rows[i].cells[j].value) != 'undefined') {
+										sheet.rows[i].cells[j].value = sheet.rows[i].cells[j].value.toString();
+									}
 								}
 							}
 						}
@@ -116,6 +115,8 @@
 			resultExcelcmpNm  = $("#verfOfCompany").val();
 			resultExcelMonth  = $("#verfResultDatePick").val();
 			resultExcelYmdVal = $("#verfResultDateType").val();
+			resultExcelCmptncCd = cmptncZoneCd;
+			resultExcelAuthrtCd = authrtCd;
 			
 			$("#verfResult-grid").kendoGrid({
 				dataSource: {
@@ -135,7 +136,9 @@
 							options.auth               = resultExcelAuth;
 							options.companyNm  = resultExcelcmpNm;
 							options.monthDt        = resultExcelMonth;
-							options.ymdVal           = resultExcelYmdVal;
+							options.ymdVal          = resultExcelYmdVal;
+							options.cmptncCd      = resultExcelCmptncCd;
+							options.authrtCd      = resultExcelAuthrtCd;
 							return JSON.stringify(options);
 						}
 					},
@@ -152,6 +155,8 @@
 				columns: [
 					{"field": "sn", "title": "순번", /*locked: true,*/ "template": "#: sn#", "width": "60px;"},
 					{"field": "coNm", "title": "사업자명", /*locked: true,*/ "template": "#= coNm#", "width": "270px;"},
+					{"field": "tot", "title": "<span style='font-weight: bold;'>합계</span>", "template": "#if(tot == 0){#<div class='grayRDiv'>#= FormatNumber(tot)#</div>#}"
+																+"else {##= FormatNumber(tot)##}#", "width": "120px;"},
 					{"field": "cd00", "title": "정상", "template": "#if(cd00 == 0){#<div class='grayRDiv'>#= FormatNumber(cd00)#</div>#}"
 																+"else {##= FormatNumber(cd00)##}#", "width": "120px;"},
 					{"field": "cd01", "title": "면허정보없음", "template": "#if(cd01 == 0){#<div class='grayRDiv'>#= FormatNumber(cd01)#</div>#}"
@@ -184,8 +189,6 @@
 																+"else {##= FormatNumber(cd31)##}#", "width": "120px;"},
 					{"field": "cd51", "title": "검증실패", "template": "#if(cd51 == 0){#<div class='grayRDiv'>#= FormatNumber(cd51)#</div>#}"
 																+"else {##= FormatNumber(cd51)##}#", "width": "120px;"},
-					{"field": "tot", "title": "<span style='font-weight: bold;'>합계</span>", "template": "#if(tot == 0){#<div class='grayRDiv'>#= FormatNumber(tot)#</div>#}"
-																+"else {##= FormatNumber(tot)##}#", "width": "120px;"},
 				],
 				navigatable: true,
 				scrollable: true,
@@ -208,6 +211,8 @@
 					params.companyNm  = resultExcelcmpNm;
 					params.monthDt        = resultExcelMonth;
 					params.ymdVal           = resultExcelYmdVal;
+					params.cmptncCd       =  resultExcelCmptncCd;
+					params.authrtCd       =  resultExcelAuthrtCd;
 					ajax(true, contextPath + '/stts/verfStts/verfResult', 'body', '처리중입니다.', params, function(data) {
 						var data = data.data[data.data.length-1];
 						$("#cd_tot").text(FormatNumber(data.tot)); $("#cd_nrml").text(FormatNumber(data.cd00)); $("#cd_ab_nrml").text(FormatNumber(data.tot-data.cd00));
@@ -263,11 +268,13 @@
 			// 시간별 검증수단
 			$("#checkMthd").kendoDropDownList({
 				optionLabel: "전체",
-				dataTextField: "cd_nm",
+				dataTextField: "cdNm",
 				dataValueField: "cd",
 				dataSource: [
-					{"cd": "4", "cd_nm": "API"},
-					{"cd": "123", "cd_nm": "웹, 모바일 등"}
+					{"cd": "1", "cdNm": "직접입력"},
+					{"cd": "2", "cdNm": "OCR"},
+					{"cd": "3", "cdNm": "모바일면허증"},
+					{"cd": "4", "cdNm": "API"},
 				],
 				value: "cd"
 			});
@@ -414,7 +421,9 @@
 			
 			var param ={
 				"bsM"  : $("#verfDatePick").val(),
-				"mthd" : $("#checkMthd").val()
+				"mthd" : $("#checkMthd").val(),
+				"authrtCd" : authrtCd,
+				"cmptncCd" : cmptncZoneCd
 			};
 
 			$statistics.event.verfColumn();
@@ -423,51 +432,96 @@
 			kendo.ui.progress($("#verf-grid"), true);
 			
 			ajax(true, contextPath + '/stts/verfStts/verfCount', 'body', '조회중입니다', param, function(data) {
+				
 				if(data != null) {
 					verfCountData = [];
+					verfCountDataAb = [];
+					verfCountDataTot = [];
 					
 					var dayTotalObj = {};
+					var dayTotalObjAb = {};
+					var dayTotalObjTot = {};
 					
 					for(var t=0; t<24; t++) {
-						var obj = {"str": (t < 10 ? "0"+t : t)+":00", "end": ((t+1) < 10 ? "0"+(t+1) : (t+1))+":00" == "24:00" ? "00:00" : ((t+1) < 10 ? "0"+(t+1) : (t+1))+":00"};
-						if(data.length == 28) {
-							for(var i=0; i<28; i++) {obj[i+1] = data[i][t];}
-						} else if(data.length == 29) {
-							for(var i=0; i<29; i++) {obj[i+1] = data[i][t];}
-						} else if(data.length == 30) {
-							for(var i=0; i<30; i++) {obj[i+1] = data[i][t];}
-						} else {
-							for(var i=0; i<31; i++) {obj[i+1] = data[i][t];}
-						}
+						var objNrml = {"str": (t < 10 ? "0"+t : t)+":00", "end": ((t+1) < 10 ? "0"+(t+1) : (t+1))+":00" == "24:00" ? "00:00" : ((t+1) < 10 ? "0"+(t+1) : (t+1))+":00"};
+						var objAbNrml = {};  // 병합위함
+						var objTot = {};  // 병합위함
+//						var objAbNrml = {"str": (t < 10 ? "0"+t : t)+":00", "end": ((t+1) < 10 ? "0"+(t+1) : (t+1))+":00" == "24:00" ? "00:00" : ((t+1) < 10 ? "0"+(t+1) : (t+1))+":00"};
+
+						for (var i = 0; i < data.length; i += 3) {objNrml[Math.floor(i / 3) + 1] = data[i][t]; if (data[i+3] == null) {break;}}
+						objNrml.nrml = data[i].nrml == '1' ?  '정상' : data[i].nrml == '2' ? '비정상' : '합계';
+						for (var i = 1; i < data.length; i += 3) {objAbNrml[Math.floor(i / 3) + 1] = data[i][t]; if (data[i+3] == null) {break;}}
+						objAbNrml.nrml = data[i].nrml == '1' ?  '정상' : data[i].nrml == '2' ? '비정상' : '합계';
+						for (var i = 2; i < data.length; i += 3) {objTot[Math.floor(i / 3) + 1] = data[i][t]; if (data[i+3] == null) {break;}}
+						objTot.nrml = data[i].nrml == '1' ?  '정상' : data[i].nrml == '2' ? '비정상' : '합계';
 						
 						// 시간별 토탈 값 더하기
+						// 정상
 						var objSum = 0;
-						for(var i in obj) {
-							if(i != 'str' && i != 'end') {
-								objSum += obj[i];
-							}
-						}
-						obj.hourTotal = objSum;
+						for(var i in objNrml) {if(i != 'str' && i != 'end' && i != 'nrml') {objSum += objNrml[i];}}
+						objNrml.hourTotal = objSum;
+						// 비정상
+						var objSumAb = 0;
+						for(var i in objAbNrml) {if(i != 'str' && i != 'end' && i != 'nrml') {objSumAb += objAbNrml[i];}}
+						objAbNrml.hourTotal = objSumAb;
+						// 합계
+						var objSumTot = 0;
+						for(var i in objTot) {if(i != 'str' && i != 'end' && i != 'nrml') {objSumTot += objTot[i];}}
+						objTot.hourTotal = objSumTot;
 						
-						verfCountData.push(obj);
+						// 시간별 평균 값
+						var avg1 = Math.round(objSum/(data.length/3) * 100) / 100;
+						var avg2 = Math.round(objSumAb/(data.length/3) * 100) / 100;
+						var avg3 = Math.round(objSumTot/(data.length/3) * 100) / 100;
+						objNrml.avg = avg1;
+						objAbNrml.avg = avg2;
+						objTot.avg = avg3;
+						
+						verfCountData.push(objNrml);
+						verfCountDataAb.push(objAbNrml);
+						verfCountDataTot.push(objTot);
 					}
 					
 					// 일별 토탈 값 더하기
+					// 정상
 					for(var i in verfCountData[0]) {
 					var daySum = 0;
-						if(i != 'str' && i != 'end') {
-							for(var j=0; j<verfCountData.length; j++) {
-								daySum += verfCountData[j][i];
-							}
-						}
+						if(i != 'str' && i != 'end' && i != 'nrml') {for(var j=0; j<verfCountData.length; j++) {daySum += verfCountData[j][i];}}
 						dayTotalObj[i] = daySum;
 					}
 					dayTotalObj.str = "일별";
 					dayTotalObj.end = "합계";
+					dayTotalObj.nrml = "정상";
 					
 					verfCountData.push(dayTotalObj);
+					// 비정상
+					for(var i in verfCountDataAb[0]) {
+					var daySumAb = 0;
+						if(i != 'str' && i != 'end' && i != 'nrml') {for(var j=0; j<verfCountDataAb.length; j++) {daySumAb += verfCountDataAb[j][i];}}
+						dayTotalObjAb[i] = daySumAb;
+					}
+					dayTotalObjAb.nrml = "비정상";
+					
+					verfCountDataAb.push(dayTotalObjAb);
+					// 합계
+					for(var i in verfCountDataTot[0]) {
+					var daySumTot = 0;
+						if(i != 'str' && i != 'end' && i != 'nrml') {for(var j=0; j<verfCountDataTot.length; j++) {daySumTot += verfCountDataTot[j][i];}}
+						dayTotalObjTot[i] = daySumTot;
+					}
+					dayTotalObjTot.nrml = "합계";
+					
+					verfCountDataTot.push(dayTotalObjTot);
 				
-					$("#verf-grid").data("kendoGrid").setDataSource(verfCountData);
+					// 최종 데이터 형식
+					var endData = []
+					for(var i=0; i<verfCountData.length; i++) {
+						endData.push(verfCountData[i])
+						endData.push(verfCountDataAb[i])
+						endData.push(verfCountDataTot[i])
+					}
+					
+					$("#verf-grid").data("kendoGrid").setDataSource(endData);
 				}
 			});
 		},
@@ -480,8 +534,11 @@
 		 */
 		verfColumn: function() {
 			dayColumns = [
-				{"field": "str", "title": "시작시각", "locked": true, "template": "<span style='color: black;'>#:str #</span>", "width": "70px;"},
-				{"field": "end", "title": "종료시각", "locked": true, "template": "<span style='color: black;'>#:end #</span>", "width": "70px;"}
+//				{"field": "str", "title": "시작시각", "locked": true, "template": "<span style='color: black;'>#=str #</span>", "width": "70px;"},
+//				{"field": "end", "title": "종료시각", "locked": true, "template": "<span style='color: black;'>#=end #</span>", "width": "70px;"},
+				{"field": "str", "title": "시작시각", "locked": true, "template": "# if (typeof str !== 'undefined' && str !== null) { # <span style='color: black;'>#= str #</span> # } #", "width": "70px;"},
+				{"field": "end", "title": "종료시각", "locked": true, "template": "# if (typeof end !== 'undefined') { # <span style='color: black;'>#= end #</span> # } #", "width": "70px;"},
+				{"field": "nrml", "title": "구분", "locked": true, "template": "<span style='color: black;'>#=nrml #</span>", "width": "70px;"}
 			];
 			var dayList = [];
 			var day = null;
@@ -515,10 +572,14 @@
 								 "template": "#if(data["+(i+1)+"] == 0) {#<div class='grayDiv'>#= FormatNumber(data["+(i+1)+"])#</div>#}"
 								 			+ "else {##= FormatNumber(data["+(i+1)+"])##}#", "width": "100px;"});
 			}
-			
+			/* 시간별 합계 */
 			dayColumns.push({"field": "hourTotal", "title": "<span style='font-weight: bold;'>시간별 합계</span>", 
 							 "template": "#if(hourTotal == 0) {#<div class='grayDiv'>#= FormatNumber(hourTotal)#</div>#}"
 							 			+ "else {##= FormatNumber(hourTotal)##}#", "width": "120px;"})
+			/* 시간별 평균 */
+			dayColumns.push({"field": "hourTotal", "title": "<span style='font-weight: bold;'>시간별 평균</span>", 
+							 "template": "#if(hourTotal == 0) {#<div class='grayDiv'>#= FormatNumber(avg)#</div>#}"
+							 			+ "else {##= FormatNumber(avg)##}#", "width": "120px;"})
 		},
 		
 		/**
@@ -544,6 +605,8 @@
 				resultExcelAuth = $("#authSelected").val();
 				resultExcelMonth  = $("#verfResultDatePick").val();
 				resultExcelYmdVal  = $("#verfResultDateType").val();
+				resultExcelCmptncCd = cmptncZoneCd;
+				resultExcelAuthrtCd = authrtCd;
 				
 				excelDateResult = $("#verfResultDatePick").val();
 				
@@ -555,7 +618,7 @@
 		
 		/**
 		 * @name         : tmTabBtn
-		 * @description  : 시간/월별 버튼
+		 * @description  : 시간별 버튼
 		 * @date         : 2024. 02. 06
 		 * @author       : 김경룡
 		 */

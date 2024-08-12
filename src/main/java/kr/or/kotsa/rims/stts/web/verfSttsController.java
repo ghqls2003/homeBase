@@ -39,7 +39,7 @@ public class verfSttsController extends CmmnAbstractServiceImpl {
 	public ModelAndView viewMain(@RequestParam Map<String, Object> paramsMap, ModelAndView mav,
 			HttpServletRequest request, HttpServletResponse response) throws RimsException {
 		
-		String [] validAuth = {"K01", "Z01", "D01"};
+		String [] validAuth = {"K01", "Z01", "D01", "G01"};
 		if(Arrays.asList(validAuth).contains(getAuthrtCd())) {
 			mav.addObject("authrtCd", getAuthrtCd());
 			mav.addObject("cmptncZoneCd", getCmptncZoneCd());

@@ -79,31 +79,12 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 			if(firstChar == 'S' ) {
 				busine = true;
 			} else if (firstChar == 'M' || firstChar == 'G' || firstChar == 'K' || firstChar == 'Z' || firstChar == 'D' ){
-				admstt = true;
+//				admstt = true;  // 완성되면 풀기
 			}
 		}
 		String userType = isDevice(request);
 		
-		
-//      이건 내부 WAS를 못잡더라		
-//		try {
-//            // 현재 호스트의 IP 주소 가져오기
-//            InetAddress inetAddress = InetAddress.getLocalHost();
-//            String inIp = request.getRemoteAddr();
-//            String ipAddress = inetAddress.getHostAddress();
-//            
-//            if(inIp == "10.149.150.59" || ipAddress == "10.149.150.59") {
-//            	mav.addObject("ipCheck", "W1");
-//            } else if(inIp == "10.149.150.60" || ipAddress == "10.149.150.60") {
-//            	mav.addObject("ipCheck", "W2");
-//            } else {
-//            	mav.addObject("ipCheck", "none");
-//            }
-//        } catch (UnknownHostException e) {
-//            e.printStackTrace();
-//        }
-		
-		
+		// 내부 WAS 체크용
 		try {
 			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
 			
