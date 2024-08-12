@@ -67,6 +67,19 @@
 						kendo.ui.progress($("#verf-grid"), false);
 						$(".excelDownBtn").attr("disabled", false);
 	//					$(".grayDiv").parent().css("background-color", "lightgray");
+
+
+						// 묶음으로 보이게 border 처리
+						var grid = this;
+						var i = 0;
+	        			grid.tbody.find("td").each(function() {
+	            			var cell = $(this);
+	            			var dataItem = grid.dataItem(cell.closest("tr"));
+	            			if (typeof dataItem.str !== 'undefined' && i/75 >= 1) {
+	                			cell.css("border-top", "1px solid black");
+	            			}
+	            			i++;
+	        			});
 					}
 				},
                 excel: { allPages: true },
@@ -233,6 +246,90 @@
 						e.preventDefault();
 						alert("데이터가 없어 다운로드를 할 수 없습니다.");
 					} else {
+						
+						
+						
+						
+//						var sheet = e.workbook.sheets[0];
+//                
+//                // Define the values for each cell id
+//                var values = {
+//                    cd_tot: 50,
+//                    cd_nrml: 30,
+//                    cd_ab_nrml: 20,
+//                    cd01: 5,
+//                    cd02: 4,
+//                    cd03: 3,
+//                    cd04: 2,
+//                    cd11: 1,
+//                    cd12: 0,
+//                    cd13: 2,
+//                    cd14: 1,
+//                    cd21: 4,
+//                    cd22: 3,
+//                    cd23: 2,
+//                    cd24: 1,
+//                    cd25: 0,
+//                    cd31: 3,
+//                    cd51: 2
+//                };
+//
+//                // Create the custom header with dynamic values
+//                var customHeader = [
+//                    {
+//                        cells: [
+//                            { value: "총 건수", rowSpan: 2 },
+//                            { value: "정상", rowSpan: 2 },
+//                            { value: "비정상 (전체)", rowSpan: 2 },
+//                            { value: "비정상 항목상세", rowSpan: 4 },
+//                            { value: "면허정보없음" },
+//                            { value: "재발급된면허" },
+//                            { value: "분실된면허" },
+//                            { value: "사망취소된면허" },
+//                            { value: "취소된면허" },
+//                            { value: "정지된면허" },
+//                            { value: "기간중취소면허" },
+//                            { value: "기간중정지면허" }
+//                        ]
+//                    },
+//                    {
+//                        cells: [
+//                            { value: values.cd01 }, { value: values.cd02 }, { value: values.cd03 },
+//                            { value: values.cd04 }, { value: values.cd11 }, { value: values.cd12 },
+//                            { value: values.cd13 }, { value: values.cd14 }
+//                        ]
+//                    },
+//                    {
+//                        cells: [
+//                            { value: values.cd_tot, rowSpan: 2 },
+//                            { value: values.cd_nrml, rowSpan: 2 },
+//                            { value: values.cd_ab_nrml, rowSpan: 2 },
+//                            { value: "정보불일치(이름)" },
+//                            { value: "정보불일치(생년월일)" },
+//                            { value: "정보불일치(암호일련번호)" },
+//                            { value: "정보불일치(종별)" },
+//                            { value: "필수값누락(대여기간)" },
+//                            { value: "암호화안된면허" },
+//                            { value: "검증실패" }
+//                        ]
+//                    },
+//                    {
+//                        cells: [
+//                            { value: values.cd21 }, { value: values.cd22 }, { value: values.cd23 },
+//                            { value: values.cd24 }, { value: values.cd25 }, { value: values.cd31 },
+//                            { value: values.cd51 }
+//                        ]
+//                    }
+//                ];
+//                // Insert the custom header at the top of the sheet
+//                sheet.rows.splice(0, 0, ...customHeader);
+                
+                
+                
+                
+                
+                
+						
 						var sheet = e.workbook.sheets[0];
 						var columnVal = sheet.rows[0].cells;
 						
@@ -493,7 +590,7 @@
 					dayTotalObj.end = "합계";
 					dayTotalObj.nrml = "정상";
 					
-					verfCountData.push(dayTotalObj);
+					verfCountData.unshift(dayTotalObj);
 					// 비정상
 					for(var i in verfCountDataAb[0]) {
 					var daySumAb = 0;
@@ -502,7 +599,7 @@
 					}
 					dayTotalObjAb.nrml = "비정상";
 					
-					verfCountDataAb.push(dayTotalObjAb);
+					verfCountDataAb.unshift(dayTotalObjAb);
 					// 합계
 					for(var i in verfCountDataTot[0]) {
 					var daySumTot = 0;
@@ -511,7 +608,7 @@
 					}
 					dayTotalObjTot.nrml = "합계";
 					
-					verfCountDataTot.push(dayTotalObjTot);
+					verfCountDataTot.unshift(dayTotalObjTot);
 				
 					// 최종 데이터 형식
 					var endData = []
@@ -536,9 +633,17 @@
 			dayColumns = [
 //				{"field": "str", "title": "시작시각", "locked": true, "template": "<span style='color: black;'>#=str #</span>", "width": "70px;"},
 //				{"field": "end", "title": "종료시각", "locked": true, "template": "<span style='color: black;'>#=end #</span>", "width": "70px;"},
-				{"field": "str", "title": "시작시각", "locked": true, "template": "# if (typeof str !== 'undefined' && str !== null) { # <span style='color: black;'>#= str #</span> # } #", "width": "70px;"},
-				{"field": "end", "title": "종료시각", "locked": true, "template": "# if (typeof end !== 'undefined') { # <span style='color: black;'>#= end #</span> # } #", "width": "70px;"},
-				{"field": "nrml", "title": "구분", "locked": true, "template": "<span style='color: black;'>#=nrml #</span>", "width": "70px;"}
+				{"field": "str", "title": "시작시각", "template": "# if (typeof str !== 'undefined') { ##= str ## } #", "width": "70px;",
+					"attributes": {
+				        "style": "color: black; border: 0px !important;"
+				    }},
+				{"field": "end", "title": "종료시각", "template": "# if (typeof end !== 'undefined') { ##= end ## } #", "width": "70px;",
+					"attributes": {
+				        "style": "color: black; border: 0px !important;"
+				    }},
+				{"field": "nrml", "title": "구분", "template": "<span style='color: black;'>#=nrml #</span>", "width": "70px;", "attributes": {
+				        "style": "color: black; border-top: 0px !important; border-left: 0px !important; border-bottom: 0px !important;"
+				    }}
 			];
 			var dayList = [];
 			var day = null;
@@ -577,8 +682,8 @@
 							 "template": "#if(hourTotal == 0) {#<div class='grayDiv'>#= FormatNumber(hourTotal)#</div>#}"
 							 			+ "else {##= FormatNumber(hourTotal)##}#", "width": "120px;"})
 			/* 시간별 평균 */
-			dayColumns.push({"field": "hourTotal", "title": "<span style='font-weight: bold;'>시간별 평균</span>", 
-							 "template": "#if(hourTotal == 0) {#<div class='grayDiv'>#= FormatNumber(avg)#</div>#}"
+			dayColumns.push({"field": "avg", "title": "<span style='font-weight: bold;'>시간별 평균</span>", 
+							 "template": "#if(avg == 0) {#<div class='grayDiv'>#= FormatNumber(avg)#</div>#}"
 							 			+ "else {##= FormatNumber(avg)##}#", "width": "120px;"})
 		},
 		
