@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sys.smsSend">
+	
+	<!-- 검색옵션 - 계정상태(전체) -->
+	<select id="selectSttsCd" resultType="map">
+        select cd_nm from dqvs.dvs_cmm_mt_code
+        where cd_nm != '정상' and cd_group = 'acnt_stts_cd' or cd_group  = 'aprv_stts_cd'
+    </select>
 
  	<!-- 검색옵션 - 권한(전체) -->
 	<select id="selectAuth" resultType="map">
@@ -9,6 +15,31 @@
 		WHERE use_yn = 'Y'		
 		AND authrt_cd IN ('S01','S02','S03')
     </select>
+    
+    <!-- 검색옵션 - 시도(전체) -->
+    <select id="selectCtpvNm" resultType="map">
+        SELECT DISTINCT
+		    SUBSTRING(stdg_cd, 1, 2) AS ctpv_cd, ctpv_nm
+		FROM
+		    dqvs.dvs_cmm_mt_area
+		where mtnabn_yn = 'Y'
+		ORDER BY
+		    ctpv_cd
+    </select>
+    
+    <!-- 검색옵션 - 시군구(전체) -->
+    <select id="selectSggNm" resultType="map">
+        select distinct
+			SUBSTRING(stdg_cd, 3, 3) AS sgg_cd, sgg_nm
+		from dqvs.dvs_cmm_mt_area
+		where mtnabn_yn = 'Y'
+			and sgg_nm != ''
+		<if test="ctpvCd != null and ctpvCd != ''">
+			and stdg_cd LIKE CONCAT(#{ctpvCd}, '%')
+		</if>
+		order by sgg_cd
+    </select>
+    
     
     <!-- 법인명 자동조건 검색 -->
     <select id="selectCrno" resultType="map">
@@ -105,7 +136,7 @@
 				, TO_CHAR(sndng_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_dt
 				, TO_CHAR(sndng_rsvt_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_rsvt_dt
 				, rcvr
-				, rcvr_telno
+				, dqvs.pca_decrypt(rcvr_telno, '150') rcvr_telno
 			FROM dqvs.dvs_cmm_hs_sms_send
 			)AS T1
 		WHERE 1 = 1
@@ -135,7 +166,7 @@
 				, TO_CHAR(sndng_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_dt
 				, TO_CHAR(sndng_rsvt_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_rsvt_dt
 				, rcvr
-				, rcvr_telno
+				, dqvs.pca_decrypt(rcvr_telno, '150') rcvr_telno
 			FROM dqvs.dvs_cmm_hs_sms_send
 			)AS T1
 		WHERE 1 = 1
@@ -603,7 +634,7 @@
 				nextval('dqvs.seq_cmm_hs_sms_send')
 				, #{msg}
 				, #{rcvr}
-				, #{rcvr_telno}
+				, dqvs.pca_encrypt(#{rcvr_telno}, '150')
 				<if test='send_date == null or send_date == ""'>
 					, 0
 				</if>

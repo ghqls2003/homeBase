@@ -135,6 +135,9 @@
 			                	<input id="verfResultDateType" class="ymd" aria-label="연월일" style="width: 80px;" />
 			                	<label for="verfResultDatePick" style="display: none;">조회날짜</label>
 			                	<input id="verfResultDatePick" class="date_pic" title="datepicker" aria-label="조회날짜" style="height: 40px; width: 100px;"/>
+<!-- 			                	~ -->
+<!-- 			                	<label for="verfResultDatePick2" style="display: none;">조회날짜</label> -->
+<!-- 			                	<input id="verfResultDatePick2" class="date_pic" title="datepicker" aria-label="조회날짜" style="height: 40px; width: 100px;"/> -->
 		                	</li>
 		                	<li class="li_slec" style="display: flex; align-items: center">
 			                	<label for="verfResultMthd" style="width: 110px;">검증방법 : </label>

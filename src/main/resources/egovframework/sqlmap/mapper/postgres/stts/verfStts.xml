@@ -74,7 +74,7 @@
 			crosstab(
 				'SELECT hs.dt 
 					, hs.hr
-					, SUM(hs.sum-hs.rslt_cd_00) tot
+					, SUM(hs.tot-hs.rslt_cd_00) tot
 				FROM
 					dqvs.dvs_st_verf_hour hs
 				LEFT JOIN
@@ -121,7 +121,7 @@
 			crosstab(
 				'SELECT hs.dt 
 					, hs.hr
-					, SUM(hs.sum) tot
+					, SUM(hs.tot) tot
 				FROM
 					dqvs.dvs_st_verf_hour hs
 				LEFT JOIN
@@ -158,7 +158,7 @@
 	    , SUM(t.rslt_cd_00) cd00, SUM(t.rslt_cd_01) cd01, SUM(t.rslt_cd_02) cd02, SUM(t.rslt_cd_03) cd03, SUM(t.rslt_cd_04) cd04
 	    , SUM(t.rslt_cd_11) cd11, SUM(t.rslt_cd_12) cd12, SUM(t.rslt_cd_13) cd13, SUM(t.rslt_cd_14) cd14, SUM(t.rslt_cd_21) cd21
 	    , SUM(t.rslt_cd_22) cd22, SUM(t.rslt_cd_23) cd23, SUM(t.rslt_cd_24) cd24, SUM(t.rslt_cd_25) cd25, SUM(t.rslt_cd_31) cd31
-	    , SUM(t.rslt_cd_51) cd51, SUM(t.sum) tot
+	    , SUM(t.rslt_cd_51) cd51, SUM(t.tot) tot
 	FROM
 		(
 		SELECT COALESCE(agency.co_nm, '-') co_nm
