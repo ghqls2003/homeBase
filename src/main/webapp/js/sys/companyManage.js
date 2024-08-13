@@ -775,8 +775,8 @@
 
 			// 상세 팝업 X, 닫기 버튼
 			$(".detailClose").on("click",function(){
-				location.reload();
-              //grid.dataSource.read();
+               var grid = $("#cmpnymanageGrid").data("kendoGrid");
+               grid.dataSource.read();
 				$("#insert_mdfcn_rsn").val('');  // 수정사유 입력 input 초기화
 				$("#cmpnymanageGrid").data("kendoGrid").clearSelection();  // 상세보기 팝업창 닫았을 때, select 해제
 
