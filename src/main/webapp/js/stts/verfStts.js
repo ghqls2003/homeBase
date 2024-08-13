@@ -75,10 +75,10 @@
 	        			grid.tbody.find("td").each(function() {
 	            			var cell = $(this);
 	            			var dataItem = grid.dataItem(cell.closest("tr"));
-	            			if (typeof dataItem.str !== 'undefined' && i/75 >= 1) {
+	            			if (typeof dataItem.str !== 'undefined'/* && i/75 >= 1*/) {
 	                			cell.css("border-top", "1px solid black");
 	            			}
-	            			i++;
+//	            			i++;
 	        			});
 					}
 				},
@@ -108,7 +108,7 @@
 							}
 						}
 						
-						e.workbook.fileName = "운전자격확인 시간별 통계("+excelDate+")-"+excelMthd+".xlsx";
+						e.workbook.fileName = "운전자격확인 시간별 통계("+excelDate+").xlsx";
 						e.workbook.sheets[0].title = "운전자격확인결과("+excelMthd+")";
 						
 					}
@@ -586,6 +586,7 @@
 						if(i != 'str' && i != 'end' && i != 'nrml') {for(var j=0; j<verfCountData.length; j++) {daySum += verfCountData[j][i];}}
 						dayTotalObj[i] = daySum;
 					}
+					dayTotalObj.avg = dayTotalObj.avg.toString().split(".")[1].length > 2 ? dayTotalObj.avg.toFixed(2) : dayTotalObj.avg;
 					dayTotalObj.str = "일별";
 					dayTotalObj.end = "합계";
 					dayTotalObj.nrml = "정상";
@@ -597,6 +598,7 @@
 						if(i != 'str' && i != 'end' && i != 'nrml') {for(var j=0; j<verfCountDataAb.length; j++) {daySumAb += verfCountDataAb[j][i];}}
 						dayTotalObjAb[i] = daySumAb;
 					}
+					dayTotalObjAb.avg = dayTotalObjAb.avg.toString().split(".")[1].length > 2 ? dayTotalObjAb.avg.toFixed(2) : dayTotalObjAb.avg;
 					dayTotalObjAb.nrml = "비정상";
 					
 					verfCountDataAb.unshift(dayTotalObjAb);
@@ -606,9 +608,26 @@
 						if(i != 'str' && i != 'end' && i != 'nrml') {for(var j=0; j<verfCountDataTot.length; j++) {daySumTot += verfCountDataTot[j][i];}}
 						dayTotalObjTot[i] = daySumTot;
 					}
+					dayTotalObjTot.avg = dayTotalObjTot.avg.toString().split(".")[1].length > 2 ? dayTotalObjTot.avg.toFixed(2) : dayTotalObjTot.avg;
 					dayTotalObjTot.nrml = "합계";
 					
 					verfCountDataTot.unshift(dayTotalObjTot);
+					
+					var perData = {"str": "비정상", "end": "비율(%)", "nrml": "(비정상/합계)"};
+					// 정상비율
+					for(var i in dayTotalObjTot) {
+						if(dayTotalObjAb.hasOwnProperty(i)) {
+							var valTot = dayTotalObjTot[i];
+							var valAb = dayTotalObjAb[i];
+							if(i != 'nrml') {
+								if(valTot == 0 && valAb == 0) {
+									perData[i] = 0;
+								} else {
+									perData[i] = Math.round((valAb/valTot)*1000)/1000;
+								}
+							}
+						}
+					}
 				
 					// 최종 데이터 형식
 					var endData = []
@@ -617,6 +636,7 @@
 						endData.push(verfCountDataAb[i])
 						endData.push(verfCountDataTot[i])
 					}
+					endData.unshift(perData)
 					
 					$("#verf-grid").data("kendoGrid").setDataSource(endData);
 				}
@@ -633,15 +653,15 @@
 			dayColumns = [
 //				{"field": "str", "title": "시작시각", "locked": true, "template": "<span style='color: black;'>#=str #</span>", "width": "70px;"},
 //				{"field": "end", "title": "종료시각", "locked": true, "template": "<span style='color: black;'>#=end #</span>", "width": "70px;"},
-				{"field": "str", "title": "시작시각", "template": "# if (typeof str !== 'undefined') { ##= str ## } #", "width": "70px;",
+				{"field": "str", "title": "시작시각", "template": "# if (typeof str !== 'undefined') { ##= str ## } #", "width": "80px;",
 					"attributes": {
 				        "style": "color: black; border: 0px !important;"
 				    }},
-				{"field": "end", "title": "종료시각", "template": "# if (typeof end !== 'undefined') { ##= end ## } #", "width": "70px;",
+				{"field": "end", "title": "종료시각", "template": "# if (typeof end !== 'undefined') { ##= end ## } #", "width": "80px;",
 					"attributes": {
 				        "style": "color: black; border: 0px !important;"
 				    }},
-				{"field": "nrml", "title": "구분", "template": "<span style='color: black;'>#=nrml #</span>", "width": "70px;", "attributes": {
+				{"field": "nrml", "title": "구분", "template": "<span style='color: black;'>#=nrml #</span>", "width": "120px;", "attributes": {
 				        "style": "color: black; border-top: 0px !important; border-left: 0px !important; border-bottom: 0px !important;"
 				    }}
 			];
