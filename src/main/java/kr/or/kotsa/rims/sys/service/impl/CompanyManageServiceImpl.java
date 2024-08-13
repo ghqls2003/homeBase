@@ -248,6 +248,8 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 	// 상황별 : openAPI를 이용한 사업자등록정보 상태 업데이트(server측 openAPI 요청)
 	@Override
 	public Map<String, Object> updateCmpnyBrnoBySituation(List<Map<String, Object>> paramsMap) throws UnsupportedEncodingException {
+		String selectedBsnSttsCd ="";
+		String bStt ="";
 		Map<String, Object> result = new HashMap<>();
 		Map<String, Object> orgParam = paramsMap.get(0); // 마스터 입력 데이터
 		String brno = (String) orgParam.get("brno");
@@ -258,7 +260,7 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 
 		// 해당일련번호가 agency 마스터테이블에 있을 경우만 update
 		Map<String, Object>	choiceBrnoInfo = companyManageDao.choiceBrno(orgParam);
-		String selectedBsnSttsCd = (String) choiceBrnoInfo.get("bsnSttsNm");
+		selectedBsnSttsCd = (String) choiceBrnoInfo.get("bsnSttsNm");
 		if( choiceBrnoInfo != null ) {
 			Map<String, Object> hsParam = paramsMap.get(1); // 마스터일 경우만 데이터 존재함 , 히스토리 입력 데이터
 			updateCommonParams(orgParam,hsParam);
@@ -287,8 +289,7 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 			}
 			// 사업자 등록 상태 코드 및 명칭 변경 { api 응답 :  계속사업자(01), 휴업(02), 폐업(03)}
 			updateBusinessStatus(orgParam, hsParam, ApiResponseData);
-			String bStt = (String) hsParam.get("bStt");
-
+			bStt = (String) hsParam.get("bStt");
 			// api요청한 영업상태와 기존 영업상태가 다를 때만 사업자 및 사업자 히스토리 업데이트 발생
 			if(!bStt.equals(selectedBsnSttsCd)){
 				// 사업자등록정보 상태 업데이트
@@ -343,19 +344,19 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 		return response.getBody();
 	}
 
-
-
 	// 사업자 등록 상태 코드 및 명칭 변경 { api 응답 :  계속사업자(01), 휴업(02), 폐업(03)}
 	private void updateBusinessStatus(Map<String, Object> orgParam, Map<String, Object> hsParam ,List<Map<String, Object>> data) {
 		String bsnSttsCd = (String) data.get(0).get("b_stt_cd");
 		String bStt = (String) data.get(0).get("b_stt");
 		String taxType = (String) data.get(0).get("tax_type"); //"국세청에 등록되지 않은 사업자등록번호입니다."
-		if ("계속사업자".equals(bStt) && "01".equals(bsnSttsCd)) {
+		if ("계속사업자".equals(bStt) && "01".equals(bsnSttsCd)) { // 계속 사업자
 			bStt = "정상";
 			bsnSttsCd = "0";
-		} else if ("휴업".equals(bStt) && "02".equals(bsnSttsCd)) {
+		} else if ("휴업자".equals(bStt) && "02".equals(bsnSttsCd)) { // 휴업자
+			bStt = "휴업";
 			bsnSttsCd = "1";
-		} else if ("폐업".equals(bStt) && "03".equals(bsnSttsCd)) {
+		} else if ("폐업자".equals(bStt) && "03".equals(bsnSttsCd)) { // 폐업자
+			bStt = "폐업";
 			bsnSttsCd = "3";
 		} else if("".equals(bStt) && "".equals(bsnSttsCd) && taxType.equals("국세청에 등록되지 않은 사업자등록번호입니다.")){
 			bsnSttsCd = "70"; // 사업자번호 오류 코드  response :bsnSttsCd 값이 null임
