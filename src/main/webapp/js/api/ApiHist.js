@@ -50,7 +50,7 @@ var expryYmd;
 					var endDatePicker = $("#end-Picker01").data("kendoDatePicker");
 
 					if (startDate) {
-						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 5);
+						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 2);
 						endDatePicker.min(startDate);
 						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
 						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
@@ -238,24 +238,19 @@ var expryYmd;
 
 		selectSearchData: function() {
 			var searchOtherCondition = [
-				{ value: "", text: "API 선택" },
+//				{ value: "", text: "API 선택" },
 				{ value: "1", text: "운전자격확인 단건 조회	" },
 				{ value: "2", text: "운전자격확인 배치 조회" },
 			];
-			//			$("#search_stts_cd").kendoDropDownList({
-			//				dataTextField: "text",
-			//				dataSource: searchOtherCondition,
-			//				dataValueField: "value"
-			//				, value: "1"
-			//			});
 			ajax(true, contextPath + '/api/apiHist/ckapiList', 'body', '처리중입니다.', {}, function(data) {
 				var ckResults = data.ckResults;
+				var defaultValue = "1";
 				$('#search_stts_cd').kendoDropDownList({
-					optionLabel: "API 선택 (전체)",
+//					optionLabel: "API 선택 (전체)",
 					dataTextField: "apiNm",
 					dataValueField: "apiSn",
 					dataSource: ckResults,
-					value: "apiSn",
+					value: defaultValue,
 				});
 			});
 
@@ -295,17 +290,17 @@ var expryYmd;
 			//				dataValueField: "value"
 			//			});
 			var searchOtherCondition3 = [
-				{ value: "", text: "에러유무 (선택)" },
+//				{ value: "", text: "에러유무 (선택)" },
 				{ value: "E1", text: "정상" },
 				{ value: "E2", text: "에러" }
 			];
 			$("#search_stts_cd_error").kendoDropDownList({
 				dataTextField: "text",
 				dataSource: searchOtherCondition3,
-				dataValueField: "value"
+				dataValueField: "E1"
 			});
 			var searchOtherCondition3 = [
-				{ value: "", text: "에러유무 (선택)" },
+//				{ value: "", text: "에러유무 (선택)" },
 				{ value: "E1", text: "정상" },
 				{ value: "E2", text: "에러" }
 			];
@@ -317,7 +312,8 @@ var expryYmd;
 			$("#search_stts_cd3").kendoDropDownList({
 				dataTextField: "text",
 				dataSource: searchOtherCondition3,
-				dataValueField: "value"
+				dataValueField: "value",
+				value:  "E1"
 			});
 			//			$("#search_stts_cd_Dev03").kendoDropDownList({
 			//				dataTextField: "text",
