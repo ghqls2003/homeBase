@@ -115,7 +115,7 @@ var expryYmd;
 				}
 			});
 			$("#start-Picker02").kendoDatePicker({
-				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7),
+				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 2),
 				dateInput: true,
 				format: "yyyy-MM-dd",
 				parseFormats: ["yyyy-MM-dd"],
@@ -125,31 +125,31 @@ var expryYmd;
 					var endDatePicker = $("#end-Picker02").data("kendoDatePicker");
 
 					if (startDate) {
-						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 7);
+						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 2);
 						endDatePicker.min(startDate);
 						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
 						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
 					}
 				}
 			});
-			$("#start-Picker02").kendoDatePicker({
-				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7),
-				dateInput: true,
-				format: "yyyy-MM-dd",
-				parseFormats: ["yyyy-MM-dd"],
-				max: new Date(),
-				change: function() {
-					var startDate = this.value();
-					var endDatePicker = $("#end-Picker02").data("kendoDatePicker");
-
-					if (startDate) {
-						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 7);
-						endDatePicker.min(startDate);
-						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
-						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
-					}
-				}
-			});
+//			$("#start-Picker02").kendoDatePicker({
+//				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7),
+//				dateInput: true,
+//				format: "yyyy-MM-dd",
+//				parseFormats: ["yyyy-MM-dd"],
+//				max: new Date(),
+//				change: function() {
+//					var startDate = this.value();
+//					var endDatePicker = $("#end-Picker02").data("kendoDatePicker");
+//
+//					if (startDate) {
+//						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 7);
+//						endDatePicker.min(startDate);
+//						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
+//						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
+//					}
+//				}
+//			});
 
 			$("#end_Picker_Dev01").kendoDatePicker({
 				value: new Date(),
@@ -357,8 +357,8 @@ var expryYmd;
 								options.detailYN = $("#search_stts_cd3").val();
 								options.searchReq = $("#search_box").val();
 							} else {
-								options.endPicker = resultTime4;
-								options.startPicker = resultTime3;
+								options.endPicker02 = resultTime4;
+								options.startPicker02 = resultTime3;
 								options.searchSttsCdAPI = $("#search_stts_cd_api").val();
 								options.ErrorCd = $("#search_stts_cd_error").val();
 							}
