@@ -52,16 +52,16 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 	@Override
 	public Map<String, Object> area(Map<String, Object> paramsMap) {
 		Map<String, Object> result = new HashMap<>();
-			Map<String, Object> area  = companyManageDao.selectArea(paramsMap);
-			result.put("ctpvNm", area.get("ctpv_nm"));
-			result.put("sggNm", area.get("sgg_nm"));
+		Map<String, Object> area  = companyManageDao.selectArea(paramsMap);
+		result.put("ctpvNm", area.get("ctpv_nm"));
+		result.put("sggNm", area.get("sgg_nm"));
 		return result;
 	}
 
 	// 등록팝업 - 기본정보 (상위 사업자번호)
 	@Override
 	public List<Map<String, Object>> upBrno(Map<String, Object> paramsMap) {
-	return companyManageDao.selectUpBrno(paramsMap);
+		return companyManageDao.selectUpBrno(paramsMap);
 	}
 
 	// 검색옵션 - 승인상태(전체)
@@ -75,7 +75,7 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 	public List<Map<String, Object>> searchBsnStts(Map<String, Object> paramsMap) {
 		return companyManageDao.searchBsnStts(paramsMap);
 	}
-	
+
 	// 검색옵션 - 권한(전체)
 	@Override
 	public List<Map<String, Object>> authSelected(Map<String, Object> paramsMap) {
@@ -170,22 +170,22 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 
 		paramsMap.put("autzrSn", getUserSn());
 		paramsMap.put("rgtrSn", getUserSn());
-        paramsMap.put("regIp", getClientIP());
+		paramsMap.put("regIp", getClientIP());
 
-        Map<String, Object> offList = new HashMap<>();
-        String bzmnSeCd = (String) paramsMap.get("bzmnSeCd");
-        String upBrno = (String) paramsMap.get("upBrno");
-        offList.put("bzmnSeCd", bzmnSeCd);
-        offList.put("upBrno", upBrno);
+		Map<String, Object> offList = new HashMap<>();
+		String bzmnSeCd = (String) paramsMap.get("bzmnSeCd");
+		String upBrno = (String) paramsMap.get("upBrno");
+		offList.put("bzmnSeCd", bzmnSeCd);
+		offList.put("upBrno", upBrno);
 
-        if(upBrno != null) {
-        	int offiSn = companyManageDao.selectOffiSn(offList);
-        	paramsMap.put("offiSn", offiSn);
-        }else {
-        	paramsMap.put("offiSn", null);
-        }
+		if(upBrno != null) {
+			int offiSn = companyManageDao.selectOffiSn(offList);
+			paramsMap.put("offiSn", offiSn);
+		}else {
+			paramsMap.put("offiSn", null);
+		}
 
-        int cmpny = companyManageDao.insertCmpny(paramsMap);
+		int cmpny = companyManageDao.insertCmpny(paramsMap);
 
 		if(cmpny > 0) {
 			result.put("message", "사업자 등록이 완료되었습니다.");
@@ -204,52 +204,50 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 		Map<String, Object> hsParam = paramsMap.get(1);
 		updateCommonParams(orgParam,hsParam);
 
-        String bzmnSeCd = (String) orgParam.get("bzmnSeCd");
-        String upBrno = (String) orgParam.get("upBrno");
-        String offiSn1 = (String) orgParam.get("offiSn");
+		String bzmnSeCd = (String) orgParam.get("bzmnSeCd");
+		String upBrno = (String) orgParam.get("upBrno");
+		String offiSn1 = (String) orgParam.get("offiSn");
 
-        if(bzmnSeCd.equals("2") && offiSn1 == null) {
-        	Map<String, Object> offList = new HashMap<>();
-        	offList.put("bzmnSeCd", bzmnSeCd);
-            offList.put("upBrno", upBrno);
+		if(bzmnSeCd.equals("2") && offiSn1 == null) {
+			Map<String, Object> offList = new HashMap<>();
+			offList.put("bzmnSeCd", bzmnSeCd);
+			offList.put("upBrno", upBrno);
 
-            int offiSn = companyManageDao.selectOffiSn(offList);
-            orgParam.put("offiSn", offiSn);
-            hsParam.put("offiSn", offiSn);
-        } else {
-        	orgParam.put("offiSn", null);
-        	hsParam.put("offiSn", null);
-        }
+			int offiSn = companyManageDao.selectOffiSn(offList);
+			orgParam.put("offiSn", offiSn);
+			hsParam.put("offiSn", offiSn);
+		} else {
+			orgParam.put("offiSn", null);
+			hsParam.put("offiSn", null);
+		}
 
-    	int updateCmpny = companyManageDao.updateCmpny(orgParam);
+		int updateCmpny = companyManageDao.updateCmpny(orgParam);
 
-    	if(updateCmpny > 0) {
-    		if(!orgParam.get("regCmptncCd").equals(hsParam.get("regCmptncCd"))) {
-    			// 하위 사용자 관할코드 수정
-    			companyManageDao.updateUserCmptnc(orgParam);
-    		}
+		if(updateCmpny > 0) {
+			if(!orgParam.get("regCmptncCd").equals(hsParam.get("regCmptncCd"))) {
+				// 하위 사용자 관할코드 수정
+				companyManageDao.updateUserCmptnc(orgParam);
+			}
 
-    		companyManageDao.insertCmpnyHs(hsParam); // 히스토리 insert
-    		// 사용자 중치처리
-    		if(orgParam.get("bsnSttsCd").equals("3")) {
-    			orgParam.put("mdfrSn", getUserSn());
-    			orgParam.put("mdfcnIp", getClientIP());
-    			companyManageDao.cmpUserStop(orgParam);
-    		}
-	       	result.put("message", "사업자 수정이 완료되었습니다.");
+			companyManageDao.insertCmpnyHs(hsParam); // 히스토리 insert
+			// 사용자 중치처리
+			if(orgParam.get("bsnSttsCd").equals("3")) {
+				orgParam.put("mdfrSn", getUserSn());
+				orgParam.put("mdfcnIp", getClientIP());
+				companyManageDao.cmpUserStop(orgParam);
+			}
+			result.put("message", "사업자 수정이 완료되었습니다.");
 			return result;
-    	} else {
-        	result.put("message", "에러");
-    		return result;
-        }
+		} else {
+			result.put("message", "에러");
+			return result;
+		}
 	}
 
 
 	// 상황별 : openAPI를 이용한 사업자등록정보 상태 업데이트(server측 openAPI 요청)
 	@Override
 	public Map<String, Object> updateCmpnyBrnoBySituation(List<Map<String, Object>> paramsMap) throws UnsupportedEncodingException {
-		String selectedBsnSttsCd ="";
-		String bStt ="";
 		Map<String, Object> result = new HashMap<>();
 		Map<String, Object> orgParam = paramsMap.get(0); // 마스터 입력 데이터
 		String brno = (String) orgParam.get("brno");
@@ -260,7 +258,7 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 
 		// 해당일련번호가 agency 마스터테이블에 있을 경우만 update
 		Map<String, Object>	choiceBrnoInfo = companyManageDao.choiceBrno(orgParam);
-		selectedBsnSttsCd = (String) choiceBrnoInfo.get("bsnSttsNm");
+		String selectedBsnSttsCd = (String) choiceBrnoInfo.get("bsnSttsNm");
 		if( choiceBrnoInfo != null ) {
 			Map<String, Object> hsParam = paramsMap.get(1); // 마스터일 경우만 데이터 존재함 , 히스토리 입력 데이터
 			updateCommonParams(orgParam,hsParam);
@@ -289,7 +287,8 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 			}
 			// 사업자 등록 상태 코드 및 명칭 변경 { api 응답 :  계속사업자(01), 휴업(02), 폐업(03)}
 			updateBusinessStatus(orgParam, hsParam, ApiResponseData);
-			bStt = (String) hsParam.get("bStt");
+			String bStt = (String) hsParam.get("bStt");
+
 			// api요청한 영업상태와 기존 영업상태가 다를 때만 사업자 및 사업자 히스토리 업데이트 발생
 			if(!bStt.equals(selectedBsnSttsCd)){
 				// 사업자등록정보 상태 업데이트
@@ -344,19 +343,19 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 		return response.getBody();
 	}
 
+
+
 	// 사업자 등록 상태 코드 및 명칭 변경 { api 응답 :  계속사업자(01), 휴업(02), 폐업(03)}
 	private void updateBusinessStatus(Map<String, Object> orgParam, Map<String, Object> hsParam ,List<Map<String, Object>> data) {
 		String bsnSttsCd = (String) data.get(0).get("b_stt_cd");
 		String bStt = (String) data.get(0).get("b_stt");
 		String taxType = (String) data.get(0).get("tax_type"); //"국세청에 등록되지 않은 사업자등록번호입니다."
-		if ("계속사업자".equals(bStt) && "01".equals(bsnSttsCd)) { // 계속 사업자
+		if ("계속사업자".equals(bStt) && "01".equals(bsnSttsCd)) {
 			bStt = "정상";
 			bsnSttsCd = "0";
-		} else if ("휴업자".equals(bStt) && "02".equals(bsnSttsCd)) { // 휴업자
-			bStt = "휴업";
+		} else if ("휴업".equals(bStt) && "02".equals(bsnSttsCd)) {
 			bsnSttsCd = "1";
-		} else if ("폐업자".equals(bStt) && "03".equals(bsnSttsCd)) { // 폐업자
-			bStt = "폐업";
+		} else if ("폐업".equals(bStt) && "03".equals(bsnSttsCd)) {
 			bsnSttsCd = "3";
 		} else if("".equals(bStt) && "".equals(bsnSttsCd) && taxType.equals("국세청에 등록되지 않은 사업자등록번호입니다.")){
 			bsnSttsCd = "70"; // 사업자번호 오류 코드  response :bsnSttsCd 값이 null임
@@ -370,6 +369,7 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 		hsParam.put("bStt", bStt);
 		hsParam.put("taxType", taxType);
 	}
+
 
 
 	private void updateCommonParams(Map<String, Object> orgParam, Map<String, Object> hsParam) {
@@ -388,30 +388,30 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 		Map<String, Object> cmpnyUpdatMap = new HashMap<>();
 
 		paramsMap.put("rgtrSn", getUserSn());
-        paramsMap.put("regIp", getClientIP());
-        String bzmnSn = (String) paramsMap.get("bzmnSn");
-        cmpnyUpdatMap.put("mdfrSn", getUserSn());
-        cmpnyUpdatMap.put("mdfcnIp", getClientIP());
-        cmpnyUpdatMap.put("bzmnSn", bzmnSn);
+		paramsMap.put("regIp", getClientIP());
+		String bzmnSn = (String) paramsMap.get("bzmnSn");
+		cmpnyUpdatMap.put("mdfrSn", getUserSn());
+		cmpnyUpdatMap.put("mdfcnIp", getClientIP());
+		cmpnyUpdatMap.put("bzmnSn", bzmnSn);
 
-        // 요청 일련번호
-        String dmndSn = companyManageDao.selectDmndSn(paramsMap);
+		// 요청 일련번호
+		String dmndSn = companyManageDao.selectDmndSn(paramsMap);
 
-        if(dmndSn != null) {
-        	paramsMap.put("dmndSn", dmndSn);
-        	// 요청테이블 반려
-	        int updateRequestCompanion = companyManageDao.updateRequestCompanion(paramsMap);
-	        if(updateRequestCompanion > 0) {
-	        	result.put("message", "반려 처리가 되었습니다.");
+		if(dmndSn != null) {
+			paramsMap.put("dmndSn", dmndSn);
+			// 요청테이블 반려
+			int updateRequestCompanion = companyManageDao.updateRequestCompanion(paramsMap);
+			if(updateRequestCompanion > 0) {
+				result.put("message", "반려 처리가 되었습니다.");
 				return result;
-	        }else {
-	        	result.put("message", "에러");
+			}else {
+				result.put("message", "에러");
 				return result;
-	        }
-        }else {
-        	result.put("message", "에러");
+			}
+		}else {
+			result.put("message", "에러");
 			return result;
-        }
+		}
 	}
 
 	// 사업자 관리 승인 - 수정 요청
@@ -422,72 +422,29 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 
 		paramsMap.put("autzrSn", getUserSn());
 		paramsMap.put("rgtrSn", getUserSn());
-        paramsMap.put("regIp", getClientIP());
-        paramsMap.put("rjctSn", null);
-    	paramsMap.put("rjctDt", null);
-
-    	String bzmnSeCd = (String) paramsMap.get("bzmnSeCd");
-        String upBrno = (String) paramsMap.get("upBrno");
-        String offiSn1 = (String) paramsMap.get("offiSn");
-
-        if (bzmnSeCd.equals("2") && offiSn1 == null) {
-            Map<String, Object> offList = new HashMap<>();
-        	offList.put("bzmnSeCd", bzmnSeCd);
-            offList.put("upBrno", upBrno);
-
-            int offiSn = companyManageDao.selectOffiSn(offList);
-        	paramsMap.put("offiSn", offiSn);
-        }
-
-        int cmpny = companyManageDao.updateCmpny(paramsMap);
-
-    	if(cmpny > 0) {
-    		int deleteRequestCmpny = companyManageDao.deleteRequestCmpny(paramsMap);
-    		companyManageDao.insertCmpnyHs(paramsMap);
-
-    		if(deleteRequestCmpny > 0) {
-	    		result.put("message", "승인 처리가 되었습니다.");
-	    		return result;
-    		} else {
-        		result.put("message", "에러");
-        		return result;
-        	}
-    	} else {
-    		result.put("message", "에러");
-    		return result;
-    	}
-	}
-	
-	// 사업자 관리 승인 - 등록 요청
-	@Override
-	public Map<String, Object> insertRequestApproval(Map<String, Object> paramsMap) {
-		
-		Map<String, Object> result = new HashMap<>();
-		
-		paramsMap.put("autzrSn", getUserSn());
-		paramsMap.put("rgtrSn", getUserSn());
 		paramsMap.put("regIp", getClientIP());
 		paramsMap.put("rjctSn", null);
 		paramsMap.put("rjctDt", null);
-		
+
 		String bzmnSeCd = (String) paramsMap.get("bzmnSeCd");
 		String upBrno = (String) paramsMap.get("upBrno");
 		String offiSn1 = (String) paramsMap.get("offiSn");
-		
+
 		if (bzmnSeCd.equals("2") && offiSn1 == null) {
 			Map<String, Object> offList = new HashMap<>();
 			offList.put("bzmnSeCd", bzmnSeCd);
 			offList.put("upBrno", upBrno);
-			
+
 			int offiSn = companyManageDao.selectOffiSn(offList);
 			paramsMap.put("offiSn", offiSn);
 		}
-		
-		int cmpny = companyManageDao.insertCmpny(paramsMap);
-		
+
+		int cmpny = companyManageDao.updateCmpny(paramsMap);
+
 		if(cmpny > 0) {
 			int deleteRequestCmpny = companyManageDao.deleteRequestCmpny(paramsMap);
-			
+			companyManageDao.insertCmpnyHs(paramsMap);
+
 			if(deleteRequestCmpny > 0) {
 				result.put("message", "승인 처리가 되었습니다.");
 				return result;
@@ -501,14 +458,57 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 		}
 	}
 
-	
+	// 사업자 관리 승인 - 등록 요청
+	@Override
+	public Map<String, Object> insertRequestApproval(Map<String, Object> paramsMap) {
+
+		Map<String, Object> result = new HashMap<>();
+
+		paramsMap.put("autzrSn", getUserSn());
+		paramsMap.put("rgtrSn", getUserSn());
+		paramsMap.put("regIp", getClientIP());
+		paramsMap.put("rjctSn", null);
+		paramsMap.put("rjctDt", null);
+
+		String bzmnSeCd = (String) paramsMap.get("bzmnSeCd");
+		String upBrno = (String) paramsMap.get("upBrno");
+		String offiSn1 = (String) paramsMap.get("offiSn");
+
+		if (bzmnSeCd.equals("2") && offiSn1 == null) {
+			Map<String, Object> offList = new HashMap<>();
+			offList.put("bzmnSeCd", bzmnSeCd);
+			offList.put("upBrno", upBrno);
+
+			int offiSn = companyManageDao.selectOffiSn(offList);
+			paramsMap.put("offiSn", offiSn);
+		}
+
+		int cmpny = companyManageDao.insertCmpny(paramsMap);
+
+		if(cmpny > 0) {
+			int deleteRequestCmpny = companyManageDao.deleteRequestCmpny(paramsMap);
+
+			if(deleteRequestCmpny > 0) {
+				result.put("message", "승인 처리가 되었습니다.");
+				return result;
+			} else {
+				result.put("message", "에러");
+				return result;
+			}
+		} else {
+			result.put("message", "에러");
+			return result;
+		}
+	}
+
+
 	/**
 	 * 사업소/사용자/차량 현황 버튼
 	 *
 	 * @param paramsMap
 	 * @return
 	 * @throws RimsException
-	 */		
+	 */
 	// 사업소 현황
 	@Override
 	public Map<String, Object> selectOfficeDetailInfo(Map<String, Object> paramsMap) {
@@ -526,29 +526,29 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 	@Override
 	public Map<String, Object> selectUserCmp(Map<String, Object> paramsMap) {
 		Map<String, Object> result = new HashMap<>();
-		
+
 		List<Map<String, Object>> data = companyManageDao.selectUserCmp(paramsMap);
 		int total = companyManageDao.selectUserCmpCnt(paramsMap);
-		
+
 		result.put("data", data);
 		result.put("total", total);
-		
+
 		return result;
 	}
 	// 차량 현황
 	@Override
 	public Map<String, Object> findCarCmp(Map<String, Object> paramsMap) {
 		Map<String, Object> result = new HashMap<>();
-		
+
 		List<Map<String, Object>> data = companyManageDao.findCarCmp(paramsMap);
 		int total = companyManageDao.findCarCmpCnt(paramsMap);
-		
+
 		result.put("data", data);
 		result.put("total", total);
-		
+
 		return result;
 	}
-	
+
 
 	// 이관팝업-지자체조회
 	@Override
@@ -563,26 +563,26 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 
 		paramsMap.put("rqstrSn", getUserSn()); //요청자
 		paramsMap.put("rgtrSn", getUserSn()); //등록자
-        paramsMap.put("regIp", getClientIP());
-        paramsMap.put("rjctSn", null);
-    	paramsMap.put("rjctDt", null);
+		paramsMap.put("regIp", getClientIP());
+		paramsMap.put("rjctSn", null);
+		paramsMap.put("rjctDt", null);
 
 		int insertCmpnyHs = companyManageDao.insertCmpnyHs(paramsMap);
 
-        if(insertCmpnyHs > 0) {
+		if(insertCmpnyHs > 0) {
 			int insertRequestCmpny = companyManageDao.insertRequestCmpny(paramsMap);
 
 			if(insertRequestCmpny > 0) {
-    			result.put("message", "지자체 이관 요청 처리가 되었습니다.");
-    			return result;
+				result.put("message", "지자체 이관 요청 처리가 되었습니다.");
+				return result;
 			}else {
-    			result.put("message", "에러");
-    			return result;
-    		}
-        }else {
-        	result.put("message", "에러");
+				result.put("message", "에러");
+				return result;
+			}
+		}else {
+			result.put("message", "에러");
 			return result;
-        }
+		}
 	}
 
 	// 상세팝업-이관요청여부
@@ -609,31 +609,31 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 
 		paramsMap.put("autzrSn", getUserSn());
 		paramsMap.put("rgtrSn", getUserSn());
-        paramsMap.put("regIp", getClientIP());
-        paramsMap.put("rjctSn", null);
-    	paramsMap.put("rjctDt", null);
+		paramsMap.put("regIp", getClientIP());
+		paramsMap.put("rjctSn", null);
+		paramsMap.put("rjctDt", null);
 
-        int updateCmpny = companyManageDao.updateCmpny(paramsMap);
+		int updateCmpny = companyManageDao.updateCmpny(paramsMap);
 
-    	if(updateCmpny > 0) {
-    		
-    		// 하위 사용자 관할코드 수정
-    		companyManageDao.updateUserCmptnc(paramsMap);
-    		
-    		companyManageDao.insertCmpnyHs(paramsMap);
-    		int deleteRequestCmpny = companyManageDao.deleteRequestCmpny(paramsMap);
+		if(updateCmpny > 0) {
 
-    		if(deleteRequestCmpny > 0) {
-	    		result.put("message", "승인 처리가 되었습니다.");
-	    		return result;
-    		} else {
-        		result.put("message", "에러");
-        		return result;
-        	}
-    	} else {
-    		result.put("message", "에러");
-    		return result;
-    	}
+			// 하위 사용자 관할코드 수정
+			companyManageDao.updateUserCmptnc(paramsMap);
+
+			companyManageDao.insertCmpnyHs(paramsMap);
+			int deleteRequestCmpny = companyManageDao.deleteRequestCmpny(paramsMap);
+
+			if(deleteRequestCmpny > 0) {
+				result.put("message", "승인 처리가 되었습니다.");
+				return result;
+			} else {
+				result.put("message", "에러");
+				return result;
+			}
+		} else {
+			result.put("message", "에러");
+			return result;
+		}
 	}
 
 	// 상세팝업-반려확인
@@ -642,55 +642,55 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 		Map<String, Object> result = new HashMap<>();
 
 		paramsMap.put("mdfrSn", getUserSn());
-        paramsMap.put("mdfcnIp", getClientIP());
+		paramsMap.put("mdfcnIp", getClientIP());
 
-        // 요청 일련번호
-        String dmndSn = companyManageDao.selectDmndSn(paramsMap);
+		// 요청 일련번호
+		String dmndSn = companyManageDao.selectDmndSn(paramsMap);
 
-        if(dmndSn != null) {
-        	paramsMap.put("dmndSn", dmndSn);
+		if(dmndSn != null) {
+			paramsMap.put("dmndSn", dmndSn);
 
-        	// 요청테이블 반려
-	        int updateRequestCompanionChk = companyManageDao.updateRequestCompanionChk(paramsMap);
+			// 요청테이블 반려
+			int updateRequestCompanionChk = companyManageDao.updateRequestCompanionChk(paramsMap);
 
-	        if(updateRequestCompanionChk > 0) {
+			if(updateRequestCompanionChk > 0) {
 
-	        	result.put("message", "반려 확인이 되었습니다.");
+				result.put("message", "반려 확인이 되었습니다.");
 				return result;
 
-	        }else {
-	        	result.put("message", "에러");
+			}else {
+				result.put("message", "에러");
 				return result;
-	        }
-        }else {
-        	result.put("message", "에러");
+			}
+		}else {
+			result.put("message", "에러");
 			return result;
-        }
+		}
 	}
-	
+
 	// 상세팝업 - 삭제
 	@Override
 	public Map<String, Object> deleteCmpny(Map<String, Object> paramsMap) {
 		Map<String, Object> result = new HashMap<>();
-		
+
 		String authrtCd = getAuthrtCd();
 		paramsMap.put("rqstrSn", getUserSn()); //요청자
 		paramsMap.put("rgtrSn", getUserSn()); //등록자
-        paramsMap.put("regIp", getClientIP());
-        paramsMap.put("rjctSn", null);
-    	paramsMap.put("rjctDt", null);
-    	paramsMap.put("mdfrSn", getUserSn());
-        paramsMap.put("mdfcnIp", getClientIP());
-        
+		paramsMap.put("regIp", getClientIP());
+		paramsMap.put("rjctSn", null);
+		paramsMap.put("rjctDt", null);
+		paramsMap.put("mdfrSn", getUserSn());
+		paramsMap.put("mdfcnIp", getClientIP());
+
 		if(authrtCd.equals("K01") || authrtCd.equals("Z01")) {
-			
+
 			paramsMap.put("delYn", "Y");
 //			System.out.println("deleteCmpny =========================== " + paramsMap);
 			int masterCmpny = companyManageDao.deleteCmpny(paramsMap);  // 마스터 delete
 
-	        if(masterCmpny > 0) {
-	        	
-	        	int insertCmpnyHs = companyManageDao.insertCmpnyHs(paramsMap); // 히스토리 insert
+			if(masterCmpny > 0) {
+
+				int insertCmpnyHs = companyManageDao.insertCmpnyHs(paramsMap); // 히스토리 insert
 
 				if(insertCmpnyHs > 0) {
 					result.put("message", "사업자 정보가 정상적으로 삭제 되었습니다.");
