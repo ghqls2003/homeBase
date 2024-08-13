@@ -294,16 +294,16 @@ var expryYmd;
 				{ value: "E1", text: "정상" },
 				{ value: "E2", text: "에러" }
 			];
-			$("#search_stts_cd_error").kendoDropDownList({
-				dataTextField: "text",
-				dataSource: searchOtherCondition3,
-				dataValueField: "E1"
-			});
-			var searchOtherCondition3 = [
-//				{ value: "", text: "에러유무 (선택)" },
+			var searchOtherCondition4 = [
+				{ value: "", text: "에러유무 (선택)" },
 				{ value: "E1", text: "정상" },
 				{ value: "E2", text: "에러" }
 			];
+			$("#search_stts_cd_error").kendoDropDownList({
+				dataTextField: "text",
+				dataSource: searchOtherCondition4,
+				dataValueField: "value",
+			});
 			//			$("#search_stts_cd_error_dev").kendoDropDownList({
 			//				dataTextField: "text",
 			//				dataSource: searchOtherCondition3,
@@ -349,7 +349,7 @@ var expryYmd;
 							var endtime2 = $("#end-Picker02").val();
 							var resultTime3 = startTime2.replace(/-/g, '')
 							var resultTime4 = endtime2.replace(/-/g, '')
-							if (Auth == 'K01' || Auth == 'D01' || Auth == 'Z01' || Auth == 'S04') {
+							if (Auth == 'K01' || Auth == 'D01' || Auth == 'Z01') {
 								options.endPicker02 = resultTime2;
 								options.startPicker02 = resultTime;
 								options.searchSttsCd = $("#search_stts_cd").val();
@@ -360,7 +360,7 @@ var expryYmd;
 								options.endPicker02 = resultTime4;
 								options.startPicker02 = resultTime3;
 								options.searchSttsCdAPI = $("#search_stts_cd_api").val();
-								options.ErrorCd = $("#search_stts_cd_error").val();
+								options.detailYN = $("#search_stts_cd_error").val();
 							}
 							return JSON.stringify(options);
 						}
