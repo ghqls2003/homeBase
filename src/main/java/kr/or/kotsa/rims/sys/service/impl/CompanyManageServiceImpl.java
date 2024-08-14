@@ -303,7 +303,6 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 					// 현재 날짜
 					hsParam.put("bsnSttsMdfcnDt",formatedNow);
 					companyManageDao.insertCmpnyHs(hsParam);
-
 					if(hsParam.get("bsnSttsCd").equals("70")){
 						result.put("message", "영업상태 : 국세청에 등록되지 않은 사업자등록번호입니다. (기준일시 : "+updateDt+")");
 					}else{
@@ -343,8 +342,6 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 		return response.getBody();
 	}
 
-
-
 	// 사업자 등록 상태 코드 및 명칭 변경 { api 응답 :  계속사업자(01), 휴업(02), 폐업(03)}
 	private void updateBusinessStatus(Map<String, Object> orgParam, Map<String, Object> hsParam ,List<Map<String, Object>> data) {
 		String bsnSttsCd = (String) data.get(0).get("b_stt_cd");
@@ -354,10 +351,13 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 			bStt = "정상";
 			bsnSttsCd = "0";
 		} else if ("휴업".equals(bStt) && "02".equals(bsnSttsCd)) {
+			bStt = "휴업";
 			bsnSttsCd = "1";
 		} else if ("폐업".equals(bStt) && "03".equals(bsnSttsCd)) {
+			bStt = "폐업";
 			bsnSttsCd = "3";
 		} else if("".equals(bStt) && "".equals(bsnSttsCd) && taxType.equals("국세청에 등록되지 않은 사업자등록번호입니다.")){
+			bStt = "사업자번호오류";
 			bsnSttsCd = "70"; // 사업자번호 오류 코드  response :bsnSttsCd 값이 null임
 		}else {
 			bsnSttsCd = "9"; // 기타
