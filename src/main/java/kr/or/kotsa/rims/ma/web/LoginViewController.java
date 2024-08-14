@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
+import kr.or.kotsa.rims.cmmn.biz.LoginVO;
 import kr.or.kotsa.rims.cmmn.biz.service.CmmnService;
 import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
 import kr.or.kotsa.rims.ma.service.LoginViewService;
@@ -225,7 +227,21 @@ public class LoginViewController {
 					userData.put("setInOut", "I");
 					userData.put("lgnType", "1");
 					loginViewDao.insertLoginLog(userData, isLogin, httpServletRequest);
-					mav.setViewName("redirect:/");
+					
+					
+					String authrtCd = (String) resultMap.get("authrtCd");
+					//authrtCd = "S01";
+					
+					if ("S01".equals(authrtCd) || "S02".equals(authrtCd)) {
+						if ("Y".equals(resultMap.get("prvcPrcsAgreYn")) && resultMap.get("prvcPrcsAgreDt") != null) {
+							mav.setViewName("redirect:/");	
+						} else {
+							mav.setViewName("ma/PTSterms");
+							return mav;
+						}
+					}else {
+						mav.setViewName("redirect:/");
+					}
 				} else {
 			        mav.setViewName("redirect:/ma/login");
 			        session.setAttribute("message", "계정의 승인 상태를 확인하여 주세요.");

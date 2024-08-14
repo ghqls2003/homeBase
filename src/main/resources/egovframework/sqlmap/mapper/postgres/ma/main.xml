@@ -228,15 +228,55 @@
 	<select id="selectSvrStat" resultType="resultMap">
 		<!-- api 서버 상태 -->
 		SELECT
-			TO_CHAR(crtrtm, 'YYYY-MM-DD') AS crtrtm
-		,	COALESCE(chck_1, '-') AS chck_1
-		,	COALESCE(chck_2, '-') AS chck_2
-		,	COALESCE(chck_3, '-') AS chck_3
-		,	COALESCE(chck_4, '-') AS chck_4
-		,	COALESCE(chck_5, '-') AS chck_5
-		,	COALESCE(chck_6, '-') AS chck_6
-		,	rmrk
+				TO_CHAR(crtrtm, 'YYYY-MM-DD') AS crtrtm
+			 ,	COALESCE(chck_1, '-') AS chck_1
+			 ,	COALESCE(chck_2, '-') AS chck_2
+			 ,	COALESCE(chck_3, '-') AS chck_3
+			 ,	COALESCE(chck_4, '-') AS chck_4
+			 ,	COALESCE(chck_5, '-') AS chck_5
+			 ,	COALESCE(chck_6, '-') AS chck_6
+			 ,	rmrk
 		FROM
-			dvs_cmm_bs_svr_stat;
+				dvs_cmm_bs_svr_stat
 	</select>
+
+	<select id="stChartHour" resultType="resultMap">
+		SELECT
+				CONCAT(tmp_h.tmp_h, '시') AS hr,
+				COALESCE(h2.tot, 0) AS total
+		  FROM
+				(SELECT GENERATE_SERIES(0, 23)::TEXT AS tmp_h) tmp_h
+					LEFT OUTER JOIN
+				(
+				SELECT
+						h1.hr,
+						SUM(h1.tot) AS tot
+				  FROM
+					 (
+						SELECT
+								bzmn_sn
+							 ,	TO_CHAR(dt, 'yyyy-MM-dd') AS dt
+							 ,	hr
+							 ,	tot
+						FROM
+								dqvs.dvs_st_verf_hour
+						WHERE
+								dt = CURRENT_DATE
+					) AS h1
+				GROUP
+				   BY 	h1.hr
+			 	) AS h2
+				ON
+					tmp_h.tmp_h::NUMERIC = h2.hr
+		ORDER
+		   BY
+				tmp_h::NUMERIC
+	</select>
+
+	
+	<update id="updateAgre" parameterType="paraMap">
+	<!-- 개인정보보호 서약 처리 -->
+		update dvs_cmm_mt_user set prvc_prcs_agre_yn = #{termsAgre}, prvc_prcs_agre_dt = NOW()	
+		where user_sn = #{userSn} and reg_ip = #{regIp}
+	</update>
 </mapper>

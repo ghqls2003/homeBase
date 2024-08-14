@@ -19,6 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
+
+
+import org.apache.poi.util.SystemOutLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +33,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import kr.or.kotsa.rims.cmmn.biz.LoginVO;
 import kr.or.kotsa.rims.cmmn.biz.service.CmmnService;
 import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
 import kr.or.kotsa.rims.cmmn.sys.service.CmmnAbstractServiceImpl;
+import kr.or.kotsa.rims.ma.service.AuthService;
+import kr.or.kotsa.rims.ma.service.LoginViewService;
 import kr.or.kotsa.rims.ma.service.MainViewService;
 
 @Controller
@@ -56,6 +62,11 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 	@Autowired
 	private CmmnService cmmnService;
 	
+	
+	@Autowired
+	private AuthService authService;
+	
+	
 	/**
 	 * 메인 화면
 	 *
@@ -71,6 +82,7 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 		Boolean admstt = false;
 		String auth = getAuthrtCd(); 
 		
+		
 //		char firstChar = auth.charAt(0);
 		if(auth == "" || auth == null) {
 			guest = true;
@@ -79,12 +91,31 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 			if(firstChar == 'S' ) {
 				busine = true;
 			} else if (firstChar == 'M' || firstChar == 'G' || firstChar == 'K' || firstChar == 'Z' || firstChar == 'D' ){
-//				admstt = true;  // 완성되면 풀기
+				admstt = true;
 			}
 		}
 		String userType = isDevice(request);
 		
-		// 내부 WAS 체크용
+		
+//      이건 내부 WAS를 못잡더라		
+//		try {
+//            // 현재 호스트의 IP 주소 가져오기
+//            InetAddress inetAddress = InetAddress.getLocalHost();
+//            String inIp = request.getRemoteAddr();
+//            String ipAddress = inetAddress.getHostAddress();
+//            
+//            if(inIp == "10.149.150.59" || ipAddress == "10.149.150.59") {
+//            	mav.addObject("ipCheck", "W1");
+//            } else if(inIp == "10.149.150.60" || ipAddress == "10.149.150.60") {
+//            	mav.addObject("ipCheck", "W2");
+//            } else {
+//            	mav.addObject("ipCheck", "none");
+//            }
+//        } catch (UnknownHostException e) {
+//            e.printStackTrace();
+//        }
+		
+		
 		try {
 			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
 			
@@ -117,8 +148,6 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 			e.printStackTrace();
 		}
 		
-		
-		
 		mav.addObject("busine", busine);
 		mav.addObject("admstt", admstt);
 		mav.addObject("type", userType);
@@ -147,7 +176,6 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 	@RequestMapping("join")
 	public ModelAndView viewjoin(@RequestParam Map<String, Object> paramsMap, ModelAndView mav,
 			HttpServletRequest request, HttpServletResponse response) throws RimsException {
-
 		mav.setViewName("ma/join");
 		mav.addObject("error", request.getAttribute("error"));
 		return mav;
@@ -261,4 +289,27 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 			Thread.currentThread().interrupt();
 		}
 	}
+	
+	  /**
+     * 개인정보보호 보안 서약서 처리
+     *
+     * @param paramsMap
+     * @return
+     * @throws RimsException
+     */
+	@RequestMapping("main/updateTermsInfo")
+	@ResponseBody
+	public Object updateAgre(@RequestBody Map<String, Object> paramsMap, HttpServletRequest httpServletRequest) throws RimsException {
+		HttpSession httpSession = httpServletRequest.getSession();
+		paramsMap.put("userId", httpSession.getAttribute(SSO_ID).toString());
+		
+		Object userData = httpSession.getAttribute("userData");
+		Map<String, Object> userDataMap = (Map) userData;
+		
+		paramsMap.put("userSn", userDataMap.get("userSn"));
+		paramsMap.put("regIp", userDataMap.get("regIp"));
+		
+		int res = mainViewService.updateAgre(paramsMap);
+		return res;
+	} 
 }

@@ -180,6 +180,11 @@ public class MainViewServiceImpl extends CmmnAbstractServiceImpl implements Main
 	
    	}
 
+	/**
+	 * api 서버 상태 조회
+	 * @return
+	 * @throws RimsException
+	 */
 	@Override
 	public Map<String, Object> selectSvrStat() throws RimsException {
 	   Map<String, Object> result = new HashMap<>();
@@ -195,6 +200,20 @@ public class MainViewServiceImpl extends CmmnAbstractServiceImpl implements Main
 	   }
 	   return result;
 	}
+	
+	  /**
+     * 개인정보보호 서약 처리
+     * @param paramsMap
+     * @return
+     * @throws RimsException
+     */
+	@Override
+    public int updateAgre(Map<String, Object> paramsMap) throws RimsException {
+	    return mainViewDao.updateAgre(paramsMap);
+	}
+	
+	
+	
    	
 }
    	

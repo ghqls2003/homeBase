@@ -44,9 +44,20 @@ public interface MainViewService {
    	 */
    public List<Map<String, Object>> selectMainPopup(String authrtCd) throws RimsException ;
 
+	/**
+	 * api 서버 상태 조회
+	 * @return
+	 * @throws RimsException
+	 */
    public Map<String, Object> selectSvrStat() throws RimsException ;
-
-
+   
+   /**
+    * 개인정보보호 서약 처리
+    * @param paramsMap
+    * @return
+    * @throws RimsException
+    */
+   int updateAgre(Map<String, Object> paramsMap) throws RimsException;
 
 
 }
