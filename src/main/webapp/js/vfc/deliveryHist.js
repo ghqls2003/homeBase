@@ -159,7 +159,7 @@
                { field: "vrfcDmndDt",  title: "확인요청일시", width: "150px", template: "#= vrfcDmndDt != null ? $delivery.ui.dateFomat(vrfcDmndDt) : '-' #"},
                { field: "vrfcMthd",    title: "확인방법",     width: "130px", template: "#= vrfcMthd != null ? vrfcMthd : '-' #"},
                { field: "resNm",       title: "확인결과",     width: "150px", template: "#= verifyNm != null ? verifyNm : '-' #"},
-               { field: "rqstrNm",     title: "요청자",       width: "150px", template: "#= rqstrNm != null ? rqstrNm : '-' #"},
+//               { field: "rqstrNm",     title: "요청자",       width: "150px", template: "#= rqstrNm != null ? rqstrNm : '-' #"},
                { field: "coNm",        title: "회사명",   width: "150px", template: "#= coNm != null ? coNm : '-' #"}
             ],
             dataBound: function(){
