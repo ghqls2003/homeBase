@@ -740,12 +740,15 @@
          * @author       : 김경룡
          */
 		delYn: function() {
-			$('#delYn').change(function() {
-	            if ($(this).is(':checked')) {
-	                $(this).val('Y');
-	            } else {
-	                $(this).val('');
-	            }
+			$('#delYn').kendoDropDownList({
+				optionLabel: "삭제여부(전체)",
+				dataTextField: "text",
+				dataValueField: "value",
+				dataSource: [
+					{value: "Y", text: "삭제"},
+					{value: "N", text: "미삭제"},
+				],
+				value: "value"
 			});
 		}		
 	};
@@ -1646,6 +1649,11 @@
 					$(".update_top_info").hide();
 					$(".insert_top_info").hide();
 
+					if(master.del_yn == 'Y') {
+						$(".deleteBtn").hide();
+					} else {
+						$(".deleteBtn").show();
+					}
 					if (request != null && request.closed_yn != 'Y' && rowStts != '승인') {
 						$cmpnymanage.event.detailInfo(request);
 						$(".modifiable").hide();
