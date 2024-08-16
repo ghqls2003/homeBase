@@ -218,7 +218,6 @@ public class DriveController extends CmmnAbstractServiceImpl {
 		Map<String,Object> resultMap = new HashMap<>();
 		String f_rtn_cd ="";
 		String userType = isDevice(request);
-
 		if(userType == "MOBI") {
 			poket = "2";
 		} else {
@@ -300,7 +299,6 @@ public class DriveController extends CmmnAbstractServiceImpl {
 				connection.disconnect();
 			}
 		}
-
 		return response;
 	}
 

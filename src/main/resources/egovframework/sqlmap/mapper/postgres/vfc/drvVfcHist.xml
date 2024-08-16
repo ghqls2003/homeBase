@@ -12,15 +12,15 @@
         , vrfc_hstry_sn
         , rqstr_sn
         , drma.co_nm
-<!-- 		, case -->
-<!-- 		    WHEN vrfc_mthd = '4' THEN  -->
-<!-- 		    	REPEAT('*', LENGTH(viui.sso_user_nm)) -->
-<!-- 			when viui.sso_user_nm is not null then -->
-<!-- 				concat(left(viui.sso_user_nm, 1), repeat('*', length(viui.sso_user_nm) - 2), right(viui.sso_user_nm, 1)) -->
-<!-- 			when viui.onepass_user_nm is not null then -->
-<!-- 				concat(left(viui.onepass_user_nm, 1), repeat('*', length(viui.onepass_user_nm) - 2), right(viui.onepass_user_nm, 1)) -->
-<!-- 			else null -->
-<!-- 		end as rqstr_nm -->
+ 		, case
+ 		    WHEN vrfc_mthd = '4' THEN
+ 		    	REPEAT('*', LENGTH(viui.sso_user_nm))
+ 			when viui.sso_user_nm is not null then
+ 				concat(left(viui.sso_user_nm, 1), repeat('*', length(viui.sso_user_nm) - 2), right(viui.sso_user_nm, 1))
+ 			when viui.onepass_user_nm is not null then
+ 				concat(left(viui.onepass_user_nm, 1), repeat('*', length(viui.onepass_user_nm) - 2), right(viui.onepass_user_nm, 1))
+ 			else null
+ 		end as rqstr_nm
 		, '*******' || SUBSTRING(dqvs.pca_decrypt(dln, '150'), 8) AS dln
         , brdt
         , lcns_asort_cd
