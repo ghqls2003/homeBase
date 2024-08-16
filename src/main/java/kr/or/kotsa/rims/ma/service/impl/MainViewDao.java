@@ -94,4 +94,23 @@ public class MainViewDao extends CmmnAbstractMapper {
 	public List<Map<String, Object>> selectSvrStat() throws RimsException {
 		return selectList("ma.main.selectSvrStat");
 	}
+	
+    /**
+     * 개인정보보호 서약 처리
+     * @param paramsMap
+     * @return
+     * @throws RimsException
+     */
+    public int updateAgre(Map<String, Object> paramsMap) throws RimsException {
+        return update("ma.main.updateAgre", paramsMap);
+    }
+
+	/**
+	 * 시간별 API 요청 건수 조회
+	 * @return
+	 * @throws RimsException
+	 */
+	public List<Map<String, Object>> selectStChartHour() throws RimsException{
+		return selectList("ma.main.selectStChartHour");
+	}
 }

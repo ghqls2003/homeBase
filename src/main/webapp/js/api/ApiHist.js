@@ -23,7 +23,7 @@ var expryYmd;
 		 */
 		pageLoad: function() {
 
-			if (Auth == 'K01' || Auth == 'D01' || Auth == 'Z01' || Auth == 'S04') {
+			if (Auth == 'K01' || Auth == 'D01' || Auth == 'Z01' ) {
 				$("#tabview1").show();
 				$("#tabview2").hide();
 				$("#search_area_Dev").hide();
@@ -132,24 +132,24 @@ var expryYmd;
 					}
 				}
 			});
-//			$("#start-Picker02").kendoDatePicker({
-//				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7),
-//				dateInput: true,
-//				format: "yyyy-MM-dd",
-//				parseFormats: ["yyyy-MM-dd"],
-//				max: new Date(),
-//				change: function() {
-//					var startDate = this.value();
-//					var endDatePicker = $("#end-Picker02").data("kendoDatePicker");
-//
-//					if (startDate) {
-//						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 7);
-//						endDatePicker.min(startDate);
-//						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
-//						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
-//					}
-//				}
-//			});
+			//			$("#start-Picker02").kendoDatePicker({
+			//				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7),
+			//				dateInput: true,
+			//				format: "yyyy-MM-dd",
+			//				parseFormats: ["yyyy-MM-dd"],
+			//				max: new Date(),
+			//				change: function() {
+			//					var startDate = this.value();
+			//					var endDatePicker = $("#end-Picker02").data("kendoDatePicker");
+			//
+			//					if (startDate) {
+			//						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 7);
+			//						endDatePicker.min(startDate);
+			//						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
+			//						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
+			//					}
+			//				}
+			//			});
 
 			$("#end_Picker_Dev01").kendoDatePicker({
 				value: new Date(),
@@ -238,7 +238,7 @@ var expryYmd;
 
 		selectSearchData: function() {
 			var searchOtherCondition = [
-//				{ value: "", text: "API 선택" },
+				//				{ value: "", text: "API 선택" },
 				{ value: "1", text: "운전자격확인 단건 조회	" },
 				{ value: "2", text: "운전자격확인 배치 조회" },
 			];
@@ -246,7 +246,7 @@ var expryYmd;
 				var ckResults = data.ckResults;
 				var defaultValue = "1";
 				$('#search_stts_cd').kendoDropDownList({
-//					optionLabel: "API 선택 (전체)",
+					//					optionLabel: "API 선택 (전체)",
 					dataTextField: "apiNm",
 					dataValueField: "apiSn",
 					dataSource: ckResults,
@@ -290,7 +290,7 @@ var expryYmd;
 			//				dataValueField: "value"
 			//			});
 			var searchOtherCondition3 = [
-//				{ value: "", text: "에러유무 (선택)" },
+				//				{ value: "", text: "에러유무 (선택)" },
 				{ value: "E1", text: "정상" },
 				{ value: "E2", text: "에러" }
 			];
@@ -313,7 +313,7 @@ var expryYmd;
 				dataTextField: "text",
 				dataSource: searchOtherCondition3,
 				dataValueField: "value",
-				value:  "E1"
+				value: "E1"
 			});
 			//			$("#search_stts_cd_Dev03").kendoDropDownList({
 			//				dataTextField: "text",
@@ -531,20 +531,18 @@ var expryYmd;
 			var resultTime3 = startTime2.replace(/-/g, '')
 			var resultTime4 = endtime2.replace(/-/g, '')
 			var options = {}
-			if (Auth == 'K01' || Auth == 'D01' || Auth == 'Z01' || Auth == 'S04') {
-
-				options.endPicker02 = resultTime2
-				options.startPicker02 = resultTime
+			if (Auth == 'K01' || Auth == 'D01' || Auth == 'Z01') {
+				options.endPicker02 = resultTime2;
+				options.startPicker02 = resultTime;
 				options.searchSttsCd = $("#search_stts_cd").val();
 				options.searchSttsCd2 = $("#search_stts_cd2").val();
 				options.detailYN = $("#search_stts_cd3").val();
 				options.searchReq = $("#search_box").val();
 			} else {
-				options.endPicker = resultTime4
-				options.startPicker = resultTime3
+				options.endPicker02 = resultTime4;
+				options.startPicker02 = resultTime3;
 				options.searchSttsCdAPI = $("#search_stts_cd_api").val();
-				options.ErrorCd = $("#search_stts_cd_error").val();
-				//								options.searchReq = $("#search_box").val();
+				options.detailYN = $("#search_stts_cd_error").val();
 			}
 			var filename = "apiHist"
 			var totalRowCount = $("#grid").data("kendoGrid").dataSource.total();

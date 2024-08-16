@@ -28,18 +28,12 @@ import kr.or.kotsa.rims.sys.service.impl.SmsSendDao;
 public class SmsSendController extends CmmnAbstractServiceImpl{
 
 	@Autowired
-	private SmsSendService SmsSendService;
+	private SmsSendService smsSendService;
 	
 	@Autowired
 	private SmsSendDao SmsSendDao;
 
-	/**
-	 * sms발송 화면
-	 *
-	 * @param paramsMap
-	 * @return
-	 * @throws RimsException
-	 */
+	// 문자발송이력 화면
 	@RequestMapping("/smsSend")
 	public ModelAndView viewSmsSend(@RequestParam Map<String, Object> paramsMap, ModelAndView mav,
 			HttpServletRequest request, HttpServletResponse response, HttpSession session) throws RimsException {
@@ -52,12 +46,29 @@ public class SmsSendController extends CmmnAbstractServiceImpl{
 		return mav;
 	}
 
+    @RequestMapping(value = "/smsSend/selectCtpvNm")
+    @ResponseBody
+    public List<Map<String, Object>> CtpvNm(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+        return smsSendService.selectCtpvNm(paramsMap);
+    }
+    
+    @RequestMapping(value = "/smsSend/selectSggNm")
+    @ResponseBody
+    public List<Map<String, Object>> SggNm(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+        return smsSendService.selectSggNm(paramsMap);
+    }
+	
+    @RequestMapping("/smsSend/selectSttsCd")
+    @ResponseBody
+    public List<Map<String, Object>> SttsCd(@RequestBody Map<String, Object> paramsMap) {
+        return smsSendService.selectSttsCd(paramsMap);
+    }
 	
 	// 권한
 	@RequestMapping("/smsSend/selectAuth")
     @ResponseBody
     public List<Map<String, Object>> selectAuth(@RequestBody Map<String, Object> paramsMap) {
-        return SmsSendService.selectAuth(paramsMap);
+        return smsSendService.selectAuth(paramsMap);
     }
 	
 	
@@ -65,35 +76,35 @@ public class SmsSendController extends CmmnAbstractServiceImpl{
 	@RequestMapping("/smsSend/selectCrno")
     @ResponseBody
     public List<Map<String, Object>> selectCrno(@RequestBody Map<String, Object> paramsMap) {
-        return SmsSendService.selectCrno(paramsMap);
+        return smsSendService.selectCrno(paramsMap);
     }
 	
 	// 문자 발송 이력 그리드
 	@PostMapping("/smsSend/selectSmsSendInfo")
 	@ResponseBody
 	public Map<String, Object> selectSmsSendInfo(@RequestBody Map<String, Object> paramsMap){
-		return SmsSendService.selectSmsSendInfo(paramsMap);
+		return smsSendService.selectSmsSendInfo(paramsMap);
 	}
 	
 	// 수신자 목록 그리드
 	@PostMapping("/smsSend/selectReceiverList")
 	@ResponseBody
 	public Map<String, Object> selectReceiverList(@RequestBody Map<String, Object> paramsMap){
-		return SmsSendService.selectReceiverList(paramsMap);
+		return smsSendService.selectReceiverList(paramsMap);
 	}
 	
 	// 개별 발송 그리드
 	@PostMapping("/smsSend/selectIndivReceiverList")
 	@ResponseBody
 	public Map<String, Object> selectIndivReceiverList(@RequestBody Map<String, Object> paramsMap){
-		return SmsSendService.selectIndivReceiverList(paramsMap);
+		return smsSendService.selectIndivReceiverList(paramsMap);
 	}
 	
 	// 그룹 발송 그리드
 	@PostMapping("/smsSend/selectGroupReceiverList")
 	@ResponseBody
 	public Map<String, Object> selectGroupReceiverList(@RequestBody Map<String, Object> paramsMap){
-		return SmsSendService.selectGroupReceiverList(paramsMap);
+		return smsSendService.selectGroupReceiverList(paramsMap);
 	}
 	
 	//문자발송
@@ -102,7 +113,7 @@ public class SmsSendController extends CmmnAbstractServiceImpl{
 	public Map<String, Object> insertSendMsg(@RequestBody Map<String, Object> paramsMap) {
 		paramsMap.put("userSn", getUserSn());
 		paramsMap.put("userIp", getClientIP());
-		return SmsSendService.insertSendMsg(paramsMap);
+		return smsSendService.insertSendMsg(paramsMap);
 	}
 	
 	/**
@@ -116,7 +127,7 @@ public class SmsSendController extends CmmnAbstractServiceImpl{
                                       HttpServletRequest request, HttpServletResponse response) throws RimsException {
 
 		String fileName = "smsSend" + (new java.text.SimpleDateFormat("yyyyMMddHHmmss")).format(new java.util.Date());
-        String colName[] = {"순번", "내용", "발송요청일", "발송일", "수신자명", "연락처"};
+        String colName[] = {"순번", "내용", "발송등록일", "발송일", "수신자명", "연락처"};
         String valName[] = {"rn", "cn", "sndng_dt", "sndng_rsvt_dt", "rcvr", "rcvr_telno"};
 
 

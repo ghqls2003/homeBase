@@ -12,6 +12,14 @@ import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
 @Repository
 public class SmsSendDao extends CmmnAbstractMapper {
 
+	public List<Map<String, Object>> selectSttsCd(Map<String, Object> paramsMap) {
+		return selectList("sys.smsSend.selectSttsCd", paramsMap);
+	}
+	
+	public List<Map<String, Object>> selectAuth(Map<String, Object> paramsMap) {
+		return selectList("sys.smsSend.selectAuth", paramsMap);
+	}
+	
 	public int selectSmsSendInfoCnt(Map<String, Object> paramsMap) {
 		return selectOne("sys.smsSend.SmsSendInfoCnt", paramsMap);
 	}
@@ -26,10 +34,6 @@ public class SmsSendDao extends CmmnAbstractMapper {
 
 	public List<Map<String, Object>> selectReceiverList(Map<String, Object> paramsMap) {
 		return selectList("sys.smsSend.ReceiverList", paramsMap);
-	}
-
-	public List<Map<String, Object>> selectAuth(Map<String, Object> paramsMap) {
-		return selectList("sys.smsSend.selectAuth", paramsMap);
 	}
 
 	public List<Map<String, Object>> selectGroupReceiverList(Map<String, Object> paramsMap) {
@@ -59,5 +63,15 @@ public class SmsSendDao extends CmmnAbstractMapper {
 	public int insertSendMsgList(Map<String, Object> paramsMap) {
 		return insert("sys.smsSend.insertSendMsgList", paramsMap);
 	}
+
+	public List<Map<String, Object>> selectCtpvNm(Map<String, Object> paramsMap) {
+		return selectList("sys.smsSend.selectCtpvNm", paramsMap);
+	}
+
+	public List<Map<String, Object>> selectSggNm(Map<String, Object> paramsMap) {
+		return selectList("sys.smsSend.selectSggNm", paramsMap);
+	}
+
+
 	
 }

@@ -187,7 +187,7 @@
 		                                        <ul class="selec_lists">
 		                                            <li class="selec_list1 selec_list">
 		                                                <input type="radio" name="selec_target" id="all">
-		                                                <label for="all">전체</label>
+		                                                <label for="all">전체 &#40;삭제된 계정 제외&#41;</label>
 		                                            </li>
 		                                            <li class="selec_list2 selec_list">
 		                                                <input type="radio" name="selec_target" id="auth" checked>
@@ -196,6 +196,10 @@
 		                                            <li class="selec_list3 selec_list">
 		                                                <input type="radio" name="selec_target" id="inc">
 		                                                <label for="inc">법인별 &#40;하위영업소 포함&#41;</label>
+		                                            </li>
+		                                             <li class="selec_list4 selec_list">
+		                                                <input type="radio" name="selec_target" id="api">
+		                                                <label for="api">API 사용자</label>
 		                                            </li>
 		                                        </ul>
 		                                    </div>
@@ -260,8 +264,9 @@
 		                                </div>
 		                            </div>
 		                            <div class="box_cont">
+										<div class="byteInfoWrap"><span class="byteInfo" id="byteInfo">0</span> / 2000bytes</div>
 		                                <div class="msg_write_box">
-		                                    <textarea name="msg_val" id="msg_val" placeholder="내용 입력"></textarea>
+		                                    <textarea name="msg_val" id="msg_val" placeholder="내용 입력" onKeyUp="javascript:$smsSend.event.fnChkByte(this,'2000')"></textarea>
 		                                </div>
 		                            </div>
 		                        </div>
@@ -284,12 +289,15 @@
 	                        <span></span>
 	                        <span></span>
 	                    </div>
+	                    <div class="backDiv" style="position:absolute; right:60px; top:13px;">
+	                    <button class="back">
+                            <img style="width:20px;height:20px;" src="${contextPath}/images/sub/back_2.png" alt="뒤로가기">
+                        </button>
+                        </div>
 	                </div>
 	                <div class="content">
 		                <div class="scrollBar02">
-		                    <div class="cont_inner">
-		                        <div class="selec_box">
-		                            <div class="search_top">
+		                 <div class="search_top">
 		                                <div class="selec_wr">
 		                                    <div class="mo_flex">
 		                                        <ul class="selec_box">
@@ -309,33 +317,17 @@
 		                                                <label for="searchAuthrtCd" hidden> 권한(전체)</label>
 		                                                <input id="searchAuthrtCd">
 		                                            </li>
-		                                        </ul>
-		                                        <ul class="selec_box">
-						                            <li class="li_slec">
+		                                            <li class="li_slec">
 						                           	    <div class="dropdown">
 						                           	    	<label for="searchOtherCondition"></label>
 		                                                    <input id="searchOtherCondition">
 						                           	    </div>
 						                            </li>
-						                        </ul>
-		                                        <ul class="selec_box">
-						                            <li class="li_slec">
+						                             <li class="li_slec">
 							                            <label for="searchBox" hidden>검색 내용</label>
 		                                                    <input id="searchBox" class="input" aria-label="검색어 내용" placeholder="검색어를 입력하세요.">
 						                            </li>
-						                        </ul>
-		                                        <ul class="selec_box">
-		                                            <!-- <li class="li_slec">
-		                                                <div class="selec_flex">
-		                                                    <div class="dropdown">
-		                                                        <label for="searchOtherCondition"></label>
-		                                                        <input id="searchOtherCondition">
-		                                                    </div>
-		                                                    <label for="searchBox" hidden>검색 내용</label>
-		                                                    <input id="searchBox" class="input" aria-label="검색어 내용" placeholder="검색어를 입력하세요.">
-		                                                </div>
-		                                            </li> -->
-		                                            <li class="li_slec">
+						                            <li class="li_slec">
 		                                                <input type="checkbox" name="receiverExceptTel" id="receiver_except_tel" >
 		                                                <label for="receiver_except_tel">유선전화 제외</label>
 		                                            </li>
@@ -349,38 +341,52 @@
 		                                    
 		                                </div>
 		                            </div>
+		                    <div class="cont_inner">
+		                        <div class="selec_box">
+		                           
 		                            <div class="indivSelec_lists" id="receiverListGrid_box">
 		                                <table id="receiverListGrid">
 		                                </table>
 		                            </div>
 		                        </div>
-		                        <div class="input_box">
-		                            <div class="indivReceiver_lists_wrap">
-		                                <div class="cont_header">
-		                                    <div><b>수신자 목록</b> (총 <p id="totalRowCnt" style="font-weight: bold; display: inline;"></p> 건)</div>
-		                                    <span>※ 최대 50건 선택 가능</span>
-		                                </div>
-		                                <div class="indivReceiver_lists">
-		                                
-		                                </div>
-		                            </div>
-		                            <div class="msg_box">
-		                                <div class="box_head">
-		                                    <div class="btn_wr">
-		                                        <input type="checkbox" id="sendIndiviReservation" hidden>
-		                                        <label for="sendIndiviReservation" class="btn_s btn_fill">발송예약</label>
-		                                        <div class="input_wr">
-		                                            <label for="indivMsg_reserv_time" hidden>문자 예약 발송 시간</label>
-		                                            <input id="indivMsg_reserv_time" class="msg_reserv_time" title="datepicker" aria-label="대여사업자 문자 예약 발송 시간 설정">
-		                                        </div>
-		                                    </div>
-		                                </div>
-		                                <div class="box_cont">
-		                                    <div class="msg_write_box">
-		                                        <textarea name="indiv_msg_val" id="indiv_msg_val" placeholder="내용 입력"></textarea>
-		                                    </div>
-		                                </div>
-		                            </div>
+		                        <div class="selec_box2">
+		                      	  <div class="selectBtnBox">
+									<button class="select-btn recDv">수신자 목록</button>
+									<button class="select-btn msgDv selected">메시지 작성</button>
+							 	 </div>
+		                        	<div class="input_box">
+			                            <div class="indivReceiver_lists_wrap" style="display:none;">
+			                                <div class="cont_header">
+			                                    <div><b>수신자 목록</b> (총 <p id="totalRowCnt" style="font-weight: bold; display: inline;"></p> 건)</div>
+			                                    <span>※ 최대 50건 선택 가능</span>
+			                                </div>
+			                                <div class="indivReceiver_lists">
+			                                
+			                                </div>
+			                            </div>
+		                       		
+		                            
+			                            <div class="msg_box">
+			                                <div class="box_head">
+			                                    <div class="btn_wr">
+			                                        <input type="checkbox" id="sendIndiviReservation" hidden>
+			                                        <label for="sendIndiviReservation" class="btn_s btn_fill">발송예약</label>
+			                                        <div class="input_wr">
+			                                            <label for="indivMsg_reserv_time" hidden>문자 예약 발송 시간</label>
+			                                            <input id="indivMsg_reserv_time" class="msg_reserv_time" title="datepicker" aria-label="대여사업자 문자 예약 발송 시간 설정">
+			                                        </div>
+			                                    </div>
+			                                </div>
+			                                <div class="box_cont">
+			                                	<div class="byteInfoWrap"><span class="byteInfo" id="indivByteInfo">0</span> / 2000bytes</div>
+			                                    <div class="msg_write_box">
+			                                        <textarea name="indiv_msg_val" id="indiv_msg_val" placeholder="내용 입력" onKeyUp="javascript:$smsSend.event.fnChkByte(this,'2000')"></textarea>
+			                                    </div>
+			                                </div>
+			                            </div>
+		                            
+		                            
+		                          </div>    
 		                        </div>
 		                    </div>
 		                </div>

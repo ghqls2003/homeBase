@@ -969,6 +969,7 @@
 			const authChk = $(".serverStatusBar");
 
 			if(authChk) {
+				$main.event.stVerfHourLoad();
 				const eventSource = new EventSource(url);
 				eventSource.onmessage = function(event){
 					$main.event.sseCall(event)
@@ -1093,6 +1094,52 @@
 				setCookieAt00(name, "true");
 			}
 
+		},
+		stVerfHourLoad : function(){
+			let stVerfHourList;
+			ajax(false, contextPath + '/ma/main/stVerfHour', 'body', '조회 중입니다', null, function(data) {
+				if(data.success){
+					stVerfHourList = data.stVerfHourList
+					$main.event.generateStHourChart(stVerfHourList);
+				}
+			});
+		},
+		generateStHourChart : function(data){
+			const month = data.map(function(elem){
+				return elem.hr
+			})
+			const chartcontainer = $(".chart_wrap");
+			const chartWidth = chartcontainer.width();
+			const chartHeight = chartcontainer.height();
+
+			$("#server_chart").kendoChart({
+				dataSource : {
+					data: data
+				},
+				title: {
+					text: "시간별 API 요청 건수",
+					color: "#fff",
+				},
+				legend: {
+					visible: false,
+				},
+				series: [{
+					name: "API 요청 건수",
+					field: "total"
+				}],
+				categoryAxis: {
+					categories: month,
+					color: "#585858",
+				},
+				tooltip: {
+					visible: true,
+					template: "#: kendo.format('{0:N0}', value)#건 "
+				},
+				chartArea: {
+					width: 840,
+					height: chartHeight
+				}
+			});
 		}
 
     };

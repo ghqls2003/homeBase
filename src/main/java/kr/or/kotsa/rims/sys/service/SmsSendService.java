@@ -9,9 +9,11 @@ public interface SmsSendService {
 
 	public Map<String, Object> selectSmsSendInfo(Map<String, Object> paramsMap);
 
-	public Map<String, Object> selectReceiverList(Map<String, Object> paramsMap);
-
+	public List<Map<String, Object>> selectSttsCd(Map<String, Object> paramsMap);
+	
 	public List<Map<String, Object>> selectAuth(Map<String, Object> paramsMap);
+	
+	public Map<String, Object> selectReceiverList(Map<String, Object> paramsMap);
 
 	public Map<String, Object> selectGroupReceiverList(Map<String, Object> paramsMap);
 
@@ -20,5 +22,10 @@ public interface SmsSendService {
 	public Map<String, Object> insertSendMsg(Map<String, Object> paramsMap);
 
 	public Map<String, Object> selectIndivReceiverList(Map<String, Object> paramsMap);
+
+	public List<Map<String, Object>> selectCtpvNm(Map<String, Object> paramsMap);
+
+	public List<Map<String, Object>> selectSggNm(Map<String, Object> paramsMap);
+
 
 }

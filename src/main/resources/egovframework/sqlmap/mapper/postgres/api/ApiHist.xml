@@ -92,34 +92,23 @@
 		    LEFT JOIN dqvs.dvs_cmm_mt_code AS dcmc ON dcmc.cd = dahr.dmnd_rslt_cd
 		    LEFT JOIN dqvs.v_intg_user_admin_info AS dcms ON dcms.user_sn = dahr.user_sn
 		    LEFT JOIN dqvs.v_intg_user_admin_info AS dcms2 ON dcms2.user_sn = dahr.rqstr_sn
-		    WHERE 
-		    <choose>	
-				<when test="AuthCd == 'K01' or AuthCd == 'Z01' or AuthCd == 'D01'">
-		        dahr.dmnd_ymd BETWEEN #{startPicker02} AND #{endPicker02}
-		        <if test="searchSttsCd != ''">
-		            AND dahr.api_sn = #{searchSttsCd}::numeric
-		        </if>
-		        <if test="detailYN == 'E1' and detailYN != null and detailYN != ''">
-		            AND dahr.dmnd_rslt_cd = '200'
-		        </if>
-		        <if test="detailYN == 'E2' and detailYN != null and detailYN != ''">
-		            AND dahr.dmnd_rslt_cd != '200'
-		        </if>
-		        </when>
-	        	<otherwise>
-					dahr.user_sn = #{userSn}::numeric  
-		      		and  dahr.dmnd_ymd BETWEEN #{startPicker02} AND #{endPicker02}
-		        	<if test = "searchSttsCdAPI != ''">
-						 and dahr.api_sn = #{searchSttsCdAPI}::numeric 
-					</if>
-					<if test="detailYN == 'E1' and detailYN != null and detailYN != ''">
-					    and dahr.dmnd_rslt_cd = '200'
-					</if>
-					<if test="detailYN == 'E2' and detailYN != null and detailYN != ''">
-					    and dahr.dmnd_rslt_cd != '200'
-					</if>
+		    WHERE dahr.dmnd_ymd BETWEEN #{startPicker02} AND #{endPicker02}
+			<!-- 권한처리(공단, 관리자, 개발자) -->
+			<if test="AuthCd != 'K01' or AuthCd != 'Z01' or AuthCd != 'D01'">
+				and dahr.user_sn = #{userSn}::numeric
+			</if>
+			<!-- 조회조건 -->
+			<if test = "searchSttsCdAPI != '' and searchSttsCdAPI != null">
+				and dahr.api_sn = #{searchSttsCdAPI}::numeric 
+			</if>
+			<choose>
+				<when test="detailYN == 'E1'">
+				and dahr.dmnd_rslt_cd = '200'
+				</when>
+				<otherwise>
+				and dahr.dmnd_rslt_cd != '200'
 				</otherwise>
-		        </choose>
+			</choose>
 		</sql>
 		
 		<sql id="listViewWith">
