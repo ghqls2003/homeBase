@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import kr.or.kotsa.rims.cmmn.biz.LoginVO;
 import kr.or.kotsa.rims.cmmn.biz.service.CmmnService;
 import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
 import kr.or.kotsa.rims.cmmn.sys.service.CmmnAbstractServiceImpl;
@@ -311,5 +310,24 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 		
 		int res = mainViewService.updateAgre(paramsMap);
 		return res;
-	} 
+	}
+
+	/**
+	 * 시간별 API 요청 건수 조회
+	 * @param request
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping("main/stVerfHour")
+	@ResponseBody
+	public Object selectStVerfHour(HttpServletRequest request) throws RimsException{
+		String authrtCd = getAuthrtCd();
+		char firstChar = authrtCd.charAt(0);
+		if(firstChar == 'S') {
+			return Collections.emptyList();
+		}else {
+			Map<String, Object> resultMap = mainViewService.selectStChartHour();
+			return  resultMap;
+		}
+	}
 }

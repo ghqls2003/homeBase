@@ -59,5 +59,9 @@ public interface MainViewService {
     */
    int updateAgre(Map<String, Object> paramsMap) throws RimsException;
 
-
+	/**
+	 * 시간별 API 요청 건수 조회
+	 * @return
+	 */
+	public Map<String, Object> selectStChartHour() throws RimsException;
 }

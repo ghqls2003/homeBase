@@ -120,7 +120,7 @@
                                     </div>
                                 </li>
                             </ul>
-                            <div class="chart_wrap">
+                            <div class="chart_wrap scrollBar">
                                 <div id="server_chart"></div>
                             </div>
                             <div class="server_btn_wrap">

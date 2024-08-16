@@ -211,8 +211,26 @@ public class MainViewServiceImpl extends CmmnAbstractServiceImpl implements Main
     public int updateAgre(Map<String, Object> paramsMap) throws RimsException {
 	    return mainViewDao.updateAgre(paramsMap);
 	}
-	
-	
+
+	/**
+	 * 시간별 API 요청 건수 조회
+	 * @return
+	 */
+	@Override
+	public Map<String, Object> selectStChartHour() {
+		Map<String, Object> result = new HashMap<>();
+
+		try {
+			List<Map<String, Object>> stVerfHourList = mainViewDao.selectStChartHour();
+			result.put(SUCCESS, true);
+			result.put("stVerfHourList", stVerfHourList);
+		} catch (RimsException e){
+			result.put(SUCCESS, false);
+			result.put("stVerfHourList", Collections.emptyList());
+			logger.error("selectSvrStat Error", e);
+		}
+		return result;
+	}
 	
    	
 }

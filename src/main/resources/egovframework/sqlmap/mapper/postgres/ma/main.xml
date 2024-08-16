@@ -240,7 +240,7 @@
 				dvs_cmm_bs_svr_stat
 	</select>
 
-	<select id="stChartHour" resultType="resultMap">
+	<select id="selectStChartHour" resultType="resultMap">
 		SELECT
 				CONCAT(tmp_h.tmp_h, '시') AS hr,
 				COALESCE(h2.tot, 0) AS total

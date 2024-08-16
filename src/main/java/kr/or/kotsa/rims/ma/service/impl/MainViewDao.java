@@ -104,4 +104,13 @@ public class MainViewDao extends CmmnAbstractMapper {
     public int updateAgre(Map<String, Object> paramsMap) throws RimsException {
         return update("ma.main.updateAgre", paramsMap);
     }
+
+	/**
+	 * 시간별 API 요청 건수 조회
+	 * @return
+	 * @throws RimsException
+	 */
+	public List<Map<String, Object>> selectStChartHour() throws RimsException{
+		return selectList("ma.main.selectStChartHour");
+	}
 }
