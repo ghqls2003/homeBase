@@ -1211,7 +1211,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			else if($('#num01').val()!='' && $('#num02').val()!='' && $('#num03').val()!='' && $('#num04').val()!='' &&
 				$('#user_name02').val()!='' && $("input[type=radio][name=category01]:checked").val() !=undefined){
             //======================================================== end =========================
-				ajax(false, contextPath+"/vfc/drive/verifyLicense", "", "", param, function(data) {
+				ajax(true, contextPath+"/vfc/drive/verifyLicense", 'body', '처리중입니다.', param, function(data) {
 					if(data != null && data != ""){
 
 						var resultHeaderCd = data.header.f_rtn_cd;
@@ -1246,7 +1246,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 							param.sn = data.vrfc_hstry_sn;
 //							param.dln ='251301689481'; //✂️todo
 							param.dln = $('#num01').val() + $('#num02').val() + $('#num03').val() + $('#num04').val(); //✂️todo
-							ajax(false, contextPath+"/vfc/drive/selectVerifyCd", "", "", param, function(result) {
+							ajax(true, contextPath+"/vfc/drive/selectVerifyCd", 'body', '처리중입니다.', param, function(result) {
 								if (result != null && result != "") {
 									rentno = result.rentno;
 									if(data.body.f_rtn_code == '00'){
