@@ -21,6 +21,9 @@ public class ApiAuthKeyDao extends CmmnAbstractMapper {
 	public List<Map<String, Object>> selectlistView(Map<String, Object> paramsMap) {
 		return selectList("mm.apiAuthKey.listApiAuthKey", paramsMap);
 	}
+	public List<Map<String, Object>> selectlistView2(Map<String, Object> paramsMap) {
+		return selectList("mm.apiAuthKey.listApiAuthKey2", paramsMap);
+	}
 //	public List<Map<String, Object>> selectIssueApi(Map<String, Object> paramsMap) {
 //		return selectList("mm.apiAuthKey.selectIssueApi", paramsMap);
 //	}
