@@ -86,4 +86,10 @@ public class DriveDao extends CmmnAbstractMapper {
 	public int selectVfcHistCnt(Map<String, Object> paramsMap) {
 		return selectOne("vfc.drive.selectVfcHistCnt", paramsMap);
 	}
+
+
+	// 대여처리시 운전자격이력에 대여유형 업데이트
+	public void updateRentType(Map<String, Object> paramsMap) {
+		update("vfc.drive.updateRentType", paramsMap);
+	}
 }

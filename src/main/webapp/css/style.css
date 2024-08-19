@@ -1422,6 +1422,8 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
 .sub04 .download_btn {color: white; background-color: #018316;}
 .sub04 .download_btn img {margin-right: 12px; filter: brightness(0) saturate(100%) invert(99%) sepia(0%) saturate(0%) hue-rotate(134deg) brightness(103%) contrast(101%);}
 .sub04 .send_btn{margin-top: 72px;}
+.sub04 .byteInfoWrap{display: flex;}
+.sub04 .byteInfoWrap .byteInfo{margin-left: auto;}
 
 /* 팝업  */
 .sub04 .btn_fill {background-color: #364BC6; color: white; font-size: 1.4rem;}
@@ -1433,9 +1435,11 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
 .msg_send .box {height: 710px; width: 1120px;}
 .msg_send .box .popup_top {text-align: center;}
 .msg_send .box .content {height: 570px;}
-.msg_send .box .content .cont_inner {display: flex; gap: 8px; height: 100%;}
+.msg_send .box .content .cont_inner {display: flex; gap: 8px; height: 450px;}
 .msg_send .box .content .cont_inner > .selec_box {width: 60%;}
-.msg_send .box .content .cont_inner > .input_box {width: 40%;}
+.msg_send .box .content .cont_inner > .selec_box2 {width: 60%;}
+/* .msg_send .box .content .cont_inner > .input_box {width: 40%;} */
+.msg_send .box .content .cont_inner .input_box {height: -webkit-fill-available;}
 
 /* 대여사업자 문자 발송 */
 .send_popup .selec_box .box_head { height: 60px; display: flex; align-items: center; justify-content: space-between;  border-radius: 12px 12px 0 0; background-color: #F5F8FE; -webkit-border-radius: 12px 12px 0 0; -moz-border-radius: 12px 12px 0 0; -ms-border-radius: 12px 12px 0 0; -o-border-radius: 12px 12px 0 0; }
@@ -1459,7 +1463,7 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
 .send_popup .msg_box .input_wr {display: none; align-items: center; gap: 12px;}
 .send_popup .msg_box #sendReservation:checked ~ .input_wr {display: flex;}
 .send_popup .msg_box .k-datetimepicker {width: 100%; height: 38px;}
-.send_popup .msg_box .box_cont {padding: 24px; height: 100%;}
+.send_popup .msg_box .box_cont {padding: 0 24px 24px 24px; height: 100%; display: flex; flex-direction: column;}
 .send_popup .msg_box .box_cont .msg_write_box { width: 100%; height: 100%; border: 1px solid #E8EDF8; background-color: #F5F8FE; border-radius: 12px; -webkit-border-radius: 12px; -moz-border-radius: 12px; -ms-border-radius: 12px; -o-border-radius: 12px; }
 .send_popup .msg_box .box_cont .msg_write_box #msg_val {height: 100%; background: transparent; padding: 12px; font-size: 1.8rem;}
 .send_popup .k-input-button {background: unset;}
@@ -1474,8 +1478,8 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
 .send_popup .inc_box .inc_receiver_lists .inc_receiver_list .com_nm {overflow: hidden; white-space: nowrap; text-overflow: ellipsis; align-items: center; justify-content: center; text-align: center; width: 100%; height: 100%; font-size: 1.6rem;}
 .send_popup .inc_box .inc_receiver_lists .inc_receiver_list .com_tel {overflow: hidden; white-space: nowrap; text-overflow: ellipsis; align-items: center; justify-content: center; text-align: center; width: 100%; height: 100%; font-size: 1.5rem;}
 
-
 /* 개별 선택 문자 전송 */
+.indivSelec_popup .box .content {height: 580px;}
 .indivSelec_popup ul.selec_box li.li_slec {display: flex; align-items: center; gap: 8px; white-space: nowrap;}
 .indivSelec_popup .search_btn {align-self: flex-end; margin-left: 11px;}
 .indivSelec_popup #receiver_send_condition02 {width: 240px;}
@@ -1484,9 +1488,10 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
 .indivSelec_popup #send_grid .no_data {text-align: center;}
 /* .indivSelec_popup .box .content .cont_inner > .selec_box {overflow: hidden;} */
 .indivSelec_popup .selec_wr .mo_flex {gap: 12px 0;}
-.indivSelec_popup .k-grid-content {max-height: 300px;}
-.indivSelec_popup .indivReceiver_lists {width: 100%; height: 92px; overflow-y: auto;  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); border: 1px solid #E8EDF8; background-color: #F5F8FE;}
-.indivSelec_popup .indivReceiver_lists .inc_receiver_list {height: 45px; padding: 4px; display: flex; gap: 4px; flex-direction: column; align-items: center; justify-content: center;}
+/* .indivSelec_popup .k-grid-content {max-height: 300px;} */
+/* .indivSelec_popup .indivReceiver_lists {width: 100%; height: 300px; overflow-y: auto;  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); border: 1px solid #E8EDF8; background-color: #F5F8FE;} */
+.indivSelec_popup .indivReceiver_lists {width: 100%; height: 300px; overflow-y: auto; border: 1px solid #E8EDF8; background-color: #F5F8FE;}
+.indivSelec_popup .indivReceiver_lists .inc_receiver_list {height: 47px; padding: 4px; display: flex; gap: 4px; flex-direction: column; align-items: center; justify-content: center;}
 .indivSelec_popup .indivReceiver_lists .inc_receiver_list .com_nm {overflow: hidden; white-space: nowrap; text-overflow: ellipsis; align-items: center; justify-content: center; text-align: center; width: 100%; height: 100%; font-size: 1.6rem;}
 .indivSelec_popup .indivReceiver_lists .inc_receiver_list .com_tel {overflow: hidden; white-space: nowrap; text-overflow: ellipsis; align-items: center; justify-content: center; text-align: center; width: 100%; height: 100%; font-size: 1.5rem;}
 .indivSelec_popup .input_box { width: 100%; border: 1px solid #E8EDF8; display: flex; gap:24px; flex-direction: column; border-radius: 24px; -webkit-border-radius: 24px; -moz-border-radius: 24px; -ms-border-radius: 24px; -o-border-radius: 24px; padding: 24px;}
@@ -1496,7 +1501,7 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
 .indivSelec_popup .msg_box .input_wr {display: none; align-items: center; gap: 12px;}
 .indivSelec_popup .msg_box #sendIndiviReservation:checked ~ .input_wr {display: flex;}
 .indivSelec_popup .msg_box .k-datetimepicker {width: 100%; height: 38px;}
-.indivSelec_popup .msg_box .box_cont {padding: 24px 0; height: 90%;}
+.indivSelec_popup .msg_box .box_cont {padding: 0 0 24px 0; height: 90%;}
 .indivSelec_popup .msg_box .box_cont .msg_write_box { width: 100%; height: 100%; border: 1px solid #E8EDF8; background-color: #F5F8FE; border-radius: 12px; -webkit-border-radius: 12px; -moz-border-radius: 12px; -ms-border-radius: 12px; -o-border-radius: 12px; }
 .indivSelec_popup .msg_box .box_cont .msg_write_box #indiv_msg_val {height: 100%; background: transparent; padding: 12px; font-size: 1.8rem;}
 .indivSelec_popup .k-datetimepicker .k-input-button {background: unset;}
@@ -1505,7 +1510,26 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
 .indivSelec_popup .indivReceiver_lists_wrap .cont_header h5 {font-size: 1.8rem;}
 .indivSelec_popup .indivSelec_lists {margin-bottom: 30px;}
 .indivSelec_popup .scrollBar02::-webkit-scrollbar {height: 7px;}
-.indivSelec_popup #searchBox {height: 36px;}
+.indivSelec_popup .indivSelec_popup #searchBox {height: 36px;}
+.indivSelec_popup .box .content {padding: 10px 37px 0;}
+.indivSelec_popup .btn_flex {margin-top: 10px;}
+.indivSelec_popup .input_box {margin-bottom: 30px;}
+.indivSelec_popup .selectBtnBox {display: flex; margin: 10px;}
+.indivSelec_popup .selectBtnBox button.selected {
+    background-color: #364BC6 !important;
+    color: #fff !important;
+}
+.indivSelec_popup .selectBtnBox button.select-btn {
+    padding: 2px 12px;
+    background-color: #F5F8FE;
+    border: 1px solid #DBE0EC;
+    border-radius: 8px;
+    line-height: 26px;
+    color: #040404;
+    font-weight: 500;
+    margin-right: 10px;
+}
+.inc_receiver_list{border: 1px solid lavender;}
 /* 문자 확인 */
 .chkSend_popup .box .content {padding: 38px 37px 0px 37px; height: 460px;}
 .chkSend_popup .content .cont_inner {display: flex; gap: 24px; height: 100%;}
@@ -1546,6 +1570,7 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
     .indivSelec_popup .li_slec label {font-size: 1.2rem;}
     .indivSelec_popup .selec_wr {flex-wrap: wrap; gap: 12px;}
 /*     .indivSelec_popup .k-grid-content {height: 276px;} */
+	.indivSelec_popup .selec_box {flex-wrap: wrap;}
 }
 @media (max-width:950px) {
 	.sub04 .selec_wr ul.selec_box li .k-picker-solid{border-radius: 8px;background-color: #fff;}
@@ -1569,8 +1594,8 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
     .indivSelec_popup .box {width: 650px; }
     .indivSelec_popup .box .content .cont_inner {flex-direction: column;}
     .indivSelec_popup .box .content .cont_inner .selec_box {width: 100%;}
+    .indivSelec_popup .box .content .cont_inner .selec_box2 {width: 100%;}
     .indivSelec_popup .selec_wr {flex-wrap: nowrap; gap: 0;}
-    .indivSelec_popup .box .content .cont_inner > .input_box {width: 100%;}
     .indivSelec_popup .k-grid-content {height: 200px;}
     
 

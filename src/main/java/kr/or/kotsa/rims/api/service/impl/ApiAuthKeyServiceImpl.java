@@ -33,9 +33,20 @@ public class ApiAuthKeyServiceImpl extends CmmnAbstractServiceImpl implements Ap
 	 */
 	@Override
 	public List<Map<String, Object>> selectlistView(Map<String, Object> paramsMap) {
-
-		return apiAuthKeyDao.selectlistView(paramsMap);
-	}
+    		return apiAuthKeyDao.selectlistView(paramsMap);
+       }
+	
+// 위에 있는 	selectlistView 지우고 아래 주석 풀어서 운영/ 개발 나눠서 보기
+//	@Override
+//	public List<Map<String, Object>> selectlistView(Map<String, Object> paramsMap) {
+//		String authrtCd = (String) paramsMap.get("authrtCd");
+//		if ("K01".equals(authrtCd) || "Z01".equals(authrtCd) || "D01".equals(authrtCd)) {
+//			return apiAuthKeyDao.selectlistView(paramsMap);
+//		}else {
+//			return apiAuthKeyDao.selectlistView2(paramsMap);
+//			
+//		}
+//	}
 //	@Override
 //	public List<Map<String, Object>> selectIssueApi(Map<String, Object> paramsMap) {
 //		

@@ -96,6 +96,12 @@
 		                                <input type="text" id="authSelected" class="authSelected" aria-label="권한(전체)" placeholder="권한(전체)">
 		                            </li>
 		                        </ul>
+		                        <ul class="selec_box">
+		                            <li class="li_slec">
+		                                <label for="delYn" hidden>삭제여부(전체)</label>
+		                                <input type="text" id="delYn" class="authSelected" aria-label="삭제여부(전체)" placeholder="삭제여부(전체)">
+		                            </li>
+		                        </ul>
 						        <ul class="selec_box">
 		                            <li class="li_slec">
 			                            <label for="selectCond" hidden>조건선택</label>
@@ -115,12 +121,6 @@
 		 			                    <input id="searchChk02" type="radio" name="searchChk" aria-label="소재지 체크" value="location"/>
 		 			                    <label for="searchChk02">소재지</label>
 									</li>
-		                        </ul>
-		                        <ul class="selec_box">
-		                            <li class="li_slec">
-			                            <input type="checkbox" id="delYn" class="delYn" aria-label="삭제여부"  value=""/>
-			                            <label for="delYn" >삭제여부</label>
-		                            </li>
 		                        </ul>
 					        </div>
 					        <button class="yellow_btn searchBtn" type="button">

@@ -78,10 +78,11 @@ public class LoggerAspect extends CmmnAbstractServiceImpl{
 
     }
     /**
-     * @name         : beforeMenu
-     * @description  : URL 접금 제한
-     * @date         : 2023. 06. 21
-     * @author	     : 최진호
+     * @name               : beforeMenu
+     * @description    : URL 접근 제한
+     * @date                 : 2023. 06. 21
+     * @author	            : 최진호
+     * @modify_date  : 2024. 08. 14
      */
     @Before("MenuAop()")
     public void beforeMenu(JoinPoint joinPoint) throws RimsException, IOException {

@@ -249,4 +249,12 @@
 		AND dln = dqvs.pca_encrypt(#{dln},'150')
 	</if>
 	</select>
+
+
+	<!-- 대여처리시 운전자격이력에 대여유형 업데이트  -->
+	<update id="updateRentType" parameterType="paraMap" >
+		UPDATE dqvs.dvs_dqv_hs_verf
+		SET oneway_yn= #{onewayYn}
+		WHERE vrfc_hstry_sn = #{vrfcHstrySn}
+	</update>
 </mapper>

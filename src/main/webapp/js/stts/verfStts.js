@@ -26,8 +26,10 @@
 	var month = today.getMonth()+1;
 	var toYear = year;
 	var toMonth = year+"-"+(month < 10 ? "0"+month : month);
-    
+	
     $(document).ready(function() {
+		kendo.ui.progress($(document.body), true);
+		
 		$statistics.ui.verfDropdown();
 		
 		$statistics.datePicker.verfDatePick();
@@ -65,7 +67,6 @@
 				selectable: "row",
 				dataBound: function(e) {
 					if($("#verf-grid").data("kendoGrid").dataSource.total() != 0) {
-						kendo.ui.progress($("#verf-grid"), false);
 						$(".excelDownBtn").attr("disabled", false);
 	//					$(".grayDiv").parent().css("background-color", "lightgray");
 
@@ -81,6 +82,8 @@
 	            			}
 //	            			i++;
 	        			});
+	        			
+	        			kendo.ui.progress($(document.body), false);
 					}
 				},
                 excel: { allPages: true },
@@ -238,9 +241,10 @@
 						$("#cd13").text(FormatNumber(data.cd13)); $("#cd14").text(FormatNumber(data.cd14)); $("#cd21").text(FormatNumber(data.cd21)); 
 						$("#cd22").text(FormatNumber(data.cd22)); $("#cd23").text(FormatNumber(data.cd23)); $("#cd24").text(FormatNumber(data.cd24));
 						$("#cd25").text(FormatNumber(data.cd25)); $("#cd31").text(FormatNumber(data.cd31)); $("#cd51").text(FormatNumber(data.cd51));
+						
+						kendo.ui.progress($(document.body), false);  
 					});
 					
-//					kendo.ui.progress($(document.body), false);  
 //					$(".grayRDiv").parent().css("background-color", "lightgray");
 					$(".excelDownBtn").attr("disabled", false);
 				},
@@ -518,8 +522,6 @@
 			$statistics.event.verfColumn();
 			$statistics.ui.verfCountGrid();
 			
-			kendo.ui.progress($("#verf-grid"), true);
-			
 			ajax(true, contextPath + '/stts/verfStts/verfCount', 'body', '조회중입니다', param, function(data) {
 				
 				if(data != null) {
@@ -709,6 +711,8 @@
 		searchBtn: function() {
 			// 시간별
 			$("#searchTimeBtn").on("click", function() {
+				kendo.ui.progress($(document.body), true);
+				
 				excelDate = $("#verfDatePick").val();
 				excelMthd = $("#checkMthd").data("kendoDropDownList").text();
 				
@@ -718,6 +722,8 @@
 			
 			// 결과별
 			$("#searchResultBtn").on("click", function() {
+				kendo.ui.progress($(document.body), true);
+				
 				resultExcelMthd   = $("#verfResultMthd").val();
 				resultExcelcmpNm  = $("#verfOfCompany").val();
 				resultExcelAuth = $("#authSelected").val();
@@ -742,6 +748,8 @@
 		tmTabBtn: function() {
 			$(".tmDv").click(function() {
 				if(!$(this).hasClass("selected")) {
+					kendo.ui.progress($(document.body), true);
+					
 					$(this).addClass("selected");
 					$(".rmDv").removeClass("selected");
 					$(".rmCond").hide();
@@ -771,7 +779,7 @@
 		rmTabBtn: function() {
 			$(".rmDv").click(function() {
 				if(!$(this).hasClass("selected")) {
-//					kendo.ui.progress($(document.body), true);  그리드꺼랑 중복됨
+					kendo.ui.progress($(document.body), true);
 					
 					$(this).addClass("selected");
 					$(".tmDv").removeClass("selected");

@@ -16,7 +16,7 @@
 		pageLoad: function() {
 			$smsSend.ui.search(); // 검색옵셥
 			$smsSend.ui.smsSendInfo();  // 문자 발송 이력 그리드
-			$smsSend.ui.receiverListGrid();  // 개별 문자 그리드
+			//$smsSend.ui.receiverListGrid();  // 개별 문자 그리드
 			$smsSend.ui.crnoAutoComplete(); // 법인별 자동검색
 		},
 		
@@ -47,9 +47,9 @@
 		search: function() {
 			var param = {};
 			
-			ajax(true, contextPath+'/sys/usermanage/selectCtpvNm.do', 'body', '처리중입니다.', param, function (data) {
+			ajax(true, contextPath+'/sys/smsSend/selectCtpvNm', 'body', '처리중입니다.', param, function (data) {
 				$('.sub04 #searchCtpvNm').kendoDropDownList({
-		            optionLabel: "시도(전체)",
+		            optionLabel: "시도",
 		            dataTextField: "ctpv_nm",
 		            dataValueField: "ctpv_cd",
 		            dataSource: data,
@@ -59,9 +59,9 @@
 							$('.sub04 #searchSggNm').data("kendoDropDownList").setDataSource(null);
 						} else {
 						    param.ctpvCd = this.value();
-							ajax(true, contextPath+'/sys/usermanage/selectSggNm.do', 'body', '처리중입니다.', param, function (data) {
+							ajax(true, contextPath+'/sys/smsSend/selectSggNm', 'body', '처리중입니다.', param, function (data) {
 								$('.sub04 #searchSggNm').kendoDropDownList({
-						            optionLabel: "시군구(전체)",
+						            optionLabel: "시군구",
 						            dataTextField: "sgg_nm",
 						            dataValueField: "sgg_cd",
 						            dataSource: data,
@@ -75,25 +75,29 @@
 			
 			// 시구군
 			$('.sub04 #searchSggNm').kendoDropDownList({
-	            optionLabel: "시군구(전체)",
+	            optionLabel: "시군구",
 	            dataSource: {}
 	        });
 
 			// 계정상태
-			ajax(false, contextPath + '/sys/usermanage/selectSttsCd.do', 'body', '처리중입니다.', param, function(data) {
+			ajax(false, contextPath + '/sys/smsSend/selectSttsCd', 'body', '처리중입니다.', param, function(data) {
 				$(".sub04 #searchSttsCd").kendoDropDownList({
-	              optionLabel: "계정상태(전체)",
+	              optionLabel: "계정상태",
 	              dataTextField: "cd_nm",
 	              dataValueField: "cd_nm",
 	              dataSource: data,
 	              value: "cd_nm"
 				});
+				$(".sub04 #searchSttsCd").data("kendoDropDownList").select(3);
 			});
+			
+			
+			
 
 			// 권한
 			ajax(false, contextPath + '/sys/smsSend/selectAuth', 'body', '처리중입니다.', param, function(data) {
 				$("#searchAuthrtCd").kendoDropDownList({
-	              optionLabel: "권한(전체)",
+	              optionLabel: "권한",
 	              dataTextField: "authrt_nm",
 	              dataValueField: "authrt_cd",
 	              dataSource: data,
@@ -110,7 +114,7 @@
 	    	];
 
 	    	$(".sub04 #searchOtherCondition").kendoDropDownList({
-              optionLabel: "검색조건(전체)",
+              optionLabel: "전체",
               dataTextField: "text",
               dataValueField: "value",
               dataSource: searchOtherCondition,
@@ -119,8 +123,8 @@
 			
 			// 기간 유형
 			var dateType = [
+			   	{ value: "now_date", text: "발송등록일"},
 				{ value: "send_date", text: "발송일"},
-			   	{ value: "now_date", text: "발송요청일"},
 			];
 			
 			$("#dateType").kendoDropDownList({
@@ -171,6 +175,8 @@
 					value: "value"
     		});
 
+			//$smsSend.ui.receiverListGrid();  // 개별 문자 그리드
+
 		},
 		
 		// 개별 수신자 목록 선택 시 이벤트
@@ -178,156 +184,101 @@
 			var grid = e.sender;
 			var selectedRows = grid.select();
 			var table = selectedRows.closest('table');
-			
 			user_sn = grid.selectedKeyNames();
-			console.log(user_sn);
-			
 			var maximumRow = 50;
+			
 			$('thead input[type="checkbox"]').off('change').on('change', function(event) {
-	                if ($(this).is(':checked')) {
-						table.find('tr').addClass('select')
-						if(user_sn.length>maximumRow){
-							alert("최대 50건 선택 가능합니다.")
-							$('.indivSelec_lists').find('thead input[type="checkbox"]').prop('checked', false);
-							var totalRows = table.find('tr').length;
-							var del = user_sn.length - maximumRow;
-							var delRowIndex = totalRows-del;
-							var start = delRowIndex;
-							var end = delRowIndex+del;
-							
-							for (var i = start; i < end; i++) {
-							   var delRow = table.find('tr').eq(i);
-							   table.find('tr').eq(i).removeClass('k-selected');
-							   table.find('tr').eq(i).removeClass('select');
-							   table.find('tr').eq(i).find("input[type='checkbox']").prop("checked", false);
-								var dataItem = grid.dataItem(delRow);
-								if (dataItem) {
-								    grid.clearSelection(); // 선택 상태 초기화
-								    grid.select(grid.table.find('tr.select'));
-								}
+                if ($(this).is(':checked')) {
+					table.find('tr').addClass('select')
+					if(user_sn.length>maximumRow){
+						alert("최대 50건 선택 가능합니다.")
+						$('.indivSelec_lists').find('thead input[type="checkbox"]').prop('checked', false);
+						var totalRows = table.find('tr').length;
+						var del = user_sn.length - maximumRow;
+						var delRowIndex = totalRows-del;
+						var start = delRowIndex;
+						var end = delRowIndex+del;
+						
+						for (var i = start; i < end; i++) {
+						   var delRow = table.find('tr').eq(i);
+						   table.find('tr').eq(i).removeClass('k-selected');
+						   table.find('tr').eq(i).removeClass('select');
+						   table.find('tr').eq(i).find("input[type='checkbox']").prop("checked", false);
+							var dataItem = grid.dataItem(delRow);
+							if (dataItem) {
+							    grid.clearSelection(); // 선택 상태 초기화
+							    grid.select(grid.table.find('tr.select'));
 							}
-							user_sn = grid.selectedKeyNames();
-							console.log(user_sn);
-							var totalReciverCnt = 0;
-							console.log(totalReciverCnt);
-							$('#totalRowCnt').text(totalReciverCnt);
 						}
-	                } else {
-						table.find('tr').removeClass('select');
+						user_sn = grid.selectedKeyNames();
+						console.log(user_sn);
+						var totalReciverCnt = 0;
+						console.log(totalReciverCnt);
+						$('#totalRowCnt').text(totalReciverCnt);
+					}
+                } else {
+					table.find('tr').removeClass('select');
+					var totalReciverCnt = user_sn.length;
+					$('#totalRowCnt').text(totalReciverCnt);
+                }
+				$('tbody input[type="checkbox"]').trigger('change');
+	        });
+
+			$('tbody input[type="checkbox"]').off('change').on('change', function(event) {
+				var receiverListRn =[];
+				$('.indivReceiver_lists .inc_receiver_list').each(function() {
+				        var value = $(this).attr('id');
+						receiverListRn.push(value);
+				});
+				var tr = $(this).closest('tr');
+                if ($(this).is(':checked')) {
+					$(this).closest('tr').addClass('select')
+					if(user_sn.length>maximumRow){
+						alert("최대 50건 선택 가능합니다.")
+						$('.indivSelec_lists').find('thead input[type="checkbox"]').prop('checked', false);
+						
+						tr.removeClass('k-selected');
+						tr.removeClass('select');
+						tr.find("input[type='checkbox']").prop("checked", false);
+						var dataItem = grid.dataItem(tr);
+						if (dataItem) {
+							    grid.clearSelection(); 
+							    grid.select(grid.table.find('tr.select'));
+							}
+						user_sn = grid.selectedKeyNames();
+						console.log(user_sn);
 						var totalReciverCnt = user_sn.length;
 						$('#totalRowCnt').text(totalReciverCnt);
-	                }
-					$('tbody input[type="checkbox"]').trigger('change');
-	            });
-
-				$('tbody input[type="checkbox"]').off('change').on('change', function(event) {
-					var receiverListRn =[];
-					$('.indivReceiver_lists .inc_receiver_list').each(function() {
-					        var value = $(this).attr('id');
-							receiverListRn.push(value);
-					});
-					var tr = $(this).closest('tr');
-	                if ($(this).is(':checked')) {
-						$(this).closest('tr').addClass('select')
-						if(user_sn.length>maximumRow){
-							alert("최대 50건 선택 가능합니다.")
-							$('.indivSelec_lists').find('thead input[type="checkbox"]').prop('checked', false);
-							
-							tr.removeClass('k-selected');
-							tr.removeClass('select');
-							tr.find("input[type='checkbox']").prop("checked", false);
-							var dataItem = grid.dataItem(tr);
-							if (dataItem) {
-								    grid.clearSelection(); 
-								    grid.select(grid.table.find('tr.select'));
-								}
-							user_sn = grid.selectedKeyNames();
-							console.log(user_sn);
-							var totalReciverCnt = user_sn.length;
-							$('#totalRowCnt').text(totalReciverCnt);
-						}else{
-							var tr = $(this).closest('tr');
-		                    var secondTd = tr.find('td').eq(1); 
-		                    var thirdTd = tr.find('td').eq(2); 
-		                    var fourthTd = tr.find('td').eq(3); 
-							var coRn = secondTd.text();
-							var pCoNm = $('<p>', { class: 'com_nm', text: thirdTd.text() });
-							var pCotel = $('<p>', { class: 'com_tel', text: fourthTd.text() });
-							var divincReceiverList = $('<div>', { class: 'inc_receiver_list', id: coRn}).append(pCoNm, pCotel);
-							
-							receiverListRn.forEach(function(rn){
-								if(rn==coRn){
-									var removeDiv='#'+rn;
-									$(removeDiv).remove();
-								}
-							});
-							$('.indivReceiver_lists').append(divincReceiverList);
-							$('.indivReceiver_lists').scrollTop($('.indivReceiver_lists')[0].scrollHeight);
-							var totalReciverCnt = user_sn.length;
-							$('#totalRowCnt').text(totalReciverCnt);
-						}
-	                }else{
-						tr.removeClass('select');
-						var unchecked = tr.find('td').eq(1);
-						var unchk = '#' + unchecked.text(); 
-						$(unchk).remove();
+					}else{
+						var tr = $(this).closest('tr');
+	                    var secondTd = tr.find('td').eq(1); 
+	                    var thirdTd = tr.find('td').eq(2); 
+	                    var fourthTd = tr.find('td').eq(3); 
+						var coRn = secondTd.text();
+						var pCoNm = $('<p>', { class: 'com_nm', text: thirdTd.text() });
+						var pCotel = $('<p>', { class: 'com_tel', text: fourthTd.text() });
+						var divIncReceiverList = $('<div>', { class: 'inc_receiver_list', id: coRn}).append(pCoNm, pCotel);
+						
+						receiverListRn.forEach(function(rn){
+							if(rn==coRn){
+								var removeDiv='#'+rn;
+								$(removeDiv).remove();
+							}
+						});
+						$('.indivReceiver_lists').append(divIncReceiverList);
+						$('.indivReceiver_lists').scrollTop($('.indivReceiver_lists')[0].scrollHeight);
 						var totalReciverCnt = user_sn.length;
 						$('#totalRowCnt').text(totalReciverCnt);
 					}
-	            });
-								
-
-//			var grid = e.sender;
-//    		var selectedRows = grid.select();
-//			if (selectedRows.length > 9) {
-//				var tr = selectedRows.closest('tr');
-//            	var secondTd = tr.find('td').eq(1); 
-//				var coRn = secondTd.text();
-//				console.log(coRn);
-//				var lastSelectedRow = selectedRows.last();
-//                lastSelectedRow.removeClass("k-selected");
-//				lastSelectedRow.find("input[type='checkbox']").prop("checked", false);
-//                alert("50명까지 선택 가능합니다."); 
-//            }else{
-//				user_sn = grid.selectedKeyNames();
-//				console.log(user_sn);
-//				var receiverListRn =[];
-//				$('.indivReceiver_lists .inc_receiver_list').each(function() {
-//			        var value = $(this).attr('id');
-//					receiverListRn.push(value);
-//				});
-//				$('thead input[type="checkbox"]').off('change').on('change', function(event) {
-//	                $('tbody input[type="checkbox"]').trigger('change');
-//	            });
-//				$('tbody input[type="checkbox"]').off('change').on('change', function(event) {
-//	                if ($(this).is(':checked')) {
-//	                    var tr = $(this).closest('tr');
-//	                    var secondTd = tr.find('td').eq(1); 
-//	                    var thirdTd = tr.find('td').eq(2); 
-//	                    var fourthTd = tr.find('td').eq(3); 
-//						var coRn = secondTd.text();
-//						var pCoNm = $('<p>', { class: 'com_nm', text: thirdTd.text() });
-//						var pCotel = $('<p>', { class: 'com_tel', text: fourthTd.text() });
-//						var divincReceiverList = $('<div>', { class: 'inc_receiver_list', id: coRn}).append(pCoNm, pCotel);
-//						
-//						receiverListRn.forEach(function(rn){
-//							if(rn==coRn){
-//								var removeDiv='#'+rn;
-//								$(removeDiv).remove();
-//							}
-//						});
-//						$('.indivReceiver_lists').append(divincReceiverList);
-//						$('.indivReceiver_lists').scrollTop($('.indivReceiver_lists')[0].scrollHeight);
-//	                }else{
-//						var tr = $(this).closest('tr');
-//						var unchecked = tr.find('td').eq(1);
-//						var unchk = '#' + unchecked.text(); 
-//						$(unchk).remove();
-//					}
-//	            });
-//	
-//			}
-			
+                }else{
+					tr.removeClass('select');
+					var unchecked = tr.find('td').eq(1);
+					var unchk = '#' + unchecked.text(); 
+					$(unchk).remove();
+					var totalReciverCnt = user_sn.length;
+					$('#totalRowCnt').text(totalReciverCnt);
+				}
+	        });
         },
 		
 		// 발송 이력 그리드
@@ -379,7 +330,7 @@
 				columns: [
 					{ field: "rn", title: "순번", width: "50px", template: "#:rn #", sortable: false },
 					{ field: "cn", title: "내용", width: "100px", template: "#= cn != null ? cn : '-' #", sortable: true },
-					{ field: "sndng_dt", title: "발송요청일", width: "100px", template: "#= sndng_dt != null ? sndng_dt : '-' #", sortable: true },
+					{ field: "sndng_dt", title: "발송등록일", width: "100px", template: "#= sndng_dt != null ? sndng_dt : '-' #", sortable: true },
 					{ field: "sndng_rsvt_dt", title: "발송일", width: "100px", template: "#= sndng_rsvt_dt != null ? sndng_rsvt_dt : '-' #", sortable: true },
 					{ field: "rcvr", title: "수신자명", width: "100px", template: "#= rcvr != null ? rcvr : '-' #", sortable: true },
 					{ field: "rcvr_telno", title: "연락처", width: "100px", template: "#= rcvr_telno != null ? rcvr_telno : '-' #", sortable: true },
@@ -405,9 +356,6 @@
 				dataItem = grid.dataItem(this);
 			});
 			$smsSend.event.detailInfoPopup(dataItem);
-		 	//$(".viewMsg_popup").addClass("view");
-			//$("body").css("overflow", "hidden");
-			
 		},
 
 		// 개별 수신자 목록 그리드
@@ -434,7 +382,8 @@
 							options.stts_cd = $("#searchSttsCd").val();
 							options.search_other_condition = $("#searchOtherCondition").val();
 							options.search_wrd = $("#searchBox").val();
-							options.receiver_except_tel = $('#receiver_except_tel').data('value');
+							//options.receiver_except_tel = $('#receiver_except_tel').data('value');
+							options.receiver_except_tel = JSON.stringify($("#receiver_except_tel").is(':checked'));
 							
 							return JSON.stringify(options);
 						}
@@ -461,7 +410,7 @@
 				},
 				columns: [
 					{ selectable: true, width: "50px"},
-					{ field: "rn", title: "순번", width: "50px", template: "#:rn #"},
+					{ field: "rn", title: "순번", width: "60px", template: "#:rn #"},
 					{ field: "co_nm", title: "회사명", width: "150px", template: "#= co_nm != null ? co_nm : '-' #"},
 					{ field: "telno", title: "연락처", width: "150px", template: "#= telno != null ? telno : '-' #"},
 					{ field: "user_nm", title: "성명", width: "100px", template: "#= user_nm != null ? user_nm : '-' #" },
@@ -507,6 +456,7 @@
 							options.auth_03 = JSON.stringify($("#auth_03").is(':checked'));
 							options.auth_04 = JSON.stringify($("#auth_04").is(':checked'));
 							options.crno = $('#inc_selec_01').data('value');
+							options.api = JSON.stringify($("#api").is(':checked'));
 							
 							return JSON.stringify(options);
 						}
@@ -603,7 +553,8 @@
 						auth_02 : JSON.stringify($("#auth_02").is(':checked')),
 						auth_03 : JSON.stringify($("#auth_03").is(':checked')),
 						auth_04 : JSON.stringify($("#auth_04").is(':checked')),
-						crno : $('#inc_selec_01').data('value')
+						crno : $('#inc_selec_01').data('value'),
+						api : JSON.stringify($("#api").is(':checked'))
 			};
 			ajax(true, contextPath+'/sys/smsSend/selectGroupReceiverList', 'body', '처리중입니다.', parameterMap, function (data) {
 				if($("#inc_selec_01").val() != ""){
@@ -699,6 +650,8 @@
                 } else if (this.id === 'inc') {
                	 	$('.auth_box').removeClass('show');
                 	$('.inc_box').addClass('show');
+                } else if (this.id === 'api') {
+               	 	$('.auth_box, .inc_box').removeClass('show');
                 }
             });
 
@@ -708,7 +661,9 @@
         	});
 	
 			// 전체, 권한별, 법인별 체크시 초기화
-			$('#all, #auth, #inc').change(function() {
+			$('#all, #auth, #inc, #api').change(function() {
+				$("#inc_selec_01").val('');
+				$('.inc_receiver_lists div').remove();
 				if($('#inc_selec_01').data('value')){
 					$('#inc_selec_01').data('value', '');
 				}
@@ -720,54 +675,26 @@
 		        });
 			});
 			
-			// 전체, 권한별 초기화 
-		    $('#all, #auth').change(function() {
-				$("#inc_selec_01").val('');
-				$('.inc_receiver_lists div').remove();
-		    });
+			// 전체, 권한별, api별 초기화 
+//		    $('#all, #auth', '#api').change(function() {
+//				$("#inc_selec_01").val('');
+//				$('.inc_receiver_lists div').remove();
+//		    });
 
-			
 			// 그룹 유선 번호 제외
 			$("#except_tel").on("change", function() {
 				$smsSend.ui.incReceiverList();
 			});
 			
-//			$("#inc_selec_01").on("change", function() {
-//				$('.inc_receiver_lists div').remove();
-//				var parameterMap={
-//							except_tel : JSON.stringify($("#except_tel").is(':checked')),
-//							auth_01 : JSON.stringify($('#auth_01').is(':checked')),
-//							auth_02 : JSON.stringify($("#auth_02").is(':checked')),
-//							auth_03 : JSON.stringify($("#auth_03").is(':checked')),
-//							auth_04 : JSON.stringify($("#auth_04").is(':checked')),
-//							crno : $('#inc_selec_01').data('value')
-//				};
-//				if($("#inc_selec_01").val()!=''){
-//					ajax(true, contextPath+'/sys/smsSend/selectGroupReceiverList', 'body', '처리중입니다.', parameterMap, function (data) {
-//						data.data.forEach(function(y){
-//								var co_rn = y.rn;
-//								var co_nm = y.co_nm;
-//								var co_tel = y.telno;
-//								var pCoNm = $('<p>', { class: 'com_nm', text: co_nm });
-//								var pCotel = $('<p>', { class: 'com_tel', text: co_tel });
-//								var inc_receiver_lists = $('<div>', { class: 'inc_receiver_list', id: co_rn}).append(pCoNm, pCotel);
-//								$('.inc_receiver_lists').append(inc_receiver_lists);
-//							}
-//								
-//						)
-//					})
-//				}
-//			});
-			
 			// 개별 유선번호 제외
-			$("#receiver_except_tel").on("click", function() {
-				var checked = $('#receiver_except_tel').is(':checked');
-				if(checked){
-					$('#receiver_except_tel').data('value', 'true');
-				}else{
-					$('#receiver_except_tel').data('value', 'false');
-				}
-        	});
+//			$("#receiver_except_tel").on("change", function() {
+//				var checked = $('#receiver_except_tel').is(':checked');
+//				if(checked){
+//					$('#receiver_except_tel').data('value', 'true');
+//				}else{
+//					$('#receiver_except_tel').data('value', 'false');
+//				}
+//        	});
 
 			// 발송 이력 발송하기 버튼	
 			$(".send_btn").on("click",function(){
@@ -820,7 +747,6 @@
 					$('#totalRowCnt').text(totalReciverCnt);
 					$smsSend.ui.receiverListGrid();
 				}
-				console.log(user_sn);
             });
 			
 		    $(".msg_send01 .close, .msg_send01 .cancel_btn").on("click",function(){
@@ -836,13 +762,26 @@
 		      $(".chkSend_popup").removeClass("view");
 		    });
 
+			// 뒤로가기 버튼
+		    $(".indivSelec_popup .back").on("click",function(){
+		      $(".indivSelec_popup").removeClass("view");
+			  $("#receiverListGrid_box").empty();
+			  $(".indivReceiver_lists").empty();
+//			  $("#indiv_msg_val").val("");
+//			  $("#indiv_msg_val").text("");
+			  $('#receiverListGrid_box').append('<table id="receiverListGrid"></table>');
+			  $(".send_popup").addClass("view");
+		    });
+
 		  	// 문자 발송 팝업(개별)
 		    $(".indivSelec_btn").on("click",function(){
 			  var totalReciverCnt = 0;
 			  $('#totalRowCnt').text(totalReciverCnt);
-			  var indiv_msg_val = $('#msg_val').text();
+			  var indiv_msg_val = $('#msg_val').val();
 			  $('#indiv_msg_val').text(indiv_msg_val);
-			  //$smsSend.ui.receiverListGrid();
+			  $('#indiv_msg_val').val(indiv_msg_val);
+			  $('#indivByteInfo').text($('#byteInfo').text());
+			  $smsSend.ui.receiverListGrid();
 		      $(".msg_send02").addClass("view");
 		      $(".msg_send01").removeClass("view");
 		    });
@@ -923,6 +862,26 @@
 				}
 			});
 			
+			//개별발송 - 수신자 목록 클릭
+			$(".recDv").click(function() {
+				if(!$(this).hasClass("selected")) {
+					$(this).addClass("selected");
+					$(".msgDv").removeClass("selected");
+					$(".indivSelec_popup .msg_box").hide();
+					$(".indivReceiver_lists_wrap").show();
+				}
+			});
+			
+			//개별발송 - 메시지 작성 클릭
+			$(".msgDv").click(function() {
+				if(!$(this).hasClass("selected")) {
+					$(this).addClass("selected");
+					$(".recDv").removeClass("selected");
+					$(".indivReceiver_lists_wrap").hide();
+					$(".indivSelec_popup .msg_box").show();
+				}
+			});
+			
 			// 최종 발송 버튼 클릭
 			$("#realSendMsg").on("click",function(){
 				var now = new Date();
@@ -967,6 +926,28 @@
 					$smsSend.ui.incReceiverList();
 				}
 			});
+			
+			// 글자수 세기
+			$('#textBox').keyup(function (e) {
+				let content = $(this).val();
+			    
+			    // 글자수 세기
+			    if (content.length == 0 || content == '') {
+			    	$('.textCount').text('0자');
+			    } else {
+			    	$('.textCount').text(content.length + '자');
+			    }
+			    
+			    // 글자수 제한
+			    if (content.length > 200) {
+			    	// 200자 부터는 타이핑 되지 않도록
+			        $(this).val($(this).val().substring(0, 200));
+			        // 200자 넘으면 알림창 뜨도록
+			        alert('글자수는 200자까지 입력 가능합니다.');
+			    };
+			});
+			
+			
 		},
 		
 		authValid: function() {
@@ -1084,6 +1065,8 @@
 			params.auth_03 = JSON.stringify($('#auth_03').is(':checked'));
 			params.auth_04 = JSON.stringify($('#auth_04').is(':checked'));
 			params.crno = $('#inc_selec_01').data('value');
+			params.api = JSON.stringify($("#api").is(':checked'));
+			
 			return ajax(true, contextPath+'/sys/smsSend/selectGroupReceiverList', 'body', '확인중입니다.', params, function(data) {
 				return $smsSend.event.insertSms(data);
 			});
@@ -1100,7 +1083,8 @@
 			params.stts_cd = $("#searchSttsCd").val();
 			params.search_other_condition = $("#searchOtherCondition").val();
 			params.search_wrd = $("#searchBox").val();
-			params.receiver_except_tel = $('#receiver_except_tel').data('value');
+			//params.receiver_except_tel = $('#receiver_except_tel').data('value');
+			params.receiver_except_tel = JSON.stringify($("#receiver_except_tel").is(':checked'));
 			
 			return ajax(true, contextPath+'/sys/smsSend/selectReceiverList', 'body', '확인중입니다.', params, function(data) {
 				return $smsSend.event.insertSms(data);
@@ -1115,7 +1099,7 @@
 			var params = {};
 			var msg = $('#check_msg').text();
 			var dest_info = '';
-			var send_date = ''
+			var send_date = '';
 			var dest_count = 0;
 			var rcvr = [];
 			var rcvr_telno = [];
@@ -1192,10 +1176,6 @@
 			params.rcvr = rcvr;
 			params.rcvr_telno = rcvr_telno;
 			params.sndng_rsvt_dt = sndng_rsvt_dt;
-			
-			
-			
-			console.log(params);
 				
 			ajax(true, contextPath + '/sys/smsSend/insertSendMsg', 'body', '처리중입니다.', params, function(data) {
 				//alert(data + "건 전송 되었습니다.");
@@ -1205,5 +1185,53 @@
 			});
 			
 		},
-	};
+		
+		fnChkByte: function(obj, maxByte) {
+			    var str = obj.value;
+			    var str_len = str.length;
+			
+			
+			    var rbyte = 0;
+			    var rlen = 0;
+			    var one_char = "";
+			    var str2 = "";
+			
+			
+			    for(var i=0; i<str_len; i++)
+			    {
+			        one_char = str.charAt(i);
+			        if(escape(one_char).length > 4) {
+			            rbyte += 2;                                         //한글2Byte
+			        }else{
+			            rbyte++;                                            //영문 등 나머지 1Byte
+			        }
+			        if(rbyte <= maxByte){
+			            rlen = i+1;                                          //return할 문자열 갯수
+			        }
+			     }
+			     if(rbyte > maxByte)
+			     {
+			        alert("메세지는 최대 " + maxByte + "byte를 초과할 수 없습니다.")
+			        str2 = str.substr(0,rlen);                                  //문자열 자르기
+			        obj.value = str2;
+			        $smsSend.event.fnChkByte(obj, maxByte);
+			     }
+			     else
+			     {
+					 var byteInfoWrap = $(obj).closest('.msg_write_box').prev('.byteInfoWrap');
+           			 var byteInfo = byteInfoWrap.find('#byteInfo');
+			        if (byteInfo.length > 0) {
+					    $('#byteInfo').text(rbyte);
+					}else{
+						$('#indivByteInfo').text(rbyte);
+					}
+			        
+			     }
+
+		},
+		
+		
+		
+		
+	}
 }(window, document, jQuery));

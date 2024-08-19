@@ -85,7 +85,7 @@ table.tb td .k-picker-solid {
 
 
 /* 팝업 관련 */
-.popup.result_popup .box{height: 515px;}
+.popup.result_popup .box{height: 640px;}
 
 @media (max-width:768px) {
     .popup.drvie_popup .box{width: 540px;}

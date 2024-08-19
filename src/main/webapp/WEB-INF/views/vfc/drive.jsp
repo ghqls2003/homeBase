@@ -516,6 +516,23 @@ var authrtCd = '${authrtCd}'
                        </div>
                 </div>
             </div>
+            <div class="contBox" style = "margin-top: 10px;">
+                            <div class="nameBox">
+                                <h4 class="name"> 대여 유형 </h4>
+                            </div>
+                            <div class="cont" id="result" style="height: auto; justify-content: flex-start;">
+                                <ul class="" style ="align-self: flex-start; display: flex; align-items: center; gap: 24px;">
+                                    <li>
+                                        <input id="rentalType_1" value="Y" type="radio" name="category02">
+                                        <label for="rentalType_1">편도</label>
+                                    </li>
+                                    <li>
+                                        <input id="rentalType_2" value="N" type="radio" name="category02">
+                                        <label for="rentalType_2">왕복</label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
             <p class="p_info">※ 본 웹사이트에 게시된 정보는 프로그램이나 그 밖의 기술적 장치를 이용하여 무단으로 사용할 수 없습니다.</p>
 			<br/>
             <input id="resetChk" type="checkbox">

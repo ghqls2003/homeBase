@@ -207,6 +207,8 @@ public class ApiAuthKeyController extends CmmnAbstractServiceImpl {
 	@ResponseBody
 	public int updatestopUse(@RequestBody Map<String, Object> paramsMap, HttpServletRequest request,
 			HttpServletResponse response) throws RimsException {
+		paramsMap.put("autzr", getUserSn());
+
 		return apiAuthKeyService.updatestopUse(paramsMap);
 	}
 
@@ -215,6 +217,8 @@ public class ApiAuthKeyController extends CmmnAbstractServiceImpl {
 	@ResponseBody
 	public int updateReUse(@RequestBody Map<String, Object> paramsMap, HttpServletRequest request,
 			HttpServletResponse response) throws RimsException {
+		paramsMap.put("autzr", getUserSn());
+
 		return apiAuthKeyService.updateReUse(paramsMap);
 	}
 

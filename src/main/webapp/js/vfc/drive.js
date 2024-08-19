@@ -6,6 +6,7 @@ var choiceVin = '';
 var choiceVhclRegNo = '';
 var tempHtml = ''; // 팝업 그리드 동적 html
 var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
+var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 (function (W, D, $) {
     // bjlee, IE 10 부터 지원하는 strict mode 선언. 안전하지 않은 액션들에 대해 예외를 발생시킴
     'use strict';
@@ -286,7 +287,6 @@ var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
 						parameterMap: function(options){
 						    // 대여자 이력 정보
 						    if(gridId == '#rentalHistManage_grid'){
-						    //todo 데이터 많을때 찾아서 쿼리 최적화하기 ( 면허등록번호 데이터 필수 , 데이터 많은 날짜로 확인하기 )/dln 더미풀기
 						        //  최근 7일 이력 조회
 //						        var dln = '251301689481'; // 🚗 todo 더미
 						        var dln =  $('#num01').val() + $('#num02').val() + $('#num03').val() + $('#num04').val();// todo 더미 추후 풀기
@@ -693,11 +693,23 @@ var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
 				$drive.event.resetInput();
 			});
 
+
 			$('#rentCfm').click(function(){
-				if ($('#car_num').val() == '')
-					alert('차량번호를 입력해주세요');
-				else {
-					$drive.event.updateRentSttsCd();
+			    var onewayYn = $("input[type=radio][name=category02]:checked").val();
+			    var vrfcHstrySn1 = vrfcHstrySn;
+			    var param = {onewayYn : onewayYn,
+			                 vrfcHstrySn : vrfcHstrySn1
+			                 };
+// todo
+//				if ('01하5030'== ''){
+
+				if ($('#car_num').val() == ''){
+					alert('차량번호를 입력해주세요.');
+
+				}else if (onewayYn =='' || onewayYn == null || onewayYn == ' '){
+				    alert('대여유형을 선택해주세요.');
+				} else {
+					$drive.event.updateRentSttsCd(param);
 //					$('.result_popup').css('display', 'block');
 //					$(".result_popup").addClass("view");
 				}
@@ -1033,8 +1045,6 @@ var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
                         		</div>
                             </div>`;
             $('#popup_drvVfcHist_box').append(tempHtml);
-            // ✂️todo
-//            $drive.ui.popupGridLoad('#rentalHistManage_grid','/vfc/rentalHistManage/selectRentalHistList', rentalHistManageColumns);
             $drive.ui.popupGridLoad('#rentalHistManage_grid','/vfc/drvVfcHist/listView.do', rentalHistManageColumns);
 
         },
@@ -1149,7 +1159,7 @@ var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
         },
 
 
-		// todo : !! 최근이력 7일  한번더 체크 하기
+		// todo : !! 최근이력 7일
         // 운전자격이력 건수 관련 Date 셋팅
         vfcHistDateDt: function(){
             var now = new Date();
@@ -1192,30 +1202,8 @@ var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
 				regDt: $("#regDt").val(),
 				vrfcMthd: vrfcMthd
 			};
-//			console.log("param",param);
 
-//			var param = {
-//                 bzmnSn: "",
-//                 carNum: '01하5030',// $('#car_num').val(),
-//                 carmdl: "",
-//                 cd: "00",
-//                 engineType: "",
-//                 modelYear: "",
-//                 name: "강순혁",
-//                 num: "251301689481",
-//                 regDt: "",
-//                 signguCd: "",
-//                 sn: 4815089,
-//                 startDt: "20240802",
-//                 endDt: "20240802",
-//                 startDtTm : startDtTm ,
-//                 endDtTm : endDtTm ,
-//                 type: "12",
-//                 useYn: "",
-//                 vhclNm: "",
-//                 vin: "",
-//                 vrfcMthd: 1
-//			};
+//			console.log("param",param);
 
 			//⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐ 🚗 todo : 반드시 추후 주석 풀것!!!!!!!!!!!!!!!!!!!!!!
 			if(param.carNum == '')
@@ -1224,7 +1212,6 @@ var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
 				$('#user_name02').val()!='' && $("input[type=radio][name=category01]:checked").val() !=undefined){
             //======================================================== end =========================
 				ajax(false, contextPath+"/vfc/drive/verifyLicense", "", "", param, function(data) {
-
 					if(data != null && data != ""){
 
 						var resultHeaderCd = data.header.f_rtn_cd;
@@ -1235,7 +1222,8 @@ var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
                          resultHeaderCd(vrfc_rslt ) : 나머지  또는 2 일때 실패*/
 
 						if (resultHeaderCd == '00' || resultHeaderCd == '01' ) { // api 통신 성공 일때
-
+                            // 운전자격이력 일련번호
+                            vrfcHstrySn  = data.vrfc_hstry_sn;
 							$('#result').empty();
 
 							$('.result_popup').css('display', 'block');
@@ -1258,9 +1246,7 @@ var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
 							param.sn = data.vrfc_hstry_sn;
 //							param.dln ='251301689481'; //✂️todo
 							param.dln = $('#num01').val() + $('#num02').val() + $('#num03').val() + $('#num04').val(); //✂️todo
-
 							ajax(false, contextPath+"/vfc/drive/selectVerifyCd", "", "", param, function(result) {
-
 								if (result != null && result != "") {
 									rentno = result.rentno;
 									if(data.body.f_rtn_code == '00'){
@@ -1277,20 +1263,6 @@ var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
 						                    </p>`;
 											$('#result').prepend(html);
 										}
-										// ✂️todo : 대여이력건수 result.rentCnt
-//										if(result.rentCnt == 0){
-//											var html = `<br><p class="current_info" >
-//						                        최근 7일 대여이력이 없습니다.
-//						                    </p><br>`;
-//											$('#result').prepend(html);
-//										} else {
-//                                        $drive.event.popupVhclDfctList();
-//					                    	var html = `<br><p class="current_info">
-//						                        최근 7일 대여이력은
-//						                        <span class = "popupSpan" id = "rslt_rentalHistory" onclick =$drive.event.popupRntlHsListClick(); >`+ result.rentCnt + `건</span> 입니다.
-//						                    </p><br>`;
-//											$('#result').prepend(html);
-//										}
                                         // ✂️todo  운전자격확인 이력 건수 result.VfcHistCnt
 										if(result.VfcHistCnt == 0){
 											var html = `<br><p class="current_info" >
@@ -1322,53 +1294,12 @@ var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
 		                } else{   // api 통신 실패 일때
                             //============================================ 실패처리 24.02.14
                                 alert(resultHeaderMsg);
-//                            switch(resultHeader){
-//                                case '05' :
-//                                    alert("인증 정보 없음 (인증 토큰 없음)");
-//                                    break;
-//                                case '06' :
-//                                    alert("잘못된 인증 정보 (인증 토큰 값 오류)");
-//                                    break;
-//                                case '03' :
-//                                    alert("인증실패");
-//                                    break;
-//                                case '04' :
-//                                    alert("만료된 토큰 정보");
-//                                    break;
-//                                case '10' :
-//                                    alert("잘못된 경로를 통한 접근 (등록된 IP와 다름)");
-//                                    break;
-//                                case '20' :
-//                                    alert("복호화 키 정보 없음 (사용자 정보 중 복호화에 사용될 비밀 값이 없음)");
-//                                    break;
-//                                case '21' :
-//                                    alert("메시지 복호화 실패");
-//                                    break;
-//                                case '22' :
-//                                    alert("메시지 암호화 실패");
-//                                    break;
-//                                case '40' :
-//                                    alert("수수료 결제 정보 없음");
-//                                    break;
-//                                case '41' :
-//                                    alert("수수료 결제 중 오류");
-//                                    break;
-//                                case '97' :
-//                                    alert("자동 검증 시스템 작업 장애");
-//                                    break;
-//                                case '98' :
-//                                    alert("경찰청 운전 면허 조회 장애");
-//                                    break;
-//                                case '99' :
-//                                    alert("자동 검증 시스템 장애");
-//                                    break;
-//                            }
 						}
 					} else{
 						alert("운전자격 확인 중 오류가 발생하였습니다.");
 					}
 	            });
-// 🚗 todo 추후주석 풀기
+//// 🚗 todo 추후주석 풀기
 			} else{
 				alert("필수입력 정보를 입력해 주십시오.");
 			}
@@ -1394,11 +1325,13 @@ var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
 			}
 		},
 
-		updateRentSttsCd : function() {
+		updateRentSttsCd : function(param) {
+		    var obj = param;
+		    obj.rentno = rentno;
 			if($(".point02").length) {
 				alert("면허정보 조회 결과 비정상이기 때문에 대여처리 할 수 없습니다.");
 			} else {
-				ajax(false, contextPath+"/vfc/drive/updateRentSttsCd", "", "", {rentno: rentno}, function(result) {
+				ajax(false, contextPath+"/vfc/drive/updateRentSttsCd", "", "", obj, function(result) {
 					if (result != null && result=="success"){
 						alert("대여처리 완료되었습니다.");
 						$(".result_popup").removeClass("view");

@@ -169,9 +169,14 @@
 			        AND sgg_cd LIKE CONCAT(#{regCmptncCd}, '%')
 			    </when>
 			</choose>
-			<if test='delYn != "" and delYn != null'>
-				AND del_yn = 'Y'
-			</if>
+			<choose>
+				<when test='delYn.equals("Y")'>
+					AND del_yn = #{delYn}
+				</when>
+				<when test='delYn.equals("N")'>
+					AND (del_yn = 'N' OR del_yn ISNULL)
+				</when>
+			</choose>
 			<if test='searchAprvStts != "" and searchAprvStts != null'>
 				AND aprv_stts_cd = #{searchAprvStts}
 			</if>
@@ -287,7 +292,8 @@
 				, TO_CHAR(aprv_dmnd_dt, 'YYYY-MM-DD HH24:MI:SS.MS') aprv_dmnd_dt
 				, TO_CHAR(aprv_dt, 'YYYY-MM-DD HH24:MI:SS.MS') aprv_dt
 				, aprv_dmnd_cd
-			FROM
+				, del_yn
+			FROM 
 				dqvs.dvs_rac_mt_agency
 			) AS t
 		<if test="bzmnSn != null and bzmnSn != ''">
@@ -913,9 +919,14 @@
 				<if test='searchWrd != "" and searchWrd != null'>
 					AND (brno LIKE CONCAT('%', #{searchWrd}, '%') OR co_nm LIKE CONCAT('%', #{searchWrd}, '%'))
 				</if>
-				<if test='delYn != "" and delYn != null'>
-					AND del_yn = #{delYn} 
-				</if>
+				<choose>
+					<when test='delYn.equals("Y")'>
+						AND del_yn = #{delYn}
+					</when>
+					<when test='delYn.equals("N")'>
+						AND (del_yn = 'N' OR del_yn ISNULL)
+					</when>
+				</choose>
 			)T3
 	) AS T
 	</sql>

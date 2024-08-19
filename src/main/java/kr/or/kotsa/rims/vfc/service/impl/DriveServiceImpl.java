@@ -74,7 +74,6 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 			insertRent(paramsMap);
 		}
 		result.putAll(selectEtcInfo(paramsMap));
-
 		return result;
 	}
 
@@ -95,7 +94,8 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 
 		driveDao.insertRentHstryInfo(paramsMap);
 		driveDao.updateRentSttsCd(paramsMap);
-
+		// 대여처리시 운전자격이력에 대여유형 업데이트
+		driveDao.updateRentType(paramsMap);
 		return "success";
 	}
 
@@ -110,7 +110,7 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 		//대여이력 건수
 		int rentCnt = driveDao.selectRentCnt(paramsMap);
 		result.put("rentCnt", rentCnt);
-		// 최근 7일 운전자격이력 건수 : 24.08.01 jeonghyewon 추후 불필요할 경우 삭제 가능성 있음
+		// 최근 7일 운전자격이력 건수
 		int VfcHistCnt = driveDao.selectVfcHistCnt(paramsMap);
 		result.put("VfcHistCnt", VfcHistCnt);
 
