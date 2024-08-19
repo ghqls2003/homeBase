@@ -350,10 +350,10 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 		if ("계속사업자".equals(bStt) && "01".equals(bsnSttsCd)) {
 			bStt = "정상";
 			bsnSttsCd = "0";
-		} else if ("휴업".equals(bStt) && "02".equals(bsnSttsCd)) {
+		} else if ("휴업자".equals(bStt) && "02".equals(bsnSttsCd)) {
 			bStt = "휴업";
 			bsnSttsCd = "1";
-		} else if ("폐업".equals(bStt) && "03".equals(bsnSttsCd)) {
+		} else if ("폐업자".equals(bStt) && "03".equals(bsnSttsCd)) {
 			bStt = "폐업";
 			bsnSttsCd = "3";
 		} else if("".equals(bStt) && "".equals(bsnSttsCd) && taxType.equals("국세청에 등록되지 않은 사업자등록번호입니다.")){

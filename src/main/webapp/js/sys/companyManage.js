@@ -536,6 +536,8 @@
                          var message =JSON.parse(data.responseText).message;
                          if(message.includes("등록되지 않은 사업자등록번호")){
                               $('#businessStatus').css("color","#ff3838");
+                         }else{
+                              $('#businessStatus').css("color","#364BC6");
                          }
 
                          $('#businessStatus').append(`
