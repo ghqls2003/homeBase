@@ -35,7 +35,7 @@ public class ApiHistController extends CmmnAbstractServiceImpl {
 
 	/**
 	 * 자격검증 화면
-	 *
+	 *북촌
 	 * @return
 	 * @throws RimsException
 	 */
@@ -60,7 +60,11 @@ public class ApiHistController extends CmmnAbstractServiceImpl {
 	public Object selectlistViewapiHist(@RequestBody Map<String, Object> paramsMap) {
 
 		paramsMap.put("AuthCd", getAuthrtCd());
-		paramsMap.put("userSn", getUserSn());
+		String Auth = (String) paramsMap.get("AuthCd");
+
+		if (!"K01".equals(Auth) && !"D01".equals(Auth) && !"Z01".equals(Auth)) {
+		    paramsMap.put("userSn", getUserSn());
+		}
 		int total = ApiHistService.selectlistViewCnt(paramsMap);
 		List<Map<String, Object>> list = ApiHistService.selectlistView(paramsMap);
 
@@ -73,9 +77,13 @@ public class ApiHistController extends CmmnAbstractServiceImpl {
 	@RequestMapping("apiHist/listViewDev")
 	@ResponseBody
 	public Object selectlistViewapiDevHist(@RequestBody Map<String, Object> paramsMap) {
-		
 		paramsMap.put("AuthCd", getAuthrtCd());
-		paramsMap.put("userSn", getUserSn());
+
+		String Auth = (String) paramsMap.get("AuthCd");
+
+		if (!"K01".equals(Auth) && !"D01".equals(Auth) && !"Z01".equals(Auth)) {
+		    paramsMap.put("userSn", getUserSn());
+		}
 		int total = ApiHistService.selectlistViewapiHistDevCnt(paramsMap);
 		List<Map<String, Object>> list = ApiHistService.selectlistViewapiHistDev(paramsMap);
 		

@@ -29,8 +29,6 @@ public class ApiHistServiceImpl extends CmmnAbstractServiceImpl implements ApiHi
 	 */
 	@Override
 	public List<Map<String, Object>> selectlistView(Map<String, Object> paramsMap) {
-		paramsMap.put("AuthCd", getAuthrtCd());
-		paramsMap.put("UserSn", getUserSn());
 		return apiHistDao.selectlistView(paramsMap);
 	}
 
@@ -43,27 +41,19 @@ public class ApiHistServiceImpl extends CmmnAbstractServiceImpl implements ApiHi
 
 	@Override
 	public int selectApiSttsViewCnt(Map<String, Object> paramsMap) {
-		paramsMap.put("AuthCd", getAuthrtCd());
-		paramsMap.put("UserSn", getUserSn());
 		return apiHistDao.selectApiSttsViewCnt(paramsMap);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectlistViewapiHistDev(Map<String, Object> paramsMap) {
-		paramsMap.put("AuthCd", getAuthrtCd());
-		paramsMap.put("UserSn", getUserSn());
 		return apiHistDao.selectlistViewapiHistDev(paramsMap);
 	}
 	@Override
 	public int selectlistViewapiHistDevCnt(Map<String, Object> paramsMap) {
-		paramsMap.put("AuthCd", getAuthrtCd());
-		paramsMap.put("UserSn", getUserSn());
 		return apiHistDao.selectlistViewapiHistDevCnt(paramsMap);
 	}
 	@Override
 	public int selectlistViewCnt(Map<String, Object> paramsMap) {
-		paramsMap.put("AuthCd", getAuthrtCd());
-		paramsMap.put("UserSn", getUserSn());
 		return apiHistDao.selectlistViewCnt(paramsMap);
 	}
 
