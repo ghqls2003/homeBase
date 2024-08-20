@@ -129,6 +129,7 @@
 		</if>
 	</insert>
 
+	<!-- 대여정보 대여확정 처리  -->
 	<update id="updateRentSttsCd">
         <if test="rentno != null and rentno != ''">
 	        UPDATE dqvs.dvs_dqv_mt_rent

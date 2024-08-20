@@ -87,17 +87,21 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 //		driveDao.insertRentHstryInfo(paramsMap);
 	}
 
-	//대여처리
 	public String updateRentSttsCd(Map<String, Object> paramsMap) {
 		paramsMap.put("mdfrSn", getUserSn());
 		paramsMap.put("mdfcnIp", getClientIP());
-
+		String rentalTypeYn = (String) paramsMap.get("rentalTypeYn");
 		driveDao.insertRentHstryInfo(paramsMap);
+		// 대여정보 대여확정처리
 		driveDao.updateRentSttsCd(paramsMap);
-		// 대여처리시 운전자격이력에 대여유형 업데이트
-		driveDao.updateRentType(paramsMap);
+
+		if(rentalTypeYn.equals("Y")){ // 대여유형 포함 : Y
+			// 대여처리시 운전자격이력에 대여유형 업데이트
+			driveDao.updateRentType(paramsMap);
+		}
 		return "success";
 	}
+
 
 	//운전자격검증 부가정보 등록
 	public void insertEtcInfo(Map<String, Object> paramsMap) {
