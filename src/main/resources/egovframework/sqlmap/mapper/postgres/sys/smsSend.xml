@@ -14,6 +14,7 @@
 		from dqvs.dvs_cmm_mt_auth
 		where use_yn = 'Y'		
 		and authrt_cd in ('S01', 'S02', 'S03', 'S04', 'S05', 'G01')
+		order by authrt_cd asc
     </select>
     
     <!-- 검색옵션 - 시도(전체) -->
@@ -179,20 +180,27 @@
 	<sql id="SmsSendInfoSql">
 	<if test="dateType.equals('send_date') and startDt != '' and startDt != null and endDt != '' and endDt != null">
     (
-    	select row_number() over(order by T1.sndng_rsvt_dt desc) rn
-			, T1.*
+    	select
+    		row_number() over(
+			order by T1.sndng_dt desc) rn ,
+			T1.cn ,
+			T1.rsvt_yn ,
+			TO_CHAR(T1.sndng_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_dt,
+			TO_CHAR(T1.sndng_rsvt_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_rsvt_dt,
+			T1.rcvr,
+			T1.rcvr_telno
 		from(
 			select 
 				cn
 				, rsvt_yn
-				, TO_CHAR(sndng_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_dt
-				, TO_CHAR(sndng_rsvt_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_rsvt_dt
+				, sndng_dt
+				, sndng_rsvt_dt
 				, rcvr
 				, dqvs.pca_decrypt(rcvr_telno, '150') rcvr_telno
 			from dqvs.dvs_cmm_hs_sms_send
 			)as T1
 		where 1 = 1
-        	and (T1.sndng_rsvt_dt between #{startDt} || '000000' and #{endDt} || '235959')
+        	and (T1.sndng_rsvt_dt BETWEEN #{startDt}::TIMESTAMP AND #{endDt}::DATE + '23:59:59'::INTERVAL)
 		<if test="sendType != '' and sendType != null">
            	and T1.rsvt_yn = #{sendType}
 		</if>
@@ -209,20 +217,27 @@
 	</if>
 	<if test="dateType.equals('now_date') and startDt != '' and startDt != null and endDt != '' and endDt != null">
     (
-    	SELECT ROW_NUMBER() OVER(ORDER BY T1.sndng_dt desc) rn
-			, T1.*
+    	SELECT 
+    		row_number() over(
+			order by T1.sndng_dt desc) rn ,
+			T1.cn ,
+			T1.rsvt_yn ,
+			TO_CHAR(T1.sndng_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_dt,
+			TO_CHAR(T1.sndng_rsvt_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_rsvt_dt,
+			T1.rcvr,
+			T1.rcvr_telno
 		FROM(
 			SELECT 
 				cn
 				, rsvt_yn
-				, TO_CHAR(sndng_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_dt
-				, TO_CHAR(sndng_rsvt_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_rsvt_dt
+				, sndng_dt
+				, sndng_rsvt_dt
 				, rcvr
 				, dqvs.pca_decrypt(rcvr_telno, '150') rcvr_telno
 			FROM dqvs.dvs_cmm_hs_sms_send
 			)AS T1
 		WHERE 1 = 1
-        	AND (T1.sndng_dt BETWEEN #{startDt} || '000000' AND #{endDt} || '235959')
+        	AND (T1.sndng_dt BETWEEN #{startDt}::TIMESTAMP AND #{endDt}::DATE + '23:59:59'::INTERVAL)
 		<if test="sendType != '' and sendType != null">
            	AND T1.rsvt_yn = #{sendType}
 		</if>

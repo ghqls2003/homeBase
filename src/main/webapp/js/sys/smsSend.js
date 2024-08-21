@@ -114,7 +114,7 @@
 	    	];
 
 	    	$(".sub04 #searchOtherCondition").kendoDropDownList({
-              optionLabel: "전체",
+              optionLabel: "검색조건",
               dataTextField: "text",
               dataValueField: "value",
               dataSource: searchOtherCondition,
@@ -168,7 +168,7 @@
 			];
 			
 			 $("#searchType").kendoDropDownList({
-					optionLabel: '전체',
+					optionLabel: '검색조건',
 					dataTextField: "text",
 					dataValueField: "value",
 					dataSource: searchType,
@@ -294,13 +294,9 @@
 							},
 						},
 						parameterMap: function(options){
-							var sd = $("#start-picker01").val();
-							var ed = $("#end-picker01").val();
-							var startDt = sd.replace(/-/g, "");
-							var endDt = ed.replace(/-/g, "");
 							options.dateType = $("#dateType").val();
-							options.startDt = startDt;
-							options.endDt = endDt;
+							options.startDt = $("#start-picker01").val();
+							options.endDt = $("#end-picker01").val();
 							options.sendType = $("#sendType").val();
 							options.searchType = $("#searchType").val();
 							options.searchWrd = $("#searchWrd").val();
@@ -639,13 +635,9 @@
 				alert("데이터가 존재하지 않습니다.");
 			} else {
 				if(Object.keys(excelDownArc).length === 0) {
-					var sd = $("#start-picker01").val();
-					var ed = $("#end-picker01").val();
-					var startDt = sd.replace(/-/g, "");
-					var endDt = ed.replace(/-/g, "");
 					excelDownArc.dateType = $("#dateType").val();
-					excelDownArc.startDt = startDt;
-					excelDownArc.endDt = endDt;
+					excelDownArc.startDt = $("#start-picker01").val();
+					excelDownArc.endDt = $("#end-picker01").val();
 					excelDownArc.sendType = $("#sendType").val();
 					excelDownArc.searchType = $("#searchType").val();
 					excelDownArc.searchWrd = $("#searchWrd").val();
@@ -1010,13 +1002,9 @@
 				alert("검색조건을 입력해주세요");
 			}
 			else{
-				var sd = $("#start-picker01").val();
-				var ed = $("#end-picker01").val();
-				var startDt = sd.replace(/-/g, "");
-				var endDt = ed.replace(/-/g, "");
 				excelDownArc.dateType = $("#dateType").val();
-				excelDownArc.startDt = startDt;
-				excelDownArc.endDt = endDt;
+				excelDownArc.startDt = $("#start-picker01").val();
+				excelDownArc.endDt = $("#end-picker01").val();
 				excelDownArc.sendType = $("#sendType").val();
 				excelDownArc.searchType = $("#searchType").val();
 				excelDownArc.searchWrd = $("#searchWrd").val();
