@@ -290,7 +290,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 						        //  최근 7일 이력 조회
 //						        var dln = '251301689481'; // 🚗 todo 더미
 						        var dln =  $('#num01').val() + $('#num02').val() + $('#num03').val() + $('#num04').val();// todo 더미 추후 풀기
-
+                                 //✂️todo : 대여정보이력일때
 //                                var now = new Date();
 //                                var endDt = dateToStr(now);
 //                                var startDt = dateToStr(new Date(now.getTime() - 1000 * 60 * 60 * 24 * 7));
@@ -1054,6 +1054,8 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
                         		</div>
                             </div>`;
             $('#popup_drvVfcHist_box').append(tempHtml);
+                 // ✂️todo
+            //            $drive.ui.popupGridLoad('#rentalHistManage_grid','/vfc/rentalHistManage/selectRentalHistList', rentalHistManageColumns);
             $drive.ui.popupGridLoad('#rentalHistManage_grid','/vfc/drvVfcHist/listView.do', rentalHistManageColumns);
 
         },
@@ -1272,6 +1274,23 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 						                    </p>`;
 											$('#result').prepend(html);
 										}
+
+																				// ✂️todo : 대여이력건수 result.rentCnt
+                                        //										if(result.rentCnt == 0){
+                                        //											var html = `<br><p class="current_info" >
+                                        //						                        최근 7일 대여이력이 없습니다.
+                                        //						                    </p><br>`;
+                                        //											$('#result').prepend(html);
+                                        //										} else {
+                                        //                                        $drive.event.popupVhclDfctList();
+                                        //					                    	var html = `<br><p class="current_info">
+                                        //						                        최근 7일 대여이력은
+                                        //						                        <span class = "popupSpan" id = "rslt_rentalHistory" onclick =$drive.event.popupRntlHsListClick(); >`+ result.rentCnt + `건</span> 입니다.
+                                        //						                    </p><br>`;
+                                        //											$('#result').prepend(html);
+                                        //										}
+										//==================================================대여이력건수 end
+
                                         // ✂️todo  운전자격확인 이력 건수 result.VfcHistCnt
 										if(result.VfcHistCnt == 0){
 											var html = `<br><p class="current_info" >
@@ -1286,6 +1305,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 						                    </p><br>`;
 											$('#result').prepend(html);
 										}
+										//==================================================운전자격확인 이력 건수 end
 										var html = `<p class="current_info">운전면허정보 조회 결과 <span class="point">정상</span> 입니다.</p>`;
 										$('#result').prepend(html);
 										$('#rentCfm').css('display', 'block');
