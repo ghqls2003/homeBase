@@ -1192,12 +1192,15 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 
 		// 웹으로 결과 전달(2)
 		alcheraCheckResult: function(json) {
-			console.log(json);
-			if(json != null) {
+			alert('1');
+			var data = JSON.parse(json);
+			console.log(data);
+			if(data.similarityConfidence != null && data.livenessConfidence != null) {
 				$drive.event.verifyLicense();
+			} else {
+				alert('data 값없음');
 			}
 		},
-		
 		verifyLicense : function() {
             var dateData = $drive.event.vfcHistDateDt();
             var startDtTm = dateData.startDtTm;
