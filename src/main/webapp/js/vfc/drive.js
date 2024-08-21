@@ -675,7 +675,12 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 	$drive.event = {
 		setUIEvent : function() {
 			$('.verify-btn').click(function(){
-				$drive.event.verifyLicense();
+				// 네이티브 호출(1)
+				if(userOperSystemBool){
+					ocrInterface.runAlcheraLicenseCheck();
+				}else {
+					window.webkit.messageHandlers.runAlcheraLicenseCheck.postMessage('');
+				}
 			});
 
 			$('#homeBtn').click(function(){
@@ -1185,10 +1190,18 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
             return param;
         },
 
+		// 웹으로 결과 전달(2)
+		alcheraCheckResult: function(json) {
+			console.log(json);
+			if(json != null) {
+				$drive.event.verifyLicense();
+			}
+		},
+		
 		verifyLicense : function() {
-                var dateData = $drive.event.vfcHistDateDt();
-                var startDtTm = dateData.startDtTm;
-                var endDtTm = dateData.endDtTm;
+            var dateData = $drive.event.vfcHistDateDt();
+            var startDtTm = dateData.startDtTm;
+            var endDtTm = dateData.endDtTm;
 			var param = {
 				num: $('#num01').val() + $('#num02').val() + $('#num03').val() + $('#num04').val(),
 				name: $('#name').val(),
