@@ -34,11 +34,6 @@ public class InspectionHistServiceImpl extends CmmnAbstractServiceImpl implement
 	}
 
 	@Override
-	public int insertFile(Map<String, Object> paramsMap) {
-		return inspectionHistDao.insertFile(paramsMap);
-	}
-
-	@Override
 	public List<Map<String, Object>> ctpvNm(Map<String, Object> paramsMap) {
 		return inspectionHistDao.ctpvNm(paramsMap);
 	}
@@ -61,6 +56,16 @@ public class InspectionHistServiceImpl extends CmmnAbstractServiceImpl implement
 	@Override
 	public int updateInspectionHist(Map<String, Object> paramsMap) {
 		return inspectionHistDao.updateInspectionHist(paramsMap);
+	}
+
+	@Override
+	public List<Map<String, Object>> agencyList(Map<String, Object> paramsMap) {
+		return inspectionHistDao.agencyList(paramsMap);
+	}
+
+	@Override
+	public List<Map<String, Object>> agencyInfo(Map<String, Object> paramsMap) {
+		return inspectionHistDao.agencyInfo(paramsMap);
 	}
 
 }

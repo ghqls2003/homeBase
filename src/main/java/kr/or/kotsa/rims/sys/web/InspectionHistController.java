@@ -86,12 +86,6 @@ public class InspectionHistController extends CmmnAbstractServiceImpl{
 		return inspectionHistService.insertInspectionHist(paramsMap);
 	}
 	
-	@RequestMapping("/inspectionHist/insertFile")
-	@ResponseBody
-	public int insertFile(@RequestBody Map<String, Object> paramsMap) throws RimsException {
-		return inspectionHistService.insertFile(paramsMap);
-	}
-	
 	//클립리포트
 	@RequestMapping("inspectionReport")
 	public ModelAndView inspectionReport(@RequestParam Map<String, Object> paramsMap, ModelAndView mav,
@@ -132,6 +126,22 @@ public class InspectionHistController extends CmmnAbstractServiceImpl{
 
         return inspectionHistService.updateInspectionHist(paramsMap);
     }
+	
+	@RequestMapping(value = "/inspectionHist/agencyList")
+	public ModelAndView agencyList(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		List<Map<String, Object>> result = inspectionHistService.agencyList(paramsMap);
+		
+		ModelAndView mav = new ModelAndView("jsonView");
+	    mav.addObject("data", result);
+	    
+		return mav;
+	}
+	
+	@RequestMapping(value = "/inspectionHist/agencyInfo")
+	@ResponseBody
+	public List<Map<String, Object>> agencyInfo(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		return inspectionHistService.agencyInfo(paramsMap);
+	}
 	
 	
 }

@@ -39,3 +39,6 @@
 /* 삭제 버튼 */
 button.red_btn{width: 152px;height: 54px;background-color: #ff3838;border-radius: 8px;font-size: 1.8rem;line-height: 26px;color: #fff;}
 button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff3838;}
+
+/*  */
+#directInsertPopup #agencyNm{height: 36px;}

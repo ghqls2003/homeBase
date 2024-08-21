@@ -71,12 +71,15 @@ public class SmsSendController extends CmmnAbstractServiceImpl{
         return smsSendService.selectAuth(paramsMap);
     }
 	
-	
 	// 법인별 회사 목록
 	@RequestMapping("/smsSend/selectCrno")
-    @ResponseBody
-    public List<Map<String, Object>> selectCrno(@RequestBody Map<String, Object> paramsMap) {
-        return smsSendService.selectCrno(paramsMap);
+    public ModelAndView selectCrno(@RequestBody Map<String, Object> paramsMap) {
+        List<Map<String, Object>> result = smsSendService.selectCrno(paramsMap);
+        
+        ModelAndView mav = new ModelAndView("jsonView");
+        mav.addObject("data", result);
+        
+        return mav;
     }
 	
 	// 문자 발송 이력 그리드

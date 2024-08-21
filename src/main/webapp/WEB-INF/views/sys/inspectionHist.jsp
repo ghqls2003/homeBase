@@ -48,8 +48,8 @@
                                <input id="searchSggNm">
                            </li>
                            <li class="li_slec">
-                               <label for="searchAuthrtCd" hidden> 권한(전체)</label>
-                               <input id="searchAuthrtCd">
+                               <label for="searchBzmnSeCd" hidden> 권한(전체)</label>
+                               <input id="searchBzmnSeCd">
                            </li>
                            <li class="li_slec">
                                <label for="searchBsnSttsCd" hidden> 영업상태(전체)</label>
@@ -149,7 +149,7 @@
 								        <h4 class="name">지도원 정보</h4>
 								    </div>
 								    <div class="cont cont-flex">
-								        <table class="tb rental_tb01 inspector">
+								        <table class="tb rental_tb01 inspector"> 
 								        	<tr>
 								           	<th>
 								           	순번
@@ -212,17 +212,26 @@
 
 								<div class="contBox">
 								    <div class="nameBox nameBox-flex">
-								        <h4 class="name">지도 내용</h4>
+								        <h4 class="name">회사 정보</h4>
 								    </div>
 								    <div class="cont cont-flex">
 								        <table class="tb rental_tb01">
+								       	 	<tr>
+								                <th scope="col"><span class="asterisk">*</span>법인조회</th>
+								                <td>
+								                    <div class="tb_flex">
+								                        <label for="">법인조회</label>
+								                        <input id="agencyNm" name="agencyNm" />
+								                    </div>
+								                </td>
+								            </tr>
 								            <tr>
 								                <th scope="col"><span class="asterisk">*</span>영업상태</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="">영업상태</label>
-								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="영업상태"
-								                               oninput="charOnly(this)" />
+								                        <label for="bsnSttsNm">영업상태</label>
+								                        <input type="text" id="bsnSttsNm" name="bsnSttsNm" class="input" maxLength="80" aria-label="영업상태"
+								                               readOnly />
 								                    </div>
 								                </td>
 								            </tr>
@@ -230,9 +239,9 @@
 								                <th scope="col"><span class="asterisk">*</span>상태변경일시</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="insertBrno">상태변경일시</label>
-								                        <input type="text" id="insertBrno" name="insertBrno" class="input" maxlength="12" aria-label="상태변경일시"
-								                               oninput="brnoFormat(this)" />
+								                        <label for="bsnSttsMdfcnDt">상태변경일시</label>
+								                        <input type="text" id="bsnSttsMdfcnDt" name="bsnSttsMdfcnDt" class="input" maxlength="12" aria-label="상태변경일시"
+								                              readOnly />
 								                    </div>
 								                </td>
 								            </tr>
@@ -240,12 +249,54 @@
 								                <th scope="col"><span class="asterisk">*</span>연락처</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="">연락처</label>
-								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="전화번호"
-								                               oninput="charOnly(this)" />
+								                        <label for="agencyTelno">연락처</label>
+								                        <input type="text" id="agencyTelno" name="agencyTelno" class="input" maxLength="80" aria-label="전화번호"
+								                              readOnly />
 								                    </div>
 								                </td>
 								            </tr>
+								        </table>
+								        <table class="tb rental_tb01">
+								            <tr>
+								                <th scope="col"><span class="asterisk">*</span>대표자명</th>
+								                <td>
+								                    <div class="tb_flex">
+								                        <label for="rprsvNm">대표자명</label>
+								                        <input type="text" id="rprsvNm" name="rprsvNm" class="input" maxLength="80" aria-label="대표자명"
+								                              readOnly />
+								                    </div>
+								                </td>
+								            </tr>
+								            <tr>
+								                <th scope="col">사업자번호</th>
+								                <td>
+								                    <div class="tb_flex">
+								                        <label for="brno">사업자번호</label>
+								                        <input type="text" id="brno" name="brno" class="input" maxLength="80" aria-label="사업자번호"
+								                              readOnly />
+								                    </div>
+								                </td>
+								            </tr>
+								             <tr>
+								                <th scope="col">소재지</th>
+								                <td>
+								                    <div class="tb_flex">
+								                        <label for="jurisdiction">소재지</label>
+								                        <input type="text" id="jurisdiction" name="jurisdiction" class="input" maxLength="80" aria-label="소재지"
+								                               readOnly />
+								                    </div>
+								                </td>
+								            </tr>
+								        </table>
+								    </div>
+								</div>
+
+							<div class="contBox">
+								    <div class="nameBox nameBox-flex">
+								        <h4 class="name">지도 내용</h4>
+								    </div>
+								    <div class="cont cont-flex">
+								        <table class="tb rental_tb01">
 								            <tr>
 								                <th scope="col"><span class="asterisk">*</span>지도항목</th>
 								                <td>
@@ -257,47 +308,24 @@
 								                </td>
 								            </tr>
 								           	<tr>
-								                <th scope="col">지도내용</th>
+								                <th scope="col">첨부파일</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="regChckCn">지도내용</label>
-								                        <input type="text" id="regChckCn" name="regChckCn" class="input" maxLength="80" aria-label="지도내용"
-								                               oninput="charOnly(this)" />
+									                    <input id="fileNm" type="text" placeholder="지도점검결과 파일을 등록해주세요" class="input inp filetype" disabled="disabled" readonly />
+														<input
+															type="file" id="fileUpload" name="files"
+															onchange="fileAddCheck(this)" class="upload-hidden"
+															style="display: none;" accept=".jpg, .jpeg, .png, .pdf" />
+<!-- 														<button id="fileBtn" class="yellow_btn"> -->
+<%-- 															<img src="${contextPath}/images/sub/ico_search02.png" alt="검색아이콘"> --%>
+<!-- 														</button> -->
+														<button class="yellow_btn" id="fileBtn">파일첨부</button>
 								                    </div>
 								                </td>
 								            </tr>
+								            
 								        </table>
 								        <table class="tb rental_tb01">
-								            <tr>
-								                <th scope="col"><span class="asterisk">*</span>대표자명</th>
-								                <td>
-								                    <div class="tb_flex">
-								                        <label for="">대표자명</label>
-								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="대표자명"
-								                               oninput="charOnly(this)" />
-								                    </div>
-								                </td>
-								            </tr>
-								            <tr>
-								                <th scope="col">사업자번호</th>
-								                <td>
-								                    <div class="tb_flex">
-								                        <label for="regBrno">사업자번호</label>
-								                        <input type="text" id="regBrno" name="regBrno" class="input" maxLength="80" aria-label="사업자번호"
-								                               oninput="charOnly(this)" />
-								                    </div>
-								                </td>
-								            </tr>
-								             <tr>
-								                <th scope="col">소재지</th>
-								                <td>
-								                    <div class="tb_flex">
-								                        <label for="">소재지</label>
-								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="소재지"
-								                               oninput="charOnly(this)" />
-								                    </div>
-								                </td>
-								            </tr>
 								            <tr>
 								                <th scope="col">기타항목</th>
 								               	<td>
@@ -314,6 +342,16 @@
 								                    <div class="tb_flex">
 								                        <label for="regChckPlc">지도장소</label>
 								                        <input type="text" id="regChckPlc" name="regChckPlc" class="input" maxLength="80" aria-label="지도장소"
+								                               oninput="charOnly(this)" />
+								                    </div>
+								                </td>
+								            </tr>
+								            <tr>
+								                <th scope="col"><span class="asterisk">*</span>지도내용</th>
+								                <td>
+								                    <div class="tb_flex">
+								                        <label for="regChckCn">지도내용</label>
+								                        <input type="text" id="regChckCn" name="regChckCn" class="input" maxLength="80" aria-label="지도내용"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
@@ -536,16 +574,26 @@
 
 								<div class="contBox">
 								    <div class="nameBox nameBox-flex">
-								        <h4 class="name">지도 내용</h4>
+								        <h4 class="name">회사 정보</h4>
 								    </div>
 								    <div class="cont cont-flex">
 								        <table class="tb rental_tb01">
+								        	<tr>
+								                <th scope="col"><span class="asterisk">*</span>회사명</th>
+								                <td>
+								                    <div class="tb_flex">
+								                        <label for="detailCoNm">회사명</label>
+								                        <input type="text" id="detailCoNm" name="detailCoNm" class="input no_line" maxLength="80" aria-label="회사명"
+								                               readonly/>
+								                    </div>
+								                </td>
+								            </tr>
 								            <tr>
 								                <th scope="col"><span class="asterisk">*</span>영업상태</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="detailBsnSttsCd">영업상태</label>
-								                        <input type="text" id="detailBsnSttsCd" name="detailBsnSttsCd" class="input no_line" maxLength="80" aria-label="영업상태"
+								                        <label for="detailBsnSttsNm">영업상태</label>
+								                        <input type="text" id="detailBsnSttsNm" name="detailBsnSttsNm" class="input no_line" maxLength="80" aria-label="영업상태"
 								                               readonly/>
 								                    </div>
 								                </td>
@@ -567,26 +615,6 @@
 								                        <label for="detailAgencyTelno">연락처</label>
 								                        <input type="text" id="detailAgencyTelno" name="detailAgencyTelno" class="input no_line" maxLength="80" aria-label="전화번호"
 								                               readonly />
-								                    </div>
-								                </td>
-								            </tr>
-								            <tr>
-								                <th scope="col"><span class="asterisk">*</span>지도항목</th>
-								                <td>
-								                    <div class="tb_flex">
-								                        <label for="detailChckArtcl">지도항목</label>
-								                        <input type="text" id="detailChckArtcl" name="detailChckArtcl" class="input" maxLength="80" aria-label="지도항목"
-								                               oninput="charOnly(this)" />
-								                    </div>
-								                </td>
-								            </tr>
-								           	<tr>
-								                <th scope="col">지도내용</th>
-								                <td>
-								                    <div class="tb_flex">
-								                        <label for="detailChckCn">지도내용</label>
-								                        <input type="text" id="detailChckCn" name="detailChckCn" class="input" maxLength="80" aria-label="지도내용"
-								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
 								            </tr>
@@ -622,6 +650,51 @@
 								                    </div>
 								                </td>
 								            </tr>
+								        </table>
+								    </div>
+								</div>
+								
+								<div class="contBox">
+								    <div class="nameBox nameBox-flex">
+								        <h4 class="name">지도 내용</h4>
+								    </div>
+								    <div class="cont cont-flex">
+								        <table class="tb rental_tb01">
+								            <tr>
+								                <th scope="col"><span class="asterisk">*</span>지도항목</th>
+								                <td>
+								                    <div class="tb_flex">
+								                        <label for="detailChckArtcl">지도항목</label>
+								                        <input type="text" id="detailChckArtcl" name="detailChckArtcl" class="input" maxLength="80" aria-label="지도항목"
+								                               oninput="charOnly(this)" />
+								                    </div>
+								                </td>
+								            </tr>
+								           	<tr>
+								                <th scope="col">지도내용</th>
+								                <td>
+								                    <div class="tb_flex">
+								                        <label for="detailChckCn">지도내용</label>
+								                        <input type="text" id="detailChckCn" name="detailChckCn" class="input" maxLength="80" aria-label="지도내용"
+								                               oninput="charOnly(this)" />
+								                    </div>
+								                </td>
+								            </tr>
+								            <tr>
+								                <th scope="col">첨부파일</th>
+								                <td>
+								                    <div class="tb_flex">
+								                    	<label for="detailFileNm">첨부파일</label>
+														<input style="display: none;" id="detailFileNo" name ="detailFileNo" style="display: none;" aria-label="첨부파일 번호" readonly />
+														<input id="detailFileNm" name="detailFileNm" class="input" aria-label="첨부파일" readonly />
+														<label for="detailFile" style="display: none;">첨부파일</label>
+														<input type="file" id="detailFile" name="files" style="display: none;" aria-label="첨부파일"  onchange='fileAddCheck(this)' accept=".jpg, .jpeg, .gif, .png, .pdf">
+														<button class="yellow_btn detailFileBtn">파일첨부</button>
+								                    </div>
+								                </td>
+								            </tr>
+								        </table>
+								        <table class="tb rental_tb01">
 								            <tr>
 								                <th scope="col">기타항목</th>
 								               	<td>
