@@ -147,6 +147,9 @@
 				value: new Date(),
 			});
 			
+			$("#start-picker01").attr("readonly", true);
+			$("#end-picker01").attr("readonly", true);
+			
 			// 발송 유형
 			var sendType = [
 				{ cd: 0, sendType: "즉시 전송"},

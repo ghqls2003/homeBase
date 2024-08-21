@@ -38,7 +38,7 @@ public class SmsSendController extends CmmnAbstractServiceImpl{
 	public ModelAndView viewSmsSend(@RequestParam Map<String, Object> paramsMap, ModelAndView mav,
 			HttpServletRequest request, HttpServletResponse response, HttpSession session) throws RimsException {
 		
- 		String [] validAuth = {"Z01", "K01", "M01", "D01", "G01", "G02"};
+ 		String [] validAuth = {"Z01", "K01", "D01", "G01"};
 		if(Arrays.asList(validAuth).contains(getAuthrtCd())) {
 		} else {
 			mav.setViewName("redirect:/");
