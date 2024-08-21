@@ -601,8 +601,15 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			}
 			$('.policy_popup .text').append(html);
 		},
-		//app 에 호출 함수
-		showAndroidToast: function() {
+		//app 에 호출 함수들
+		similarityApp: function() {  // 유사도
+			if(userOperSystemBool){
+				ocrInterface.runAlcheraLicenseCheck();
+			} else {
+				window.webkit.messageHandlers.runAlcheraLicenseCheck.postMessage('');
+			}
+		},
+		showAndroidToast: function() {  // OCR
 			if(userOperSystemBool){
 			  	ocrInterface.photographyOCR();
 			}else {
@@ -675,12 +682,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 	$drive.event = {
 		setUIEvent : function() {
 			$('.verify-btn').click(function(){
-				// 네이티브 호출(1)
-				if(userOperSystemBool){
-					ocrInterface.runAlcheraLicenseCheck();
-				}else {
-					window.webkit.messageHandlers.runAlcheraLicenseCheck.postMessage('');
-				}
+				$drive.ui.similarityApp();
 			});
 
 			$('#homeBtn').click(function(){
@@ -1196,7 +1198,6 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 		alcheraCheckResult: function(json) {
 			alert('1');
 			var data = JSON.parse(json);
-			console.log(data);
 			if(data.similarityConfidence != null && data.livenessConfidence != null) {
 				$drive.event.verifyLicense();
 			} else {
