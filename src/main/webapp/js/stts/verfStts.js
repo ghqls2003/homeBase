@@ -41,8 +41,6 @@
 		$statistics.event.rmTabBtn();
 		$statistics.event.enterKey();
 		
-		// 테스트중
-//		$(".rmDv").click();
     });
     
     $statistics.ui = {
@@ -449,7 +447,7 @@
 				start: "year",
     			depth: "year"
 			}).width(10);
-
+			$("#verfDatePick").attr("readonly", true);
 			excelDate = $("#verfDatePick").val();	
 			excelMthd = $("#checkMthd").data("kendoDropDownList").text();
 		},
