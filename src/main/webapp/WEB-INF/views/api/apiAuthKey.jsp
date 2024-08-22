@@ -288,6 +288,7 @@ button.gray_btn:hover {
 }
 
 .api_page .use_wr ul.bx {
+    width: 100% !important;
 	padding: 29px 33px;
 	height: calc(100%/ 2);
 	display: flex;
