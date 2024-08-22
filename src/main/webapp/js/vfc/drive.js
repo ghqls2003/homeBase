@@ -694,33 +694,34 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			});
 
             // 대여유형 포함 코드 =======================================
-			$('#rentCfm').click(function(){
-			    var onewayYn = $("input[type=radio][name=category02]:checked").val();
-			    var vrfcHstrySn1 = vrfcHstrySn;
-			    var param = {onewayYn : onewayYn,
-			                 vrfcHstrySn : vrfcHstrySn1
-			                 };
-// todo
-//				if ('01하5030'== ''){
-				if ($('#car_num').val() == ''){
-					alert('차량번호를 입력해주세요.');
-
-				}else if (onewayYn =='' || onewayYn == null || onewayYn == ' '){
-				    alert('대여유형을 선택해주세요.');
-				} else {
-					$drive.event.updateRentSttsCdInclRentalType(param);
-				}
-			});
+//			$('#rentCfm').click(function(){
+//			    var onewayYn = $("input[type=radio][name=category02]:checked").val();
+//			    var vrfcHstrySn1 = vrfcHstrySn;
+//			    var param = {onewayYn : onewayYn,
+//			                 vrfcHstrySn : vrfcHstrySn1
+//			                 };
+//// todo
+////				if ('01하5030'== ''){
+//				if ($('#car_num').val() == ''){
+//					alert('차량번호를 입력해주세요.');
+//
+//				}else if (onewayYn =='' || onewayYn == null || onewayYn == ' '){
+//				    alert('대여유형을 선택해주세요.');
+//				}
+//				else {
+//					$drive.event.updateRentSttsCdInclRentalType(param);
+//				}
+//			});
 			//================================================end=======
 
             // 대여유형 미포함 코드 =======================================
-//			$('#rentCfm').click(function(){
-//				if ($('#car_num').val() == ''){
-//					alert('차량번호를 입력해주세요.');
-//				} else {
-//					$drive.event.updateRentSttsCd();
-//				}
-//			});
+			$('#rentCfm').click(function(){
+				if ($('#car_num').val() == ''){
+					alert('차량번호를 입력해주세요.');
+				} else {
+					$drive.event.updateRentSttsCd();
+				}
+			});
 			//================================================end=======
 
 
@@ -1373,22 +1374,22 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 //        },
 //
 //        // 대여유형 미!!!포함
-//        updateRentSttsCd : function() {
-//            var obj1 = {};
-//            obj1.rentno = rentno;
-//            obj1.rentalTypeYn = 'N';
-//            if($(".point02").length) {
-//                alert("면허정보 조회 결과 비정상이기 때문에 대여처리 할 수 없습니다.");
-//            } else {
-//                ajax(false, contextPath+"/vfc/drive/updateRentSttsCd", "", "", obj1, function(result) {
-//                    if (result != null && result=="success"){
-//                        alert("대여처리 완료되었습니다.");
-//                        $(".result_popup").removeClass("view");
-//                        location.reload();
-//                    }
-//                });
-//            }
-//        },
+        updateRentSttsCd : function() {
+            var obj1 = {};
+            obj1.rentno = rentno;
+            obj1.rentalTypeYn = 'N';
+            if($(".point02").length) {
+                alert("면허정보 조회 결과 비정상이기 때문에 대여처리 할 수 없습니다.");
+            } else {
+                ajax(false, contextPath+"/vfc/drive/updateRentSttsCd", "", "", obj1, function(result) {
+                    if (result != null && result=="success"){
+                        alert("대여처리 완료되었습니다.");
+                        $(".result_popup").removeClass("view");
+                        location.reload();
+                    }
+                });
+            }
+        },
 
 		resetInput : function() {
 			$("#num01").data("kendoDropDownList").select(0);
