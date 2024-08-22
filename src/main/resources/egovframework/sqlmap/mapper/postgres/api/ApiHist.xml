@@ -55,21 +55,8 @@
 					    LEFT JOIN dqvs.dvs_rac_mt_agency AS drma2 ON T1.S1BZSN = drma2.bzmn_sn
 					) as JJ1
 		</sql>
-		<sql id = "listViewWith">
-		 (
-		    SELECT 
-		        CONCAT(drma1.co_nm, '(', T1.S4Id, ')') AS rq,
-		        CONCAT(
-		            COALESCE(drma2.co_nm, drma1.co_nm), 
-		            '(', COALESCE(T1.S1Id, T1.S4Id), ')'
-		        ) AS orq,
-		        T1.api_nm,
-		        T1.dmnd_dt,
-		        T1.rslt_msg,
-		        T1.dmnd_cnt,
-		        T1.dln,
-		        T1.req_hr
-		    FROM (
+		<sql id = "listViewMain">
+		
 		        SELECT
 		            dami.api_nm,
 		            dahr.dmnd_dt,
@@ -101,7 +88,25 @@
 						<if test="detailYN == 'E2'">
 						and dahr.dmnd_rslt_cd != '200'
 						</if>
-		        ) AS T1
+		        
+		</sql>
+		<sql id = "listViewWith">
+		 (
+		    SELECT 
+		        CONCAT(drma1.co_nm, '(', T1.S4Id, ')') AS rq,
+		        CONCAT(
+		            COALESCE(drma2.co_nm, drma1.co_nm), 
+		            '(', COALESCE(T1.S1Id, T1.S4Id), ')'
+		        ) AS orq,
+		        T1.api_nm,
+		        T1.dmnd_dt,
+		        T1.rslt_msg,
+		        T1.dmnd_cnt,
+		        T1.dln,
+		        T1.req_hr
+		    FROM (
+		   		 <include refid="listViewMain" />
+		    ) AS T1
 					    LEFT JOIN dqvs.dvs_rac_mt_agency AS drma1 ON T1.S4BZSN = drma1.bzmn_sn
 					    LEFT JOIN dqvs.dvs_rac_mt_agency AS drma2 ON T1.S1BZSN = drma2.bzmn_sn
 					) as JJ1
