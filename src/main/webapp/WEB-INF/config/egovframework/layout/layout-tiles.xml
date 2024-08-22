@@ -67,6 +67,11 @@
         <put-attribute name="body"
             value="/WEB-INF/views/vfc/reRentalReport.jsp" />
     </definition>
+    <definition name="sys/inspectionReport"
+        template="/WEB-INF/views/cmm/layout/rms_report.jsp">
+        <put-attribute name="body"
+            value="/WEB-INF/views/sys/inspectionReport.jsp" />
+    </definition>
 
     <!-- 소프트웨어 설치 -->
 	<definition name="cmmn/software" template="/WEB-INF/views/cmm/layout/empty.jsp">
