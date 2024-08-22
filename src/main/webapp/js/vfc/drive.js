@@ -1099,7 +1099,6 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
                                 </div>
                             </div>`;
             $('#popup_mobiDefect_box').append(tempHtml);
-            console.log("그리드");
             $drive.ui.popupGridLoad('#mobiDefect_grid','/sys/carManage/selectCarList',defectColumns);
         },
 

@@ -94,11 +94,11 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 		driveDao.insertRentHstryInfo(paramsMap);
 		// 대여정보 대여확정처리
 		driveDao.updateRentSttsCd(paramsMap);
-
-		if(rentalTypeYn.equals("Y")){ // 대여유형 포함 : Y
-			// 대여처리시 운전자격이력에 대여유형 업데이트
-			driveDao.updateRentType(paramsMap);
-		}
+// 20250822 운전자격이력에서 대여유형컬럼 삭제해서 필요없어짐 우선 주석처리 추후 삭제 요망
+//		if(rentalTypeYn.equals("Y")){ // 대여유형 포함 : Y
+//			// 대여처리시 운전자격이력에 대여유형 업데이트
+//			driveDao.updateRentType(paramsMap);
+//		}
 		return "success";
 	}
 

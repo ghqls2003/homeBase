@@ -168,7 +168,7 @@
 			select
 				row_number() over() as rn,
 				vin,
-				to_char(ocrn_dt, 'YYYY-MM-DD HH24:MI') as ocrn_dt
+				to_char(ocrn_dt, 'YYYY-MM-DD HH24:MI') as ocrn_dt,
 				defects_type_cd,
 				prcs_stts_cd
 			from dqvs.dvs_rac_mt_defect
@@ -192,7 +192,7 @@
 			select
 				row_number() over() as rn,
 				vin,
-				ocrn_dt
+				ocrn_dt,
 				defects_type_cd,
 				prcs_stts_cd
 			from dqvs.dvs_rac_mt_defect
@@ -252,10 +252,10 @@
 	</select>
 
 
-	<!-- 대여처리시 운전자격이력에 대여유형 업데이트  -->
-	<update id="updateRentType" parameterType="paraMap" >
-		UPDATE dqvs.dvs_dqv_hs_verf
-		SET oneway_yn= #{onewayYn}
-		WHERE vrfc_hstry_sn = #{vrfcHstrySn}
-	</update>
+<!--	&lt;!&ndash; 대여처리시 운전자격이력에 대여유형 업데이트 20240822 운전자격이력테이블에서 대여유형컬럼삭제되어 불필요시 삭제요망 &ndash;&gt;-->
+<!--	<update id="updateRentType" parameterType="paraMap" >-->
+<!--		UPDATE dqvs.dvs_dqv_hs_verf-->
+<!--		SET oneway_yn= #{onewayYn}-->
+<!--		WHERE vrfc_hstry_sn = #{vrfcHstrySn}-->
+<!--	</update>-->
 </mapper>
