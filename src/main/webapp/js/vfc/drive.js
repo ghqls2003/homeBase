@@ -601,15 +601,8 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			}
 			$('.policy_popup .text').append(html);
 		},
-		//app 에 호출 함수들
-		similarityApp: function() {  // 유사도
-			if(userOperSystemBool){
-				ocrInterface.runAlcheraLicenseCheck();
-			} else {
-				window.webkit.messageHandlers.runAlcheraLicenseCheck.postMessage('');
-			}
-		},
-		showAndroidToast: function() {  // OCR
+		//app 에 호출 함수
+		showAndroidToast: function() {
 			if(userOperSystemBool){
 			  	ocrInterface.photographyOCR();
 			}else {
@@ -682,7 +675,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 	$drive.event = {
 		setUIEvent : function() {
 			$('.verify-btn').click(function(){
-				$drive.ui.similarityApp();
+				$drive.event.verifyLicense();
 			});
 
 			$('#homeBtn').click(function(){
@@ -1194,20 +1187,10 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
             return param;
         },
 
-		// 웹으로 결과 전달(2)
-		alcheraCheckResult: function(json) {
-			alert('1');
-			var data = JSON.parse(json);
-			if(data.similarityConfidence != null && data.livenessConfidence != null) {
-				$drive.event.verifyLicense();
-			} else {
-				alert('data 값없음');
-			}
-		},
 		verifyLicense : function() {
-            var dateData = $drive.event.vfcHistDateDt();
-            var startDtTm = dateData.startDtTm;
-            var endDtTm = dateData.endDtTm;
+                var dateData = $drive.event.vfcHistDateDt();
+                var startDtTm = dateData.startDtTm;
+                var endDtTm = dateData.endDtTm;
 			var param = {
 				num: $('#num01').val() + $('#num02').val() + $('#num03').val() + $('#num04').val(),
 				name: $('#name').val(),
