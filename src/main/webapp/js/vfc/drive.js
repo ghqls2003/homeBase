@@ -105,8 +105,12 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 
 			if(userTypeBool){
 				$(".photo_btn").remove();
+				$(".verify-btn-app").remove();
+				$(".verify-btn").css("display", "block");
 			} else {
 				$(".upload_btn").remove();
+				$(".verify-btn").remove();
+				$(".verify-btn-app").css("display", "block");
 			}
 
 			$("#start-picker02").kendoDatePicker({
@@ -601,7 +605,14 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			}
 			$('.policy_popup .text').append(html);
 		},
-		//app 에 호출 함수
+		//app 에 호출 함수들
+		similarityApp: function() {  // 유사도  // 앱테스트중
+			if(userOperSystemBool){
+				ocrInterface.runAlcheraLicenseCheck();
+			} else {
+				window.webkit.messageHandlers.runAlcheraLicenseCheck.postMessage('');
+			}
+		},
 		showAndroidToast: function() {
 			if(userOperSystemBool){
 			  	ocrInterface.photographyOCR();
@@ -676,6 +687,16 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 		setUIEvent : function() {
 			$('.verify-btn').click(function(){
 				$drive.event.verifyLicense();
+			});
+			$('.verify-btn-app').click(function(){  // 앱테스트중
+				if($('#car_num').val() == '') {
+					alert("차량번호를 입력해 주십시오.");
+				} else if($('#num01').val()!='' && $('#num02').val()!='' && $('#num03').val()!='' && $('#num04').val()!='' &&
+				$('#user_name02').val()!='' && $("input[type=radio][name=category01]:checked").val() !=undefined){
+					$drive.ui.similarityApp();
+				} else {
+					alert("면허증 촬영 및 면허증 정보를 입력해 주십시오.");
+				}
 			});
 
 			$('#homeBtn').click(function(){
@@ -1187,7 +1208,17 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
             }
             return param;
         },
-
+        
+		// 웹으로 결과 전달(2)  // 앱테스트중
+		alcheraCheckResult: function(json) {
+			var data = JSON.parse(json);
+			if(data.similarityConfidence != null && data.livenessConfidence != null) {
+				$drive.event.verifyLicense();
+			} else {
+				alert('data 없음');
+			}
+		},
+		
 		verifyLicense : function() {
                 var dateData = $drive.event.vfcHistDateDt();
                 var startDtTm = dateData.startDtTm;
