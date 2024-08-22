@@ -168,7 +168,7 @@
 			select
 				row_number() over() as rn,
 				vin,
-				to_char(ocrn_dt, 'YYYY-MM-DD HH24:MI') as ocrn_dt,
+				to_char(ocrn_dt, 'YYYY-MM-DD HH24:MI') as ocrn_dt
 				defects_type_cd,
 				prcs_stts_cd
 			from dqvs.dvs_rac_mt_defect
@@ -192,7 +192,7 @@
 			select
 				row_number() over() as rn,
 				vin,
-				ocrn_dt,
+				ocrn_dt
 				defects_type_cd,
 				prcs_stts_cd
 			from dqvs.dvs_rac_mt_defect

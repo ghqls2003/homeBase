@@ -1099,6 +1099,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
                                 </div>
                             </div>`;
             $('#popup_mobiDefect_box').append(tempHtml);
+            console.log("그리드");
             $drive.ui.popupGridLoad('#mobiDefect_grid','/sys/carManage/selectCarList',defectColumns);
         },
 
@@ -1354,41 +1355,41 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			}
 		},
 
-        // 대여유형 포함
-        updateRentSttsCdInclRentalType : function(param) {
-            var obj = param;
-            obj.rentno = rentno;
-            obj.rentalTypeYn = 'Y';
-            if($(".point02").length) {
-                alert("면허정보 조회 결과 비정상이기 때문에 대여처리 할 수 없습니다.");
-            } else {
-                ajax(false, contextPath+"/vfc/drive/updateRentSttsCd", "", "", obj, function(result) {
-                    if (result != null && result=="success"){
-                        alert("대여처리 완료되었습니다.");
-                        $(".result_popup").removeClass("view");
-                        location.reload();
-                    }
-                });
-            }
-        },
-
-        // 대여유형 미!!!포함
-        updateRentSttsCd : function() {
-            var obj1 = {};
-            obj1.rentno = rentno;
-            obj1.rentalTypeYn = 'N';
-            if($(".point02").length) {
-                alert("면허정보 조회 결과 비정상이기 때문에 대여처리 할 수 없습니다.");
-            } else {
-                ajax(false, contextPath+"/vfc/drive/updateRentSttsCd", "", "", obj1, function(result) {
-                    if (result != null && result=="success"){
-                        alert("대여처리 완료되었습니다.");
-                        $(".result_popup").removeClass("view");
-                        location.reload();
-                    }
-                });
-            }
-        },
+//        // 대여유형 포함
+//        updateRentSttsCdInclRentalType : function(param) {
+//            var obj = param;
+//            obj.rentno = rentno;
+//            obj.rentalTypeYn = 'Y';
+//            if($(".point02").length) {
+//                alert("면허정보 조회 결과 비정상이기 때문에 대여처리 할 수 없습니다.");
+//            } else {
+//                ajax(false, contextPath+"/vfc/drive/updateRentSttsCd", "", "", obj, function(result) {
+//                    if (result != null && result=="success"){
+//                        alert("대여처리 완료되었습니다.");
+//                        $(".result_popup").removeClass("view");
+//                        location.reload();
+//                    }
+//                });
+//            }
+//        },
+//
+//        // 대여유형 미!!!포함
+//        updateRentSttsCd : function() {
+//            var obj1 = {};
+//            obj1.rentno = rentno;
+//            obj1.rentalTypeYn = 'N';
+//            if($(".point02").length) {
+//                alert("면허정보 조회 결과 비정상이기 때문에 대여처리 할 수 없습니다.");
+//            } else {
+//                ajax(false, contextPath+"/vfc/drive/updateRentSttsCd", "", "", obj1, function(result) {
+//                    if (result != null && result=="success"){
+//                        alert("대여처리 완료되었습니다.");
+//                        $(".result_popup").removeClass("view");
+//                        location.reload();
+//                    }
+//                });
+//            }
+//        },
 
 		resetInput : function() {
 			$("#num01").data("kendoDropDownList").select(0);
