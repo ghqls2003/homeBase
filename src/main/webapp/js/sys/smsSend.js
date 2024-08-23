@@ -32,7 +32,7 @@
 			        dataSource: data,
 					select: function(e) {
 	                    var dataItem = this.dataItem(e.item.index());
-	                    var crno = dataItem ? dataItem.crno : null;
+	                    var crno = dataItem.crno || "데이터없음";
 	                    var co_nm = dataItem ? dataItem.co_nm : null;
 	                    $("#inc_selec_01").data('value', crno);
 						$("#inc_selec_01").val(co_nm);
@@ -420,13 +420,13 @@
 				},
 				columns: [
 					{ selectable: true, width: "50px"},
-					{ field: "rn", title: "순번", width: "60px", template: "#:rn #"},
+					{ field: "rn", title: "순번", width: "70px", template: "#:rn #"},
 					{ field: "co_nm", title: "회사명", width: "150px", template: "#= co_nm != null ? co_nm : '-' #"},
 					{ field: "telno", title: "연락처", width: "150px", template: "#= telno != null ? $smsSend.ui.telnoFormat(telno) : '-' #"},
 					{ field: "user_nm", title: "성명", width: "100px", template: "#= user_nm != null ? user_nm : '-' #" },
 					{ field: "stts_cd", title: "계정상태", width: "70px", template: "#= stts_cd != null ? stts_cd : '-' #"},
-					{ field: "api", title: "API 사용여부", width: "70px", template: "#: api #"},
-					{ field: "authrt_nm", title: "권한명", width: "100px", template: "#= authrt_nm != null ? authrt_nm : '-' #" },
+					{ field: "api", title: "API 사용여부", width: "100px", template: "#: api #"},
+					{ field: "authrt_nm", title: "권한명", width: "120px", template: "#= authrt_nm != null ? authrt_nm : '-' #" },
 					{ field: "user_id", title: "아이디", width: "100px", template: "#= user_id != null ? user_id : '-' #"},
 				],
 				scrollable: true,
@@ -944,7 +944,7 @@
 		incListValid: function() {
 			var listLength = $('.inc_receiver_lists .inc_receiver_list').length;
 			if($("#inc_selec_01").val()!=''&&listLength===0){
-                alert('가입된 계정이 없습니다.');
+                alert('가입된 계정이 없거나 법인번호가 없습니다.');
             }
 		},
 		authValid: function() {

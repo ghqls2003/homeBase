@@ -885,7 +885,7 @@
 					, #{send_date}
 				</if>
 				, TO_CHAR(now(), 'YYYYMMDDHH24MISS')
-				, #{callback}
+				, '0544597565'
 				, #{dest_count}
 				, #{dest_info}
 				, #{msg}
