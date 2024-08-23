@@ -269,6 +269,38 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 				String status_code = (String) responseData.get("status_code");
 				if(status_code.equals("OK")){
 					ApiResponseData = (List<Map<String, Object>>) responseData.get("data");
+
+					// 사업자 등록 상태 코드 및 명칭 변경 { api 응답 :  계속사업자(01), 휴업(02), 폐업(03)}
+					updateBusinessStatus(orgParam, hsParam, ApiResponseData);
+					String bStt = (String) hsParam.get("bStt");
+
+					// api요청한 영업상태와 기존 영업상태가 다를 때만 사업자 및 사업자 히스토리 업데이트 발생
+					if(!bStt.equals(selectedBsnSttsCd)){
+						// 사업자등록정보 상태 업데이트
+						LocalDateTime now = LocalDateTime.now();
+						String formatedNow = now.format(DateTimeFormatter.ofPattern(("yyyyMMdd")));
+						orgParam.put("bsnSttsMdfcnDt",formatedNow);
+						int updateCmpnyBrno = companyManageDao.updateCmpnyBrnoToAgency(orgParam);
+
+						//변경 사항 히스토리 insert
+						if(updateCmpnyBrno > 0) {
+							String bsnSttsCd = (String) hsParam.get("bsnSttsCd");
+							hsParam.put("mdfcnRsn","영업상태 API 업데이트");
+							// 현재 날짜
+							hsParam.put("bsnSttsMdfcnDt",formatedNow);
+							companyManageDao.insertCmpnyHs(hsParam);
+							if(bsnSttsCd.equals("70")){
+								result.put("bsnSttsCd", bsnSttsCd);
+								result.put("message", "영업상태 : 국세청에 등록되지 않은 사업자등록번호입니다. (기준일시 : "+updateDt+")");
+							}else{
+								result.put("bsnSttsCd", bsnSttsCd);
+								result.put("message", "영업상태 : 업데이트 되었습니다.(기준일시 : "+updateDt+")");
+							}
+						}
+					}else{
+						result.put("message", "영업상태 : 기존 영업상태와 동일하여 업데이트 하지 않습니다. (기준일시 : "+updateDt+")");
+					}
+
 				}else if(status_code.equals("BAD_JSON_REQUEST")){
 					result.put("message","영업상태 : JSON format 오류(기준일시 : "+updateDt+")");
 					return result;
@@ -285,34 +317,9 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 			} catch (UnsupportedEncodingException e) {
 				throw new RuntimeException(e);
 			}
-			// 사업자 등록 상태 코드 및 명칭 변경 { api 응답 :  계속사업자(01), 휴업(02), 폐업(03)}
-			updateBusinessStatus(orgParam, hsParam, ApiResponseData);
-			String bStt = (String) hsParam.get("bStt");
 
-			// api요청한 영업상태와 기존 영업상태가 다를 때만 사업자 및 사업자 히스토리 업데이트 발생
-			if(!bStt.equals(selectedBsnSttsCd)){
-				// 사업자등록정보 상태 업데이트
-				LocalDateTime now = LocalDateTime.now();
-				String formatedNow = now.format(DateTimeFormatter.ofPattern(("yyyyMMdd")));
-				orgParam.put("bsnSttsMdfcnDt",formatedNow);
-				int updateCmpnyBrno = companyManageDao.updateCmpnyBrnoToAgency(orgParam);
-
-				//변경 사항 히스토리 insert
-				if(updateCmpnyBrno > 0) {
-					hsParam.put("mdfcnRsn","영업상태 API 업데이트");
-					// 현재 날짜
-					hsParam.put("bsnSttsMdfcnDt",formatedNow);
-					companyManageDao.insertCmpnyHs(hsParam);
-					if(hsParam.get("bsnSttsCd").equals("70")){
-						result.put("message", "영업상태 : 국세청에 등록되지 않은 사업자등록번호입니다. (기준일시 : "+updateDt+")");
-					}else{
-						result.put("message", "영업상태 : 업데이트 되었습니다.(기준일시 : "+updateDt+")");
-					}
-				}
-			}else{
-				result.put("message", "영업상태 : 기존 영업상태와 동일하여 업데이트 하지 않습니다. (기준일시 : "+updateDt+")");
-			}
 		}
+		// todo : else 구문 에러 메세지 띄우기 !!🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎
 //		else{
 //			result.put("message", "기존 영업상태가 존재하지 않습니다."); // 없을시 호출했을때 영업상태로 업데이트 해주기 .
 		return result;
