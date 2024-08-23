@@ -427,7 +427,8 @@ var authrtCd = '${authrtCd}'
 	        </div>
 	        <p class="info">※ 본 웹사이트에 게시된 정보는 프로그램이나 그 밖의 기술적 장치를 이용하여 무단으로 사용할 수 없습니다.</p>
 	        <div class="btn_flex">
-	            <button class="blue_btn verify-btn">운전자격 확인</button>
+	            <button class="blue_btn verify-btn" style="display: none;">운전자격 확인</button>
+	            <button class="blue_btn verify-btn-app" style="display: none;">운전자격 확인</button>  <%--앱테스트중 --%>
 	            <button class="gray_btn reset-btn">초기화</button>
 	        </div>
 	    </div>

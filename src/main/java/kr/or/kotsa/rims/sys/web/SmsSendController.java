@@ -114,12 +114,6 @@ public class SmsSendController extends CmmnAbstractServiceImpl{
 	@RequestMapping(value = "/smsSend/insertSendMsg")
 	@ResponseBody
 	public Map<String, Object> insertSendMsg(@RequestBody Map<String, Object> paramsMap) {
-		 String userTelno = "";
-        Map<String, Object> userMap = getUserData();
-        if (userMap != null && userMap.get("ogdpTelno") != null) {
-        	userTelno = userMap.get("ogdpTelno").toString();
-        }
-        paramsMap.put("callback", userTelno);
 		paramsMap.put("userSn", getUserSn());
 		paramsMap.put("userIp", getClientIP());
 		return smsSendService.insertSendMsg(paramsMap);
