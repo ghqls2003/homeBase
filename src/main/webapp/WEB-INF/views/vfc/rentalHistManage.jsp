@@ -5,6 +5,7 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath }" />
 
 <script src="${contextPath}/js/vfc/rentalHistManage.js"></script>
+<script src="https://unpkg.com/jszip/dist/jszip.min.js"></script>
 <link rel="stylesheet" type="text/css" href="${contextPath}/css/custom/rentalHistManage.css" />
 
 <script>
@@ -102,7 +103,7 @@
                     	<h4 class="name">대여이력 관리 현황</h4>&emsp;
                     	총&nbsp;<span id="totCnt" style="font-weight: bold;"></span>건
                     </div>
-                    <button class="download-btn excelDownBtn">
+                    <button class="download-btn excelDownBtn" onClick="javaScript:$rentalHistManage.event.excelDownBtn();">
                         <img src="${contextPath}/images/sub/ico_down.png" alt="다운로드아이콘">
                         엑셀
                     </button>
