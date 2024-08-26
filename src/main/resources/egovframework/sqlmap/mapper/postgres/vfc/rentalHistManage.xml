@@ -64,7 +64,7 @@
 				
 	</sql>
 	
-	<sql id="RentalHistListSql_soon">
+	<sql id="RentalHistListSql">
 		(
 		SELECT ROW_NUMBER() OVER(ORDER BY T.rent_no) rn
 			, *
@@ -97,6 +97,7 @@
 					dqvs.dvs_rac_mt_agency agency
 				ON base.bzmn_sn = agency.bzmn_sn			
 				WHERE (#{rentDt}::TIMESTAMP  BETWEEN base.rent_bgng_dt AND base.rent_end_dt)
+					AND base.reg_dt <![CDATA[ <= ]]> NOW()
 				<if test="rentSttsCd != '' and rentSttsCd != null">
 	            	AND base.rent_stts_cd = #{rentSttsCd}
 				</if>
@@ -153,25 +154,7 @@
 		) AS A
 	</sql>
 	
-	<sql id="RentalHistListSql">
-		(
-			SELECT ROW_NUMBER() OVER(ORDER BY rent.rent_no DESC) rn
-				, rent.rent_no
-				, rent.lcns_idntf_nm
-				, rent.vhcl_reg_no
-				, rent.brno
-				, rent.rent_bgng_dt
-				, rent.rent_end_dt
-				, rent.rent_stts_cd
-				, rent.co_nm
-				, rent.rent_stts_nm
-				, rent.vrfc_hstry_sn
-				, rent.rgtr_sn
-				, rent.reg_dt
-				, rent.mdfcn_dt
-				, rent.dln
-			FROM
-				(
+	<sql id="RentalHistListSql2">
 				SELECT rent.rent_no
 					, CASE rent.lcns_idntf_cd WHEN '1' THEN '국내 면허' WHEN '2' THEN '국제 면허' ELSE '국내 면허' END lcns_idntf_nm
 					, rent.vhcl_reg_no
@@ -191,7 +174,7 @@
 					, rent.mdfcn_dt
 					, rent.dln
 				FROM
-					dqvs.dvs_dqv_mt_rent_dump rent 
+					dqvs.dvs_dqv_mt_rent_dump rent
 <!-- 					dqvs.dvs_dqv_mt_rent rent -->
 				LEFT OUTER JOIN
 					dqvs.dvs_rac_mt_agency agency
@@ -209,6 +192,28 @@
 				<if test="dln != '' and dln != null">
 	            	AND rent.dln = dqvs.pca_encrypt(#{dln}, '150')
 				</if>
+	</sql>
+	
+	<sql id="RentalHistListSql_past">
+		(
+			SELECT ROW_NUMBER() OVER(ORDER BY rent.rent_no DESC) rn
+				, rent.rent_no
+				, rent.lcns_idntf_nm
+				, rent.vhcl_reg_no
+				, rent.brno
+				, rent.rent_bgng_dt
+				, rent.rent_end_dt
+				, rent.rent_stts_cd
+				, rent.co_nm
+				, rent.rent_stts_nm
+				, rent.vrfc_hstry_sn
+				, rent.rgtr_sn
+				, rent.reg_dt
+				, rent.mdfcn_dt
+				, rent.dln
+			FROM
+				(
+					<include refid="RentalHistListSql2" />
 				) AS rent
 			WHERE 1=1
 			<if test='authrtCd.indexOf("Z") == -1 or authrtCd.indexOf("M") == -1 or authrtCd.indexOf("K") == -1'>
@@ -257,6 +262,7 @@
 			</choose>
 		) AS T
 	</sql>
+	
 	<sql id="RsvHistListSql">
 		(
 			SELECT ROW_NUMBER() OVER(ORDER BY rent.rent_no DESC) rn
@@ -345,26 +351,14 @@
 		SELECT *
 		FROM
 			<include refid="RentalHistListSql" />
-<!--     soon         -->
-<!-- 	    <choose> -->
-<!-- 	       <when test="skip != null or skip != ''"> -->
-<!-- 	       WHERE A.rn <![CDATA[>]]> #{skip} -->
-<!-- 	       LIMIT 10 -->
-<!-- 	       </when> -->
-<!-- 	       <otherwise> -->
-<!-- 	       <if test="page != null and page != '' and take != null and take != ''"> -->
-<!-- 	      LIMIT #{pageSize} OFFSET ((#{page}::NUMERIC - 1) * #{take}) -->
-<!-- 	      </if> -->
-<!-- 	       </otherwise> -->
-<!-- 	    </choose> -->
 	    		<choose>
             <when test="take != '' and take != null">
                 <choose>
                     <when test="skip != '' and skip != null">
-                        WHERE T.rn <![CDATA[>]]> #{skip}
+                        WHERE A.rn <![CDATA[>]]> #{skip}
                     </when>
                     <otherwise>
-                        WHERE T.rn <![CDATA[>]]> 0
+                        WHERE A.rn <![CDATA[>]]> 0
                     </otherwise>
                 </choose>
                 LIMIT #{take}
