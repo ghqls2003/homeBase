@@ -24,6 +24,9 @@
 		from
 		    dqvs.dvs_cmm_mt_area
 		where mtnabn_yn = 'Y'
+		<if test="userCmptncZoneCd != null and userCmptncZoneCd != ''">
+			and stdg_cd = #{userCmptncZoneCd}
+		</if>
 		order by
 		    ctpv_cd
     </select>
@@ -37,6 +40,9 @@
 			and sgg_nm != ''
 		<if test="ctpvCd != null and ctpvCd != ''">
 			and stdg_cd LIKE CONCAT(#{ctpvCd}, '%')
+		</if>
+		<if test="userCmptncZoneCd != null and userCmptncZoneCd != ''">
+			and stdg_cd = #{userCmptncZoneCd}
 		</if>
 		order by sgg_cd
     </select>
@@ -173,6 +179,9 @@
 		and bzmn_se_cd = '1'
 		and crno is not null
 		and bsn_stts_cd = '0'
+		<if test="userCmptncZoneCd != '' and userCmptncZoneCd != null">
+			and reg_cmptnc_cd like #{userCmptncZoneCd} || '%'
+		</if>
     </select>
 
     
@@ -188,7 +197,8 @@
 			TO_CHAR(T1.sndng_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_dt,
 			TO_CHAR(T1.sndng_rsvt_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_rsvt_dt,
 			T1.rcvr,
-			T1.rcvr_telno
+			T1.rcvr_telno,
+			T1.sndr_sn
 		from(
 			select 
 				cn
@@ -197,10 +207,12 @@
 				, sndng_rsvt_dt
 				, rcvr
 				, dqvs.pca_decrypt(rcvr_telno, '150') rcvr_telno
+				, sndr_sn
 			from dqvs.dvs_cmm_hs_sms_send
 			)as T1
 		where 1 = 1
         	and (T1.sndng_rsvt_dt BETWEEN #{startDt}::TIMESTAMP AND #{endDt}::DATE + '23:59:59'::INTERVAL)
+        	and sndr_sn=#{userSn}::numeric
 		<if test="sendType != '' and sendType != null">
            	and T1.rsvt_yn = #{sendType}
 		</if>
@@ -225,7 +237,8 @@
 			TO_CHAR(T1.sndng_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_dt,
 			TO_CHAR(T1.sndng_rsvt_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_rsvt_dt,
 			T1.rcvr,
-			T1.rcvr_telno
+			T1.rcvr_telno,
+			T1.sndr_sn
 		FROM(
 			SELECT 
 				cn
@@ -234,10 +247,12 @@
 				, sndng_rsvt_dt
 				, rcvr
 				, dqvs.pca_decrypt(rcvr_telno, '150') rcvr_telno
+				, sndr_sn
 			FROM dqvs.dvs_cmm_hs_sms_send
 			)AS T1
 		WHERE 1 = 1
         	AND (T1.sndng_dt BETWEEN #{startDt}::TIMESTAMP AND #{endDt}::DATE + '23:59:59'::INTERVAL)
+        	and sndr_sn=#{userSn}::numeric
 		<if test="sendType != '' and sendType != null">
            	AND T1.rsvt_yn = #{sendType}
 		</if>
@@ -359,7 +374,7 @@
 							NULLIF(TRIM(dqvs.pca_decrypt(Tagency.telno,
 							'150')), ''),
 							'-') as telno
-							, cmptnc_zone_cd
+							, COALESCE(nullif(Tuser.cmptnc_zone_cd,''),nullif(Tagency.reg_cmptnc_cd,'')) as cmptnc_zone_cd
 							, ctpv_nm
 							, sgg_nm
 							, Tagency.crno
@@ -380,7 +395,7 @@
 								sgg_nm
 							from
 								dqvs.dvs_cmm_mt_area)g
-							on Tuser.cmptnc_zone_cd = g.stdg_cd
+							on Tuser.cmptnc_zone_cd = g.stdg_cd or Tagency.reg_cmptnc_cd = g.stdg_cd
 						where Tuser.authrt_cd IN ('S01','S02','S04','S05')
 					) as T3
 					where
@@ -400,6 +415,9 @@
 			and user_nm NOT IN ('', '-')
 			and stts_cd = '승인'
 			and bsn_stts_cd = '0'
+			<if test="userCmptncZoneCd != null and userCmptncZoneCd != ''">
+				and cmptnc_zone_cd like #{userCmptncZoneCd}||'%'
+			</if>
 			<if test='except_tel.equals("true")'>
 				and telno like '01%'
 			</if>
@@ -555,7 +573,7 @@
 				NULLIF(TRIM(dqvs.pca_decrypt(Tagency.telno,
 				'150')), ''),
 				'-') as telno
-				, cmptnc_zone_cd
+				, COALESCE(nullif(Tuser.cmptnc_zone_cd,''),nullif(Tagency.reg_cmptnc_cd,'')) as cmptnc_zone_cd
 				, ctpv_nm
 				, sgg_nm
 			from
@@ -577,7 +595,7 @@
 				from
 					dqvs.dvs_cmm_mt_area)g
 			on
-				Tuser.cmptnc_zone_cd = g.stdg_cd
+				Tuser.cmptnc_zone_cd = g.stdg_cd or Tagency.reg_cmptnc_cd = g.stdg_cd
 			where
 				Tuser.authrt_cd in ('S01', 'S02', 'S03', 'S04', 'S05', 'G01')
 				) T3
@@ -731,7 +749,7 @@
 				NULLIF(TRIM(dqvs.pca_decrypt(Tagency.telno,
 				'150')), ''),
 				'-') as telno
-				, cmptnc_zone_cd
+				, COALESCE(nullif(Tuser.cmptnc_zone_cd,''),nullif(Tagency.reg_cmptnc_cd,'')) as cmptnc_zone_cd
 				, ctpv_nm
 				, sgg_nm
 			from
@@ -752,7 +770,7 @@
 				from
 					dqvs.dvs_cmm_mt_area)g
 			on
-				Tuser.cmptnc_zone_cd = g.stdg_cd
+				Tuser.cmptnc_zone_cd = g.stdg_cd or Tagency.reg_cmptnc_cd = g.stdg_cd
 			where
 				Tuser.authrt_cd in ('S01', 'S02', 'S03', 'S04', 'S05', 'G01')
 				) T3

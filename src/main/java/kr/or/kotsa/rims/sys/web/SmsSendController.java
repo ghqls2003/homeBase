@@ -42,7 +42,10 @@ public class SmsSendController extends CmmnAbstractServiceImpl{
 		if(Arrays.asList(validAuth).contains(getAuthrtCd())) {
 		} else {
 			mav.setViewName("redirect:/");
-		}		
+		}
+		
+		mav.addObject("userCmptncZoneCd", getCmptncZoneCd()); // 관할지
+		
 		return mav;
 	}
 
@@ -86,6 +89,7 @@ public class SmsSendController extends CmmnAbstractServiceImpl{
 	@PostMapping("/smsSend/selectSmsSendInfo")
 	@ResponseBody
 	public Map<String, Object> selectSmsSendInfo(@RequestBody Map<String, Object> paramsMap){
+		paramsMap.put("userSn", getUserSn());
 		return smsSendService.selectSmsSendInfo(paramsMap);
 	}
 	
