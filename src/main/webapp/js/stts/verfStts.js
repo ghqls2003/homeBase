@@ -40,7 +40,6 @@
 		$statistics.event.tmTabBtn();
 		$statistics.event.rmTabBtn();
 		$statistics.event.enterKey();
-		
     });
     
     $statistics.ui = {
