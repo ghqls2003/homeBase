@@ -535,7 +535,9 @@
          // 마스터 일때만 openApi를 이용한 회사상태 업데이트 및 히스토리 저장
             setTimeout(function(){
                 $cmpnymanage.event.updateCmpnyBrno(master,responseData,hsParams);
-            },300);
+                $cmpnymanage.event.detailPopup(bzmnSn, rowStts);
+            },300); // 팝업띄운 후 -> update된 영업상태 표시
+
          //=================================================================================================
          },
 
@@ -3255,8 +3257,6 @@
                  },function(data){
                      var message =JSON.parse(data.responseText).message;
                      var bsnSttsCd =JSON.parse(data.responseText).bsnSttsCd;
-                      $('#bsn_stts_cd_nm').val('');
-                      $('#bsn_stts_cd_nm').data('kendoDropDownList').value(bsnSttsCd);
                      if(message.includes("등록되지 않은 사업자등록번호")){
                           $('#businessStatus').css("color","#ff3838");
                      }else{

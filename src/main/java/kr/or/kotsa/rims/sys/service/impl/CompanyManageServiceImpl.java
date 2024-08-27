@@ -1,5 +1,6 @@
 package kr.or.kotsa.rims.sys.service.impl;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.time.LocalDate;
@@ -8,6 +9,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import com.clipsoft.clipreport.export.hwpx.contents.header.borderfill.charproperties.StrikeOut;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -247,7 +251,7 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 
 	// 상황별 : openAPI를 이용한 사업자등록정보 상태 업데이트(server측 openAPI 요청)
 	@Override
-	public Map<String, Object> updateCmpnyBrnoBySituation(List<Map<String, Object>> paramsMap) throws UnsupportedEncodingException {
+	public Map<String, Object> updateCmpnyBrnoBySituation(List<Map<String, Object>> paramsMap) throws IOException {
 		Map<String, Object> result = new HashMap<>();
 		Map<String, Object> orgParam = paramsMap.get(0); // 마스터 입력 데이터
 		String brno = (String) orgParam.get("brno");
@@ -314,14 +318,24 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 			} catch (HttpClientErrorException e) {
 				System.err.println("HTTP 오류:" + e.getStatusCode());
 				System.err.println("HTTP 오류 응답:" + e.getResponseBodyAsString());
+
+				ObjectMapper objectMapper = new ObjectMapper();
+				Map<String,Object> errorResponse = objectMapper.readValue(e.getResponseBodyAsString(),Map.class);
+				int errorCode  = (int) errorResponse.get("code"); // code:-5 msg:API 서버 오류가 발생하였습니다.
+				if(errorCode == -5){
+					result.put("message","영업상태 : 국세청 API 서버 오류가 발생하여 업데이트 할 수 없습니다.(기준일시 : "+updateDt+")");
+					return result;
+				}
+
 			} catch (UnsupportedEncodingException e) {
 				throw new RuntimeException(e);
-			}
+			} catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
+        } else {
+			result.put("message", "기존 사업자등록정보가 존재하지 않습니다.");
 		}
-		// todo : else 구문 에러 메세지 띄우기 !!🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎🍎
-//		else{
-//			result.put("message", "기존 영업상태가 존재하지 않습니다."); // 없을시 호출했을때 영업상태로 업데이트 해주기 .
 		return result;
 	}
 
@@ -351,30 +365,34 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 
 	// 사업자 등록 상태 코드 및 명칭 변경 { api 응답 :  계속사업자(01), 휴업(02), 폐업(03)}
 	private void updateBusinessStatus(Map<String, Object> orgParam, Map<String, Object> hsParam ,List<Map<String, Object>> data) {
-		String bsnSttsCd = (String) data.get(0).get("b_stt_cd");
-		String bStt = (String) data.get(0).get("b_stt");
-		String taxType = (String) data.get(0).get("tax_type"); //"국세청에 등록되지 않은 사업자등록번호입니다."
-		if ("계속사업자".equals(bStt) && "01".equals(bsnSttsCd)) {
-			bStt = "정상";
-			bsnSttsCd = "0";
-		} else if ("휴업자".equals(bStt) && "02".equals(bsnSttsCd)) {
-			bStt = "휴업";
-			bsnSttsCd = "1";
-		} else if ("폐업자".equals(bStt) && "03".equals(bsnSttsCd)) {
-			bStt = "폐업";
-			bsnSttsCd = "3";
-		} else if("".equals(bStt) && "".equals(bsnSttsCd) && taxType.equals("국세청에 등록되지 않은 사업자등록번호입니다.")){
-			bStt = "사업자번호오류";
-			bsnSttsCd = "70"; // 사업자번호 오류 코드  response :bsnSttsCd 값이 null임
-		}else {
-			bsnSttsCd = "9"; // 기타
+		if(data.size()> 0) {
+			String bsnSttsCd = (String) data.get(0).get("b_stt_cd");
+			String bStt = (String) data.get(0).get("b_stt");
+			String taxType = (String) data.get(0).get("tax_type"); //"국세청에 등록되지 않은 사업자등록번호입니다."
+			if ("계속사업자".equals(bStt) && "01".equals(bsnSttsCd)) {
+				bStt = "정상";
+				bsnSttsCd = "0";
+			} else if ("휴업자".equals(bStt) && "02".equals(bsnSttsCd)) {
+				bStt = "휴업";
+				bsnSttsCd = "1";
+			} else if ("폐업자".equals(bStt) && "03".equals(bsnSttsCd)) {
+				bStt = "폐업";
+				bsnSttsCd = "3";
+			} else if ("".equals(bStt) && "".equals(bsnSttsCd) && taxType.equals("국세청에 등록되지 않은 사업자등록번호입니다.")) {
+				bStt = "사업자번호오류";
+				bsnSttsCd = "70"; // 사업자번호 오류 코드  response :bsnSttsCd 값이 null임
+			} else {
+				bsnSttsCd = "9"; // 기타
+			}
+			orgParam.put("bsnSttsCd", bsnSttsCd);
+			orgParam.put("bStt", bStt);
+			orgParam.put("taxType", taxType);
+			hsParam.put("bsnSttsCd", bsnSttsCd);
+			hsParam.put("bStt", bStt);
+			hsParam.put("taxType", taxType);
+		}else{
+			throw new ArrayIndexOutOfBoundsException();
 		}
-		orgParam.put("bsnSttsCd", bsnSttsCd);
-		orgParam.put("bStt", bStt);
-		orgParam.put("taxType", taxType);
-		hsParam.put("bsnSttsCd", bsnSttsCd);
-		hsParam.put("bStt", bStt);
-		hsParam.put("taxType", taxType);
 	}
 
 

@@ -1,5 +1,6 @@
 package kr.or.kotsa.rims.sys.web;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -160,7 +161,7 @@ public class CompanyManageController extends CmmnAbstractServiceImpl{
 	// 상황별 : openAPI를 이용한 사업자등록정보 상태 업데이트
 	@RequestMapping(value = "/companyManage/updateCmpnyBrnoBySituation")
 	@ResponseBody
-	public Map<String, Object> updateCmpnyBrnoBySituation(@RequestBody List<Map<String, Object>> paramsMap) throws RimsException, UnsupportedEncodingException {
+	public Map<String, Object> updateCmpnyBrnoBySituation(@RequestBody List<Map<String, Object>> paramsMap) throws RimsException, IOException {
 		return companyManageService.updateCmpnyBrnoBySituation(paramsMap);
 	}
 
