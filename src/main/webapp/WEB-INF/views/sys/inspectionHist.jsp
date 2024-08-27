@@ -128,7 +128,7 @@
 			
 			<!-- 지도점검이력 직접입력 팝업 -->
 			<div class="popup register_popup popup_type02 popup" style="z-index: 999">
-		        <div id="directInsertPopup" class="box">
+		        <div id="insertPopup" class="box">
 		            <div class="popup_top">
 		                <h4>지도점검이력 직접입력</h4>
 		                <div class="close insertClose">
@@ -295,7 +295,7 @@
 								    <div class="nameBox nameBox-flex">
 								        <h4 class="name">지도 내용</h4>
 								    </div>
-								    <div class="cont cont-flex">
+								    <div class="cont cont-flex inspection01">
 								        <table class="tb rental_tb01">
 								            <tr>
 								                <th scope="col"><span class="asterisk">*</span>지도항목</th>
@@ -346,17 +346,32 @@
 								                    </div>
 								                </td>
 								            </tr>
-								            <tr>
+<!-- 								            <tr> -->
+<!-- 								                <th scope="col"><span class="asterisk">*</span>지도내용</th> -->
+<!-- 								                <td> -->
+<!-- 								                    <div class="tb_flex"> -->
+<!-- 								                        <label for="regChckCn">지도내용</label> -->
+<!-- 								                        <input type="text" id="regChckCn" name="regChckCn" class="input" maxLength="80" aria-label="지도내용" -->
+<!-- 								                               oninput="charOnly(this)" /> -->
+<!-- 								                    </div> -->
+<!-- 								                </td> -->
+<!-- 								            </tr> -->
+								        </table>
+								    </div>
+								    <div class="cont inspection02">
+								    	<table class="tb rental_tb01">
+								    	   <tr>
 								                <th scope="col"><span class="asterisk">*</span>지도내용</th>
 								                <td>
 								                    <div class="tb_flex">
 								                        <label for="regChckCn">지도내용</label>
-								                        <input type="text" id="regChckCn" name="regChckCn" class="input" maxLength="80" aria-label="지도내용"
-								                               oninput="charOnly(this)" />
+<!-- 								                        <input type="text" id="regChckCn" name="regChckCn" class="input" maxLength="80" aria-label="지도내용" -->
+<!-- 								                               oninput="charOnly(this)" /> -->
+								                        <textarea class="input chckCn" name="regChckCn" id="regChckCn" ></textarea>
 								                    </div>
 								                </td>
 								            </tr>
-								        </table>
+						            	</table>
 								    </div>
 								</div>
 
@@ -431,61 +446,61 @@
 								    	</table>
 								    </div>
 								</div>
-<!-- 								<div class="contBox"> -->
-<!-- 								    <div class="nameBox nameBox-flex"> -->
-<!-- 								        <h4 class="name">지도 후속 처리 내용</h4> -->
-<!-- 								    </div> -->
-<!-- 								    <div class="a-flex"> -->
-<!-- 								   	 	<div class="aaa"> -->
-<!-- 								    	<table class="tb rental_tb01"> -->
-<!-- 								    		<tr> -->
-<!-- 								    		<th>1차</th> -->
-<!-- 								    		</tr> -->
-<!-- 								    	</table> -->
-<!-- 								    	</div> -->
-<!-- 								    	<div class="aaaa b-flex"> -->
-<!-- 								    	<table class="tb bbb rental_tb01"> -->
-<!-- 								    		<tr> -->
-<!-- 								                <th scope="col"><span class="asterisk">*</span>지도여부</th> -->
-<!-- 								                <td> -->
-<!-- 								                    <div class="tb_flex"> -->
-<!-- 								                        <label for="">지도여부</label> -->
-<!-- 								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="회사명" -->
-<!-- 								                               oninput="charOnly(this)" /> -->
-<!-- 								                    </div> -->
-<!-- 								                </td> -->
-<!-- 								            </tr> -->
-<!-- 							    			<tr> -->
-<!-- 								                <th scope="col"><span class="asterisk">*</span>조치현황</th> -->
-<!-- 								                <td> -->
-<!-- 								                    <div class="tb_flex"> -->
-<!-- 								                        <label for="">조치현황</label> -->
-<!-- 								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="회사명" -->
-<!-- 								                               oninput="charOnly(this)" /> -->
-<!-- 								                    </div> -->
-<!-- 								                </td> -->
-<!-- 								            </tr> -->
-<!-- 								    	</table> -->
-<!-- 								    	<table class="tb bbb rental_tb01"> -->
-<!-- 								    		<tr> -->
-<!-- 								                <th scope="col"><span class="asterisk">*</span>지도여부</th> -->
-<!-- 								                <td> -->
-<!-- 								                    <div class="tb_flex"> -->
-<!-- 								                        <label for="coNm">영업상태</label> -->
-<!-- 								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="회사명" -->
-<!-- 								                               oninput="charOnly(this)" /> -->
-<!-- 								                    </div> -->
-<!-- 								                </td> -->
-<!-- 								            </tr> -->
-<!-- 								    	</table> -->
-<!-- 								    	</div> -->
-<!-- 								    </div> -->
-<!-- 								</div> -->
+								<div class="contBox">
+								    <div class="nameBox nameBox-flex">
+								        <h4 class="name">지도 후속 처리 내용</h4>
+								    </div>
+								    <div class="cont cont-flex a-flex">
+								   	 	<div class="aaa">
+								    	<table class="tb rental_tb01">
+								    		<tr>
+								    		<th>1차</th>
+								    		</tr>
+								    	</table>
+								    	</div>
+								    	<div class="aaaa b-flex">
+								    	<table class="tb bbb rental_tb01">
+								    		<tr>
+								                <th scope="col"><span class="asterisk">*</span>지도여부</th>
+								                <td>
+								                    <div class="tb_flex">
+								                        <label for="">지도여부</label>
+								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="회사명"
+								                               oninput="charOnly(this)" />
+								                    </div>
+								                </td>
+								            </tr>
+							    			<tr>
+								                <th scope="col"><span class="asterisk">*</span>조치현황</th>
+								                <td>
+								                    <div class="tb_flex">
+								                        <label for="">조치현황</label>
+								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="회사명"
+								                               oninput="charOnly(this)" />
+								                    </div>
+								                </td>
+								            </tr>
+								    	</table>
+								    	<table class="tb bbb rental_tb01">
+								    		<tr>
+								                <th scope="col"><span class="asterisk">*</span>지도여부</th>
+								                <td>
+								                    <div class="tb_flex">
+								                        <label for="coNm">영업상태</label>
+								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="회사명"
+								                               oninput="charOnly(this)" />
+								                    </div>
+								                </td>
+								            </tr>
+								    	</table>
+								    	</div>
+								    </div>
+								</div>
 							</div>
 						</div>
 
 						<div class="btn_flex">
-							<button class="blue_btn directInsertBtn" value="Insert">등록</button>
+							<button class="blue_btn insertBtn" value="Insert">등록</button>
 							<button class="gray_btn cancelBtn insertClose" value="Cancel">닫기</button>
 						</div>
 					</div>
@@ -658,7 +673,7 @@
 								    <div class="nameBox nameBox-flex">
 								        <h4 class="name">지도 내용</h4>
 								    </div>
-								    <div class="cont cont-flex">
+								    <div class="cont cont-flex inspection01">
 								        <table class="tb rental_tb01">
 								            <tr>
 								                <th scope="col"><span class="asterisk">*</span>지도항목</th>
@@ -666,16 +681,6 @@
 								                    <div class="tb_flex">
 								                        <label for="detailChckArtcl">지도항목</label>
 								                        <input type="text" id="detailChckArtcl" name="detailChckArtcl" class="input" maxLength="80" aria-label="지도항목"
-								                               oninput="charOnly(this)" />
-								                    </div>
-								                </td>
-								            </tr>
-								           	<tr>
-								                <th scope="col">지도내용</th>
-								                <td>
-								                    <div class="tb_flex">
-								                        <label for="detailChckCn">지도내용</label>
-								                        <input type="text" id="detailChckCn" name="detailChckCn" class="input" maxLength="80" aria-label="지도내용"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
@@ -716,6 +721,19 @@
 								                </td>
 								            </tr>
 								        </table>
+								    </div>
+								    <div class="cont inspection02">
+								    	<table class="tb rental_tb01">
+								    	   <tr>
+								                <th scope="col"><span class="asterisk">*</span>지도내용</th>
+								                <td>
+								                    <div class="tb_flex">
+								                        <label for="detailChckCn">지도내용</label>
+								                        <textarea class="input chckCn" name="detailChckCn" id="detailChckCn" ></textarea>
+								                    </div>
+								                </td>
+								            </tr>
+						            	</table>
 								    </div>
 								</div>
 
@@ -790,61 +808,61 @@
 								    	</table>
 								    </div>
 								</div>
-<!-- 								<div class="contBox"> -->
-<!-- 								    <div class="nameBox nameBox-flex"> -->
-<!-- 								        <h4 class="name">지도 후속 처리 내용</h4> -->
-<!-- 								    </div> -->
-<!-- 								    <div class="a-flex"> -->
-<!-- 								   	 	<div class="aaa"> -->
-<!-- 								    	<table class="tb rental_tb01"> -->
-<!-- 								    		<tr> -->
-<!-- 								    		<th>1차</th> -->
-<!-- 								    		</tr> -->
-<!-- 								    	</table> -->
-<!-- 								    	</div> -->
-<!-- 								    	<div class="aaaa b-flex"> -->
-<!-- 								    	<table class="tb bbb rental_tb01"> -->
-<!-- 								    		<tr> -->
-<!-- 								                <th scope="col"><span class="asterisk">*</span>지도여부</th> -->
-<!-- 								                <td> -->
-<!-- 								                    <div class="tb_flex"> -->
-<!-- 								                        <label for=""></label> -->
-<!-- 								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="" -->
-<!-- 								                               oninput="charOnly(this)" /> -->
-<!-- 								                    </div> -->
-<!-- 								                </td> -->
-<!-- 								            </tr> -->
-<!-- 							    			<tr> -->
-<!-- 								                <th scope="col"><span class="asterisk">*</span>조치현황</th> -->
-<!-- 								                <td> -->
-<!-- 								                    <div class="tb_flex"> -->
-<!-- 								                        <label for=""></label> -->
-<!-- 								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="" -->
-<!-- 								                               oninput="charOnly(this)" /> -->
-<!-- 								                    </div> -->
-<!-- 								                </td> -->
-<!-- 								            </tr> -->
-<!-- 								    	</table> -->
-<!-- 								    	<table class="tb bbb rental_tb01"> -->
-<!-- 								    		<tr> -->
-<!-- 								                <th scope="col"><span class="asterisk">*</span>지도여부</th> -->
-<!-- 								                <td> -->
-<!-- 								                    <div class="tb_flex"> -->
-<!-- 								                        <label for=""></label> -->
-<!-- 								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="" -->
-<!-- 								                               oninput="charOnly(this)" /> -->
-<!-- 								                    </div> -->
-<!-- 								                </td> -->
-<!-- 								            </tr> -->
-<!-- 								    	</table> -->
-<!-- 								    	</div> -->
-<!-- 								    </div> -->
-<!-- 								</div> -->
+								<div class="contBox">
+								    <div class="nameBox nameBox-flex">
+								        <h4 class="name">지도 후속 처리 내용</h4>
+								    </div>
+								    <div class="cont cont-flex a-flex">
+								   	 	<div class="aaa">
+								    	<table class="tb rental_tb01">
+								    		<tr>
+								    		<th>1차</th>
+								    		</tr>
+								    	</table>
+								    	</div>
+								    	<div class="aaaa b-flex">
+								    	<table class="tb bbb rental_tb01">
+								    		<tr>
+								                <th scope="col"><span class="asterisk">*</span>지도여부</th>
+								                <td>
+								                    <div class="tb_flex">
+								                        <label for=""></label>
+								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label=""
+								                               oninput="charOnly(this)" />
+								                    </div>
+								                </td>
+								            </tr>
+							    			<tr>
+								                <th scope="col"><span class="asterisk">*</span>조치현황</th>
+								                <td>
+								                    <div class="tb_flex">
+								                        <label for=""></label>
+								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label=""
+								                               oninput="charOnly(this)" />
+								                    </div>
+								                </td>
+								            </tr>
+								    	</table>
+								    	<table class="tb bbb rental_tb01">
+								    		<tr>
+								                <th scope="col"><span class="asterisk">*</span>지도여부</th>
+								                <td>
+								                    <div class="tb_flex">
+								                        <label for=""></label>
+								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label=""
+								                               oninput="charOnly(this)" />
+								                    </div>
+								                </td>
+								            </tr>
+								    	</table>
+								    	</div>
+								    </div>
+								</div>
 			                </div>
 			            </div>
 			            <div class='btn_flex'>
-			            	<button style="margin-right: 10px" class='blue_btn updateBtn country' value="Update">수정</button>
-			            	<button style="margin-right: 10px" class='red_btn deleteBtn admin' value="Delete">삭제</button>
+			            	<button style="margin-right: 10px" class='blue_btn updateBtn' value="Update">수정</button>
+			            	<button style="margin-right: 10px" class='red_btn deleteBtn' value="Delete">삭제</button>
 			                <button class="gray_btn cancel_btn detailClose" value="Cancel">닫기</button>
 			            </div>
 			        </div>

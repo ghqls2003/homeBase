@@ -68,4 +68,9 @@ public class InspectionHistServiceImpl extends CmmnAbstractServiceImpl implement
 		return inspectionHistDao.agencyInfo(paramsMap);
 	}
 
+	@Override
+	public int updateDeleteYn(Map<String, Object> paramsMap) {
+		return inspectionHistDao.updateDeleteYn(paramsMap);
+	}
+
 }

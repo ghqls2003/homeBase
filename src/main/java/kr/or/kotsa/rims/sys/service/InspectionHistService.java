@@ -23,6 +23,8 @@ public interface InspectionHistService {
 
 	public int updateInspectionHist(Map<String, Object> paramsMap);
 
+	public int updateDeleteYn(Map<String, Object> paramsMap);
+
 
 }
  
