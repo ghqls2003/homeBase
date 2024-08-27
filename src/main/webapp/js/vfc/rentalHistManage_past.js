@@ -4,6 +4,13 @@
 
     W.$rentalHistManage = W.$rentalHistManage || {};
 
+    $(document).ready(function() {
+		kendo.ui.progress($(document.body), true);
+
+		$rentalHistManage.ui.pageLoad();		//최초 페이지 로드 시
+		$rentalHistManage.event.setUIEvent();
+    });
+
 	var pcColumns = [
 		{title: "순번", field: "rn", template: "#: rn #"},
 		{title: "대여번호", field: "rentNo", template: "#: rentNo #"},
@@ -56,24 +63,12 @@
 
 	var optVal = null;  // 차량 검색 조건
 	
-	var boundTotal = null;  // 엑셀다운로드 시 로직 안돌도록 빠르게.
-	
 	// 팝업창 로딩 체크
 	var detailCk = 0;
-	
-    $(document).ready(function() {
-		kendo.ui.progress($(document.body), true);
-		$(".excelDownBtn").attr("disabled", true);
-		$("#searchBtn").attr("disabled", true);
-
-		$rentalHistManage.ui.pageLoad();		//최초 페이지 로드 시
-		$rentalHistManage.event.setUIEvent();
-    });
-
 
 	$rentalHistManage.ui = {
 		pageLoad : function() {
-			
+
 			//날짜데이터 세팅
 			var nowYear = new Date().getFullYear();
 			var nowMonth = new Date().getMonth();
@@ -90,24 +85,18 @@
 
 			$("#start-picker01").kendoDatePicker({
 				format: "yyyy-MM-dd",
-				parseFormats: ["yyyy-MM-dd"],
 				value: new Date(oneWeekAgo)
 			});
-			$("#start-picker01").attr("readonly", true);
 
             $("#end-picker01").kendoDatePicker({
 				format: "yyyy-MM-dd",
-				parseFormats: ["yyyy-MM-dd"],
 				value: new Date(nowYear, nowMonth, nowDate)
 			});
-			$("#end-picker01").attr("readonly", true);
 			
 			$("#rent-picker").kendoDatePicker({
 				format: "yyyy-MM-dd",
-				parseFormats: ["yyyy-MM-dd"],
 				value: new Date(nowYear, nowMonth, nowDate)
 			});
-			$("#rent-picker").attr("readonly", true);
 
 			var lcnsIdntData = [
 				{ cd_nm: "국내 면허", cd: "1" },
@@ -192,8 +181,6 @@
 //				}
 //			});
 
-			// 최초 파라미터 세팅
-			$rentalHistManage.event.setData();			
 			$rentalHistManage.ui.kendoGrid();
 
 			if(authrtCd.startsWith('G')){
@@ -229,14 +216,14 @@
 							},
 						},
 						parameterMap: function(options){
-//							options.startDt			= searchParamsArc.startDt;
-//							options.endDt			= searchParamsArc.endDt;
-							options.rentDt			= searchParamsArc.rentDt;
-							options.lcnsIdntfCd	= searchParamsArc.lcnsIdntfCd;
-							options.rentSttsCd		= searchParamsArc.rentSttsCd;
-							options.vhclRegNo		= searchParamsArc.vhclRegNo;
-							options.coNm				= searchParamsArc.coNm;
-							options.dln					= searchParamsArc.dln;
+//							options.startDt = $("#start-picker01").val();
+//							options.endDt = $("#end-picker01").val();
+							options.rentDt = $("#rent-picker").val();
+							options.lcnsIdntfCd = $("#searchLcnsCd").val();
+							options.vhclRegNo = $("#searchWrd").val();
+							options.coNm = $("#searchCoNm").val();
+							options.dln = $("#searchDln").val();
+							options.rentSttsCd = $("#searchRentSttsCd").val();
 							return JSON.stringify(options);
 						}
 					},
@@ -257,6 +244,10 @@
 					template: "데이터가 없습니다."
 				},
 				columns: userTypeBool ? pcColumns : mobiColumns,
+                sortable: {
+                    mode: "single",
+                    allowUnsort: true
+                },
 				scrollable: true,
 				editable: false,
 				resizable: true,
@@ -266,17 +257,9 @@
 				 * modifier : 김경룡
 				 */
 				dataBound: function() {
-					boundTotal = this.dataSource.total();
 					var formatTotal = FormatNumber(this.dataSource.total());
 					$("#totCnt").text(formatTotal);
 					kendo.ui.progress($(document.body), false);
-					$(".excelDownBtn").attr("disabled", false);
-					$("#searchBtn").attr("disabled", false);
-				},
-				excel: { allPages: true },
-				excelExport: function(e) {
-					e.workbook.fileName = "대여이력(["+searchParamsArc.rentDt+"]포함).xlsx";
-					e.workbook.sheets[0].title = searchParamsArc.rentDt+" 포함";
 				},
                 change: function(e) {
 					var rows = e.sender.select();
@@ -289,7 +272,7 @@
 		            });
 
 					$rentalHistManage.event.detailInfoPopup(data);
-				},
+				}
 			});
 		},
 
@@ -416,7 +399,7 @@
 			});
 
 			$("#searchBtn").on("click",function(){
-				// 엑셀 다운로드 및 데이터 유지용 파라미터
+				// 엑셀 다운로드용 파라미터
 				searchParamsArc.startDt = $("#start-picker01").val();
 				searchParamsArc.endDt = $("#end-picker01").val();
 				searchParamsArc.rentDt = $("#rent-picker").val();
@@ -424,10 +407,8 @@
 				searchParamsArc.coNm = $("#searchCoNm").val();
 				searchParamsArc.lcnsIdntfCd = $("#searchLcnsCd").val();
 				searchParamsArc.rentSttsCd = $("#searchRentSttsCd").val();
-				searchParamsArc.dln = $("#searchDln").val();
-				
-				$(".excelDownBtn").attr("disabled", true);
-				$("#searchBtn").attr("disabled", true);
+				searchParamsArc.elxExcelDownReason = $('#elxExcelDownReason').val();
+				searchParamsArc._csrf = $('._csrf').val();
 
 				var start = new Date($("#start-picker01").val());
 				var end = new Date($("#end-picker01").val());
@@ -439,15 +420,20 @@
 				
 				if(new Date($('#start-picker01').val()) > new Date($('#end-picker01').val())){
 					alert("시작일은 종료일보다 늦을 수 없습니다.");
+//					$('#end-picker01').data("kendoDatePicker").value(new Date($('#start-picker01').val()));
 					return;
 				}
 
-				$("#rentalHistGrid").data("kendoGrid").dataSource.page(1);
+				$rentalHistManage.event.search();
 			});
 
 			$(".register_btn").on("click",function(){
 				$rentalHistManage.event.regiPopup();
 			});
+
+			$(".excelDownBtn").on("click", function() {
+            	$rentalHistManage.event.excelDownBtn();
+        	});
 
         	$("#carBtn").on("click", function() {
             	$rentalHistManage.event.carGridPopup();
@@ -497,7 +483,7 @@
 
         	$("#searchWrd").on('keydown', function(e) {
 				if (e.key === 'Enter') {
-					$('#rentalHistGrid').data('kendoGrid').page(1);
+					$rentalHistManage.event.search();
 				}
         	});
 
@@ -522,19 +508,10 @@
 			});
 
         },
-        
-        setData: function() {
-			searchParamsArc = {};
-			searchParamsArc.startDt = $("#start-picker01").val();
-			searchParamsArc.endDt = $("#end-picker01").val();
-			searchParamsArc.rentDt = $("#rent-picker").val();
-			searchParamsArc.vhclRegNo = $("#searchWrd").val();
-			searchParamsArc.coNm = $("#searchCoNm").val();
-			searchParamsArc.lcnsIdntfCd = $("#searchLcnsCd").val();
-			searchParamsArc.rentSttsCd = $("#searchRentSttsCd").val();
-			searchParamsArc.dln = $("#searchDln").val();
-		},
-        
+        search: function() {
+			var grid = $('#rentalHistGrid').data('kendoGrid');
+			grid.dataSource.page(1);
+        },
         carPopupSearch: function(){
 			optVal = $("#carSearchWrd").val();
 			var grid = $('#carGrid').data('kendoGrid');
@@ -555,22 +532,23 @@
 
         },
 
-		/**
-		 * @name         : excelDownBtn
-		 * @description  : 엑셀 다운로드(java => kendo)
-		 * @date         : 2024. 08. 26
-		 * @author       : 김경룡
-		 */
         excelDownBtn: function() {
-			if(boundTotal == 0) {
-				alert("데이터가 없어 다운로드를 할 수 없습니다.");
-			} else if(boundTotal > 10000) {
-				alert("10,000 건 이하의 데이터만 다운로드 가능합니다.");
+			var totalRowCount = $("#rentalHistGrid").data("kendoGrid").dataSource.total();
+			if(totalRowCount == 0) {
+				alert("데이터가 존재하지 않습니다.");
 			} else {
-				$("#rentalHistGrid").data("kendoGrid").saveAsExcel();
+				if(Object.keys(searchParamsArc).length === 0) {
+					searchParamsArc.startDt = $("#start-picker01").val();
+					searchParamsArc.endDt = $("#end-picker01").val();
+					searchParamsArc.rentDt = $("#rent-picker").val();
+					searchParamsArc.vhclRegNo = $("#searchWrd").val();
+					searchParamsArc.coNm = $("#searchCoNm").val();
+					searchParamsArc.lcnsIdntfCd = $("#searchLcnsCd").val();
+					searchParamsArc.rentSttsCd = $("#searchRentSttsCd").val();
+				}
+				excelDown("/vfc/rentalHistManage/excelDown", searchParamsArc, "rentalHistManage", totalRowCount);
 			}
         },
-        
 		carGridPopup : function() {
 			$rentalHistManage.ui.carGrid();
 			$("#carPopup").addClass("view");

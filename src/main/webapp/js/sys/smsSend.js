@@ -23,7 +23,13 @@
 	    // 법인별 자동검색
 		crnoAutoComplete: function(){
 			var param = {};
-			
+			if(authrtCd=='G01'){
+				if(userCmptncZoneCd.substring(2, userCmptncZoneCd.length) == "00000000"){
+					param.userCmptncZoneCd = userCmptncZoneCd.substring(0,2);
+				}else{
+					param.userCmptncZoneCd=userCmptncZoneCd;
+				}
+			};
 			ajax(false, contextPath + '/sys/smsSend/selectCrno', 'body', '처리중입니다.', param, function(data) {
 				$("#inc_selec_01").kendoAutoComplete({
 	              filter: "contains",
@@ -45,33 +51,78 @@
 	
 		// 검색옵션
 		search: function() {
-			var param = {};
+			var param = {
+				userCmptncZoneCd: userCmptncZoneCd,
+			};
 			
-			ajax(true, contextPath+'/sys/smsSend/selectCtpvNm', 'body', '처리중입니다.', param, function (data) {
-				$('.sub04 #searchCtpvNm').kendoDropDownList({
-		            optionLabel: "시도",
-		            dataTextField: "ctpv_nm",
-		            dataValueField: "ctpv_cd",
-		            dataSource: data,
-					value : "ctpv_cd",
-					change: function() {
-						if(this.value() == '') {
-							$('.sub04 #searchSggNm').data("kendoDropDownList").setDataSource(null);
-						} else {
-						    param.ctpvCd = this.value();
-							ajax(true, contextPath+'/sys/smsSend/selectSggNm', 'body', '처리중입니다.', param, function (data) {
-								$('.sub04 #searchSggNm').kendoDropDownList({
-						            optionLabel: "시군구",
-						            dataTextField: "sgg_nm",
-						            dataValueField: "sgg_cd",
-						            dataSource: data,
-									value : "sgg_cd"
-						        });
-							});
+			if(authrtCd!='G01'){
+				var param = {};
+				ajax(true, contextPath+'/sys/smsSend/selectCtpvNm', 'body', '처리중입니다.', param, function (data) {
+					$('.sub04 #searchCtpvNm').kendoDropDownList({
+			            optionLabel: "시도",
+			            dataTextField: "ctpv_nm",
+			            dataValueField: "ctpv_cd",
+			            dataSource: data,
+						value : "ctpv_cd",
+						change: function() {
+							if(this.value() == '') {
+								$('.sub04 #searchSggNm').data("kendoDropDownList").setDataSource(null);
+							} else {
+							    param.ctpvCd = this.value();
+								ajax(true, contextPath+'/sys/smsSend/selectSggNm', 'body', '처리중입니다.', param, function (data) {
+									$('.sub04 #searchSggNm').kendoDropDownList({
+							            optionLabel: "시군구",
+							            dataTextField: "sgg_nm",
+							            dataValueField: "sgg_cd",
+							            dataSource: data,
+										value : "sgg_cd"
+							        });
+								});
+							}
 						}
-					}
-		        });
-			});
+			        });
+				});
+			}else{
+				
+				ajax(true, contextPath+'/sys/smsSend/selectCtpvNm', 'body', '처리중입니다.', param, function (data) {
+					$('.sub04 #searchCtpvNm').kendoDropDownList({
+			            dataTextField: "ctpv_nm",
+			            dataValueField: "ctpv_cd",
+			            dataSource: data,
+						value : "ctpv_cd",
+			        });
+				});
+				
+				if (param.userCmptncZoneCd == "3611000000") { // 세종특별자차시
+					$(".sub04 #searchSggNm").kendoDropDownList({
+						optionLabel: "시군구"
+					});
+				} else if(param.userCmptncZoneCd.substring(2, param.userCmptncZoneCd.length) == "00000000") { // 광역지자체
+					param.ctpvCd = param.userCmptncZoneCd.substring(0, 2);
+					param.userCmptncZoneCd = '';
+					ajax(true, contextPath+'/sys/smsSend/selectSggNm', 'body', '처리중입니다.', param, function (data) {
+						$(".sub04 #searchSggNm").kendoDropDownList({
+							optionLabel: "시군구",
+							dataTextField: "sgg_nm",
+							dataValueField: "sgg_cd",
+							dataSource: data,
+							value: "sgg_cd"
+						});
+					});
+				} else {
+					ajax(true, contextPath+'/sys/smsSend/selectSggNm', 'body', '처리중입니다.', param, function (data) {
+						$(".sub04 #searchSggNm").kendoDropDownList({
+							dataTextField: "sgg_nm",
+							dataValueField: "sgg_cd",
+							dataSource: data,
+							value: "sgg_cd"
+						});
+					});
+				}
+				
+			}
+			
+			
 			
 			// 시구군
 			$('.sub04 #searchSggNm').kendoDropDownList({
@@ -387,7 +438,7 @@
 							
 							var sd = $("#searchCtpvNm").val();
 							var sgg = $("#searchSggNm").val();
-							options.cmptnc_zone_cd = sd+sgg;
+							options.cmptnc_zone_cd = sd+=sgg;
 							options.authrt_cd = $("#searchAuthrtCd").val();
 							options.stts_cd = $("#searchSttsCd").val();
 							options.search_other_condition = $("#searchOtherCondition").val();
@@ -425,7 +476,7 @@
 					{ field: "telno", title: "연락처", width: "150px", template: "#= telno != null ? $smsSend.ui.telnoFormat(telno) : '-' #"},
 					{ field: "user_nm", title: "성명", width: "100px", template: "#= user_nm != null ? user_nm : '-' #" },
 					{ field: "stts_cd", title: "계정상태", width: "70px", template: "#= stts_cd != null ? stts_cd : '-' #"},
-					{ field: "api", title: "API 사용여부", width: "100px", template: "#: api #"},
+					{ field: "api", title: "API 사용여부", width: "100px", template: "#= api != null ? api : '-' #"},
 					{ field: "authrt_nm", title: "권한명", width: "120px", template: "#= authrt_nm != null ? authrt_nm : '-' #" },
 					{ field: "user_id", title: "아이디", width: "100px", template: "#= user_id != null ? user_id : '-' #"},
 				],
@@ -467,6 +518,13 @@
 							options.auth_04 = JSON.stringify($("#auth_04").is(':checked'));
 							options.crno = $('#inc_selec_01').data('value');
 							options.api = JSON.stringify($("#api").is(':checked'));
+							if(authrtCd=='G01'){
+								if(userCmptncZoneCd.substring(2, userCmptncZoneCd.length) == "00000000"){
+									options.userCmptncZoneCd = userCmptncZoneCd.substring(0,2);
+								}else{
+									options.userCmptncZoneCd=userCmptncZoneCd;
+								}
+							};
 							
 							return JSON.stringify(options);
 						}
@@ -1052,6 +1110,7 @@
 		// 그룹 발송
 		groupReceiver: function(e) {
 			var params = {};
+			
 			params.except_tel = JSON.stringify($("#except_tel").is(':checked'));
 			params.auth_01 = JSON.stringify($('#auth_01').is(':checked'));
 			params.auth_02 = JSON.stringify($('#auth_02').is(':checked'));
@@ -1059,6 +1118,9 @@
 			params.auth_04 = JSON.stringify($('#auth_04').is(':checked'));
 			params.crno = $('#inc_selec_01').data('value');
 			params.api = JSON.stringify($("#api").is(':checked'));
+			if(authrtCd=='G01'){
+				params.userCmptncZoneCd=userCmptncZoneCd;
+			};
 			
 			return ajax(true, contextPath+'/sys/smsSend/selectGroupReceiverList', 'body', '확인중입니다.', params, function(data) {
 				return $smsSend.event.insertSms(data);

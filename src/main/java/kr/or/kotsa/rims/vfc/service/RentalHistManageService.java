@@ -8,8 +8,6 @@ public interface RentalHistManageService {
 
 	Object selectRentalHistList(Map<String, Object> paramsMap);
 
-	List<Map<String, Object>> selectRentalHistListEx(Map<String, Object> paramsMap);
-
 	int selectRentalHistListCnt(Map<String, Object> paramsMap);
 
 	Object selectCarList(Map<String, Object> paramsMap);

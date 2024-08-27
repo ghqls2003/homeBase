@@ -8,6 +8,7 @@
 
 <script>
     var authrtCd = '${authrtCd}';
+    var userCmptncZoneCd = '${userCmptncZoneCd}';
 </script>
 
 <div class="subPage sub04">

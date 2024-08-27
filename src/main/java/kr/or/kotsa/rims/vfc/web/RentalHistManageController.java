@@ -274,46 +274,4 @@ public class RentalHistManageController extends CmmnAbstractServiceImpl {
 
 		return rentalHistManageService.insertConfData(paramsMap);
 	}
-
-	/**
-     * 대여이력 관리 엑셀다운로드
-     * @param
-     * @return
-     * @throws RimsException
-     */
-	@PostMapping("/rentalHistManage/excelDown")
-    public GenericExcelView excelDown(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
-                                      HttpServletRequest request, HttpServletResponse response) throws RimsException {
-
-		String fileName = "rentalHistManage" + (new java.text.SimpleDateFormat("yyyyMMddHHmmss")).format(new java.util.Date());
-        String colName[] = {"순번", "대여번호", "회사명", "차량번호", "대여 시작일시", "대여 종료일시", "면허 종류", "대여상태"};
-        String valName[] = {"rn", "rentNo", "coNm", "vhclRegNo", "rentBgngDt", "rentEndDt", "lcnsIdntfNm", "rentSttsNm"};
-
-        paramsMap.put("authrtCd", getAuthrtCd());
-
-        if(getAuthrtCd().equals("G01") || getAuthrtCd().equals("G02")) {
-        	String cmptncZoneCd = getCmptncZoneCd();
-			if(cmptncZoneCd.matches("..00000000"))
-				paramsMap.put("cmptncZoneCd", cmptncZoneCd.substring(0,2));
-			else
-				paramsMap.put("cmptncZoneCd", cmptncZoneCd);
-		} else if(getAuthrtCd().equals("S01") || getAuthrtCd().equals("S02")) {
-			paramsMap.put("cmptncZoneCd", getCmptncZoneCd());
-			paramsMap.put("bzmnSn", getBzmnSn());
-			paramsMap.put("upBzmnSn", getUpBzmnSn());
-		}
-
-        List<Map<String, Object>> colValue = rentalHistManageDao.selectRentalHistList(paramsMap);
-		int total = rentalHistManageDao.selectRentalHistListCnt(paramsMap);
-
-        modelMap.put("excelName", fileName);
-        modelMap.put("colName", colName);
-        modelMap.put("valName", valName);
-        modelMap.put("colValue", colValue);
-        paramsMap.put("total", total);
-
-        return new GenericExcelView();
-    }
-
-
 }
