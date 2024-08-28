@@ -140,7 +140,6 @@
                             options.cmpnyName = param.cmpnyName;
                             options.codeType = param.codeType;
                             options.cd = param.cd;
-                            console.log("options",options);
                             return JSON.stringify(options);
 
                   }

@@ -59,13 +59,13 @@
             <when test='authrtCd.indexOf("G") != -1'> <!-- 지자체,대여사업조합 : 관할지역 내 사업자의 사용자 -->
                 WHERE viui.user_sn IN (
                 SELECT user_sn
-                FROM dqvs.dvs_cmm_mt_user
+                FROM  dqvs.v_intg_user_info AS viui1
                 <choose>
                     <when test="subSignguCd != null  and subSignguCd != ''">
-                        WHERE cmptnc_zone_cd like  #{subSignguCd} ||'%'
+                        WHERE viui1.cmptnc_zone_cd like  #{subSignguCd} ||'%'
                     </when>
                     <otherwise> <!-- 지자체,조합 권한인데 관할구역코드가 없으면 데이터 조회 안되게 -->
-                        WHERE cmptnc_zone_cd = '999999998888333'
+                        WHERE viui1.cmptnc_zone_cd = '999999998888333'
                     </otherwise>
                 </choose>
                 )
@@ -144,13 +144,13 @@
             <when test='authrtCd.indexOf("G") != -1'> <!-- 지자체,대여사업조합 : 관할지역 내 사업자의 사용자 -->
                 WHERE viui.user_sn IN (
                 SELECT user_sn
-                FROM dqvs.dvs_cmm_mt_user
+                FROM  dqvs.v_intg_user_info AS viui1
                 <choose>
                     <when test="subSignguCd != null  and subSignguCd != ''">
-                        WHERE cmptnc_zone_cd like  #{subSignguCd} ||'%'
+                        WHERE viui1.cmptnc_zone_cd like  #{subSignguCd} ||'%'
                     </when>
-                    <otherwise> <!-- 지자체,조합 권한인데 관할구역코드가 없으면 데이터 조회안되게 -->
-                        WHERE cmptnc_zone_cd = '999999998888333'
+                    <otherwise> <!-- 지자체,조합 권한인데 관할구역코드가 없으면 데이터 조회 안되게 -->
+                        WHERE viui1.cmptnc_zone_cd = '999999998888333'
                     </otherwise>
                 </choose>
                 )
