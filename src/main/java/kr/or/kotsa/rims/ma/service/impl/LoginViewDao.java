@@ -86,7 +86,7 @@ public class LoginViewDao extends CmmnAbstractMapper {
 	public void updateUserInfo(Map<String, Object> paramsMap) {
 		update("ma.login.updateUserInfo", paramsMap);
 	}
-	//6개월 초과 휴먼상태로 변경
+	//6개월 초과 휴면상태로 변경
 	public void updateAcntCd(Map<String, Object> paramsMap) {
 		update("ma.login.updateAcntCd", paramsMap);
 	}
