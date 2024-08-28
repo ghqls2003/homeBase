@@ -64,205 +64,6 @@
 				
 	</sql>
 	
-	<sql id="RentalHistListSql">
-		(
-		SELECT ROW_NUMBER() OVER(ORDER BY T.rent_no) rn
-			, *
-		FROM 
-			(
-			SELECT rent.rent_no
-				, rent.lcns_idntf_cd
-				, CASE rent.lcns_idntf_cd WHEN '1' THEN '국내 면허' WHEN '2' THEN '국제 면허' ELSE '국내 면허' END lcns_idntf_nm
-				, rent.vhcl_reg_no
-				, rent.brno
-				, TO_CHAR(rent.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt
-			    , TO_CHAR(rent.rent_end_dt, 'YYYY-MM-DD HH24:MI') rent_end_dt
-				, rent.rent_stts_cd
-				, CASE rent.rent_stts_cd WHEN '1' THEN '미확정' WHEN '2' THEN '대여확정' WHEN '9' THEN '대여취소' ELSE rent.rent_stts_cd END rent_stts_nm
-				, rent.co_nm
-				, rent.vrfc_hstry_sn
-				, rent.rgtr_sn
-				, rent.reg_dt
-				, rent.mdfcn_dt
-				, rent.dln
-			FROM
-				(
-				SELECT base.rent_no, base.lcns_idntf_cd, base.vhcl_reg_no, base.bzmn_sn as brno
-			        , base.rent_bgng_dt, base.rent_end_dt, agency.co_nm, agency.reg_cmptnc_cd 
-			        , base.rent_stts_cd, base.vrfc_hstry_sn, base.bzmn_sn, base.del_yn
-			        , base.rgtr_sn, base.reg_dt, base.mdfcn_dt, base.dln
-				FROM
- 					dqvs.dvs_dqv_mt_rent_dump base
-				LEFT OUTER JOIN
-					dqvs.dvs_rac_mt_agency agency
-				ON base.bzmn_sn = agency.bzmn_sn			
-				WHERE (#{rentDt}::TIMESTAMP  BETWEEN base.rent_bgng_dt AND base.rent_end_dt)
-					AND base.reg_dt <![CDATA[ <= ]]> NOW()
-				<if test="rentSttsCd != '' and rentSttsCd != null">
-	            	AND base.rent_stts_cd = #{rentSttsCd}
-				</if>
-				<if test="dln != '' and dln != null">
-	            	AND base.dln = dqvs.pca_encrypt(#{dln}, '150')
-				</if>
-				) AS rent 
-			WHERE 1=1
-			<if test='authrtCd.indexOf("Z") == -1 or authrtCd.indexOf("M") == -1 or authrtCd.indexOf("K") == -1'>
-				AND rent.del_yn = 'N'
-			</if>
-			<if test="vhclRegNo != '' and vhclRegNo != null">
-            	AND rent.vhcl_reg_no LIKE '%' || #{vhclRegNo} || '%'
-			</if>
-			<if test="coNm != '' and coNm != null">
-            	AND rent.co_nm LIKE '%' || #{coNm} || '%'
-			</if>			
-            <if test='lcnsIdntfCd.equals("1")'>
-            	AND rent.lcns_idntf_cd IN ('1', NULL)
-			</if>
-            <if test='lcnsIdntfCd.equals("2")'>
-            	AND rent.lcns_idntf_cd = '2'
-			</if>
-			<choose>
-		        <when test='authrtCd.indexOf("Z") != -1 or authrtCd.indexOf("M") != -1 or authrtCd.indexOf("K") != -1'> <!-- 관리자/공단/국토부 : 전체목록 -->
-		       		AND 1=1
-		        </when>
-		        <when test='authrtCd.indexOf("G") != -1'> <!-- 지자체 : 관할지역 내 사업자의 대여이력 -->
-		        	AND rent.reg_cmptnc_cd LIKE #{cmptncZoneCd} || '%'
-		        </when>
-		        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
-					AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
-					OR rent.bzmn_sn = #{bzmnSn})
-		        </when>
-		        <when test='authrtCd.equals("S02")'> <!-- 영업소관리자 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시  -->
-					AND rent.bzmn_sn = #{bzmnSn}
-		        </when>
-		        <when test='authrtCd.equals("S03")'> <!-- 주사무소 일반회원, 영업소 일반회원에 따라 조건처리  -->
-		            <if test="bzauthCd == 1">
-		                AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno = #{bzmnSn})
-		                OR rent.bzmn_sn = #{bzmnSn})
-		            </if>
-		            <if test="bzauthCd == 2">
-		                AND rent.bzmn_sn = #{bzmnSn}
-		            </if>
-		        </when>
-		        <otherwise> <!-- 그 외는 소속 회사의 대여 건만 표시 -->
-					<if test="bzmnSn != '' and bzmnSn != null">
-	                	AND rent.bzmn_sn = #{bzmnSn}
-					</if>
-		        </otherwise>
-			</choose>
-			) AS T 
-		) AS A
-	</sql>
-	
-	<sql id="RentalHistListSql2">
-				SELECT rent.rent_no
-					, CASE rent.lcns_idntf_cd WHEN '1' THEN '국내 면허' WHEN '2' THEN '국제 면허' ELSE '국내 면허' END lcns_idntf_nm
-					, rent.vhcl_reg_no
-					, rent.bzmn_sn as brno
-			        , TO_CHAR(rent.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt
-			        , TO_CHAR(rent.rent_end_dt, 'YYYY-MM-DD HH24:MI') rent_end_dt
-			        , rent.rent_stts_cd
-			        , agency.co_nm
-			        , agency.reg_cmptnc_cd 
-			        , CASE rent.rent_stts_cd WHEN '1' THEN '미확정' WHEN '2' THEN '대여확정' WHEN '9' THEN '대여취소' ELSE rent.rent_stts_cd END rent_stts_nm
-			        , rent.vrfc_hstry_sn
-			        , rent.bzmn_sn
-			        , rent.lcns_idntf_cd
-			        , rent.del_yn
-			        , rent.rgtr_sn
-			        , rent.reg_dt
-					, rent.mdfcn_dt
-					, rent.dln
-				FROM
-					dqvs.dvs_dqv_mt_rent_dump rent
-<!-- 					dqvs.dvs_dqv_mt_rent rent -->
-				LEFT OUTER JOIN
-					dqvs.dvs_rac_mt_agency agency
-				ON rent.bzmn_sn = agency.bzmn_sn			
-				WHERE 1=1
-				<if test="startDt != '' and startDt != null and endDt != '' and endDt != null">
-	            	AND (rent.reg_dt BETWEEN #{startDt}::TIMESTAMP AND #{endDt}::DATE + '23:59:59'::INTERVAL)
-				</if>
-				<if test="rentDt != '' and rentDt != null">
-					AND (#{rentDt}::TIMESTAMP BETWEEN rent.rent_bgng_dt AND rent.rent_end_dt)
-				</if>
-				<if test="rentSttsCd != '' and rentSttsCd != null">
-	            	AND rent.rent_stts_cd = #{rentSttsCd}
-				</if>
-				<if test="dln != '' and dln != null">
-	            	AND rent.dln = dqvs.pca_encrypt(#{dln}, '150')
-				</if>
-	</sql>
-	
-	<sql id="RentalHistListSql_past">
-		(
-			SELECT ROW_NUMBER() OVER(ORDER BY rent.rent_no DESC) rn
-				, rent.rent_no
-				, rent.lcns_idntf_nm
-				, rent.vhcl_reg_no
-				, rent.brno
-				, rent.rent_bgng_dt
-				, rent.rent_end_dt
-				, rent.rent_stts_cd
-				, rent.co_nm
-				, rent.rent_stts_nm
-				, rent.vrfc_hstry_sn
-				, rent.rgtr_sn
-				, rent.reg_dt
-				, rent.mdfcn_dt
-				, rent.dln
-			FROM
-				(
-					<include refid="RentalHistListSql2" />
-				) AS rent
-			WHERE 1=1
-			<if test='authrtCd.indexOf("Z") == -1 or authrtCd.indexOf("M") == -1 or authrtCd.indexOf("K") == -1'>
-				AND rent.del_yn = 'N'
-			</if>
-			<if test="vhclRegNo != '' and vhclRegNo != null">
-            	AND rent.vhcl_reg_no LIKE '%' || #{vhclRegNo} || '%'
-			</if>
-			<if test="coNm != '' and coNm != null">
-            	AND rent.co_nm LIKE '%' || #{coNm} || '%'
-			</if>
-            <if test='lcnsIdntfCd.equals("1")'>
-            	AND rent.lcns_idntf_cd IN ('1', NULL)
-			</if>
-            <if test='lcnsIdntfCd.equals("2")'>
-            	AND rent.lcns_idntf_cd = '2'
-			</if>
-			<choose>
-		        <when test='authrtCd.indexOf("Z") != -1 or authrtCd.indexOf("M") != -1 or authrtCd.indexOf("K") != -1'> <!-- 관리자/공단/국토부 : 전체목록 -->
-		       		AND 1=1
-		        </when>
-		        <when test='authrtCd.indexOf("G") != -1'> <!-- 지자체 : 관할지역 내 사업자의 대여이력 -->
-		        	AND rent.reg_cmptnc_cd LIKE #{cmptncZoneCd} || '%'
-		        </when>
-		        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
-					AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
-					OR rent.bzmn_sn = #{bzmnSn})
-		        </when>
-		        <when test='authrtCd.equals("S02")'> <!-- 영업소관리자 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시  -->
-					AND rent.bzmn_sn = #{bzmnSn}
-		        </when>
-		        <when test='authrtCd.equals("S03")'> <!-- 주사무소 일반회원, 영업소 일반회원에 따라 조건처리  -->
-		            <if test="bzauthCd == 1">
-		                AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno = #{bzmnSn})
-		                OR rent.bzmn_sn = #{bzmnSn})
-		            </if>
-		            <if test="bzauthCd == 2">
-		                AND rent.bzmn_sn = #{bzmnSn}
-		            </if>
-		        </when>
-		        <otherwise> <!-- 그 외는 소속 회사의 대여 건만 표시 -->
-					<if test="bzmnSn != '' and bzmnSn != null">
-	                	AND rent.bzmn_sn = #{bzmnSn}
-					</if>
-		        </otherwise>
-			</choose>
-		) AS T
-	</sql>
-	
 	<sql id="RsvHistListSql">
 		(
 			SELECT ROW_NUMBER() OVER(ORDER BY rent.rent_no DESC) rn
@@ -342,28 +143,215 @@
 		        </otherwise>
 			</choose>
 		) AS T
+	</sql>	
+	
+	<!-- 대여정보이력 조회 쿼리 재구성 -->
+	<sql id="RentalHistListSql">
+		(
+		SELECT ROW_NUMBER() OVER(ORDER BY T.rent_no) rn
+			, *
+		FROM 
+			(
+			SELECT rent.rent_no
+				, rent.lcns_idntf_cd
+				, CASE rent.lcns_idntf_cd WHEN '1' THEN '국내 면허' WHEN '2' THEN '국제 면허' ELSE '국내 면허' END lcns_idntf_nm
+				, rent.vhcl_reg_no
+				, TO_CHAR(rent.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt
+			    , TO_CHAR(rent.rent_end_dt, 'YYYY-MM-DD HH24:MI') rent_end_dt
+				, rent.rent_stts_cd
+				, CASE rent.rent_stts_cd WHEN '1' THEN '미확정' WHEN '2' THEN '대여확정' WHEN '9' THEN '대여취소' ELSE rent.rent_stts_cd END rent_stts_nm
+				, agency.co_nm
+				, rent.vrfc_hstry_sn
+				, rent.rgtr_sn 
+				, rent.reg_dt
+				, rent.mdfcn_dt
+				, rent.dln
+			FROM
+				(
+				SELECT base.rent_no, base.lcns_idntf_cd, base.vhcl_reg_no, base.bzmn_sn, base.rent_bgng_dt, base.rent_end_dt
+			        , base.rent_stts_cd, base.vrfc_hstry_sn, base.del_yn, base.rgtr_sn, base.reg_dt, base.mdfcn_dt, base.dln
+				FROM
+ 					dqvs.dvs_dqv_mt_rent_dump base
+				WHERE (#{rentDt}::TIMESTAMP  BETWEEN base.rent_bgng_dt AND base.rent_end_dt)
+					AND base.reg_dt <![CDATA[ <= ]]> NOW()
+				<if test="startDt != '' and startDt != null and endDt != '' and endDt != null">  <!-- 넣을지 고민... -->
+	            	AND (base.reg_dt BETWEEN #{startDt}::TIMESTAMP AND #{endDt}::DATE + '23:59:59'::INTERVAL)
+				</if>
+				<if test="rentDt != '' and rentDt != null">
+					AND (#{rentDt}::TIMESTAMP BETWEEN base.rent_bgng_dt AND base.rent_end_dt)
+				</if>
+				<if test="rentSttsCd != '' and rentSttsCd != null">
+	            	AND base.rent_stts_cd = #{rentSttsCd}
+				</if>
+				<if test="dln != '' and dln != null">
+	            	AND base.dln = dqvs.pca_encrypt(#{dln}, '150')
+				</if>
+				) AS rent 
+			LEFT OUTER JOIN
+				dqvs.dvs_rac_mt_agency agency
+			ON rent.bzmn_sn = agency.bzmn_sn			
+			WHERE 1=1
+			<if test='authrtCd.indexOf("Z") == -1 or authrtCd.indexOf("M") == -1 or authrtCd.indexOf("K") == -1'>
+				AND rent.del_yn = 'N'
+			</if>
+			<if test="vhclRegNo != '' and vhclRegNo != null">
+            	AND rent.vhcl_reg_no LIKE '%' || #{vhclRegNo} || '%'
+			</if>
+			<if test="coNm != '' and coNm != null">
+            	AND agency.co_nm LIKE '%' || #{coNm} || '%'
+			</if>			
+            <if test='lcnsIdntfCd.equals("1")'>
+            	AND rent.lcns_idntf_cd IN ('1', NULL)
+			</if>
+            <if test='lcnsIdntfCd.equals("2")'>
+            	AND rent.lcns_idntf_cd = '2'
+			</if>
+			<choose>
+		        <when test='authrtCd.indexOf("Z") != -1 or authrtCd.indexOf("M") != -1 or authrtCd.indexOf("K") != -1'> <!-- 관리자/공단/국토부 : 전체목록 -->
+		       		AND 1=1
+		        </when>
+		        <when test='authrtCd.indexOf("G") != -1'> <!-- 지자체 : 관할지역 내 사업자의 대여이력 -->
+		        	AND agency.reg_cmptnc_cd LIKE #{cmptncZoneCd} || '%'
+		        </when>
+		        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
+					AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
+					OR rent.bzmn_sn = #{bzmnSn})
+		        </when>
+		        <when test='authrtCd.equals("S02")'> <!-- 영업소관리자 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시  -->
+					AND rent.bzmn_sn = #{bzmnSn}
+		        </when>
+		        <when test='authrtCd.equals("S03")'> <!-- 주사무소 일반회원, 영업소 일반회원에 따라 조건처리  -->
+		            <if test="bzauthCd == 1">
+		                AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno = #{bzmnSn})
+		                OR rent.bzmn_sn = #{bzmnSn})
+		            </if>
+		            <if test="bzauthCd == 2">
+		                AND rent.bzmn_sn = #{bzmnSn}
+		            </if>
+		        </when>
+		        <otherwise> <!-- 그 외는 소속 회사의 대여 건만 표시 -->
+					<if test="bzmnSn != '' and bzmnSn != null">
+	                	AND rent.bzmn_sn = #{bzmnSn}
+					</if>
+		        </otherwise>
+			</choose>
+			) AS T 
+		) AS A
+	</sql>
+	
+	<sql id="RentalHistListSql_past">
+		(
+			SELECT ROW_NUMBER() OVER(ORDER BY rent.rent_no DESC) rn
+				, rent.rent_no
+				, rent.lcns_idntf_nm
+				, rent.vhcl_reg_no
+				, rent.rent_bgng_dt
+				, rent.rent_end_dt
+				, rent.rent_stts_cd
+				, rent.co_nm
+				, rent.rent_stts_nm
+				, rent.vrfc_hstry_sn
+				, rent.rgtr_sn
+				, rent.reg_dt
+				, rent.mdfcn_dt
+				, rent.dln
+			FROM
+				(
+				SELECT rent.rent_no
+					, CASE rent.lcns_idntf_cd WHEN '1' THEN '국내 면허' WHEN '2' THEN '국제 면허' ELSE '국내 면허' END lcns_idntf_nm
+					, rent.vhcl_reg_no
+			        , TO_CHAR(rent.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt
+			        , TO_CHAR(rent.rent_end_dt, 'YYYY-MM-DD HH24:MI') rent_end_dt
+			        , rent.rent_stts_cd
+			        , agency.co_nm
+			        , agency.reg_cmptnc_cd 
+			        , CASE rent.rent_stts_cd WHEN '1' THEN '미확정' WHEN '2' THEN '대여확정' WHEN '9' THEN '대여취소' ELSE rent.rent_stts_cd END rent_stts_nm
+			        , rent.vrfc_hstry_sn
+			        , rent.bzmn_sn
+			        , rent.lcns_idntf_cd
+			        , rent.del_yn
+			        , rent.rgtr_sn
+			        , rent.reg_dt
+					, rent.mdfcn_dt
+					, rent.dln
+				FROM
+					dqvs.dvs_dqv_mt_rent_dump rent
+<!-- 					dqvs.dvs_dqv_mt_rent rent -->
+				LEFT OUTER JOIN
+					dqvs.dvs_rac_mt_agency agency
+				ON rent.bzmn_sn = agency.bzmn_sn			
+				WHERE 1=1
+				<if test="startDt != '' and startDt != null and endDt != '' and endDt != null">
+	            	AND (rent.reg_dt BETWEEN #{startDt}::TIMESTAMP AND #{endDt}::DATE + '23:59:59'::INTERVAL)
+				</if>
+				<if test="rentDt != '' and rentDt != null">
+					AND (#{rentDt}::TIMESTAMP BETWEEN rent.rent_bgng_dt AND rent.rent_end_dt)
+				</if>
+				<if test="rentSttsCd != '' and rentSttsCd != null">
+	            	AND rent.rent_stts_cd = #{rentSttsCd}
+				</if>
+				<if test="dln != '' and dln != null">
+	            	AND rent.dln = dqvs.pca_encrypt(#{dln}, '150')
+				</if>
+				) AS rent
+			WHERE 1=1
+			<if test='authrtCd.indexOf("Z") == -1 or authrtCd.indexOf("M") == -1 or authrtCd.indexOf("K") == -1'>
+				AND rent.del_yn = 'N'
+			</if>
+			<if test="vhclRegNo != '' and vhclRegNo != null">
+            	AND rent.vhcl_reg_no LIKE '%' || #{vhclRegNo} || '%'
+			</if>
+			<if test="coNm != '' and coNm != null">
+            	AND rent.co_nm LIKE '%' || #{coNm} || '%'
+			</if>
+            <if test='lcnsIdntfCd.equals("1")'>
+            	AND rent.lcns_idntf_cd IN ('1', NULL)
+			</if>
+            <if test='lcnsIdntfCd.equals("2")'>
+            	AND rent.lcns_idntf_cd = '2'
+			</if>
+			<choose>
+		        <when test='authrtCd.indexOf("Z") != -1 or authrtCd.indexOf("M") != -1 or authrtCd.indexOf("K") != -1'> <!-- 관리자/공단/국토부 : 전체목록 -->
+		       		AND 1=1
+		        </when>
+		        <when test='authrtCd.indexOf("G") != -1'> <!-- 지자체 : 관할지역 내 사업자의 대여이력 -->
+		        	AND rent.reg_cmptnc_cd LIKE #{cmptncZoneCd} || '%'
+		        </when>
+		        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
+					AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
+					OR rent.bzmn_sn = #{bzmnSn})
+		        </when>
+		        <when test='authrtCd.equals("S02")'> <!-- 영업소관리자 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시  -->
+					AND rent.bzmn_sn = #{bzmnSn}
+		        </when>
+		        <when test='authrtCd.equals("S03")'> <!-- 주사무소 일반회원, 영업소 일반회원에 따라 조건처리  -->
+		            <if test="bzauthCd == 1">
+		                AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno = #{bzmnSn})
+		                OR rent.bzmn_sn = #{bzmnSn})
+		            </if>
+		            <if test="bzauthCd == 2">
+		                AND rent.bzmn_sn = #{bzmnSn}
+		            </if>
+		        </when>
+		        <otherwise> <!-- 그 외는 소속 회사의 대여 건만 표시 -->
+					<if test="bzmnSn != '' and bzmnSn != null">
+	                	AND rent.bzmn_sn = #{bzmnSn}
+					</if>
+		        </otherwise>
+			</choose>
+		) AS T
 	</sql>
 	
 	
-    <!-- 메인 그리드 -->
+    <!-- 대여정보리스트 재구성 -->
     <select id="RentalHistList" resultType="resultMap">
-    /* 대여정보 메인 */
+    /* 대여정보이력 최신 */
 		SELECT *
 		FROM
 			<include refid="RentalHistListSql" />
-	    		<choose>
-            <when test="take != '' and take != null">
-                <choose>
-                    <when test="skip != '' and skip != null">
-                        WHERE A.rn <![CDATA[>]]> #{skip}
-                    </when>
-                    <otherwise>
-                        WHERE A.rn <![CDATA[>]]> 0
-                    </otherwise>
-                </choose>
-                LIMIT #{take}
-            </when>
-        </choose>
+		<if test="take != '' and take != null">
+			LIMIT #{take} OFFSET #{skip}
+		</if>
     </select>
     
 	<!-- 메인 그리드 카운트 -->

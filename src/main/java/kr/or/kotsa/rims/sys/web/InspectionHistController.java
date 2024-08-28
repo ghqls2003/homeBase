@@ -143,6 +143,18 @@ public class InspectionHistController extends CmmnAbstractServiceImpl{
 		return inspectionHistService.agencyInfo(paramsMap);
 	}
 	
+	/**
+     * 지도점검이력 삭제
+     * @param paramsMap
+     * @return
+     * @throws RimsException
+     */
+	@RequestMapping(value = "/inspectionHist/updateDeleteYn")
+	@ResponseBody
+	public int updateDeleteYn(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		return inspectionHistService.updateDeleteYn(paramsMap);
+	}
+	
 	
 }
 

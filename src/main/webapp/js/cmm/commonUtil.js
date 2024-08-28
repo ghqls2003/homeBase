@@ -1086,6 +1086,26 @@ function setCookie( name, value, exp) {
 
 // =====KENDO 관련=====
 /**
+ * @name           : setDatePicker
+ * @description  : kendoDatePicker 공통 초기화
+ * @date             : 2024. 08. 27
+ * @author	       : 김경룡
+ * @etc               : start/dpth = "month"는 yyyyMMdd, "year" 은 yyyyMM, "decade"는 yyyy
+ */
+function setDatePicker(ipId, bsVal, minVal, maxVal, format, dept) {
+	$(ipId).kendoDatePicker({
+		value: bsVal,
+		min: minVal,
+		max: maxVal,
+		format: format,
+		parseFormats: [format],
+		start: dept,
+    	depth: dept
+	});
+	$(ipId).prop("readonly", true);
+}
+
+/**
  * @name         : btnPeriodClick
  * @description  : 검색 기간 시작일 및 종료일 세팅
  * @date         :

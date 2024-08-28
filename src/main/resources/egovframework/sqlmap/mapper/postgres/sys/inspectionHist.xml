@@ -122,7 +122,7 @@
 				, inspctn.exmnr3
 				, inspctn.jbgd
 				, inspctn.ogdp
-				, inspctn.telno
+				, dqvs.pca_decrypt(inspctn.telno, '150') as telno
 				, inspctn.chck_artcl
 				, inspctn.etc_artcl
 				, inspctn.chck_cn
@@ -177,6 +177,7 @@
 			left join dqvs.dvs_cmm_mt_file file on file_sn = inspctn.fileatchsn
 			) as T1
 			WHERE 1 = 1
+			and T1.prcs_yn != 'Y'
 			<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
 				and T1.reg_cmptnc_cd like #{cmptncZoneCd} || '%'
 			</if>
@@ -235,7 +236,7 @@
 				, #{exmnr}
 				, #{jbgd}
 				, #{ogdp}
-				, #{telno}
+				, dqvs.pca_encrypt(#{telno}, '150')
 				, #{chckArtcl}
 				, #{etcArtcl}
 				, #{chckCn}
@@ -255,7 +256,7 @@
 			exmnr = #{exmnr},
 			jbgd = #{jbgd},
 			ogdp = #{ogdp},
-			telno = #{telno},
+			telno = dqvs.pca_encrypt(#{telno}, '150'),
 			chck_artcl = #{chckArtcl},
 			etc_artcl = #{etcArtcl},
 			chck_cn = #{chckCn},
@@ -267,6 +268,10 @@
 			bzmn_sn = #{bzmnSn}
 	</update>
 	
-	
+	<update id="updateDeleteYn">
+		UPDATE dqvs.dvs_spv_hs_inspctn
+		SET prcs_yn = 'Y'
+		WHERE bzmn_sn = #{bzmnSn}
+	</update>
 
 </mapper>

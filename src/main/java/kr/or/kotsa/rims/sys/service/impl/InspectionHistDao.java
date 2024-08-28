@@ -50,5 +50,9 @@ public class InspectionHistDao extends CmmnAbstractMapper {
 		return update("sys.inspectionHist.updateInspectionHist", paramsMap);
 	}
 
+	public int updateDeleteYn(Map<String, Object> paramsMap) {
+		return update("sys.inspectionHist.updateDeleteYn", paramsMap);
+	}
+
 
 }

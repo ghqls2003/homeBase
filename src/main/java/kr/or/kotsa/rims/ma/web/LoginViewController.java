@@ -145,7 +145,7 @@ public class LoginViewController {
 			Map<String, Object> resultMap = loginViewService.selectUserInfo(paramsMap, httpServletRequest);
 			
 			if (resultMap != null) { // 사용자 정보 있을 시
-				// 계정상태 체크 (1:정상, 2:잠김, 3:휴먼, 4:정지, 5:삭제, 6:탈퇴)
+				// 계정상태 체크 (1:정상, 2:잠김, 3:휴면, 4:정지, 5:삭제, 6:탈퇴)
 				
 				if (!resultMap.get("acntSttsCd").equals("1")) {
 					if (resultMap.get("acntSttsCd").equals("2")) {
@@ -154,9 +154,9 @@ public class LoginViewController {
 				        session.setAttribute("message", "잠금상태인 계정입니다.");
 				        return mav;
 					} else if (resultMap.get("acntSttsCd").equals("3")) {
-						// 휴먼
+						// 휴면
 				        mav.setViewName("redirect:/ma/login");
-				        session.setAttribute("message", "휴먼상태인 계정입니다.");
+				        session.setAttribute("message", "휴면상태인 계정입니다.");
 				        return mav;
 					} else if (resultMap.get("acntSttsCd").equals("4")) {
 						// 정지
@@ -185,7 +185,7 @@ public class LoginViewController {
 				
 				if (lastLoginDate.isBefore(LocalDateTime.now().minusMonths(6))) {
 					mav.setViewName("redirect:/ma/login");
-			        session.setAttribute("message", "6개월 미접속 계정으로 휴먼상태로 변경되었습니다.");
+			        session.setAttribute("message", "6개월 미접속 계정으로 휴면상태로 변경되었습니다.");
 			        loginViewService.updateAcntCd(resultMap);
 			        return mav;
 				}  

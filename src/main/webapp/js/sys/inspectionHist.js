@@ -17,8 +17,21 @@
 	
 	$inspectionHist.ui = {
 		pageLoad: function() {
+			$inspectionHist.ui.autoTextarea();
 			$inspectionHist.ui.inspectionHistInfo();
 			$inspectionHist.ui.search();
+			
+		},
+		
+		autoTextarea: function(){
+		    var textareas = $('.chckCn');
+
+			textareas.each(function() {
+			    $(this).on('input', function() {
+			        $(this).css('height', '0');
+			        $(this).css('height', this.scrollHeight + 'px');
+			    });
+			});
 			
 		},
 		
@@ -273,12 +286,12 @@
 			});
 			
 			//직접입력 팝업
-			$(".directPopupBtn").on("click", function() {
+			$(".insertPopupBtn").on("click", function() {
 				$(".register_popup").addClass("view");
 			});
 			
-			$(".directInsertBtn").on("click", function() {
-            	$inspectionHist.event.directInsertBtn();
+			$(".insertBtn").on("click", function() {
+            	$inspectionHist.event.insertBtn();
         	});
 
 			$(".excelDownBtn").on("click", function() {
@@ -344,7 +357,10 @@
 				fileDownloadget(atchFileSn, atchFileNm);
 			});
         	
-        	
+        	// 상세팝업 - 삭제버튼 (마스터 관리자 / 사업자 전체 삭제 됨 - 요청, 마스터, 이력)
+			$(".deleteBtn").on("click", function() {
+				$inspectionHist.event.updateDeleteYn();
+			});
 		},
 		
 		detailInfoPopup: function(data) {
@@ -374,7 +390,6 @@
 			
 			
 			
-			
 			$(".detail_popup").addClass("view");
 //			var params = {};
 //
@@ -391,7 +406,7 @@
 //			$("#detailInfoPopup").addClass("view");
 		},
 		
-		directInsertBtn: function(){
+		insertBtn: function(){
 			var params ={};
 			//var brno = insertBrno.replace(/[^0-9]/g, "");
 			params.exmnr = $("#regExmnr").val();
@@ -435,7 +450,7 @@
 		insertInspection: function(params){
 			ajax(true, contextPath + '/sys/inspectionHist/insertInspectionHist', 'body', '확인인중입니다.', params, function (data) {
 					alert("등록을 성공하셨습니다");
-					$("#directInsertPopup").removeClass("view");
+					$("#insertPopup").removeClass("view");
 					location.reload();
 			        //$("#inspectionHistGrid").data("kendoGrid").dataSource.page(1);
 			    });
@@ -498,7 +513,7 @@
 			params.exmnr = $("#detailExmnr").val();
 			params.jbgd = $("#detailJbgd").val();
 			params.ogdp = $("#detailOgdp").val();
-			params.telno = $("#detailtelno").val();
+			params.telno = $("#detailTelno").val();
 			params.chckArtcl = $("#detailChckArtcl").val();
 			params.etcArtcl = $("#detailEtcArtcl").val();
 			params.chckCn = $("#detailChckCn").val();
@@ -560,6 +575,31 @@
 				location.reload();
 			});
 		},
+		
+		autoTextarea: function(event) {
+			var defaultHeight = 30; // textarea 기본 height
+			var textarea = $('.chckCn');
+			var target = event.target;
+
+			target.style.height = 0;
+			target.style.height = defaultHeight + target.scrollHeight + 'px';
+			
+		},
+		
+		updateDeleteYn : function(){
+			if(confirm("삭제하시겠습니까?")){
+
+				var params = {};
+
+				params.bzmnSn = $('#detailCoNm').data('value');
+				ajax(true, contextPath + '/sys/inspectionHist/updateDeleteYn', 'body', '확인인중입니다.', params, function (data) {
+					alert("지도점검이력이 삭제되었습니다.");
+					location.reload();
+				});
+			}
+		},
+		
+		
 		
 	}
 	
