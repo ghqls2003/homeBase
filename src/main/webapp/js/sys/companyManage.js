@@ -744,6 +744,9 @@
 				],
 				value: "value"
 			});
+			var delYn = $('#delYn').data("kendoDropDownList");
+			delYn.select(2);
+			
 		}		
 	};
 
