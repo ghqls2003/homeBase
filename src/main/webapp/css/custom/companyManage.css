@@ -36,7 +36,7 @@ button.red_btn{width: 152px;height: 54px;background-color: #ff3838;border-radius
 button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff3838;}
 
 @media (max-width:1500px) {
-	.sub03 .selec_wr .mo_flex {flex-direction: inherit !important; align-items: normal;}
+	.sub03 .selec_wr .mo_flex {flex-direction: inherit !important; align-items: normal; flex-wrap: wrap; gap: 12px;}
 	.tooltip .tooltiptext{width: 500px;}
 }
 
