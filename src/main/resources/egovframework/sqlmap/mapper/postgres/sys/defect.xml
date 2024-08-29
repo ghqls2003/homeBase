@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sys.defect">
+	<sql id="defectInfoSql">
+		(	select 
+				row_number() over (order by ocrn_dt desc) as rn,
+				*
+				from (
+					select 
+						t0.vin,
+						t0.vhcl_reg_no,
+						t1.defects_sn ,
+						TO_CHAR(t1.ocrn_dt,'YYYY-MM-DD') as ocrn_dt,
+						t1.defects_type_cd ,
+						t1.prcs_stts_cd ,
+						coalesce(t1.defects_cn,'-') as  defects_cn,
+						t2.co_nm
+					from dvs_rac_mt_car t0 left join dvs_rac_mt_defect t1 on t0.vin = t1.vin
+					left join (select * from (
+						select crno, 
+							   co_nm ,
+							   ROW_NUMBER() OVER (PARTITION BY crno ORDER BY co_nm asc) AS RNK 	   
+						from dvs_rac_mt_agency 
+					) as ta where rnk ='1') t2 on t0.crno  = t2.crno
+				) Tm
+				where defects_type_cd is not null 
+			<if test="coNm != '' and coNm != null">
+	           	and co_nm like '%' || #{coNm} ||'%'
+			</if>
+			<if test="vhclRegNo != '' and vhclRegNo != null">
+	           	and vhcl_reg_no like '%' || #{vhclRegNo} ||'%'
+			</if>
+<!-- 			<if test="prcsSttsYn != '' and prcsSttsYn != null"> -->
+<!-- 	           	and prcs_stts_yn = #{sttsYn} -->
+<!-- 			</if> -->
+			<if test ='startDt != null and startDt != ""'>
+		        AND ocrn_dt::TIMESTAMP <![CDATA[>=]]>  #{startDt}::TIMESTAMP
+		    </if>
+		    <if test ='endDt != null and endDt != ""'>
+		        AND ocrn_dt::TIMESTAMP <![CDATA[<=]]> #{endDt}::TIMESTAMP
+		    </if>	
+		    ) as Ta
+	</sql>
+
+
+	<select id="selectDefectInfo" resultType="map">
+	<!-- 	대여차량 결함정보 조회 -->
+	select * from 
+		<include refid="defectInfoSql" />
+	<if test="take != '' and take != null">
+		WHERE Ta.rn  <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+	</if>
+	<if test="skip != '' and skip != null">
+		AND Ta.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+	</if>
+	</select>
+	
+	<select id="selectDefectInfoCnt" resultType="int">
+	<!-- 	대여차량 결함정보 조회 cnt-->
+		SELECT
+			COUNT(*)
+		FROM
+			<include refid="defectInfoSql"/>	
+	</select>
+	
+	<select id="selectCarInfoList" resultType="map">
+	<!-- 	차량등록번호 중복확인 대여차량 정보  -->
+	select 
+		coalesce(vin, '-') as vin, 
+		coalesce(vhcl_reg_no,'-') as vhcl_reg_no,   
+		coalesce(carmdl,'-') as carmdl,  
+		coalesce(mdlyr,'-') as mdlyr,  
+		coalesce(vhcl_nm,'-') as vhcl_nm,  
+		coalesce(engine_fom,'-') as engine_fom,  
+		coalesce(use_yn,'-') as use_yn, 
+		coalesce(sgg_cd,'-') as sgg_cd, 
+		coalesce(brno ,'-') as brno,
+		coalesce(rmrk,'-') as rmrk
+	from (
+		select * from dvs_rac_mt_car where vhcl_reg_no = #{vhclRegNo} 
+	) t0 left join (select crno, brno from dvs_rac_mt_agency) t1 on t0.crno = t1.crno
+	limit 1
+	</select>
+	
+	<select id="selectDefectList" resultType="map">
+	<!-- 차량등록번호 중복확인 차량 결험 정보 List-->
+		select * from dvs_rac_mt_defect where vin = (select vin from dvs_rac_mt_car where vhcl_reg_no = #{vhclRegNo})
+	</select>
+	
+	<update id="updateDefect" parameterType="paraMap">
+	/*대여차량 결함정보 수정*/
+		update dvs_rac_mt_defect 
+		set 
+			prcs_stts_cd = #{prcs_stts_cd},
+			defects_cn = #{defects_cn},
+			defects_type_cd = #{defects_type_cd},
+			ocrn_dt = #{ocrn_dt} ::TIMESTAMP
+		where vin = #{vin} AND 	defects_sn = #{defects_sn}
+	</update>
+	
+	
+	<insert id="insertDefect" parameterType="paraMap">
+	/*시정조치 결과 등록*/
+<!-- 		INSERT INTO dvs_rac_mt_defect (  -->
+<!-- 			  actnSn -->
+<!-- 			, actnTyCd -->
+<!-- 			, actnRsCd -->
+<!-- 			, actnCn -->
+<!-- 			, actnDt -->
+<!-- 			, actnYn -->
+<!-- 			, affilitn -->
+<!-- 			, regCarNo -->
+<!-- 			, defectSn -->
+<!-- 			, regNm -->
+<!-- 			, regDt -->
+<!-- 			, rmrk -->
+<!-- 			) VALUES ( -->
+<!-- 				  #{actnSn} -->
+<!-- 				, #{actnTyCd} -->
+<!-- 				, #{actnRsCd} -->
+<!-- 				, #{actnCn} -->
+<!-- 				, #{actnDt} -->
+<!-- 				, #{actnYn} -->
+<!-- 				, #{affilitn} -->
+<!-- 				, #{regCarNo} -->
+<!-- 				, #{defectSn} -->
+<!-- 				, #{regNm} -->
+<!-- 				, #{regDt} -->
+<!-- 				, #{rmrk} -->
+<!-- 			) -->
+	</insert>
+	
+	<update id="deleteDefect" parameterType="paraMap">
+		/*조치내용 삭제*/
+<!-- 		update -->
+<!-- 			  actnSn = null -->
+<!-- 			, actnTyCd = null -->
+<!-- 			, actnRsCd = null -->
+<!-- 			, actnCn = null -->
+<!-- 			, actnDt = null -->
+<!-- 			, actnYn = null -->
+<!-- 			, affilitn = null -->
+<!-- 			, regCarNo = null -->
+<!-- 			, defectSn = null -->
+<!-- 			, regNm = null -->
+<!-- 			, regDt = null -->
+<!-- 			, rmrk = null -->
+<!-- 			dvs_rac_mt_defect  -->
+<!-- 		set where vin = #{vin} and defects_sn = #{defects_sn} -->
+	</update>
+	
+	
+	
+	 
+    <select id="selectCtpvNm" resultType="map">
+    <!--  - 시도(전체) -->
+        select distinct
+		    substring(stdg_cd, 1, 2) AS ctpv_cd, 
+		    ctpv_nm
+		from
+		    dqvs.dvs_cmm_mt_area
+		where mtnabn_yn = 'Y'
+		order by
+		    ctpv_cd
+    </select>
+    
+    
+    <select id="selectSggNm" resultType="map">
+    <!--  - 시군구(전체) -->
+        select distinct
+			SUBSTRING(stdg_cd, 3, 3) AS sgg_cd, 
+			sgg_nm,
+			SUBSTRING(stdg_cd,0,5) as full_sgg_cd
+		from dqvs.dvs_cmm_mt_area
+		where mtnabn_yn = 'Y'
+			and sgg_nm != ''
+		<if test="ctpvCd != null and ctpvCd != ''">
+			and stdg_cd LIKE CONCAT(#{ctpvCd}, '%')
+		</if>
+		order by sgg_cd
+    </select>
+    
+
+</mapper>
