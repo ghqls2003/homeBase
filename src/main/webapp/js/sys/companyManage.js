@@ -28,7 +28,7 @@
 	var carCrno = null;
 	
 	var excelDownArc = {};
-	
+
 	$(document).ready(function() {
 		kendo.ui.progress($(document.body), true);
 		
@@ -523,22 +523,23 @@
             var hsParams = {};
 
          ajax(true, contextPath + '/sys/companyManage/selectCmpnyDetailInfo', 'body', '처리중입니다.', responseData, function(data) {
-            detailParms = data;
-
-            hsParams = $cmpnymanage.event.hsParamsFn(); // 히스토리입력 데이터
-            hsParams =  $cmpnymanage.event.updateTrim(hsParams); // input창 공백제거
-            master = data.master;
+             master = data.master;
+            if(master !== null && master !== ' ' && master !== '' && master !== undefined){ // 마스터 일때만 히스토리 저장
+                detailParms = data;
+                hsParams = $cmpnymanage.event.hsParamsFn(); // 히스토리입력 데이터
+                hsParams =  $cmpnymanage.event.updateTrim(hsParams); // input창 공백제거
+                master = data.master;
+            }
             $cmpnymanage.event.detailPopup(bzmnSn, rowStts);
-
+              //===================== openApi를 이용한 회사상태 업데이트 server 에서 openApi 요청하는 로직  ===========
+              // 마스터, 승인상태 일때만 openApi를 이용한 회사상태 업데이트 및 히스토리 저장
+            if(rowStts == '승인' ){
+                            $cmpnymanage.event.updateCmpnyBrno(master,responseData,hsParams);
+                            $cmpnymanage.event.detailPopup(bzmnSn, rowStts);
+            }
+             //=================================================================================================
           });
-         //===================== openApi를 이용한 회사상태 업데이트 server 에서 openApi 요청하는 로직  ===========
-         // 마스터 일때만 openApi를 이용한 회사상태 업데이트 및 히스토리 저장
-            setTimeout(function(){
-                $cmpnymanage.event.updateCmpnyBrno(master,responseData,hsParams);
-                $cmpnymanage.event.detailPopup(bzmnSn, rowStts);
-            },300); // 팝업띄운 후 -> update된 영업상태 표시
 
-         //=================================================================================================
          },
 
 
@@ -750,6 +751,11 @@
 	$cmpnymanage.event = {
 
 		setUIEvent: function() {
+			$("#searchAprvStts").on('change', function(e) {
+        		selectedAprvStts = $(this).val();
+        	});
+
+
 //			$cmpnymanage.ui.rowClickEvent();
 			// 엔터키 검색 함수
 			$("#searchWrd").on('keydown', function(e) {
@@ -1642,11 +1648,14 @@
 					$(".update_top_info").hide();
 					$(".insert_top_info").hide();
 
-					if(master.del_yn == 'Y') {
-						$(".deleteBtn").hide();
-					} else {
-						$(".deleteBtn").show();
-					}
+                if(master !== null && master !== '' && master !== ' ' && master !== undefined){
+                        if(master.del_yn == 'Y') {
+                                $(".deleteBtn").hide();
+                            } else {
+                                $(".deleteBtn").show();
+                            }
+                }
+
 					if (request != null && request.closed_yn != 'Y' && rowStts != '승인') {
 						$cmpnymanage.event.detailInfo(request);
 						$(".modifiable").hide();
