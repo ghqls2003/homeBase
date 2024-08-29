@@ -3,7 +3,7 @@
 <mapper namespace="sys.defect">
 	<sql id="defectInfoSql">
 		(	select 
-				row_number() over (order by ocrn_dt desc) as rn,
+				row_number() over (order by vhcl_reg_no asc) as rn,
 				*
 				from (
 					select 
@@ -21,7 +21,7 @@
 							   co_nm ,
 							   ROW_NUMBER() OVER (PARTITION BY crno ORDER BY co_nm asc) AS RNK 	   
 						from dvs_rac_mt_agency 
-					) as ta where rnk ='1') t2 on t0.crno  = t2.crno
+					) as ta where rnk ='1') t2 on t0.crno  = t2.crno 
 				) Tm
 				where defects_type_cd is not null 
 			<if test="coNm != '' and coNm != null">
