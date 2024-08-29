@@ -1652,11 +1652,11 @@
 					$(".insert_top_info").hide();
 
                 if(master !== null && master !== '' && master !== ' ' && master !== undefined){
-                        if(master.del_yn == 'Y') {
-                                $(".deleteBtn").hide();
-                            } else {
-                                $(".deleteBtn").show();
-                            }
+                    if(master.del_yn == 'Y') {
+                            $(".deleteBtn").hide();
+                        } else {
+                            $(".deleteBtn").show();
+                        }
                 }
 
 					if (request != null && request.closed_yn != 'Y' && rowStts != '승인') {
