@@ -107,9 +107,9 @@
                             <li class="li_slec">
                                 <input type="text" id="searchCoNm" class="searchBsnStts2" aria-label= "회사명을 입력 조회조건" placeholder = "회사명을 입력하세요." >
                             </li>
-                            <li class="li_slec">
-                                <input type="text" id="rqstrNm" class="searchBsnStts1" aria-label="요청자 명" placeholder = "요청자 명">
-                            </li>
+<!--                             <li class="li_slec"> -->
+<!--                                 <input type="text" id="rqstrNm" class="searchBsnStts1" aria-label="요청자 명" placeholder = "요청자 명"> -->
+<!--                             </li> -->
 			            </ul>
 
 			        </div>

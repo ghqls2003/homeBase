@@ -136,7 +136,7 @@
                             options.bzmnSnKwd = param.bzmnSnKwd;
                             options.startDtTm = param.startDtTm;
                             options.endDtTm = param.endDtTm;
-                            options.rqstrNm = param.rqstrNm;
+//                            options.rqstrNm = param.rqstrNm;
                             options.cmpnyName = param.cmpnyName;
                             options.codeType = param.codeType;
                             options.cd = param.cd;
@@ -195,7 +195,7 @@
                 params.bzmnSnKwd = data.bzmnSnKwd;
                 params.startDtTm = data.startDtTm;
                 params.endDtTm = data.endDtTm;
-                params.rqstrNm = data.rqstrNm;
+//                params.rqstrNm = data.rqstrNm;
                 params.cmpnyName = data.cmpnyName;
                 params.cd = data.cd;
                 params.codeType = data.codeType;
@@ -228,11 +228,11 @@
                 }
             });
 
-            $("#rqstrNm").on('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    $delivery.event.btnApplyClickHandler();
-                }
-            });
+//            $("#rqstrNm").on('keydown', function(e) {
+//                if (e.key === 'Enter') {
+//                    $delivery.event.btnApplyClickHandler();
+//                }
+//            });
             $("#cmpnyName").on('keydown', function(e) {
                 if (e.key === 'Enter') {
                     $delivery.event.btnApplyClickHandler();
@@ -248,7 +248,7 @@
             var endTime = $("#end-timePicker01").val();
             var endDtTm = endDt +" "+ endTime;
             var startDtTm = startDt +" "+ startTime;
-            var rqstrNm =  $("#rqstrNm").val();
+//            var rqstrNm =  $("#rqstrNm").val();
             var cmpnyName =  $("#cmpnyName").val();
             //예 cd = "verify_cd_test"
             var ckResults = $("#ckResults").val();
@@ -259,7 +259,7 @@
             param.bzmnSnKwd = $("#searchCoNm").val();
             param.startDtTm = startDtTm;
             param.endDtTm = endDtTm;
-            param.rqstrNm = rqstrNm;
+//            param.rqstrNm = rqstrNm;
             param.cmpnyName = cmpnyName;
             param.codeType = codeType;
             param.cd = cd;

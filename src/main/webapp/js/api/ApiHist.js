@@ -23,7 +23,7 @@ var expryYmd;
 		 */
 		pageLoad: function() {
 
-			if (Auth == 'K01' || Auth == 'D01' || Auth == 'Z01' ) {
+			if (Auth == 'K01' || Auth == 'D01' || Auth == 'Z01') {
 				$("#tabview1").show();
 				$("#tabview2").hide();
 				$("#search_area_Dev").hide();
@@ -40,25 +40,23 @@ var expryYmd;
 			}
 			$('#apiReUseBtn').hide();
 			$("#start-Picker01").kendoDatePicker({
-//				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1),
-//				value: new Date(),
-				    value: new Date(2024, 0, 1),
-
+				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 2),
+				//				value: new Date(2024, 3, 1),
 				dateInput: true,
 				format: "yyyy-MM-dd",
 				parseFormats: ["yyyy-MM-dd"],
 				max: new Date(),
-//				change: function() {
-//					var startDate = this.value();
-//					var endDatePicker = $("#end-Picker01").data("kendoDatePicker");
-//
-//					if (startDate) {
-//						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 1);
-//						endDatePicker.min(startDate);
-//						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
-//						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
-//					}
-//				}
+				change: function() {
+					var startDate = this.value();
+					var endDatePicker = $("#end-Picker01").data("kendoDatePicker");
+
+					if (startDate) {
+						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 1);
+						endDatePicker.min(startDate);
+						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
+						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
+					}
+				}
 			});
 			$("#end-Picker01").kendoDatePicker({
 				value: new Date(),
@@ -66,19 +64,19 @@ var expryYmd;
 				format: "yyyy-MM-dd",
 				parseFormats: ["yyyy-MM-dd"],
 				max: new Date(),
-//				change: function() {
-//					var endDate = this.value();
-//					var startDatePicker = $("#start-Picker01").data("kendoDatePicker");
-//					var startDate = startDatePicker.value();
-//
-//					if (startDate) {
-//						var diffInDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
-//						if (diffInDays > 2) {
-//							alert("2일 이내만 조회 가능합니다.");
-//							this.value(new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 1));
-//						}
-//					}
-//				}
+				change: function() {
+					var endDate = this.value();
+					var startDatePicker = $("#start-Picker01").data("kendoDatePicker");
+					var startDate = startDatePicker.value();
+
+					if (startDate) {
+						var diffInDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+						if (diffInDays > 2) {
+							alert("2일 이내만 조회 가능합니다.");
+							this.value(new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 1));
+						}
+					}
+				}
 			});
 
 			$("#start_Picker_Dev01").kendoDatePicker({
@@ -118,23 +116,22 @@ var expryYmd;
 				}
 			});
 			$("#start-Picker02").kendoDatePicker({
-//				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 2),
-				value: new Date(),
+				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 2),
 				dateInput: true,
 				format: "yyyy-MM-dd",
 				parseFormats: ["yyyy-MM-dd"],
 				max: new Date(),
-//				change: function() {
-//					var startDate = this.value();
-//					var endDatePicker = $("#end-Picker02").data("kendoDatePicker");
-//
-//					if (startDate) {
-//						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 2);
-//						endDatePicker.min(startDate);
-//						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
-//						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
-//					}
-//				}
+				change: function() {
+					var startDate = this.value();
+					var endDatePicker = $("#end-Picker02").data("kendoDatePicker");
+
+					if (startDate) {
+						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 2);
+						endDatePicker.min(startDate);
+						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
+						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
+					}
+				}
 			});
 			//			$("#start-Picker02").kendoDatePicker({
 			//				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7),
@@ -242,7 +239,7 @@ var expryYmd;
 
 		selectSearchData: function() {
 			var searchOtherCondition = [
-				{ value: "", text: "API 선택" },
+				//				{ value: "", text: "API 선택" },
 				{ value: "1", text: "운전자격확인 단건 조회	" },
 				{ value: "2", text: "운전자격확인 배치 조회" },
 			];
@@ -250,11 +247,11 @@ var expryYmd;
 				var ckResults = data.ckResults;
 				var defaultValue = "1";
 				$('#search_stts_cd').kendoDropDownList({
-										optionLabel: "API 선택 (전체)",
+					//					optionLabel: "API 선택 (전체)",
 					dataTextField: "apiNm",
 					dataValueField: "apiSn",
 					dataSource: ckResults,
-//					value: defaultValue,
+					value: defaultValue,
 				});
 			});
 
@@ -270,7 +267,7 @@ var expryYmd;
 				dataTextField: "text",
 				dataSource: searchOtherCondition,
 				dataValueField: "value"
-//				, value: "1"
+				, value: "1"
 			});
 			//			$("#search_stts_cd_api_Dev").kendoDropDownList({
 			//				dataTextField: "text",
@@ -294,12 +291,12 @@ var expryYmd;
 			//				dataValueField: "value"
 			//			});
 			var searchOtherCondition3 = [
-								{ value: "", text: "에러유무 (선택)" },
+				//				{ value: "", text: "에러유무 (선택)" },
 				{ value: "E1", text: "정상" },
 				{ value: "E2", text: "에러" }
 			];
 			var searchOtherCondition4 = [
-				{ value: "", text: "에러유무 (선택)" },
+				//				{ value: "", text: "에러유무 (선택)" },
 				{ value: "E1", text: "정상" },
 				{ value: "E2", text: "에러" }
 			];
@@ -307,6 +304,8 @@ var expryYmd;
 				dataTextField: "text",
 				dataSource: searchOtherCondition4,
 				dataValueField: "value",
+				value: "E1"
+
 			});
 			//			$("#search_stts_cd_error_dev").kendoDropDownList({
 			//				dataTextField: "text",
@@ -317,7 +316,7 @@ var expryYmd;
 				dataTextField: "text",
 				dataSource: searchOtherCondition3,
 				dataValueField: "value",
-//				value: "E1"
+				value: "E1"
 			});
 			//			$("#search_stts_cd_Dev03").kendoDropDownList({
 			//				dataTextField: "text",
@@ -713,11 +712,11 @@ var expryYmd;
 					return; // 검색 중지
 				}
 
-//				// 날짜 차이가 2일을 초과하는 경우 경고
-//				if (diffInDays > 2) {
-//					alert("2일 이내로 조회해야 합니다.");
-//					return; // 검색 중지
-//				}
+				// 날짜 차이가 2일을 초과하는 경우 경고
+				if (diffInDays > 2) {
+					alert("2일 이내로 조회해야 합니다.");
+					return; // 검색 중지
+				}
 			}
 
 			var grid = $('#grid').data('kendoGrid');

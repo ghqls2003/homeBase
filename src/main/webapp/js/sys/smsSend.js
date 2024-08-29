@@ -23,7 +23,13 @@
 	    // 법인별 자동검색
 		crnoAutoComplete: function(){
 			var param = {};
-			
+			if(authrtCd=='G01'){
+				if(userCmptncZoneCd.substring(2, userCmptncZoneCd.length) == "00000000"){
+					param.userCmptncZoneCd = userCmptncZoneCd.substring(0,2);
+				}else{
+					param.userCmptncZoneCd=userCmptncZoneCd;
+				}
+			};
 			ajax(false, contextPath + '/sys/smsSend/selectCrno', 'body', '처리중입니다.', param, function(data) {
 				$("#inc_selec_01").kendoAutoComplete({
 	              filter: "contains",
@@ -32,11 +38,11 @@
 			        dataSource: data,
 					select: function(e) {
 	                    var dataItem = this.dataItem(e.item.index());
-	                    var crno = dataItem ? dataItem.crno : null;
+	                    var crno = dataItem.crno || "데이터없음";
 	                    var co_nm = dataItem ? dataItem.co_nm : null;
 	                    $("#inc_selec_01").data('value', crno);
 						$("#inc_selec_01").val(co_nm);
-						$smsSend.ui.incReceiverList();
+						$smsSend.ui.incReceiverList($smsSend.event.incListValid);
                 	}
 				}).data("kendoAutoComplete");
 			});
@@ -45,33 +51,78 @@
 	
 		// 검색옵션
 		search: function() {
-			var param = {};
+			var param = {
+				userCmptncZoneCd: userCmptncZoneCd,
+			};
 			
-			ajax(true, contextPath+'/sys/smsSend/selectCtpvNm', 'body', '처리중입니다.', param, function (data) {
-				$('.sub04 #searchCtpvNm').kendoDropDownList({
-		            optionLabel: "시도",
-		            dataTextField: "ctpv_nm",
-		            dataValueField: "ctpv_cd",
-		            dataSource: data,
-					value : "ctpv_cd",
-					change: function() {
-						if(this.value() == '') {
-							$('.sub04 #searchSggNm').data("kendoDropDownList").setDataSource(null);
-						} else {
-						    param.ctpvCd = this.value();
-							ajax(true, contextPath+'/sys/smsSend/selectSggNm', 'body', '처리중입니다.', param, function (data) {
-								$('.sub04 #searchSggNm').kendoDropDownList({
-						            optionLabel: "시군구",
-						            dataTextField: "sgg_nm",
-						            dataValueField: "sgg_cd",
-						            dataSource: data,
-									value : "sgg_cd"
-						        });
-							});
+			if(authrtCd!='G01'){
+				var param = {};
+				ajax(true, contextPath+'/sys/smsSend/selectCtpvNm', 'body', '처리중입니다.', param, function (data) {
+					$('.sub04 #searchCtpvNm').kendoDropDownList({
+			            optionLabel: "시도",
+			            dataTextField: "ctpv_nm",
+			            dataValueField: "ctpv_cd",
+			            dataSource: data,
+						value : "ctpv_cd",
+						change: function() {
+							if(this.value() == '') {
+								$('.sub04 #searchSggNm').data("kendoDropDownList").setDataSource(null);
+							} else {
+							    param.ctpvCd = this.value();
+								ajax(true, contextPath+'/sys/smsSend/selectSggNm', 'body', '처리중입니다.', param, function (data) {
+									$('.sub04 #searchSggNm').kendoDropDownList({
+							            optionLabel: "시군구",
+							            dataTextField: "sgg_nm",
+							            dataValueField: "sgg_cd",
+							            dataSource: data,
+										value : "sgg_cd"
+							        });
+								});
+							}
 						}
-					}
-		        });
-			});
+			        });
+				});
+			}else{
+				
+				ajax(true, contextPath+'/sys/smsSend/selectCtpvNm', 'body', '처리중입니다.', param, function (data) {
+					$('.sub04 #searchCtpvNm').kendoDropDownList({
+			            dataTextField: "ctpv_nm",
+			            dataValueField: "ctpv_cd",
+			            dataSource: data,
+						value : "ctpv_cd",
+			        });
+				});
+				
+				if (param.userCmptncZoneCd == "3611000000") { // 세종특별자차시
+					$(".sub04 #searchSggNm").kendoDropDownList({
+						optionLabel: "시군구"
+					});
+				} else if(param.userCmptncZoneCd.substring(2, param.userCmptncZoneCd.length) == "00000000") { // 광역지자체
+					param.ctpvCd = param.userCmptncZoneCd.substring(0, 2);
+					param.userCmptncZoneCd = '';
+					ajax(true, contextPath+'/sys/smsSend/selectSggNm', 'body', '처리중입니다.', param, function (data) {
+						$(".sub04 #searchSggNm").kendoDropDownList({
+							optionLabel: "시군구",
+							dataTextField: "sgg_nm",
+							dataValueField: "sgg_cd",
+							dataSource: data,
+							value: "sgg_cd"
+						});
+					});
+				} else {
+					ajax(true, contextPath+'/sys/smsSend/selectSggNm', 'body', '처리중입니다.', param, function (data) {
+						$(".sub04 #searchSggNm").kendoDropDownList({
+							dataTextField: "sgg_nm",
+							dataValueField: "sgg_cd",
+							dataSource: data,
+							value: "sgg_cd"
+						});
+					});
+				}
+				
+			}
+			
+			
 			
 			// 시구군
 			$('.sub04 #searchSggNm').kendoDropDownList({
@@ -114,7 +165,7 @@
 	    	];
 
 	    	$(".sub04 #searchOtherCondition").kendoDropDownList({
-              optionLabel: "전체",
+              optionLabel: "검색조건",
               dataTextField: "text",
               dataValueField: "value",
               dataSource: searchOtherCondition,
@@ -147,6 +198,9 @@
 				value: new Date(),
 			});
 			
+			$("#start-picker01").attr("readonly", true);
+			$("#end-picker01").attr("readonly", true);
+			
 			// 발송 유형
 			var sendType = [
 				{ cd: 0, sendType: "즉시 전송"},
@@ -168,7 +222,7 @@
 			];
 			
 			 $("#searchType").kendoDropDownList({
-					optionLabel: '전체',
+					optionLabel: '검색조건',
 					dataTextField: "text",
 					dataValueField: "value",
 					dataSource: searchType,
@@ -211,9 +265,7 @@
 							}
 						}
 						user_sn = grid.selectedKeyNames();
-						console.log(user_sn);
 						var totalReciverCnt = 0;
-						console.log(totalReciverCnt);
 						$('#totalRowCnt').text(totalReciverCnt);
 					}
                 } else {
@@ -246,7 +298,6 @@
 							    grid.select(grid.table.find('tr.select'));
 							}
 						user_sn = grid.selectedKeyNames();
-						console.log(user_sn);
 						var totalReciverCnt = user_sn.length;
 						$('#totalRowCnt').text(totalReciverCnt);
 					}else{
@@ -297,13 +348,9 @@
 							},
 						},
 						parameterMap: function(options){
-							var sd = $("#start-picker01").val();
-							var ed = $("#end-picker01").val();
-							var startDt = sd.replace(/-/g, "");
-							var endDt = ed.replace(/-/g, "");
 							options.dateType = $("#dateType").val();
-							options.startDt = startDt;
-							options.endDt = endDt;
+							options.startDt = $("#start-picker01").val();
+							options.endDt = $("#end-picker01").val();
 							options.sendType = $("#sendType").val();
 							options.searchType = $("#searchType").val();
 							options.searchWrd = $("#searchWrd").val();
@@ -333,7 +380,7 @@
 					{ field: "sndng_dt", title: "발송등록일", width: "100px", template: "#= sndng_dt != null ? sndng_dt : '-' #", sortable: true },
 					{ field: "sndng_rsvt_dt", title: "발송일", width: "100px", template: "#= sndng_rsvt_dt != null ? sndng_rsvt_dt : '-' #", sortable: true },
 					{ field: "rcvr", title: "수신자명", width: "100px", template: "#= rcvr != null ? rcvr : '-' #", sortable: true },
-					{ field: "rcvr_telno", title: "연락처", width: "100px", template: "#= rcvr_telno != null ? rcvr_telno : '-' #", sortable: true },
+					{ field: "rcvr_telno", title: "연락처", width: "100px", template: "#= rcvr_telno != null ? $smsSend.ui.telnoFormat(rcvr_telno) : '-' #", sortable: true },
 				],
 				scrollable: true,
 				editable: false,
@@ -346,6 +393,20 @@
 			})
 		},
 		
+		telnoFormat: function(tel) {
+			if(tel != null) {
+				var telLength = tel.length;
+				if(telLength == 9) {
+					return tel.substring(0, 2) + '-' + tel.substring(2, 5) + '-' + tel.substring(5, 9);
+				}else if(telLength == 10) {
+					return tel.substring(0, 3) + '-' + tel.substring(3, 6) + '-' + tel.substring(6, 10);
+				}else if(telLength == 11) {
+					return tel.substring(0, 3) + '-' + tel.substring(3, 7) + '-' + tel.substring(7, 11);
+				}else{
+					return tel;
+				}
+			}
+		},
 		// row 상세팝업
 		rowClickEvent: function(e) {
 			var rows = e.sender.select();
@@ -377,7 +438,7 @@
 							
 							var sd = $("#searchCtpvNm").val();
 							var sgg = $("#searchSggNm").val();
-							options.cmptnc_zone_cd = sd+sgg;
+							options.cmptnc_zone_cd = sd+=sgg;
 							options.authrt_cd = $("#searchAuthrtCd").val();
 							options.stts_cd = $("#searchSttsCd").val();
 							options.search_other_condition = $("#searchOtherCondition").val();
@@ -410,13 +471,13 @@
 				},
 				columns: [
 					{ selectable: true, width: "50px"},
-					{ field: "rn", title: "순번", width: "60px", template: "#:rn #"},
+					{ field: "rn", title: "순번", width: "70px", template: "#:rn #"},
 					{ field: "co_nm", title: "회사명", width: "150px", template: "#= co_nm != null ? co_nm : '-' #"},
-					{ field: "telno", title: "연락처", width: "150px", template: "#= telno != null ? telno : '-' #"},
+					{ field: "telno", title: "연락처", width: "150px", template: "#= telno != null ? $smsSend.ui.telnoFormat(telno) : '-' #"},
 					{ field: "user_nm", title: "성명", width: "100px", template: "#= user_nm != null ? user_nm : '-' #" },
 					{ field: "stts_cd", title: "계정상태", width: "70px", template: "#= stts_cd != null ? stts_cd : '-' #"},
-					{ field: "api", title: "API 사용여부", width: "70px", template: "#: api #"},
-					{ field: "authrt_nm", title: "권한명", width: "100px", template: "#= authrt_nm != null ? authrt_nm : '-' #" },
+					{ field: "api", title: "API 사용여부", width: "100px", template: "#= api != null ? api : '-' #"},
+					{ field: "authrt_nm", title: "권한명", width: "120px", template: "#= authrt_nm != null ? authrt_nm : '-' #" },
 					{ field: "user_id", title: "아이디", width: "100px", template: "#= user_id != null ? user_id : '-' #"},
 				],
 				scrollable: true,
@@ -457,6 +518,13 @@
 							options.auth_04 = JSON.stringify($("#auth_04").is(':checked'));
 							options.crno = $('#inc_selec_01').data('value');
 							options.api = JSON.stringify($("#api").is(':checked'));
+							if(authrtCd=='G01'){
+								if(userCmptncZoneCd.substring(2, userCmptncZoneCd.length) == "00000000"){
+									options.userCmptncZoneCd = userCmptncZoneCd.substring(0,2);
+								}else{
+									options.userCmptncZoneCd=userCmptncZoneCd;
+								}
+							};
 							
 							return JSON.stringify(options);
 						}
@@ -544,7 +612,7 @@
 		},
 		
 		// 법인별 수신자목록 리스트
-		incReceiverList: function(){
+		incReceiverList: function(callback){
 			$('.inc_receiver_lists div').remove();
 			//$('#inc_selec_01').data('value', '');
 			var parameterMap={
@@ -569,8 +637,13 @@
 					})
 				}
 				
-			})
+				if (typeof callback === 'function') {
+		            callback();
+		        }
+			});
+			
 		},
+		
 		
 		
 	};
@@ -623,13 +696,9 @@
 				alert("데이터가 존재하지 않습니다.");
 			} else {
 				if(Object.keys(excelDownArc).length === 0) {
-					var sd = $("#start-picker01").val();
-					var ed = $("#end-picker01").val();
-					var startDt = sd.replace(/-/g, "");
-					var endDt = ed.replace(/-/g, "");
 					excelDownArc.dateType = $("#dateType").val();
-					excelDownArc.startDt = startDt;
-					excelDownArc.endDt = endDt;
+					excelDownArc.startDt = $("#start-picker01").val();
+					excelDownArc.endDt = $("#end-picker01").val();
 					excelDownArc.sendType = $("#sendType").val();
 					excelDownArc.searchType = $("#searchType").val();
 					excelDownArc.searchWrd = $("#searchWrd").val();
@@ -855,7 +924,6 @@
 				                $('#grid_box').append('<table id="receiver_grid"></table>');
 			                }
 							$smsSend.ui.indivReceiverList();
-							//console.log(user_sn)
 							$smsSend.event.indivSendCheck();
 			            }
 					}
@@ -920,36 +988,23 @@
         	});
 
 			$("#inc_selec_01").on("change",function(){
+				
 				var target = $("#inc_selec_01").val();
 				 if(target==''){
 					$("#inc_selec_01").data('value', '데이터없음');
 					$smsSend.ui.incReceiverList();
 				}
+				
 			});
-			
-			// 글자수 세기
-			$('#textBox').keyup(function (e) {
-				let content = $(this).val();
-			    
-			    // 글자수 세기
-			    if (content.length == 0 || content == '') {
-			    	$('.textCount').text('0자');
-			    } else {
-			    	$('.textCount').text(content.length + '자');
-			    }
-			    
-			    // 글자수 제한
-			    if (content.length > 200) {
-			    	// 200자 부터는 타이핑 되지 않도록
-			        $(this).val($(this).val().substring(0, 200));
-			        // 200자 넘으면 알림창 뜨도록
-			        alert('글자수는 200자까지 입력 가능합니다.');
-			    };
-			});
-			
 			
 		},
 		
+		incListValid: function() {
+			var listLength = $('.inc_receiver_lists .inc_receiver_list').length;
+			if($("#inc_selec_01").val()!=''&&listLength===0){
+                alert('가입된 계정이 없거나 법인번호가 없습니다.');
+            }
+		},
 		authValid: function() {
             var checkboxes = $('.box_lists input[type="checkbox"]');
             let checked = false;
@@ -1008,13 +1063,9 @@
 				alert("검색조건을 입력해주세요");
 			}
 			else{
-				var sd = $("#start-picker01").val();
-				var ed = $("#end-picker01").val();
-				var startDt = sd.replace(/-/g, "");
-				var endDt = ed.replace(/-/g, "");
 				excelDownArc.dateType = $("#dateType").val();
-				excelDownArc.startDt = startDt;
-				excelDownArc.endDt = endDt;
+				excelDownArc.startDt = $("#start-picker01").val();
+				excelDownArc.endDt = $("#end-picker01").val();
 				excelDownArc.sendType = $("#sendType").val();
 				excelDownArc.searchType = $("#searchType").val();
 				excelDownArc.searchWrd = $("#searchWrd").val();
@@ -1059,6 +1110,7 @@
 		// 그룹 발송
 		groupReceiver: function(e) {
 			var params = {};
+			
 			params.except_tel = JSON.stringify($("#except_tel").is(':checked'));
 			params.auth_01 = JSON.stringify($('#auth_01').is(':checked'));
 			params.auth_02 = JSON.stringify($('#auth_02').is(':checked'));
@@ -1066,6 +1118,9 @@
 			params.auth_04 = JSON.stringify($('#auth_04').is(':checked'));
 			params.crno = $('#inc_selec_01').data('value');
 			params.api = JSON.stringify($("#api").is(':checked'));
+			if(authrtCd=='G01'){
+				params.userCmptncZoneCd=userCmptncZoneCd;
+			};
 			
 			return ajax(true, contextPath+'/sys/smsSend/selectGroupReceiverList', 'body', '확인중입니다.', params, function(data) {
 				return $smsSend.event.insertSms(data);
@@ -1109,12 +1164,13 @@
 				$.each(data.data, function(index, item) {
 					num++;
 					dest_count = num;
-						dest_info += item.user_nm+"^"+item.telno
-						rcvr.push(item.user_nm)
-						rcvr_telno.push(item.telno)
-						if (index < data.data.length - 1) {
-					        dest_info += "|";
-					    }
+					var telno = item.telno.replace(/-/g, '')
+					dest_info += item.user_nm+"^"+telno
+					rcvr.push(item.user_nm)
+					rcvr_telno.push(telno)
+					if (index < data.data.length - 1) {
+				        dest_info += "|";
+				    }
 				});
             } else {
 					var num = 0;
@@ -1123,9 +1179,10 @@
 							if(item.user_sn==y){
 								num++;
 								dest_count = num;
-								dest_info += item.user_nm+"^"+item.telno
+								var telno = item.telno.replace(/-/g, '')
+								dest_info += item.user_nm+"^"+telno
 								rcvr.push(item.user_nm)
-								rcvr_telno.push(item.telno)
+								rcvr_telno.push(telno)
 								if (num < user_sn.length) {
 							        dest_info += "|";
 							    }
@@ -1183,55 +1240,47 @@
 				alert(data.message);
 				location.reload();
 			});
-			
 		},
 		
 		fnChkByte: function(obj, maxByte) {
-			    var str = obj.value;
-			    var str_len = str.length;
-			
-			
-			    var rbyte = 0;
-			    var rlen = 0;
-			    var one_char = "";
-			    var str2 = "";
-			
-			
-			    for(var i=0; i<str_len; i++)
-			    {
-			        one_char = str.charAt(i);
-			        if(escape(one_char).length > 4) {
-			            rbyte += 2;                                         //한글2Byte
-			        }else{
-			            rbyte++;                                            //영문 등 나머지 1Byte
-			        }
-			        if(rbyte <= maxByte){
-			            rlen = i+1;                                          //return할 문자열 갯수
-			        }
-			     }
-			     if(rbyte > maxByte)
-			     {
-			        alert("메세지는 최대 " + maxByte + "byte를 초과할 수 없습니다.")
-			        str2 = str.substr(0,rlen);                                  //문자열 자르기
-			        obj.value = str2;
-			        $smsSend.event.fnChkByte(obj, maxByte);
-			     }
-			     else
-			     {
-					 var byteInfoWrap = $(obj).closest('.msg_write_box').prev('.byteInfoWrap');
-           			 var byteInfo = byteInfoWrap.find('#byteInfo');
-			        if (byteInfo.length > 0) {
-					    $('#byteInfo').text(rbyte);
-					}else{
-						$('#indivByteInfo').text(rbyte);
-					}
-			        
-			     }
-
+		    var str = obj.value;
+		    var str_len = str.length;
+		
+		    var rbyte = 0;
+		    var rlen = 0;
+		    var one_char = "";
+		    var str2 = "";
+		
+		    for(var i=0; i<str_len; i++)
+		    {
+		        one_char = str.charAt(i);
+		        if(escape(one_char).length > 4) {
+		            rbyte += 2;                                         //한글2Byte
+		        }else{
+		            rbyte++;                                            //영문 등 나머지 1Byte
+		        }
+		        if(rbyte <= maxByte){
+		            rlen = i+1;                                          //return할 문자열 갯수
+		        }
+		     }
+		     if(rbyte > maxByte)
+		     {
+		        alert("메세지는 최대 " + maxByte + "byte를 초과할 수 없습니다.")
+		        str2 = str.substr(0,rlen);                                  //문자열 자르기
+		        obj.value = str2;
+		        $smsSend.event.fnChkByte(obj, maxByte);
+		     }
+		     else
+		     {
+				 var byteInfoWrap = $(obj).closest('.msg_write_box').prev('.byteInfoWrap');
+       			 var byteInfo = byteInfoWrap.find('#byteInfo');
+		        if (byteInfo.length > 0) {
+				    $('#byteInfo').text(rbyte);
+				}else{
+					$('#indivByteInfo').text(rbyte);
+				}
+		     }
 		},
-		
-		
-		
 		
 	}
 }(window, document, jQuery));

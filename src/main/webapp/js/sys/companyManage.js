@@ -28,7 +28,7 @@
 	var carCrno = null;
 	
 	var excelDownArc = {};
-	
+
 	$(document).ready(function() {
 		kendo.ui.progress($(document.body), true);
 		
@@ -519,37 +519,29 @@
             var responseData = {} ;
             responseData.brno = brno;
             responseData.bzmnSn = bzmnSn;
+            var master = '';
+            var hsParams = {};
 
-
-         //===================== openApi를 이용한 회사상태 업데이트 server 에서 openApi 요청하는 로직  ===========
          ajax(true, contextPath + '/sys/companyManage/selectCmpnyDetailInfo', 'body', '처리중입니다.', responseData, function(data) {
-                    detailParms = data;
-                    var master = data.master;
-                    var hsParams;
-                  // 마스터 일때만 openApi를 이용한 회사상태 업데이트 및 히스토리 저장
-                    if(typeof master !== 'undefined'){
-                        hsParams = $cmpnymanage.event.hsParamsFn(); // 히스토리입력 데이터
-                        hsParams =  $cmpnymanage.event.updateTrim(hsParams); // input창 공백제거
-                        var combParams = [responseData, hsParams];
-                        $cmpnymanage.comm.syncAjax(false, true, contextPath + '/sys/companyManage/updateCmpnyBrnoBySituation', 'body', '처리중입니다.', combParams, function(data) {
-                         },function(data){
-                         var message =JSON.parse(data.responseText).message;
-                         if(message.includes("등록되지 않은 사업자등록번호")){
-                              $('#businessStatus').css("color","#ff3838");
-                         }else{
-                              $('#businessStatus').css("color","#364BC6");
-                         }
-
-                         $('#businessStatus').append(`
-                             <span >${message}</span>
-                         `);
-                         $cmpnymanage.event.detailPopup(bzmnSn, rowStts);
-                        });
-                   }else{
-                         $cmpnymanage.event.detailPopup(bzmnSn, rowStts);
-                   }
+             master = data.master;
+            if(master !== null && master !== ' ' && master !== '' && master !== undefined){ // 마스터 일때만 히스토리 저장
+                detailParms = data;
+                hsParams = $cmpnymanage.event.hsParamsFn(); // 히스토리입력 데이터
+                hsParams =  $cmpnymanage.event.updateTrim(hsParams); // input창 공백제거
+                master = data.master;
+            }
+            $cmpnymanage.event.detailPopup(bzmnSn, rowStts);
+              //===================== openApi를 이용한 회사상태 업데이트 server 에서 openApi 요청하는 로직  ===========
+              // 마스터, 승인상태 일때만 openApi를 이용한 회사상태 업데이트 및 히스토리 저장
+            if(rowStts == '승인' ){
+                            $cmpnymanage.event.updateCmpnyBrno(master,responseData,hsParams);
+                            $cmpnymanage.event.detailPopup(bzmnSn, rowStts);
+            }
+             //=================================================================================================
           });
+
          },
+
 
          /**
          *
@@ -752,6 +744,9 @@
 				],
 				value: "value"
 			});
+			var delYn = $('#delYn').data("kendoDropDownList");
+			delYn.select(2);
+			
 		}		
 	};
 
@@ -759,6 +754,11 @@
 	$cmpnymanage.event = {
 
 		setUIEvent: function() {
+			$("#searchAprvStts").on('change', function(e) {
+        		selectedAprvStts = $(this).val();
+        	});
+
+
 //			$cmpnymanage.ui.rowClickEvent();
 			// 엔터키 검색 함수
 			$("#searchWrd").on('keydown', function(e) {
@@ -1651,11 +1651,14 @@
 					$(".update_top_info").hide();
 					$(".insert_top_info").hide();
 
-					if(master.del_yn == 'Y') {
-						$(".deleteBtn").hide();
-					} else {
-						$(".deleteBtn").show();
-					}
+                if(master !== null && master !== '' && master !== ' ' && master !== undefined){
+                    if(master.del_yn == 'Y') {
+                            $(".deleteBtn").hide();
+                        } else {
+                            $(".deleteBtn").show();
+                        }
+                }
+
 					if (request != null && request.closed_yn != 'Y' && rowStts != '승인') {
 						$cmpnymanage.event.detailInfo(request);
 						$(".modifiable").hide();
@@ -3252,7 +3255,32 @@
 			map3 = setRimsMap3(map3, "detailMap2", mapOptions, bounds); // 지도 생성
 			map3.options.minZoom = 8;	//초기zoom조절
 			map3.setView(new L.latLng(36.276267, 127.376912), 8);
-		}
+		},
+
+        /**
+         * @name         : updateCmpnyBrno
+         * @description  : openAPI를 이용한 사업자등록정보 상태 업데이트
+         * @author       : 정혜원 24.08.23
+         */
+        updateCmpnyBrno: function(master,responseData,hsParams){
+            // 마스터 일때만 openApi를 이용한 회사상태 업데이트 및 히스토리 저장
+                var combParams = [responseData, hsParams];
+                $cmpnymanage.comm.syncAjax(false, true, contextPath + '/sys/companyManage/updateCmpnyBrnoBySituation', 'body', '처리중입니다.', combParams, function(data) {
+                 },function(data){
+                     var message =JSON.parse(data.responseText).message;
+                     var bsnSttsCd =JSON.parse(data.responseText).bsnSttsCd;
+                     if(message.includes("등록되지 않은 사업자등록번호")){
+                          $('#businessStatus').css("color","#ff3838");
+                     }else{
+                          $('#businessStatus').css("color","#364BC6");
+                     }
+
+                     $('#businessStatus').append(`
+                         <span >${message}</span>
+                     `);
+
+                });
+        }
 	};
 	
 	$cmpnymanage.comm = {
@@ -3389,6 +3417,7 @@
 				});
 			}
 		}
+
 	};
 
 }(window, document, jQuery));

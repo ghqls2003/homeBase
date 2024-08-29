@@ -10,6 +10,14 @@ import kr.or.kotsa.rims.cmmn.sys.dao.CmmnAbstractMapper;
 @Repository
 public class InspectionHistDao extends CmmnAbstractMapper {
 
+	public List<Map<String, Object>> agencyList(Map<String, Object> paramsMap) {
+		return selectList("sys.inspectionHist.AgencyList", paramsMap);
+	}
+	
+	public List<Map<String, Object>> agencyInfo(Map<String, Object> paramsMap) {
+		return selectList("sys.inspectionHist.AgencyInfo", paramsMap);
+	}
+	
 	public int selectInspectionHistInfoCnt(Map<String, Object> paramsMap) {
 		return selectOne("sys.inspectionHist.InspectionHistInfoCnt", paramsMap);
 	}
@@ -20,10 +28,6 @@ public class InspectionHistDao extends CmmnAbstractMapper {
 
 	public int insertInspectionHist(Map<String, Object> paramsMap) {
 		return insert("sys.inspectionHist.insertInspectionHist", paramsMap);
-	}
-
-	public int insertFile(Map<String, Object> paramsMap) {
-		return insert("sys.inspectionHist.insertFile", paramsMap);
 	}
 
 	public List<Map<String, Object>> ctpvNm(Map<String, Object> paramsMap) {
@@ -44,6 +48,10 @@ public class InspectionHistDao extends CmmnAbstractMapper {
 
 	public int updateInspectionHist(Map<String, Object> paramsMap) {
 		return update("sys.inspectionHist.updateInspectionHist", paramsMap);
+	}
+
+	public int updateDeleteYn(Map<String, Object> paramsMap) {
+		return update("sys.inspectionHist.updateDeleteYn", paramsMap);
 	}
 
 

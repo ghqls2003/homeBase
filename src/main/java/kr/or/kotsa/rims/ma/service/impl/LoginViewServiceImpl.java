@@ -44,7 +44,7 @@ public class LoginViewServiceImpl extends CmmnAbstractServiceImpl implements Log
 		loginViewDao.updateUserInfo(paramsMap);
 		return "success";
 	}
-	//6개월 초과 휴먼상태로 변경
+	//6개월 초과 휴면상태로 변경
 	public Object updateAcntCd(Map<String, Object> paramsMap) {
 		loginViewDao.updateAcntCd(paramsMap);
 		return "success";

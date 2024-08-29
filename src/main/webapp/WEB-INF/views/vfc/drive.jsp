@@ -427,7 +427,8 @@ var authrtCd = '${authrtCd}'
 	        </div>
 	        <p class="info">※ 본 웹사이트에 게시된 정보는 프로그램이나 그 밖의 기술적 장치를 이용하여 무단으로 사용할 수 없습니다.</p>
 	        <div class="btn_flex">
-	            <button class="blue_btn verify-btn">운전자격 확인</button>
+	            <button class="blue_btn verify-btn" style="display: none;">운전자격 확인</button>
+	            <button class="blue_btn verify-btn-app" style="display: none;">운전자격 확인</button>  <%--앱테스트중 --%>
 	            <button class="gray_btn reset-btn">초기화</button>
 	        </div>
 	    </div>
@@ -516,7 +517,10 @@ var authrtCd = '${authrtCd}'
                        </div>
                 </div>
             </div>
-            <div class="contBox" style = "margin-top: 10px;">
+            <!-- 대여 미포함 -->
+           <div class="contBox" id = "rentalTypeBox" style = "margin-top: 10px;display: none;" >
+            <!-- 대여 포함 -->
+             <!--  <div class="contBox" id = "rentalTypeBox" style = "margin-top: 10px;" > -->
                             <div class="nameBox">
                                 <h4 class="name"> 대여 유형 </h4>
                             </div>
@@ -532,7 +536,7 @@ var authrtCd = '${authrtCd}'
                                     </li>
                                 </ul>
                             </div>
-                        </div>
+            </div>
             <p class="p_info">※ 본 웹사이트에 게시된 정보는 프로그램이나 그 밖의 기술적 장치를 이용하여 무단으로 사용할 수 없습니다.</p>
 			<br/>
             <input id="resetChk" type="checkbox">

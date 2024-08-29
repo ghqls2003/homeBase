@@ -144,9 +144,12 @@ public class ApiHistController extends CmmnAbstractServiceImpl {
 			HttpServletRequest request, HttpServletResponse response) throws RimsException {
 		String fileName = "Api이용현황";
 		String colName[] = { "번호", "API명", "요청사", "원요청사", "요청일", "면허번호", "요청결과(코드/설명)", "소요시간", "요청횟수" };
-		String valName[] = { "rn", "apiNm", "rq", "orq", "dmndDt", "dln", "rsltMsg", "reqHr", "dmndCnt" };
-		paramsMap.put("userSn", getUserSn());
-
+		String valName[] = { "rn", "apiNm", "rq", "orq", "dmndDt", "dln2", "rsltMsg", "reqHr", "dmndCnt" };
+		paramsMap.put("AuthCd", getAuthrtCd());
+		String Auth = (String) paramsMap.get("AuthCd");
+		if (!"K01".equals(Auth) && !"D01".equals(Auth) && !"Z01".equals(Auth)) {
+		    paramsMap.put("userSn", getUserSn());
+		}	
 		List<Map<String, Object>> colValue = ApiHistService.selectlistView(paramsMap);
 
 		modelMap.put("excelName", fileName);
@@ -170,9 +173,12 @@ public class ApiHistController extends CmmnAbstractServiceImpl {
 			HttpServletRequest request, HttpServletResponse response) throws RimsException {
 		String fileName = "Api이용현황";
 		String colName[] = { "번호", "API명", "요청사", "원요청사", "요청일", "면허번호", "요청결과(코드/설명)", "소요시간", "요청횟수" };
-		String valName[] = { "rn", "apiNm", "rq", "orq", "dmndDt", "dln", "rsltMsg", "reqHr", "dmndCnt" };
-		paramsMap.put("userSn", getUserSn());
-		
+		String valName[] = { "rn", "apiNm", "rq", "orq", "dmndDt", "dln2", "rsltMsg", "reqHr", "dmndCnt" };
+		paramsMap.put("AuthCd", getAuthrtCd());
+		String Auth = (String) paramsMap.get("AuthCd");
+		if (!"K01".equals(Auth) && !"D01".equals(Auth) && !"Z01".equals(Auth)) {
+		    paramsMap.put("userSn", getUserSn());
+		}		
 		List<Map<String, Object>> colValue = ApiHistService.selectlistViewapiHistDev(paramsMap);
 		
 		modelMap.put("excelName", fileName);

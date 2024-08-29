@@ -1,5 +1,6 @@
 package kr.or.kotsa.rims.sys.service;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +92,6 @@ public interface CompanyManageService {
 	public Map<String, Object> deleteCmpny(Map<String, Object> paramsMap);
 
 	// 상황별 : openAPI를 이용한 사업자등록정보 상태 업데이트
-	Map<String, Object> updateCmpnyBrnoBySituation(List<Map<String, Object>> paramsMap) throws UnsupportedEncodingException;
+	Map<String, Object> updateCmpnyBrnoBySituation(List<Map<String, Object>> paramsMap) throws IOException;
 
 }

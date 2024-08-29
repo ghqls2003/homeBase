@@ -2,6 +2,57 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="sys.inspectionHist">
 	
+	<!-- 회사명 자동 검색 -->
+	<select id="AgencyList" resultType="resultMap">
+		select
+			bzmn_sn,
+			co_nm
+		from
+			dqvs.dvs_rac_mt_agency
+		where 1=1
+		and bsn_stts_cd = '0'
+    </select>
+    
+    <!-- 회사 정보 검색 -->
+	<select id="AgencyInfo" resultType="resultMap">
+		select
+			bzmn_sn
+			, co_nm
+			, rprsv_nm
+			, brno
+			, bsn_stts_mdfcn_dt
+			, dqvs.pca_decrypt(telno,
+			'150') as agency_telno
+			, CONCAT( (
+			select
+					ctpv_nm
+			from
+					dqvs.dvs_cmm_mt_area
+			where
+					stdg_cd = reg_cmptnc_cd),
+				' ',
+				(
+			select
+					sgg_nm
+			from
+					dqvs.dvs_cmm_mt_area
+			where
+					stdg_cd = reg_cmptnc_cd)) jurisdiction
+			, (
+			select
+				cd.cd_nm
+			from
+				dqvs.dvs_cmm_mt_code cd
+			where
+				cd.cd_group = 'bsn_stts_cd'
+				and cd.cd = bsn_stts_cd) bsn_stts_nm
+		from
+			dqvs.dvs_rac_mt_agency
+		where
+			bzmn_sn = #{bzmnSn}
+    </select>
+	
+	
 	<!-- 검색/등록팝업 옵션 - 시도(전체) -->
 	<select id="CtpvNm" resultType="map">
 	/* 시도(전체) */
@@ -71,7 +122,7 @@
 				, inspctn.exmnr3
 				, inspctn.jbgd
 				, inspctn.ogdp
-				, inspctn.telno
+				, dqvs.pca_decrypt(inspctn.telno, '150') as telno
 				, inspctn.chck_artcl
 				, inspctn.etc_artcl
 				, inspctn.chck_cn
@@ -83,16 +134,25 @@
 				, agency.brno
 				, agency.crno
 				, agency.rprsv_nm
-				,(select
+				, agency.bsn_stts_cd
+				, agency.bzmn_se_cd
+				, (select
 					cd_nm
 				from
 					dqvs.dvs_cmm_mt_code
 				where
 					cd_group = 'bzmn_se_cd'
-					and cd = bzmn_se_cd) bzmn_se_cd
+					and cd = bzmn_se_cd) as bzmn_se_nm
 				, agency.co_nm
 				, agency.road_nm_addr
-				, agency.bsn_stts_cd
+				, (
+				select
+					cd.cd_nm
+				from
+					dqvs.dvs_cmm_mt_code cd
+				where
+					cd.cd_group = 'bsn_stts_cd'
+					and cd.cd = agency.bsn_stts_cd) bsn_stts_nm
 				, agency.bsn_stts_mdfcn_dt
 				, dqvs.pca_decrypt(agency.telno, '150') as agency_telno
 				, CONCAT( (
@@ -110,15 +170,19 @@
 						dqvs.dvs_cmm_mt_area
 					where
 						stdg_cd = agency.reg_cmptnc_cd)) jurisdiction
+				, file.file_sn
+				, file.atch_file_nm
 			from dqvs.dvs_spv_hs_inspctn inspctn
 			left join dqvs.dvs_rac_mt_agency agency on agency.bzmn_sn = inspctn.bzmn_sn
+			left join dqvs.dvs_cmm_mt_file file on file_sn = inspctn.fileatchsn
 			) as T1
 			WHERE 1 = 1
+			and T1.prcs_yn != 'Y'
 			<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
 				and T1.reg_cmptnc_cd like #{cmptncZoneCd} || '%'
 			</if>
-			<if test='authrtCd != "" and authrtCd != null'>
-				AND T1.bzmn_se_cd = #{authrtCd}
+			<if test='bzmnSeCd != "" and bzmnSeCd != null'>
+				AND T1.bzmn_se_cd = #{bzmnSeCd}
 			</if>
 			<if test='bsnSttsCd != "" and bsnSttsCd != null'>
 				AND T1.bsn_stts_cd = #{bsnSttsCd}
@@ -150,7 +214,6 @@
 			<include refid="InspectionHistInfoSql" />
 	</select>
 	
-	
 	<insert id="insertInspectionHist">
 			INSERT INTO dqvs.dvs_spv_hs_inspctn
 				(bzmn_sn
@@ -165,6 +228,7 @@
 				, chck_plc
 				, sign_yn
 				, rslt
+				, fileatchsn
 				)
 			SELECT 
 				bzmn_sn
@@ -172,24 +236,42 @@
 				, #{exmnr}
 				, #{jbgd}
 				, #{ogdp}
-				, #{telno}
+				, dqvs.pca_encrypt(#{telno}, '150')
 				, #{chckArtcl}
 				, #{etcArtcl}
 				, #{chckCn}
 				, #{chckPlc}
 				, #{signYn}
 				, #{rslt}
+				, #{fileatchsn}
 			FROM dqvs.dvs_rac_mt_agency
-			where bzmn_sn = #{brno}
+			where bzmn_sn = #{bzmnSn}
 	</insert>
 	
-	<insert id="insertFile">
-		INSERT INTO dqvs.dvs_spv_hs_inspctn
-		(bzmn_sn, fileatchsn)
-		values
-		(#{bzmnSn}, #{fileatchsn})
-	</insert>
+	<update id="updateInspectionHist">
+		update
+			dqvs.dvs_spv_hs_inspctn
+		set
+			reg_cmptnc_cd = #{regCmptncCd},
+			exmnr = #{exmnr},
+			jbgd = #{jbgd},
+			ogdp = #{ogdp},
+			telno = dqvs.pca_encrypt(#{telno}, '150'),
+			chck_artcl = #{chckArtcl},
+			etc_artcl = #{etcArtcl},
+			chck_cn = #{chckCn},
+			chck_plc = #{chckPlc},
+			sign_yn = #{signYn},
+			rslt = #{rslt},
+			fileatchsn = #{fileatchsn}::NUMERIC
+		where
+			bzmn_sn = #{bzmnSn}
+	</update>
 	
-	
+	<update id="updateDeleteYn">
+		UPDATE dqvs.dvs_spv_hs_inspctn
+		SET prcs_yn = 'Y'
+		WHERE bzmn_sn = #{bzmnSn}
+	</update>
 
 </mapper>

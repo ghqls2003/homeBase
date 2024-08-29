@@ -38,11 +38,14 @@ public class SmsSendController extends CmmnAbstractServiceImpl{
 	public ModelAndView viewSmsSend(@RequestParam Map<String, Object> paramsMap, ModelAndView mav,
 			HttpServletRequest request, HttpServletResponse response, HttpSession session) throws RimsException {
 		
- 		String [] validAuth = {"Z01", "K01", "M01", "D01", "G01", "G02"};
+ 		String [] validAuth = {"Z01", "K01", "D01", "G01"};
 		if(Arrays.asList(validAuth).contains(getAuthrtCd())) {
 		} else {
 			mav.setViewName("redirect:/");
-		}		
+		}
+		
+		mav.addObject("userCmptncZoneCd", getCmptncZoneCd()); // 관할지
+		
 		return mav;
 	}
 
@@ -71,18 +74,22 @@ public class SmsSendController extends CmmnAbstractServiceImpl{
         return smsSendService.selectAuth(paramsMap);
     }
 	
-	
 	// 법인별 회사 목록
 	@RequestMapping("/smsSend/selectCrno")
-    @ResponseBody
-    public List<Map<String, Object>> selectCrno(@RequestBody Map<String, Object> paramsMap) {
-        return smsSendService.selectCrno(paramsMap);
+    public ModelAndView selectCrno(@RequestBody Map<String, Object> paramsMap) {
+        List<Map<String, Object>> result = smsSendService.selectCrno(paramsMap);
+        
+        ModelAndView mav = new ModelAndView("jsonView");
+        mav.addObject("data", result);
+        
+        return mav;
     }
 	
 	// 문자 발송 이력 그리드
 	@PostMapping("/smsSend/selectSmsSendInfo")
 	@ResponseBody
 	public Map<String, Object> selectSmsSendInfo(@RequestBody Map<String, Object> paramsMap){
+		paramsMap.put("userSn", getUserSn());
 		return smsSendService.selectSmsSendInfo(paramsMap);
 	}
 	

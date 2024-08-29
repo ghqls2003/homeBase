@@ -13,7 +13,8 @@
 		select authrt_cd, authrt_nm 
 		from dqvs.dvs_cmm_mt_auth
 		where use_yn = 'Y'		
-		and authrt_cd in ('S01','S02','S03', 'G01')
+		and authrt_cd in ('S01', 'S02', 'S03', 'S04', 'S05', 'G01')
+		order by authrt_cd asc
     </select>
     
     <!-- 검색옵션 - 시도(전체) -->
@@ -23,6 +24,9 @@
 		from
 		    dqvs.dvs_cmm_mt_area
 		where mtnabn_yn = 'Y'
+		<if test="userCmptncZoneCd != null and userCmptncZoneCd != ''">
+			and stdg_cd = #{userCmptncZoneCd}
+		</if>
 		order by
 		    ctpv_cd
     </select>
@@ -37,161 +41,147 @@
 		<if test="ctpvCd != null and ctpvCd != ''">
 			and stdg_cd LIKE CONCAT(#{ctpvCd}, '%')
 		</if>
+		<if test="userCmptncZoneCd != null and userCmptncZoneCd != ''">
+			and stdg_cd = #{userCmptncZoneCd}
+		</if>
 		order by sgg_cd
     </select>
     
     
     <!-- 법인명 자동조건 검색 -->
     <select id="selectCrno" resultType="map">
-<!-- 	SELECT  -->
-<!-- 		DISTINCT crno -->
-<!-- 		,COALESCE((SELECT CASE WHEN drma.co_nm1 IS NOT NULL THEN drma.co_nm1 WHEN drma.co_nm2 IS NOT NULL THEN drma.co_nm2 ELSE NULL END AS co_nm -->
-<!-- 		FROM (SELECT co_nm AS co_nm1, NULL AS co_nm2 FROM dqvs.dvs_rac_mt_agency Tagency WHERE bzmn_sn = Tuser.bzmn_sn -->
-<!-- 			 UNION ALL -->
-<!-- 			 SELECT NULL AS co_nm1, co_nm AS co_nm2 FROM dqvs.dvs_rac_mt_request WHERE bzmn_sn = Tuser.bzmn_sn) drma -->
-<!-- 		LIMIT 1), '-') || '(' || crno || ')' as co_nm -->
-<!-- 	FROM dqvs.dvs_cmm_mt_user Tuser -->
-<!-- 	LEFT JOIN dqvs.dvs_cmm_mt_sso Tsso -->
-<!-- 	ON Tuser.user_sn = Tsso.user_sn -->
-<!-- 	LEFT JOIN dqvs.dvs_cmm_mt_onepass Tone ON Tsso.user_sn = Tone.user_sn -->
-<!-- 	LEFT JOIN dqvs.dvs_rac_mt_agency Tagency -->
-<!-- 	ON Tuser.bzmn_sn = Tagency.bzmn_sn -->
-<!-- 	LEFT JOIN ( -->
-<!-- 		SELECT -->
-<!-- 			stdg_cd, -->
-<!-- 			ctpv_nm, -->
-<!-- 			sgg_nm -->
-<!-- 		FROM -->
-<!-- 			dqvs.dvs_cmm_mt_area)g -->
-<!-- 		ON Tuser.cmptnc_zone_cd = g.stdg_cd -->
-<!-- 	WHERE Tuser.authrt_cd IN ('S01','S02','S03') -->
-<!-- 	AND co_nm IS NOT NULL -->
-<!-- 	AND crno IS NOT NULL -->
-<!-- 	AND crno != '' -->
-<!-- 	ORDER BY co_nm DESC -->
 
-	    select
-			distinct T1.crno
-		    		,
-			T1.co_nm
-		from
-			(
-			select
-				T3.*
-			from
-				(
-				select 
-					Tuser.user_sn
-						,
-					coalesce(Tsso.user_id,
-					Tone."ci",
-					'-') as user_id
-						,
-					coalesce(Tsso.user_nm,
-					Tone.user_nm,
-					'-') as user_nm
-						,
-					Tuser.authrt_cd
-						,
-					(
-					select
-						authrt_nm
-					from
-						dqvs.dvs_cmm_mt_auth
-					where
-						authrt_cd = Tuser.authrt_cd)
-						,
-					coalesce((
-					select
-						case
-							when drma.co_nm1 is not null then drma.co_nm1
-							when drma.co_nm2 is not null then drma.co_nm2
-							else null
-						end as co_nm
-					from
-						(
-						select
-							co_nm as co_nm1,
-							null as co_nm2
-						from
-							dqvs.dvs_rac_mt_agency Tagency
-						where
-							bzmn_sn = Tuser.bzmn_sn
-					union all
-						select
-							null as co_nm1,
-							co_nm as co_nm2
-						from
-							dqvs.dvs_rac_mt_request
-						where
-							bzmn_sn = Tuser.bzmn_sn) drma
-					limit 1),
-					'-') as co_nm,
-						case
-							when acnt_stts_cd = '1' then (
-						select
-							cd_nm
-						from
-							dqvs.dvs_cmm_mt_code
-						where
-							cd_group = 'aprv_stts_cd'
-							and cd = Tuser.aprv_stts_cd)
-						else (
-						select
-							cd_nm
-						from
-							dqvs.dvs_cmm_mt_code
-						where
-							cd_group = 'acnt_stts_cd'
-							and cd = acnt_stts_cd)
-					end as stts_cd
-					, coalesce(dqvs.pca_decrypt(Tsso.mbl_telno,
-					'150'),
-					dqvs.pca_decrypt(Tone.mbl_telno,
-					'150'),
-					dqvs.pca_decrypt(Tagency.telno,
-					'150'),
-					dqvs.pca_decrypt(Tuser.assi_telno,
-					'150'),
-					'-') as telno
-						,
-					cmptnc_zone_cd
-						,
-					ctpv_nm
-						,
-					sgg_nm
-						,
-					Tagency.crno
-				from
-					dqvs.dvs_cmm_mt_user Tuser
-				left join dqvs.dvs_cmm_mt_sso Tsso
-						on
-					Tuser.user_sn = Tsso.user_sn
-				left join dqvs.dvs_cmm_mt_onepass Tone on
-					Tsso.user_sn = Tone.user_sn
-				left join dqvs.dvs_rac_mt_agency Tagency
-						on
-					Tuser.bzmn_sn = Tagency.bzmn_sn
-				left join (
-					select
-								stdg_cd,
-								ctpv_nm,
-								sgg_nm
-					from
-								dqvs.dvs_cmm_mt_area)g
-							on
-					Tuser.cmptnc_zone_cd = g.stdg_cd
-				where
-					Tuser.authrt_cd in ('S01', 'S02', 'S03')
-					)as T3
-			where
-				1 = 1
-				and telno NOT IN ('', '-')
-				and user_nm NOT IN ('', '-')
-				and crno != ''
-				)as T1
-		where
-			1 = 1
+<!-- 	    select -->
+<!-- 			distinct T1.crno -->
+<!-- 		    		, -->
+<!-- 			T1.co_nm -->
+<!-- 		from -->
+<!-- 			( -->
+<!-- 			select -->
+<!-- 				T3.* -->
+<!-- 			from -->
+<!-- 				( -->
+<!-- 				select  -->
+<!-- 					Tuser.user_sn -->
+<!-- 						, -->
+<!-- 					coalesce(Tsso.user_id, -->
+<!-- 					Tone."ci", -->
+<!-- 					'-') as user_id -->
+<!-- 						, -->
+<!-- 					coalesce(Tsso.user_nm, -->
+<!-- 					Tone.user_nm, -->
+<!-- 					'-') as user_nm -->
+<!-- 						, -->
+<!-- 					Tuser.authrt_cd -->
+<!-- 						, -->
+<!-- 					( -->
+<!-- 					select -->
+<!-- 						authrt_nm -->
+<!-- 					from -->
+<!-- 						dqvs.dvs_cmm_mt_auth -->
+<!-- 					where -->
+<!-- 						authrt_cd = Tuser.authrt_cd) -->
+<!-- 						, -->
+<!-- 					coalesce(( -->
+<!-- 					select -->
+<!-- 						case -->
+<!-- 							when drma.co_nm1 is not null then drma.co_nm1 -->
+<!-- 							when drma.co_nm2 is not null then drma.co_nm2 -->
+<!-- 							else null -->
+<!-- 						end as co_nm -->
+<!-- 					from -->
+<!-- 						( -->
+<!-- 						select -->
+<!-- 							co_nm as co_nm1, -->
+<!-- 							null as co_nm2 -->
+<!-- 						from -->
+<!-- 							dqvs.dvs_rac_mt_agency Tagency -->
+<!-- 						where -->
+<!-- 							bzmn_sn = Tuser.bzmn_sn -->
+<!-- 					union all -->
+<!-- 						select -->
+<!-- 							null as co_nm1, -->
+<!-- 							co_nm as co_nm2 -->
+<!-- 						from -->
+<!-- 							dqvs.dvs_rac_mt_request -->
+<!-- 						where -->
+<!-- 							bzmn_sn = Tuser.bzmn_sn) drma -->
+<!-- 					limit 1), -->
+<!-- 					'-') as co_nm, -->
+<!-- 						case -->
+<!-- 							when acnt_stts_cd = '1' then ( -->
+<!-- 						select -->
+<!-- 							cd_nm -->
+<!-- 						from -->
+<!-- 							dqvs.dvs_cmm_mt_code -->
+<!-- 						where -->
+<!-- 							cd_group = 'aprv_stts_cd' -->
+<!-- 							and cd = Tuser.aprv_stts_cd) -->
+<!-- 						else ( -->
+<!-- 						select -->
+<!-- 							cd_nm -->
+<!-- 						from -->
+<!-- 							dqvs.dvs_cmm_mt_code -->
+<!-- 						where -->
+<!-- 							cd_group = 'acnt_stts_cd' -->
+<!-- 							and cd = acnt_stts_cd) -->
+<!-- 					end as stts_cd -->
+<!-- 					, coalesce(dqvs.pca_decrypt(Tsso.mbl_telno, -->
+<!-- 					'150'), -->
+<!-- 					dqvs.pca_decrypt(Tone.mbl_telno, -->
+<!-- 					'150'), -->
+<!-- 					dqvs.pca_decrypt(Tagency.telno, -->
+<!-- 					'150'), -->
+<!-- 					dqvs.pca_decrypt(Tuser.assi_telno, -->
+<!-- 					'150'), -->
+<!-- 					'-') as telno -->
+<!-- 						, -->
+<!-- 					cmptnc_zone_cd -->
+<!-- 						, -->
+<!-- 					ctpv_nm -->
+<!-- 						, -->
+<!-- 					sgg_nm -->
+<!-- 						, -->
+<!-- 					Tagency.crno -->
+<!-- 				from -->
+<!-- 					dqvs.dvs_cmm_mt_user Tuser -->
+<!-- 				left join dqvs.dvs_cmm_mt_sso Tsso -->
+<!-- 						on -->
+<!-- 					Tuser.user_sn = Tsso.user_sn -->
+<!-- 				left join dqvs.dvs_cmm_mt_onepass Tone on -->
+<!-- 					Tsso.user_sn = Tone.user_sn -->
+<!-- 				left join dqvs.dvs_rac_mt_agency Tagency -->
+<!-- 						on -->
+<!-- 					Tuser.bzmn_sn = Tagency.bzmn_sn -->
+<!-- 				left join ( -->
+<!-- 					select -->
+<!-- 								stdg_cd, -->
+<!-- 								ctpv_nm, -->
+<!-- 								sgg_nm -->
+<!-- 					from -->
+<!-- 								dqvs.dvs_cmm_mt_area)g -->
+<!-- 							on -->
+<!-- 					Tuser.cmptnc_zone_cd = g.stdg_cd -->
+<!-- 				where -->
+<!-- 					Tuser.authrt_cd in ('S01', 'S02', 'S03') -->
+<!-- 					)as T3 -->
+<!-- 			where -->
+<!-- 				1 = 1 -->
+<!-- 				and telno NOT IN ('', '-') -->
+<!-- 				and user_nm NOT IN ('', '-') -->
+<!-- 				and crno != '' -->
+<!-- 				)as T1 -->
+<!-- 		where -->
+<!-- 			1 = 1 -->
+		select crno, co_nm from dqvs.dvs_rac_mt_agency 
+		where 1=1
+		and up_brno is null
+		and bzmn_se_cd = '1'
+		and crno is not null
+		and bsn_stts_cd = '0'
+		<if test="userCmptncZoneCd != '' and userCmptncZoneCd != null">
+			and reg_cmptnc_cd like #{userCmptncZoneCd} || '%'
+		</if>
     </select>
 
     
@@ -199,20 +189,30 @@
 	<sql id="SmsSendInfoSql">
 	<if test="dateType.equals('send_date') and startDt != '' and startDt != null and endDt != '' and endDt != null">
     (
-    	select row_number() over(order by T1.sndng_rsvt_dt desc) rn
-			, T1.*
+    	select
+    		row_number() over(
+			order by T1.sndng_dt desc) rn ,
+			T1.cn ,
+			T1.rsvt_yn ,
+			TO_CHAR(T1.sndng_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_dt,
+			TO_CHAR(T1.sndng_rsvt_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_rsvt_dt,
+			T1.rcvr,
+			T1.rcvr_telno,
+			T1.sndr_sn
 		from(
 			select 
 				cn
 				, rsvt_yn
-				, TO_CHAR(sndng_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_dt
-				, TO_CHAR(sndng_rsvt_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_rsvt_dt
+				, sndng_dt
+				, sndng_rsvt_dt
 				, rcvr
 				, dqvs.pca_decrypt(rcvr_telno, '150') rcvr_telno
+				, sndr_sn
 			from dqvs.dvs_cmm_hs_sms_send
 			)as T1
 		where 1 = 1
-        	and (T1.sndng_rsvt_dt between #{startDt} || '000000' and #{endDt} || '235959')
+        	and (T1.sndng_rsvt_dt BETWEEN #{startDt}::TIMESTAMP AND #{endDt}::DATE + '23:59:59'::INTERVAL)
+        	and sndr_sn=#{userSn}::numeric
 		<if test="sendType != '' and sendType != null">
            	and T1.rsvt_yn = #{sendType}
 		</if>
@@ -229,20 +229,30 @@
 	</if>
 	<if test="dateType.equals('now_date') and startDt != '' and startDt != null and endDt != '' and endDt != null">
     (
-    	SELECT ROW_NUMBER() OVER(ORDER BY T1.sndng_dt desc) rn
-			, T1.*
+    	SELECT 
+    		row_number() over(
+			order by T1.sndng_dt desc) rn ,
+			T1.cn ,
+			T1.rsvt_yn ,
+			TO_CHAR(T1.sndng_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_dt,
+			TO_CHAR(T1.sndng_rsvt_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_rsvt_dt,
+			T1.rcvr,
+			T1.rcvr_telno,
+			T1.sndr_sn
 		FROM(
 			SELECT 
 				cn
 				, rsvt_yn
-				, TO_CHAR(sndng_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_dt
-				, TO_CHAR(sndng_rsvt_dt, 'YYYY-MM-DD HH24:MI:SS') as sndng_rsvt_dt
+				, sndng_dt
+				, sndng_rsvt_dt
 				, rcvr
 				, dqvs.pca_decrypt(rcvr_telno, '150') rcvr_telno
+				, sndr_sn
 			FROM dqvs.dvs_cmm_hs_sms_send
 			)AS T1
 		WHERE 1 = 1
-        	AND (T1.sndng_dt BETWEEN #{startDt} || '000000' AND #{endDt} || '235959')
+        	AND (T1.sndng_dt BETWEEN #{startDt}::TIMESTAMP AND #{endDt}::DATE + '23:59:59'::INTERVAL)
+        	and sndr_sn=#{userSn}::numeric
 		<if test="sendType != '' and sendType != null">
            	AND T1.rsvt_yn = #{sendType}
 		</if>
@@ -354,20 +364,22 @@
 									cd_group = 'acnt_stts_cd'
 									and cd = acnt_stts_cd)
 							end as stts_cd
-							, coalesce(dqvs.pca_decrypt(Tsso.mbl_telno,
-							'150'),
-							dqvs.pca_decrypt(Tone.mbl_telno,
-							'150'),
-							dqvs.pca_decrypt(Tagency.telno,
-							'150'),
-							dqvs.pca_decrypt(Tuser.assi_telno,
-							'150'),
+							, coalesce(
+							NULLIF(TRIM(dqvs.pca_decrypt(Tuser.assi_telno,
+							'150')), ''),
+							NULLIF(TRIM(dqvs.pca_decrypt(Tsso.mbl_telno,
+							'150')), ''),
+							NULLIF(TRIM(dqvs.pca_decrypt(Tone.mbl_telno,
+							'150')), ''),
+							NULLIF(TRIM(dqvs.pca_decrypt(Tagency.telno,
+							'150')), ''),
 							'-') as telno
-							, cmptnc_zone_cd
+							, COALESCE(nullif(Tuser.cmptnc_zone_cd,''),nullif(Tagency.reg_cmptnc_cd,'')) as cmptnc_zone_cd
 							, ctpv_nm
 							, sgg_nm
 							, Tagency.crno
 							, acnt_stts_cd
+							, Tagency.bsn_stts_cd
 						from
 							dqvs.dvs_cmm_mt_user Tuser
 						left join dqvs.dvs_cmm_mt_sso Tsso on
@@ -383,8 +395,8 @@
 								sgg_nm
 							from
 								dqvs.dvs_cmm_mt_area)g
-							on Tuser.cmptnc_zone_cd = g.stdg_cd
-						where Tuser.authrt_cd IN ('S01','S02','S03')
+							on Tuser.cmptnc_zone_cd = g.stdg_cd or Tagency.reg_cmptnc_cd = g.stdg_cd
+						where Tuser.authrt_cd IN ('S01','S02','S04','S05')
 					) as T3
 					where
 						user_sn in (
@@ -401,7 +413,11 @@
 			where 1 = 1
 			and telno NOT IN ('', '-')
 			and user_nm NOT IN ('', '-')
-			and acnt_stts_cd != '5'
+			and stts_cd = '승인'
+			and bsn_stts_cd = '0'
+			<if test="userCmptncZoneCd != null and userCmptncZoneCd != ''">
+				and cmptnc_zone_cd like #{userCmptncZoneCd}||'%'
+			</if>
 			<if test='except_tel.equals("true")'>
 				and telno like '01%'
 			</if>
@@ -547,16 +563,17 @@
 						cd_group = 'acnt_stts_cd'
 						and cd = acnt_stts_cd)
 				end as stts_cd
-				, coalesce(dqvs.pca_decrypt(Tsso.mbl_telno,
-				'150'),
-				dqvs.pca_decrypt(Tone.mbl_telno,
-				'150'),
-				dqvs.pca_decrypt(Tagency.telno,
-				'150'),
-				dqvs.pca_decrypt(Tuser.assi_telno,
-				'150'),
+				, coalesce(
+				NULLIF(TRIM(dqvs.pca_decrypt(Tuser.assi_telno,
+				'150')), ''),
+				NULLIF(TRIM(dqvs.pca_decrypt(Tsso.mbl_telno,
+				'150')), ''),
+				NULLIF(TRIM(dqvs.pca_decrypt(Tone.mbl_telno,
+				'150')), ''),
+				NULLIF(TRIM(dqvs.pca_decrypt(Tagency.telno,
+				'150')), ''),
 				'-') as telno
-				, cmptnc_zone_cd
+				, COALESCE(nullif(Tuser.cmptnc_zone_cd,''),nullif(Tagency.reg_cmptnc_cd,'')) as cmptnc_zone_cd
 				, ctpv_nm
 				, sgg_nm
 			from
@@ -578,9 +595,9 @@
 				from
 					dqvs.dvs_cmm_mt_area)g
 			on
-				Tuser.cmptnc_zone_cd = g.stdg_cd
+				Tuser.cmptnc_zone_cd = g.stdg_cd or Tagency.reg_cmptnc_cd = g.stdg_cd
 			where
-				Tuser.authrt_cd in ('S01', 'S02', 'S03', 'G01')
+				Tuser.authrt_cd in ('S01', 'S02', 'S03', 'S04', 'S05', 'G01')
 				) T3
 		where
 			user_sn in (
@@ -722,16 +739,17 @@
 						cd_group = 'acnt_stts_cd'
 						and cd = acnt_stts_cd)
 				end as stts_cd
-				, coalesce(dqvs.pca_decrypt(Tsso.mbl_telno,
-				'150'),
-				dqvs.pca_decrypt(Tone.mbl_telno,
-				'150'),
-				dqvs.pca_decrypt(Tagency.telno,
-				'150'),
-				dqvs.pca_decrypt(Tuser.assi_telno,
-				'150'),
+				, coalesce(
+				NULLIF(TRIM(dqvs.pca_decrypt(Tuser.assi_telno,
+				'150')), ''),
+				NULLIF(TRIM(dqvs.pca_decrypt(Tsso.mbl_telno,
+				'150')), ''),
+				NULLIF(TRIM(dqvs.pca_decrypt(Tone.mbl_telno,
+				'150')), ''),
+				NULLIF(TRIM(dqvs.pca_decrypt(Tagency.telno,
+				'150')), ''),
 				'-') as telno
-				, cmptnc_zone_cd
+				, COALESCE(nullif(Tuser.cmptnc_zone_cd,''),nullif(Tagency.reg_cmptnc_cd,'')) as cmptnc_zone_cd
 				, ctpv_nm
 				, sgg_nm
 			from
@@ -752,9 +770,9 @@
 				from
 					dqvs.dvs_cmm_mt_area)g
 			on
-				Tuser.cmptnc_zone_cd = g.stdg_cd
+				Tuser.cmptnc_zone_cd = g.stdg_cd or Tagency.reg_cmptnc_cd = g.stdg_cd
 			where
-				Tuser.authrt_cd in ('S01', 'S02', 'S03', 'G01')
+				Tuser.authrt_cd in ('S01', 'S02', 'S03', 'S04', 'S05', 'G01')
 				) T3
 		where
 			1 = 1
@@ -885,7 +903,7 @@
 					, #{send_date}
 				</if>
 				, TO_CHAR(now(), 'YYYYMMDDHH24MISS')
-				, '0540000000'
+				, '0544597565'
 				, #{dest_count}
 				, #{dest_info}
 				, #{msg}

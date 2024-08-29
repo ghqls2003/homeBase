@@ -31,11 +31,6 @@ public class RentalHistManageServiceImpl extends CmmnAbstractServiceImpl impleme
 		result.put("total", total);
 		return result;
 	}
-
-	@Override
-	public List<Map<String, Object>> selectRentalHistListEx(Map<String, Object> paramsMap) {
-		return rentalHistManageDao.selectRentalHistList(paramsMap);
-	}
 	
 	@Override
 	public int selectRentalHistListCnt(Map<String, Object> paramsMap) {

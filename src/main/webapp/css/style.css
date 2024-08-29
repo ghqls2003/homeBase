@@ -1515,20 +1515,8 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
 .indivSelec_popup .btn_flex {margin-top: 10px;}
 .indivSelec_popup .input_box {margin-bottom: 30px;}
 .indivSelec_popup .selectBtnBox {display: flex; margin: 10px;}
-.indivSelec_popup .selectBtnBox button.selected {
-    background-color: #364BC6 !important;
-    color: #fff !important;
-}
-.indivSelec_popup .selectBtnBox button.select-btn {
-    padding: 2px 12px;
-    background-color: #F5F8FE;
-    border: 1px solid #DBE0EC;
-    border-radius: 8px;
-    line-height: 26px;
-    color: #040404;
-    font-weight: 500;
-    margin-right: 10px;
-}
+.indivSelec_popup .selectBtnBox button.selected {background-color: #364BC6 !important; color: #fff !important;}
+.indivSelec_popup .selectBtnBox button.select-btn {padding: 2px 12px; background-color: #F5F8FE; border: 1px solid #DBE0EC; border-radius: 8px; line-height: 26px; color: #040404; font-weight: 500; margin-right: 10px;}
 .inc_receiver_list{border: 1px solid lavender;}
 /* 문자 확인 */
 .chkSend_popup .box .content {padding: 38px 37px 0px 37px; height: 460px;}
@@ -1604,20 +1592,12 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
 	.sub04 .selec_wr ul.selec_box li .k-picker-solid{border-radius: 8px;background-color: #fff;}
     .send_popup .box {width: 480px; height: 596px;} 
     .msg_send .box .content {height: 80%;}
-    .sub04 .selec_wr {
-        flex-direction: column;
-        gap: 12px;
-    }
+    .sub04 .selec_wr {flex-direction: column; gap: 12px;}
     .sub04 .selec_wr .mo_flex {
         justify-content: stretch;
     }
     .sub04 .selec_wr .mo_flex .year_picker {width: 100%;}
-    .sub04 .selec_wr ul.selec_box {
-        width: 100%;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-    }
+    .sub04 .selec_wr ul.selec_box {width: 100%; flex-direction: column; align-items: flex-start; gap: 12px;}
     .sub04 .btn_flex {margin-top: 18px;}
     .sub04 ul.yearBox {margin-right: 0; width: 100%;}
     .sub04 ul.yearBox li.mo_li {width: 100%;}

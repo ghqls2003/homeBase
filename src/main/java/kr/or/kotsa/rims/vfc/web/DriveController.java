@@ -175,7 +175,6 @@ public class DriveController extends CmmnAbstractServiceImpl {
 	@RequestMapping("drive/updateRentSttsCd")
 	@ResponseBody
 	public String updateRentSttsCd(@RequestBody Map<String, Object> paramsMap) throws RimsException {
-
 		return driveService.updateRentSttsCd(paramsMap);
 	}
 

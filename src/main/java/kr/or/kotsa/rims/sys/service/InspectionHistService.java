@@ -5,11 +5,13 @@ import java.util.Map;
 
 public interface InspectionHistService {
 
+	public List<Map<String, Object>> agencyList(Map<String, Object> paramsMap);
+	
+	public List<Map<String, Object>> agencyInfo(Map<String, Object> paramsMap);
+	
 	public Map<String, Object> selectInspectionHistInfo(Map<String, Object> paramsMap);
 
 	public int insertInspectionHist(Map<String, Object> paramsMap);
-
-	public int insertFile(Map<String, Object> paramsMap);
 
 	public List<Map<String, Object>> ctpvNm(Map<String, Object> paramsMap);
 
@@ -20,6 +22,8 @@ public interface InspectionHistService {
 	public List<Map<String, Object>> selectAuth(Map<String, Object> paramsMap);
 
 	public int updateInspectionHist(Map<String, Object> paramsMap);
+
+	public int updateDeleteYn(Map<String, Object> paramsMap);
 
 
 }

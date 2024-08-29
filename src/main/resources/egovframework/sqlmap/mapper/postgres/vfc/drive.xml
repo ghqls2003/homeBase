@@ -129,6 +129,7 @@
 		</if>
 	</insert>
 
+	<!-- 대여정보 대여확정 처리  -->
 	<update id="updateRentSttsCd">
         <if test="rentno != null and rentno != ''">
 	        UPDATE dqvs.dvs_dqv_mt_rent
@@ -251,10 +252,10 @@
 	</select>
 
 
-	<!-- 대여처리시 운전자격이력에 대여유형 업데이트  -->
-	<update id="updateRentType" parameterType="paraMap" >
-		UPDATE dqvs.dvs_dqv_hs_verf
-		SET oneway_yn= #{onewayYn}
-		WHERE vrfc_hstry_sn = #{vrfcHstrySn}
-	</update>
+<!--	&lt;!&ndash; 대여처리시 운전자격이력에 대여유형 업데이트 20240822 운전자격이력테이블에서 대여유형컬럼삭제되어 불필요시 삭제요망 &ndash;&gt;-->
+<!--	<update id="updateRentType" parameterType="paraMap" >-->
+<!--		UPDATE dqvs.dvs_dqv_hs_verf-->
+<!--		SET oneway_yn= #{onewayYn}-->
+<!--		WHERE vrfc_hstry_sn = #{vrfcHstrySn}-->
+<!--	</update>-->
 </mapper>
