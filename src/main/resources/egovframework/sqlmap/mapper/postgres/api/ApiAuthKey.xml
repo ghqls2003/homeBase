@@ -23,10 +23,12 @@
 				        SELECT TO_CHAR(damk.issu_dt, 'YYYY-MM-DD') issu_dt
 				        	, damk.issu_dt issu_dt_org
 				        	, damk.user_sn
-				        	, dcms.user_nm as rqstr_nm
+						    , LEFT(dcms.user_nm, 1) || 
+						      REPEAT('*', LENGTH(dcms.user_nm) - 2) || 
+						      RIGHT(dcms.user_nm, 1) as rqstr_nm
 				        	, dcms.user_id
 				        	, damk.cert_key
-<!-- 				        	, damk.oper_se_cd -->
+<!-- 				        , damk.oper_se_cd -->
 				        	, damk.secret_key
 				        	, damk.stts_cd
 				        	, dcmu.ogdp_nm
