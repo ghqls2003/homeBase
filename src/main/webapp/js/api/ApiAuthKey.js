@@ -4,7 +4,8 @@
 
 	var apiListColumns = null;
 	var colSetTime = 0;  // 컬럼 생성 전에 그리드 생성 방지용
-
+	var normalUserStts = '';
+	var authAdmin = 0;
 	$(document).ready(function() {
 		$apiAuth.ui.pageLoad();		//최초 페이지 로드 시
 		$apiAuth.event.setUIEvent();
@@ -32,18 +33,18 @@
 					clearInterval(startIn);
 				}
 			}, 5);
-			var searchOtherCondition2 = [
-				{ value: "", text: "상태 선택" },
-				{ value: "1", text: "신청" },
-				{ value: "2", text: "활용" },
-				{ value: "3", text: "반려" },
-				{ value: "4", text: "중지" }
-			];
-			$("#sttsDrop").kendoDropDownList({
-				dataTextField: "text",
-				dataSource: searchOtherCondition2,
-				dataValueField: "value",
-			});
+			//			var searchOtherCondition2 = [
+			//				{ value: "", text: "상태 선택" },
+			//				{ value: "1", text: "신청" },
+			//				{ value: "2", text: "활용" },
+			//				{ value: "3", text: "반려" },
+			//				{ value: "4", text: "중지" }
+			//			];
+			//			$("#sttsDrop").kendoDropDownList({
+			//				dataTextField: "text",
+			//				dataSource: searchOtherCondition2,
+			//				dataValueField: "value",
+			//			});
 			var searchCondition = [
 				{ value: "", text: "검색조건 선택" },
 				{ value: "companyNm", text: "회사명" },
@@ -57,17 +58,17 @@
 				dataValueField: "value",
 			});
 
-			$("#sttsDrop2").kendoDropDownList({
-				dataTextField: "text",
-				dataSource: searchOtherCondition2,
-				dataValueField: "value",
-				change: function(e) {
-					var grid = $('#operator_grid').data('kendoGrid');
-					grid.dataSource.page(1);
-					grid.dataSource.read();
-					$apiAuth.ui.apiSttsview();
-				}
-			});
+			//			$("#sttsDrop2").kendoDropDownList({
+			//				dataTextField: "text",
+			//				dataSource: searchOtherCondition2,
+			//				dataValueField: "value",
+			//				change: function(e) {
+			//					var grid = $('#operator_grid').data('kendoGrid');
+			//					grid.dataSource.page(1);
+			//					grid.dataSource.read();
+			//					$apiAuth.ui.apiSttsview();
+			//				}
+			//			});
 
 			$(document).on('click', '.copy-key', function() {
 				var keyToCopy = $(this).data('key');
@@ -140,75 +141,75 @@
 					//					});
 					//
 					//
-										$(".apply").hide();
-										$(".reissuance").hide();
-										$(".extend").hide();
-										$(".Applying").hide();
-										$(".NewApi").hide();
-										let found = false;
-					
-//										for (let i = 0; i < apiData.data.length; i++) {
-//											if (apiData.data[i].sttsCd == '1' && apiData.data[i].operSeCd == '1') {
-//												$(".Applying").show();
-//												found = true;
-//												break;
-//											}
-//										}
-					
-										if (!found) {
-											if (apiData.data.length == 0) {
-												$(".apply").show();
-												$(".extend").hide();
-												$(".Applying").hide();
-												$(".reissuance").hide();
-											} else {
-												if (apiData.data[0].sttsCd == '1') {
-												$(".Applying").show();
+					$(".apply").hide();
+					$(".reissuance").hide();
+					$(".extend").hide();
+					$(".Applying").hide();
+					$(".NewApi").hide();
+					let found = false;
 
-												}
-												if (apiData.data[0].sttsCd == '2') {
-													$(".apply").hide();
-													$(".reissuance").show();
-													$(".extend").show();
-												}
-												if (apiData.data[0].sttsCd == '3') {
-													$(".ReApi").show();
-													$(".reissuance").hide();
-													$(".extend").hide();
-												}
-												if (apiData.data[0].sttsCd == '4') {
-													$(".ReApi").show();
-													$(".reissuance").hide();
-													$(".extend").hide();
-												}
-											}
-										}
+					//										for (let i = 0; i < apiData.data.length; i++) {
+					//											if (apiData.data[i].sttsCd == '1' && apiData.data[i].operSeCd == '1') {
+					//												$(".Applying").show();
+					//												found = true;
+					//												break;
+					//											}
+					//										}
 
-//					if (apiData.data.length == 0) {
-//						$(".apply").show();
-//						$(".extend").hide();
-//						$(".Applying").hide();
-//						$(".reissuance").hide();
-//					} else {
-//						if (apiData.data[0].sttsCd == '1') {
-//							$(".Applying").show();
-//						}
-//						if (apiData.data[0].sttsCd == '2') {
-//							$(".apply").hide();
-//							$(".reissuance").show();
-//							$(".extend").show();
-//						}
-//						if (apiData.data[0].sttsCd == '3') {
-//							$(".ReApi").show();
-//							$(".reissuance").hide();
-//							$(".extend").hide();
-//						}
-//						if (apiData.data[0].sttsCd == '4') {
-//							$(".ReApi").show();
-//							$(".reissuance").hide();
-//							$(".extend").hide();
-//						}
-//					}
+					if (!found) {
+						if (apiData.data.length == 0) {
+							$(".apply").show();
+							$(".extend").hide();
+							$(".Applying").hide();
+							$(".reissuance").hide();
+						} else {
+							if (apiData.data[0].sttsCd == '1') {
+								$(".Applying").show();
+
+							}
+							if (apiData.data[0].sttsCd == '2') {
+								$(".apply").hide();
+								$(".reissuance").show();
+								$(".extend").show();
+							}
+							if (apiData.data[0].sttsCd == '3') {
+								$(".ReApi").show();
+								$(".reissuance").hide();
+								$(".extend").hide();
+							}
+							if (apiData.data[0].sttsCd == '4') {
+								$(".ReApi").show();
+								$(".reissuance").hide();
+								$(".extend").hide();
+							}
+						}
+					}
+
+					//					if (apiData.data.length == 0) {
+					//						$(".apply").show();
+					//						$(".extend").hide();
+					//						$(".Applying").hide();
+					//						$(".reissuance").hide();
+					//					} else {
+					//						if (apiData.data[0].sttsCd == '1') {
+					//							$(".Applying").show();
+					//						}
+					//						if (apiData.data[0].sttsCd == '2') {
+					//							$(".apply").hide();
+					//							$(".reissuance").show();
+					//							$(".extend").show();
+					//						}
+					//						if (apiData.data[0].sttsCd == '3') {
+					//							$(".ReApi").show();
+					//							$(".reissuance").hide();
+					//							$(".extend").hide();
+					//						}
+					//						if (apiData.data[0].sttsCd == '4') {
+					//							$(".ReApi").show();
+					//							$(".reissuance").hide();
+					//							$(".extend").hide();
+					//						}
+					//					}
 				});
 
 			}
@@ -225,7 +226,7 @@
 		 */
 		setColumnsEtc: function() {
 			if (authrtCd == 'Z01' || authrtCd == 'K01' || authrtCd == 'D01') {
-
+				authAdmin = 1;
 				apiListColumns =
 					[
 						{ field: "sn", title: "순번", width: 30 },
@@ -368,11 +369,12 @@
 								options.searchCondition = $("#searchCondition").val();
 								options.searchText = $("#search_box").val();
 								options.authrtCd = authrtCd
-								options.sttsCd = $("#sttsDrop").val()
+								//								options.sttsCd = $("#sttsDrop").val()
+								options.sttsCd = normalUserStts
 							} else {
 								//								options.userSn = UserSn
-								options.authrtCd = authrtCd
-								options.sttsCd = $("#sttsDrop2").val()
+								options.sttsCd = normalUserStts
+								//								options.authrtCd = authrtCd
 							}
 							return JSON.stringify(options);
 						}
@@ -431,11 +433,11 @@
 		},
 		issueAPi: function() {
 			var param = {}
-//			param.operSn = 1
+			//			param.operSn = 1
 			ajax(true, contextPath + '/api/apiAuthKey/insertApiAuthKey', 'body', '확인중입니다.', param, function(data) {
 				alert("API가 신청되었습니다.");
 				$apiAuth.ui.ApplyStts();
-//				$apiAuth.ui.testKey();
+				//				$apiAuth.ui.testKey();
 				location.reload();
 
 			});
@@ -448,14 +450,14 @@
 				location.reload();
 			});
 		},
-//		testKey: function() {
-//			var param = {}
-//			//			param.operSeCd = '0'
-//			ajax(true, contextPath + '/api/apiAuthKey/insertApiTestKey', 'body', '확인중입니다.', param, function(data) {
-//				alert("API 개발용 키가 신청되었습니다.");
-//				$apiAuth.ui.ApplyStts();
-//			});
-//		},
+		//		testKey: function() {
+		//			var param = {}
+		//			//			param.operSeCd = '0'
+		//			ajax(true, contextPath + '/api/apiAuthKey/insertApiTestKey', 'body', '확인중입니다.', param, function(data) {
+		//				alert("API 개발용 키가 신청되었습니다.");
+		//				$apiAuth.ui.ApplyStts();
+		//			});
+		//		},
 		apiSttsview: function() {
 			const options = {};
 			if (authrtCd == "K01" || authrtCd == "Z01" || authrtCd == 'D01') {
@@ -464,11 +466,12 @@
 				options.searchCondition = $("#searchCondition").val();
 				options.searchText = $("#search_box").val();
 				options.authrtCd = authrtCd
-				options.sttsCd = $("#sttsDrop").val()
+				//				options.sttsCd = $("#sttsDrop").val()
+				options.sttsCd = normalUserStts
 			} else {
 				//								options.userSn = UserSn
-				options.authrtCd = authrtCd
-				options.sttsCd = $("#sttsDrop2").val()
+				//				options.authrtCd = authrtCd
+				options.sttsCd = normalUserStts
 			}
 			ajax(true, contextPath + '/api/apiAuthKey/apiSttsview', 'body', '조회중입니다', options, function(data) {
 				// 초기값 설정
@@ -600,6 +603,46 @@
 			$('.NewApi').click(function() {
 				$apiAuth.ui.CheckStts();
 			});
+			//신청 (일반)
+			$('#applicationClick').click(function() {
+				if (authAdmin == 1) {
+
+					normalUserStts = '1';
+					var grid = $('#operator_grid').data('kendoGrid');
+					//				grid.dataSource.page(1);
+					grid.dataSource.page(1);
+					$apiAuth.ui.apiSttsview();
+				}
+			});
+			//활용 (일반)
+			$('#useClick').click(function() {
+				if (authAdmin == 1) {
+					normalUserStts = '2';
+					var grid = $('#operator_grid').data('kendoGrid');
+					grid.dataSource.page(1);
+					$apiAuth.ui.apiSttsview();
+				}
+			});
+			//반려 (일반)
+			$('#rejectClick').click(function() {
+				if (authAdmin == 1) {
+
+					normalUserStts = '3';
+					var grid = $('#operator_grid').data('kendoGrid');
+					grid.dataSource.page(1);
+					$apiAuth.ui.apiSttsview();
+				}
+			});
+			//중지 (일반)
+			$('#stopClick').click(function() {
+				if (authAdmin == 1) {
+
+					normalUserStts = '4';
+					var grid = $('#operator_grid').data('kendoGrid');
+					grid.dataSource.page(1);
+					$apiAuth.ui.apiSttsview();
+				}
+			});
 			$('.reissuance').click(function() {
 				$apiAuth.ui.updatesttCd();
 			});
@@ -624,7 +667,7 @@
 			// 초기 사용자가 신청하기를 클릭한다.
 			$('.apply').click(function() {
 				var confirmation = confirm("API를 신청하시겠습니까?");
-//				var confirmation = confirm("API를 신청시 테스트키도 같이 발급됩니다. 신청하시겠습니까?");
+				//				var confirmation = confirm("API를 신청시 테스트키도 같이 발급됩니다. 신청하시겠습니까?");
 				if (confirmation) {
 					$apiAuth.ui.issueAPi();
 					//					$apiAuth.ui.testKey();
@@ -644,15 +687,15 @@
 				}
 			});
 			// 기존 사용자가 개발키 발급을 신청한다.
-//			$('.TestKey').click(function() {
-//				var confirmation = confirm("개발용 API를 신청하시겠습니까?");
-//
-//				if (confirmation) {
-//					$apiAuth.ui.testKey();
-//				} else {
-//					return alert('취소되었습니다.')
-//				}
-//			});
+			//			$('.TestKey').click(function() {
+			//				var confirmation = confirm("개발용 API를 신청하시겠습니까?");
+			//
+			//				if (confirmation) {
+			//					$apiAuth.ui.testKey();
+			//				} else {
+			//					return alert('취소되었습니다.')
+			//				}
+			//			});
 
 		},
 

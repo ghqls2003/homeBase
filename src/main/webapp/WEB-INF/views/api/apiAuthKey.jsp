@@ -467,11 +467,11 @@ button.gray_btn:hover {
 							id="start-picker02"></li>
 						<li class="li_slec"><label for="end-date"></label> <input
 							id="end-picker02"></li>
-						<li class="li_slec">
-							<div class="dropdown">
-								<label for="sttsDrop"></label> <input id="sttsDrop">
-							</div>
-						</li>
+<!-- 						<li class="li_slec"> -->
+<!-- 							<div class="dropdown"> -->
+<!-- 								<label for="sttsDrop"></label> <input id="sttsDrop"> -->
+<!-- 							</div> -->
+<!-- 						</li> -->
 						<li class="li_slec">
 							<div class="dropdown">
 								<label for="searchCondition"></label> <input
@@ -490,20 +490,20 @@ button.gray_btn:hover {
 					</button>
 				</div>
 			</div>
-			<div class="selec_wr" id="userSearch" style="margin-bottom: 20px;">
-				<div class="mo_flex">
-					<ul class="selec_box">
-						<li class="li_slec">
-							<div class="dropdown">
-								<label for="sttsDrop"></label> <input id="sttsDrop2">
-							</div>
-						</li>
-					</ul>
-				</div>
-			</div>
+<!-- 			<div class="selec_wr" id="userSearch" style="margin-bottom: 20px;"> -->
+<!-- 				<div class="mo_flex"> -->
+<!-- 					<ul class="selec_box"> -->
+<!-- 						<li class="li_slec"> -->
+<!-- 							<div class="dropdown"> -->
+<!-- 								<label for="sttsDrop"></label> <input id="sttsDrop2"> -->
+<!-- 							</div> -->
+<!-- 						</li> -->
+<!-- 					</ul> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<div class="use_wr">
 				<div class="use_bx">
-					<ul class="bx bx_05_01">
+					<ul class="bx bx_05_01" id ="applicationClick">
 						<li><span class="name">신청</span> <!-- 							<div id= "APiapplication" class="num_cont"></div> -->
 							<span id="APiapplication" class="num_cont"></span></li>
 						<li>
@@ -512,7 +512,7 @@ button.gray_btn:hover {
 					</ul>
 				</div>
 				<div class="use_bx">
-					<ul class="bx bx_05_03">
+					<ul class="bx bx_05_03" id = "useClick">
 						<li><span class="name">활용</span>
 							<div id="ApiUse" class="num_cont"></div></li>
 						<li>
@@ -530,7 +530,7 @@ button.gray_btn:hover {
 					<!-- 					</ul> -->
 				</div>
 				<div class="use_bx">
-					<ul class="bx bx_02">
+					<ul class="bx bx_02" id = "rejectClick">
 						<li><span class="name">반려</span>
 							<div id="ApiReject" class="num_cont"></div></li>
 						<li>
@@ -539,7 +539,7 @@ button.gray_btn:hover {
 					</ul>
 				</div>
 				<div class="use_bx">
-					<ul class="bx bx_05">
+					<ul class="bx bx_05" id = "stopClick">
 						<li><span class="name">중지</span>
 							<div id="ApiStop" class="num_cont">건</div></li>
 						<li>
