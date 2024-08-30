@@ -759,6 +759,7 @@
         	});
 
 
+
 //			$cmpnymanage.ui.rowClickEvent();
 			// 엔터키 검색 함수
 			$("#searchWrd").on('keydown', function(e) {

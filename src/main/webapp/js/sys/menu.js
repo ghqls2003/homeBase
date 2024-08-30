@@ -253,6 +253,7 @@
             $('#delete_btn').click(function(){
                     var selectMenuCd = $('#menuCd').val();
                          $menu.ui.DeleteView(selectMenuCd);
+                         console.log(selectMenuCd)
             });
 
 

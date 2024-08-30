@@ -2,4 +2,4 @@
 
 <link rel="icon" type="image/png" sizes="16x16" href="./images/icons/favicon-16x16.png">
 
-<jsp:forward page="/ma/main" /> 
+<jsp:forward page="/ma/main" />

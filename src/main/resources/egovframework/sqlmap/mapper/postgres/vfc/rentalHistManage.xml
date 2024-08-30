@@ -171,7 +171,8 @@
 				SELECT base.rent_no, base.lcns_idntf_cd, base.vhcl_reg_no, base.bzmn_sn, base.rent_bgng_dt, base.rent_end_dt
 			        , base.rent_stts_cd, base.vrfc_hstry_sn, base.del_yn, base.rgtr_sn, base.reg_dt, base.mdfcn_dt, base.dln
 				FROM
- 					dqvs.dvs_dqv_mt_rent_dump base
+					dqvs.dvs_dqv_mt_rent base
+<!--  					dqvs.dvs_dqv_mt_rent_dump base -->
 				WHERE (#{rentDt}::TIMESTAMP  BETWEEN base.rent_bgng_dt AND base.rent_end_dt)
 					AND base.reg_dt <![CDATA[ <= ]]> NOW()
 				<if test="startDt != '' and startDt != null and endDt != '' and endDt != null">  <!-- 넣을지 고민... -->
