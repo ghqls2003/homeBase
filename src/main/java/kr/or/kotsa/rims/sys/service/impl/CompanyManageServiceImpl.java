@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
 import kr.or.kotsa.rims.cmmn.sys.service.CmmnAbstractServiceImpl;
 import kr.or.kotsa.rims.sys.service.CompanyManageService;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -258,10 +259,18 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 		List<Map<String, Object>> ApiResponseData = new ArrayList<>(); // api 응답데이터
 		LocalDateTime now1 = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		String updateDt = now1.format(formatter); // 업데이트 시간
-
+		String updateDt = now1.format(formatter); // api 호출 시간
+		String recentBizSttsDt = ""; // 사업자등록정보 상태 업데이트 가장 최근 날짜 조회
 		// 해당일련번호가 agency 마스터테이블에 있을 경우만 update
 		Map<String, Object>	choiceBrnoInfo = companyManageDao.choiceBrno(orgParam);
+		// 사업자등록정보 상태 업데이트 가장 최근 날짜 조회
+		Map<String,Object> recentBizStts = companyManageDao.recentBizSttsDt(orgParam);
+		if(recentBizStts != null){
+			recentBizSttsDt	= (String) companyManageDao.recentBizSttsDt(orgParam).get("regDt");
+			recentBizSttsDt = "최근변동일시 : "+recentBizSttsDt;
+		}else{
+			recentBizSttsDt = "최근변동없음";
+		}
 		String selectedBsnSttsCd = (String) choiceBrnoInfo.get("bsnSttsNm");
 		if( choiceBrnoInfo != null ) {
 			Map<String, Object> hsParam = paramsMap.get(1); // 마스터일 경우만 데이터 존재함 , 히스토리 입력 데이터
@@ -273,7 +282,6 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 				String status_code = (String) responseData.get("status_code");
 				if(status_code.equals("OK")){
 					ApiResponseData = (List<Map<String, Object>>) responseData.get("data");
-
 					// 사업자 등록 상태 코드 및 명칭 변경 { api 응답 :  계속사업자(01), 휴업(02), 폐업(03)}
 					updateBusinessStatus(orgParam, hsParam, ApiResponseData);
 					String bStt = (String) hsParam.get("bStt");
@@ -293,26 +301,29 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 							// 현재 날짜
 							hsParam.put("bsnSttsMdfcnDt",formatedNow);
 							companyManageDao.insertCmpnyHs(hsParam);
+							// 사업자등록정보 상태 업데이트 가장 최근 날짜 조회
+							recentBizSttsDt	= (String) companyManageDao.recentBizSttsDt(orgParam).get("regDt");
+							recentBizSttsDt = "최근변동일시 : "+recentBizSttsDt;
 							if(bsnSttsCd.equals("70")){
 								result.put("bsnSttsCd", bsnSttsCd);
-								result.put("message", "영업상태 : 국세청에 등록되지 않은 사업자등록번호입니다. (기준일시 : "+updateDt+")");
+								result.put("message", "영업상태 : 국세청에 등록되지 않은 사업자등록번호입니다. (기준일시 : "+updateDt+", "+recentBizSttsDt+")");
 							}else{
 								result.put("bsnSttsCd", bsnSttsCd);
-								result.put("message", "영업상태 : 업데이트 되었습니다.(기준일시 : "+updateDt+")");
+								result.put("message", "영업상태 : 업데이트 되었습니다.(기준일시 : "+updateDt+", "+recentBizSttsDt+")");
 							}
 						}
 					}else{
-						result.put("message", "영업상태 : 기존 영업상태와 동일하여 업데이트 하지 않습니다. (기준일시 : "+updateDt+")");
+						result.put("message", "영업상태 : 기존 영업상태와 동일하여 업데이트 하지 않습니다. (기준일시 : "+updateDt+", "+recentBizSttsDt+")");
 					}
 
 				}else if(status_code.equals("BAD_JSON_REQUEST")){
-					result.put("message","영업상태 : JSON format 오류(기준일시 : "+updateDt+")");
+					result.put("message","영업상태 : JSON format 오류(기준일시 : "+updateDt+", "+recentBizSttsDt+")");
 					return result;
 				}else if(status_code.equals("REQUEST_DATA_MALFORMED")){
-					result.put("message","영업상태 : 필수항목(사업자등록번호) 누락(기준일시 : "+updateDt+")");
+					result.put("message","영업상태 : 필수항목(사업자등록번호) 누락(기준일시 : "+updateDt+", "+recentBizSttsDt+")");
 					return result;
 				}else if(status_code.equals("INTERNAL_ERROR")){
-					result.put("message","영업상태 : 내부 에러(기준일시 : "+updateDt+")");
+					result.put("message","영업상태 : 내부 에러(기준일시 : "+updateDt+", "+recentBizSttsDt+")");
 					return result;
 				}
 			} catch (HttpClientErrorException e) {
@@ -323,7 +334,7 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 				Map<String,Object> errorResponse = objectMapper.readValue(e.getResponseBodyAsString(),Map.class);
 				int errorCode  = (int) errorResponse.get("code"); // code:-5 msg:API 서버 오류가 발생하였습니다.
 				if(errorCode == -5){
-					result.put("message","영업상태 : 국세청 API 서버 오류가 발생하여 업데이트 할 수 없습니다.(기준일시 : "+updateDt+")");
+					result.put("message","영업상태 : 국세청 API 서버 오류가 발생하여 업데이트 할 수 없습니다.(기준일시 : "+updateDt+", "+recentBizSttsDt+")");
 					return result;
 				}
 

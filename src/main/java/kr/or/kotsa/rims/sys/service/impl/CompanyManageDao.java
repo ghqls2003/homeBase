@@ -112,11 +112,10 @@ public class CompanyManageDao extends CmmnAbstractMapper {
 		return update("sys.cmpnyManage.updateCmpnyBrnoToAgency", paramsMap);
 	}
 
-	// openAPI를 이용한 사업자등록정보 상태 업데이트: agency 테이블
-	public int updateCmpnyBrnoToRequst(Map<String, Object> paramsMap) {
-		return update("sys.cmpnyManage.updateCmpnyBrnoToRequst", paramsMap);
+	// 사업자등록정보 상태 업데이트 가장 최근 날짜 조회
+	public Map<String, Object> recentBizSttsDt(Map<String, Object> paramsMap) {
+		return selectOne("sys.cmpnyManage.recentBizSttsDt", paramsMap);
 	}
-
 
 	// => 사용자 중지처리
 	public int cmpUserStop(Map<String, Object> paramsMap) {
