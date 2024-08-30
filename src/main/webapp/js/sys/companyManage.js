@@ -775,21 +775,7 @@
 
 			// 상세 팝업 X, 닫기 버튼
 			$(".detailClose").on("click",function(){
-                var grid = $("#cmpnymanageGrid").data("kendoGrid");
-                grid.dataSource.read();
-                $("#businessStatus").html("");
-				$("#insert_mdfcn_rsn").val('');  // 수정사유 입력 input 초기화
-				$("#cmpnymanageGrid").data("kendoGrid").clearSelection();  // 상세보기 팝업창 닫았을 때, select 해제
-                $('#transferBtn').text('지자체 이관요청');
-                $('#transferBtn').css('background-color', '#00127B');
-				// datePicker 변경 상태에서 다시 readOnly로
-//				$("#bsn_stts_mdfcn_dt").data("kendoDatePicker").readonly(true);
-//			    $("#bsn_stts_mdfcn_dt").addClass("readOnlyGrayBtn");
-//			    $('.sub03 .readOnlyGrayBtn .k-input-button').css('background-color', '#f5f5f5');
-
-			    // 스크롤 바 최상단으로 이동
-			    $(".scrollBar02").scrollTop(0);
-			    $("body").css("overflow", "auto");
+				$cmpnymanage.event.setInitial();
 			});
 
 			// 권한 주사무소 버튼 팝업 X, 닫기 버튼
@@ -1060,6 +1046,27 @@
 			$(".rejectChkBtn").on("click", function() {
 				$cmpnymanage.event.deleteRequestCmpny("반려");
 			});
+		},
+		
+		/**
+		 * 닫기 및 수정 시, 내용 초기화
+		*/
+		setInitial: function() {
+			var grid = $("#cmpnymanageGrid").data("kendoGrid");
+            grid.dataSource.read();
+            $("#businessStatus").html("");
+			$("#insert_mdfcn_rsn").val('');  // 수정사유 입력 input 초기화
+			$("#cmpnymanageGrid").data("kendoGrid").clearSelection();  // 상세보기 팝업창 닫았을 때, select 해제
+            $('#transferBtn').text('지자체 이관요청');
+            $('#transferBtn').css('background-color', '#00127B');
+			// datePicker 변경 상태에서 다시 readOnly로
+//			$("#bsn_stts_mdfcn_dt").data("kendoDatePicker").readonly(true);
+//			$("#bsn_stts_mdfcn_dt").addClass("readOnlyGrayBtn");
+//			$('.sub03 .readOnlyGrayBtn .k-input-button').css('background-color', '#f5f5f5');
+
+			// 스크롤 바 최상단으로 이동
+			$(".scrollBar02").scrollTop(0);
+			$("body").css("overflow", "auto");
 		},
 
 		searchClick: function() {
@@ -2921,8 +2928,9 @@
 			
 			ajax(true, contextPath + '/sys/companyManage/updateCmpny', 'body', '처리중입니다.', combParams, function(data) {
 				alert(data.message);
-				$(".register_popup").removeClass("view");
-				location.reload();
+				$cmpnymanage.event.setInitial();
+				$(".modifiable").removeClass("view");
+//				location.reload();
 			});
 		},
 
