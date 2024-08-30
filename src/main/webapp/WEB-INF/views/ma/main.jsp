@@ -124,7 +124,7 @@
                                 <div id="server_chart"></div>
                             </div>
                             <div class="server_btn_wrap">
-                                <a id="transfrom_btn" href="#" aria-label="사용자 전환 페이지로 이동">사용자 전환</a>
+                                <a id="transfrom_btn" href="${contextPath}/ma/switchAuthForAdmin" aria-label="사용자 전환 페이지로 이동">사용자 전환</a>
                             </div>
                     </div>
                         <div class="server_alarm_wrap">
