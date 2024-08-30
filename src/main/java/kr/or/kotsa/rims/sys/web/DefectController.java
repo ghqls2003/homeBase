@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
-import kr.or.kotsa.rims.cmmn.biz.LoginVO;
 import kr.or.kotsa.rims.cmmn.biz.web.CmmnController;
 import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
 import kr.or.kotsa.rims.cmmn.sys.service.CmmnAbstractServiceImpl;

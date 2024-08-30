@@ -786,7 +786,8 @@
                 $("#businessStatus").html("");
 				$("#insert_mdfcn_rsn").val('');  // 수정사유 입력 input 초기화
 				$("#cmpnymanageGrid").data("kendoGrid").clearSelection();  // 상세보기 팝업창 닫았을 때, select 해제
-
+                $('#transferBtn').text('지자체 이관요청');
+                $('#transferBtn').css('background-color', '#00127B');
 				// datePicker 변경 상태에서 다시 readOnly로
 //				$("#bsn_stts_mdfcn_dt").data("kendoDatePicker").readonly(true);
 //			    $("#bsn_stts_mdfcn_dt").addClass("readOnlyGrayBtn");
