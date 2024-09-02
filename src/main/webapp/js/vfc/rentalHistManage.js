@@ -61,6 +61,8 @@
 	// 팝업창 로딩 체크
 	var detailCk = 0;
 	
+	var sq = '1';
+	
     $(document).ready(function() {
 		kendo.ui.progress($(document.body), true);
 		$(".excelDownBtn").attr("disabled", true);
@@ -237,6 +239,7 @@
 							options.vhclRegNo		= searchParamsArc.vhclRegNo;
 							options.coNm				= searchParamsArc.coNm;
 							options.dln					= searchParamsArc.dln;
+							options.selectQuery  = sq;
 							return JSON.stringify(options);
 						}
 					},

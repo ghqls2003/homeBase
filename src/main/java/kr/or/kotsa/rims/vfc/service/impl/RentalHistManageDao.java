@@ -12,15 +12,23 @@ import kr.or.kotsa.rims.cmmn.sys.dao.CmmnAbstractMapper;
 public class RentalHistManageDao extends CmmnAbstractMapper {
 
 	public List<Map<String, Object>> selectRentalHistList(Map<String, Object> paramsMap) {
-		return selectList("vfc.rentalHistManage.RentalHistList", paramsMap);
+		if(paramsMap.get("selectQuery").equals("1")) {
+			return selectList("vfc.rentalHistManage.RentalHistList", paramsMap);
+		} else {
+			return selectList("vfc.rentalHistManage.RentalHistListRp", paramsMap);
+		}
+	}
+	
+	public int selectRentalHistListCnt(Map<String, Object> paramsMap) {
+		if(paramsMap.get("selectQuery").equals("1")) {
+			return selectOne("vfc.rentalHistManage.RentalHistListCnt", paramsMap);
+		} else {
+			return selectOne("vfc.rentalHistManage.RentalHistListCntRp", paramsMap);
+		}
 	}
 	
 	public String selectBzmnSeCd(Map<String, Object> paramsMap) {
 		return selectOne("vfc.rentalHistManage.BzmnSeCd", paramsMap);
-	}
-
-	public int selectRentalHistListCnt(Map<String, Object> paramsMap) {
-		return selectOne("vfc.rentalHistManage.RentalHistListCnt", paramsMap);
 	}
 
 	public List<Map<String, Object>> selectCarList(Map<String, Object> paramsMap) {

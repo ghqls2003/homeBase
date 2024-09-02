@@ -23,7 +23,7 @@
         	$main.event.addYoutubeVideo();
 		}else if(admstt){
 			$main.event.addYoutubeAdmsttVideo();
-			$main.event.svrStatLoad();
+//			$main.event.svrStatLoad();
 		}
     });
 	function isEmpty(obj) {
