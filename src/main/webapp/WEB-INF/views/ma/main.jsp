@@ -78,70 +78,70 @@
                 </script>
 
                 <div class="main">
-                    <c:if test="false">
-                    <!-- Server Status Bar -->
-                    <div class="serverStatusBar wt_box">
-                        <div class="bar_head">
-                            <h4>서버 상태</h4>
-                        </div>
-                        <div class="bar_cont">
-                            <ul class="server_list">
-                                <li class="server_list_item server_list_item1" id="chck1">
-                                    <div class="server_list_item_inner">
-                                        <div class="status_icon_wrap">
-                                            <div class="status_icon"></div>
-                                        </div>
-                                        <p class="server_name">RIMS 서버</p>
-                                        <div class="status">
-                                            <p class="status_text">확인중</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="server_list_item server_list_item2" id="chck2">
-                                    <div class="server_list_item_inner">
-                                        <div class="status_icon_wrap">
-                                            <div class="status_icon"></div>
-                                        </div>
-                                        <p class="server_name">공단 서버</p>
-                                        <div class="status">
-                                            <p class="status_text">확인중</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="server_list_item server_list_item3"  id="chck3">
-                                    <div class="server_list_item_inner">
-                                        <div class="status_icon_wrap">
-                                            <div class="status_icon"></div>
-                                        </div>
-                                        <p class="server_name">경찰청 서버</p>
-                                        <div class="status">
-                                            <p class="status_text">확인중</p>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div class="chart_wrap scrollBar">
-                                <div id="server_chart"></div>
-                            </div>
-                            <div class="server_btn_wrap">
-                                <a id="transfrom_btn" href="${contextPath}/ma/switchAuthForAdmin" aria-label="사용자 전환 페이지로 이동">사용자 전환</a>
-                            </div>
-                    </div>
-                        <div class="server_alarm_wrap">
-                            <div class="server_alarm_icon off">
-                                <audio id="sirenAd" src="${contextPath}/audio/siren_01.mp3"></audio>
-                                <div id="if-siren"></div>
-                            </div>
-                            <div class="switch_wrap">
-                                <p>알림설정</p>
-                                <label class="switch" aria-label="서버 상태 알림 설정">
-                                    <input type="checkbox">
-                                    <span></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    </c:if>
+<%--                     <c:if test="false"> --%>
+<!--                     Server Status Bar -->
+<!--                     <div class="serverStatusBar wt_box"> -->
+<!--                         <div class="bar_head"> -->
+<!--                             <h4>서버 상태</h4> -->
+<!--                         </div> -->
+<!--                         <div class="bar_cont"> -->
+<!--                             <ul class="server_list"> -->
+<!--                                 <li class="server_list_item server_list_item1" id="chck1"> -->
+<!--                                     <div class="server_list_item_inner"> -->
+<!--                                         <div class="status_icon_wrap"> -->
+<!--                                             <div class="status_icon"></div> -->
+<!--                                         </div> -->
+<!--                                         <p class="server_name">RIMS 서버</p> -->
+<!--                                         <div class="status"> -->
+<!--                                             <p class="status_text">확인중</p> -->
+<!--                                         </div> -->
+<!--                                     </div> -->
+<!--                                 </li> -->
+<!--                                 <li class="server_list_item server_list_item2" id="chck2"> -->
+<!--                                     <div class="server_list_item_inner"> -->
+<!--                                         <div class="status_icon_wrap"> -->
+<!--                                             <div class="status_icon"></div> -->
+<!--                                         </div> -->
+<!--                                         <p class="server_name">공단 서버</p> -->
+<!--                                         <div class="status"> -->
+<!--                                             <p class="status_text">확인중</p> -->
+<!--                                         </div> -->
+<!--                                     </div> -->
+<!--                                 </li> -->
+<!--                                 <li class="server_list_item server_list_item3"  id="chck3"> -->
+<!--                                     <div class="server_list_item_inner"> -->
+<!--                                         <div class="status_icon_wrap"> -->
+<!--                                             <div class="status_icon"></div> -->
+<!--                                         </div> -->
+<!--                                         <p class="server_name">경찰청 서버</p> -->
+<!--                                         <div class="status"> -->
+<!--                                             <p class="status_text">확인중</p> -->
+<!--                                         </div> -->
+<!--                                     </div> -->
+<!--                                 </li> -->
+<!--                             </ul> -->
+<!--                             <div class="chart_wrap scrollBar"> -->
+<!--                                 <div id="server_chart"></div> -->
+<!--                             </div> -->
+<!--                             <div class="server_btn_wrap"> -->
+<%--                                 <a id="transfrom_btn" href="${contextPath}/ma/switchAuthForAdmin" aria-label="사용자 전환 페이지로 이동">사용자 전환</a> --%>
+<!--                             </div> -->
+<!--                     </div> -->
+<!--                         <div class="server_alarm_wrap"> -->
+<!--                             <div class="server_alarm_icon off"> -->
+<%--                                 <audio id="sirenAd" src="${contextPath}/audio/siren_01.mp3"></audio> --%>
+<!--                                 <div id="if-siren"></div> -->
+<!--                             </div> -->
+<!--                             <div class="switch_wrap"> -->
+<!--                                 <p>알림설정</p> -->
+<!--                                 <label class="switch" aria-label="서버 상태 알림 설정"> -->
+<!--                                     <input type="checkbox"> -->
+<!--                                     <span></span> -->
+<!--                                 </label> -->
+<!--                             </div> -->
+<!--                         </div> -->
+<!--                     </div> -->
+<%--                     </c:if> --%>
                     <!-- 콘텐츠 시작 -->
                     <div id="container">
 
