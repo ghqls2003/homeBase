@@ -4,7 +4,13 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:set var="contextPath" value="${pageContext.request.contextPath }" />
 <script src="${contextPath}/js/ma/headerSearch.js"></script>
-<link rel="stylesheet" type="text/css" href="${contextPath}/css/custom/header.css" />
+<link rel="stylesheet" type="text/css"
+	href="${contextPath}/css/custom/header.css" />
+<script src="${contextPath}/js/ma/server_stat.js"></script>
+<script src="${contextPath}/ext-lib/eventsource.js"></script>
+
+<link rel="stylesheet" type="text/css"
+	href="${contextPath}/css/custom/mainView.css" />
 <!-- header -->
 <!-- 본문바로가기 -->
 <div id="skip_to_container">
@@ -109,8 +115,8 @@
 				if (authrtCd != null && !authrtCd.isEmpty() && !authrtCd.equals("A01")) {
 				%>
 				<div class="input2">
-					<label for="searchWrd_header">검색창</label>
-					<input class="input" id="searchWrd_header" aria-label="검색창"
+					<label for="searchWrd_header">검색창</label> <input class="input"
+						id="searchWrd_header" aria-label="검색창"
 						style="position: relative; width: 253px; height: 43px; border-radius: 22px; background-color: #fff; font-size: 1.6rem; line-height: 26px; border-color: #4A64F5; padding-left: 15px;">
 					<button class="hr_btn2" id="searchBtnHeader">
 						<img src="${contextPath}/images/ico_search.png" alt="검색 아이콘">
@@ -136,13 +142,14 @@
 						class="k-input-inner"> <span class="k-input-value-text">마이페이지</span>
 					</span>
 					</span> -->
-					
-					<span class="k-picker k-dropdownlist k-picker-solid k-picker-md k-rounded-md" style="width: 132px;">
-						<span class="k-input-inner">
+
+					<span
+						class="k-picker k-dropdownlist k-picker-solid k-picker-md k-rounded-md"
+						style="width: 132px;"> <span class="k-input-inner">
 							<span class="k-input-value-text">마이페이지</span>
-						</span>
 					</span>
-					
+					</span>
+
 				</div>
 				<%
 				} else {
@@ -223,18 +230,18 @@
 			<!-- 					</ul> -->
 			<!-- 				</div> -->
 			<!-- 			</div> -->
-<!-- 			<input class="hr_search" id="searchWrd_header2" aria-label="검색창"> -->
-<!-- 			<button class="hr_btn_mobile" id="searchBtnHeader2"> -->
-<%-- 				<img src="${contextPath}/images/ico_search.png"> --%>
-<!-- 			</button> -->
-				<div class="input2">
-					<label for="searchWrd_header2">검색창</label>
-					<input class="input" id="searchWrd_header2" aria-label="검색창"
-						style="position: relative; height: 43px; border-radius: 22px; background-color: #fff; font-size: 1.6rem; line-height: 26px; border-color: #4A64F5; padding-left: 15px;">
-					<button class="hr_btn3" id="searchBtnHeader2">
-						<img src="${contextPath}/images/ico_search.png" alt="검색 아이콘">
-					</button>
-				</div>
+			<!-- 			<input class="hr_search" id="searchWrd_header2" aria-label="검색창"> -->
+			<!-- 			<button class="hr_btn_mobile" id="searchBtnHeader2"> -->
+			<%-- 				<img src="${contextPath}/images/ico_search.png"> --%>
+			<!-- 			</button> -->
+			<div class="input2">
+				<label for="searchWrd_header2">검색창</label> <input class="input"
+					id="searchWrd_header2" aria-label="검색창"
+					style="position: relative; height: 43px; border-radius: 22px; background-color: #fff; font-size: 1.6rem; line-height: 26px; border-color: #4A64F5; padding-left: 15px;">
+				<button class="hr_btn3" id="searchBtnHeader2">
+					<img src="${contextPath}/images/ico_search.png" alt="검색 아이콘">
+				</button>
+			</div>
 			<ul class="gnb mobileGnb">
 				<%-- <li><a class="titFont">서비스소개</a>
 	                    <ul class="gnb-depth">
@@ -320,6 +327,80 @@
 </div>
 <div class="ham_bg"></div>
 <!-- header 끝 -->
+<%
+// Retrieve data from session
+// If message exists, display it and then remove it from session
+if (authrtCd != null && !authrtCd.isEmpty() && authrtCd.equals("K01")) {
+%>
+
+<div class="main">
+	<%--             <c:if test="${admstt}"> --%>
+	<div class="serverStatusBar wt_box">
+		<div class="bar_head">
+			<h4>서버 상태</h4>
+		</div>
+		<div class="bar_cont">
+			<ul class="server_list">
+				<li class="server_list_item server_list_item1" id="chck1">
+					<div class="server_list_item_inner">
+						<div class="status_icon_wrap">
+							<div class="status_icon"></div>
+						</div>
+						<p class="server_name">RIMS 서버</p>
+						<div class="status">
+							<p class="status_text">확인중</p>
+						</div>
+					</div>
+				</li>
+				<li class="server_list_item server_list_item2" id="chck2">
+					<div class="server_list_item_inner">
+						<div class="status_icon_wrap">
+							<div class="status_icon"></div>
+						</div>
+						<p class="server_name">공단 서버</p>
+						<div class="status">
+							<p class="status_text">확인중</p>
+						</div>
+					</div>
+				</li>
+				<li class="server_list_item server_list_item3" id="chck3">
+					<div class="server_list_item_inner">
+						<div class="status_icon_wrap">
+							<div class="status_icon"></div>
+						</div>
+						<p class="server_name">경찰청 서버</p>
+						<div class="status">
+							<p class="status_text">확인중</p>
+						</div>
+					</div>
+				</li>
+			</ul>
+			<div class="chart_wrap scrollBar">
+				<div id="server_chart"></div>
+			</div>
+			<div class="server_btn_wrap">
+				<a id="transfrom_btn" href="${contextPath}/ma/switchAuthForAdmin"
+					aria-label="사용자 전환 페이지로 이동">사용자 전환</a>
+			</div>
+		</div>
+		<div class="server_alarm_wrap">
+			<div class="server_alarm_icon off">
+				<audio id="sirenAd" src="${contextPath}/audio/siren_01.mp3"></audio>
+				<div id="if-siren"></div>
+			</div>
+			<div class="switch_wrap">
+				<p>알림설정</p>
+				<label class="switch" aria-label="서버 상태 알림 설정"> <input
+					type="checkbox"> <span></span>
+				</label>
+			</div>
+		</div>
+	</div>
+	<%--             </c:if> --%>
+</div>
+<%
+}
+%>
 
 <script>
 	window.onload = function() {
@@ -328,7 +409,9 @@
 </script>
 
 <script type="text/javascript">
-	var auth = "${sessionScope.userData.authorId}";
+	var admstt = "${sessionScope.userData.authrtCd}"
+	    var admstt = ['K01', 'D01', 'Z01', 'Z02', 'S04'].includes(admstt);
+	var auth = "${sessionScope.userData.authrtCd}";
 	var lBizRno = "${sessionScope.userData.bizrno}";
 	var sessionMenuId = "${sessionScope.userData.menuId}";
 
