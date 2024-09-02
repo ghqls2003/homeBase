@@ -78,7 +78,7 @@
                 </script>
 
                 <div class="main">
-                    <c:if test="${admstt}">
+                    <c:if test="false">
                     <!-- Server Status Bar -->
                     <div class="serverStatusBar wt_box">
                         <div class="bar_head">

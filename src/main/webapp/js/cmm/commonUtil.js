@@ -1935,15 +1935,30 @@ function defaultMenuInfoList(){
 	ajax(false, contextPath + "/ma/main/menuInfoList", '', '', {}, function(data) {
          if (data.success) {
 			// 메뉴조회시
-			const numbers = data.menuInfoList.map(item => {
-			  if (Array.isArray(item.path) && item.path.length >= 2) {
-			    return Number(item.path[1]);
-			  }
-			  return 0; // Default value if 'path' array doesn't have second element
-			});
-			const filteredNumbers = numbers.filter(num => !isNaN(num));
-			const maxNumber = Math.max(...filteredNumbers);
-
+			
+			/**
+			 * @author : 김경룡
+			 * @date : 2024.09.02
+			 * @description : 기존 order 숫자로 height를 구하니 9가 최대라서 메뉴 갯수로 다시 작성
+			*/
+			var upMenuCdCount = data.menuInfoList.reduce((acc, item) => {
+				var { upMenuCd } = item;
+				acc[upMenuCd] = (acc[upMenuCd] || 0) + 1;
+					return acc;
+			}, {});
+			
+			var maxNumber = Math.max(...Object.values(upMenuCdCount));
+			
+			/* 기존코드 */
+//			const numbers = data.menuInfoList.map(item => {
+//			  if (Array.isArray(item.path) && item.path.length >= 2) {
+//			    return Number(item.path[1]);
+//			  }
+//			  return 0; 
+//			});
+//			const filteredNumbers = numbers.filter(num => !isNaN(num));
+//			const maxNumber = Math.max(...filteredNumbers);
+			
 			if(maxNumber > 6){
 				var dynamicChange = maxNumber - 6;
 				dynamicChange = (dynamicChange*35)+300
