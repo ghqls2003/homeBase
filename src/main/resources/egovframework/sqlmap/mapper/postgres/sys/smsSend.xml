@@ -374,7 +374,7 @@
 							NULLIF(TRIM(dqvs.pca_decrypt(Tagency.telno,
 							'150')), ''),
 							'-') as telno
-							, COALESCE(nullif(Tuser.cmptnc_zone_cd,''),nullif(Tagency.reg_cmptnc_cd,'')) as cmptnc_zone_cd
+							, Tuser.cmptnc_zone_cd
 							, ctpv_nm
 							, sgg_nm
 							, Tagency.crno
@@ -395,7 +395,7 @@
 								sgg_nm
 							from
 								dqvs.dvs_cmm_mt_area)g
-							on Tuser.cmptnc_zone_cd = g.stdg_cd or Tagency.reg_cmptnc_cd = g.stdg_cd
+							on Tuser.cmptnc_zone_cd = g.stdg_cd
 						where Tuser.authrt_cd IN ('S01','S02','S04','S05')
 					) as T3
 					where
@@ -573,7 +573,7 @@
 				NULLIF(TRIM(dqvs.pca_decrypt(Tagency.telno,
 				'150')), ''),
 				'-') as telno
-				, COALESCE(nullif(Tuser.cmptnc_zone_cd,''),nullif(Tagency.reg_cmptnc_cd,'')) as cmptnc_zone_cd
+				, Tuser.cmptnc_zone_cd
 				, ctpv_nm
 				, sgg_nm
 			from
@@ -595,7 +595,7 @@
 				from
 					dqvs.dvs_cmm_mt_area)g
 			on
-				Tuser.cmptnc_zone_cd = g.stdg_cd or Tagency.reg_cmptnc_cd = g.stdg_cd
+				Tuser.cmptnc_zone_cd = g.stdg_cd
 			where
 				Tuser.authrt_cd in ('S01', 'S02', 'S03', 'S04', 'S05', 'G01')
 				) T3
@@ -749,7 +749,7 @@
 				NULLIF(TRIM(dqvs.pca_decrypt(Tagency.telno,
 				'150')), ''),
 				'-') as telno
-				, COALESCE(nullif(Tuser.cmptnc_zone_cd,''),nullif(Tagency.reg_cmptnc_cd,'')) as cmptnc_zone_cd
+				, Tuser.cmptnc_zone_cd
 				, ctpv_nm
 				, sgg_nm
 			from
@@ -770,7 +770,7 @@
 				from
 					dqvs.dvs_cmm_mt_area)g
 			on
-				Tuser.cmptnc_zone_cd = g.stdg_cd or Tagency.reg_cmptnc_cd = g.stdg_cd
+				Tuser.cmptnc_zone_cd = g.stdg_cd
 			where
 				Tuser.authrt_cd in ('S01', 'S02', 'S03', 'S04', 'S05', 'G01')
 				) T3

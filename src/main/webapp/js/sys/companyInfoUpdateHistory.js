@@ -42,6 +42,9 @@
 						} else {
 							param.ctpvCd = this.value();
 							$company.comm.syncAjax(false, true, contextPath + '/sys/company/selectSggNm', 'body', '처리중입니다.', param, function(data) {
+								if(data.length==0){
+									data = [{ "sgg_nm": '',"sgg_cd": '' }];
+								}
 								$('#searchSggNm').kendoDropDownList({
 									optionLabel: "시군구(전체)",
 									dataTextField: "sgg_nm",
