@@ -4,7 +4,8 @@
 	
 	var user_sn={};
 	var excelDownArc = {};
-	
+	var searchTriggered = false;
+	var receiverParams= {};
 	W.$smsSend = W.$smsSend || {};
 	
 	$(document).ready(function() {
@@ -70,6 +71,9 @@
 							} else {
 							    param.ctpvCd = this.value();
 								ajax(true, contextPath+'/sys/smsSend/selectSggNm', 'body', '처리중입니다.', param, function (data) {
+									if(data.length==0){
+										data = [{ "sgg_nm": '',"sgg_cd": '' }];
+									}
 									$('.sub04 #searchSggNm').kendoDropDownList({
 							            optionLabel: "시군구",
 							            dataTextField: "sgg_nm",
@@ -435,17 +439,22 @@
 							},
 						},
 						parameterMap: function(options){
-							
-							var sd = $("#searchCtpvNm").val();
-							var sgg = $("#searchSggNm").val();
-							options.cmptnc_zone_cd = sd+=sgg;
-							options.authrt_cd = $("#searchAuthrtCd").val();
-							options.stts_cd = $("#searchSttsCd").val();
-							options.search_other_condition = $("#searchOtherCondition").val();
-							options.search_wrd = $("#searchBox").val();
-							//options.receiver_except_tel = $('#receiver_except_tel').data('value');
-							options.receiver_except_tel = JSON.stringify($("#receiver_except_tel").is(':checked'));
-							
+							 if (searchTriggered) {
+								options.cmptnc_zone_cd = receiverParams.cmptnc_zone_cd;
+								options.authrt_cd =receiverParams.authrt_cd;
+								options.stts_cd = receiverParams.stts_cd;
+								options.search_other_condition = receiverParams.search_other_condition;
+								options.search_wrd = receiverParams.search_wrd;
+								options.receiver_except_tel = receiverParams.receiver_except_tel;
+								
+			                }else{
+								options.cmptnc_zone_cd = "";
+								options.authrt_cd = "";
+								options.stts_cd = "승인";
+								options.search_other_condition = "";
+								options.search_wrd = "";
+								options.receiver_except_tel ="false";
+							}
 							return JSON.stringify(options);
 						}
 					},
@@ -796,6 +805,16 @@
 			
 			// 개별 수신자 검색 버튼
 			$("#receiverSearchBtn").on("click", function() {
+				searchTriggered = true;
+				var sd = $("#searchCtpvNm").val();
+				var sgg = $("#searchSggNm").val();
+				receiverParams.cmptnc_zone_cd = sd+=sgg;
+				receiverParams.authrt_cd = $("#searchAuthrtCd").val();
+				receiverParams.stts_cd = $("#searchSttsCd").val();
+				receiverParams.search_other_condition = $("#searchOtherCondition").val();
+				receiverParams.search_wrd = $("#searchBox").val();
+				receiverParams.receiver_except_tel = JSON.stringify($("#receiver_except_tel").is(':checked'));
+				
 				var searchReq3 = $("#searchOtherCondition").val();
 				var searchReq4 = $("#searchBox").val();
 				
@@ -816,6 +835,8 @@
 					$('#totalRowCnt').text(totalReciverCnt);
 					$smsSend.ui.receiverListGrid();
 				}
+				
+				
             });
 			
 		    $(".msg_send01 .close, .msg_send01 .cancel_btn").on("click",function(){
