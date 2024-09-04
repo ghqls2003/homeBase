@@ -444,7 +444,7 @@
 								                    <div class="tb_flex">
 								                        <label for="regTelno">연락처</label>
 								                        <input type="text" id="regTelno" name="regTelno" class="input" maxLength="80" aria-label="연락처"
-								                               oninput="charOnly(this)" />
+								                                oninput="telFormat(this)" />
 								                    </div>
 								                </td>
 								            </tr>

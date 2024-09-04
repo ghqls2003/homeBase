@@ -259,9 +259,6 @@
 //			$(".detail_popup").addClass("view");
 		},
 		
-		// 등록팝업
-		insertSearch: function() {
-		},
 	}
 	
 	$inspectionHist.event = {
@@ -494,6 +491,8 @@
 		
 		detailInfoPopup: function(data) {
 			var brno = !data.brno ? '-' : toBizrnoNumFormat(data.brno);
+			var agencyTelno = !data.agencyTelno ? '-' : toTelNum(data.agencyTelno);
+			var bsnSttsMdfcnDt = !data.bsnSttsMdfcnDt ? '-' :  dateFormatting(data.bsnSttsMdfcnDt);
 			$('#detailCoNm').val(data.coNm);
 			$('#detailCoNm').data('value', data.bzmnSn);
 			$('#detailBrno').val(brno);
@@ -501,8 +500,8 @@
 			$('#detailJbgd').val(data.jbgd);
 			$('#detailOgdp').val(data.ogdp);
 			$('#detailBsnSttsNm').val(data.bsnSttsNm);
-			$('#detailBsnSttsMdfcnDt').val(data.bsnSttsMdfcnDt);
-			$('#detailAgencyTelno').val(data.agencyTelno);
+			$('#detailBsnSttsMdfcnDt').val(bsnSttsMdfcnDt);
+			$('#detailAgencyTelno').val(agencyTelno);
 			$('#detailChckArtcl').val(data.chckArtcl);
 			$('#detailEtcArtcl').val(data.etcArtcl);
 			$('#detailRslt').data("kendoDropDownList").value(data.rslt);
@@ -568,20 +567,15 @@
 			params.rslt = $("#regRslt").val();
 			params.signYn = $("#regSignYn").val();
 			params.bzmnSn = $('#agencyNm').data('value');
-			var fileNm = $('.regFileList').text();
-			if (fileNm == null || fileNm == "") {
-				alert("첨부파일은 필수입니다");
-				return;
-			}
 			
-			if (fileNm != '') {
-				if (confirm("등록 하시겠습니까?")) {
-					$inspectionHist.event.insertFile(params);
-				}
-			} else {
-				if (confirm("등록 하시겠습니까?")) {
-					$inspectionHist.event.insertInspection(params);
-				}
+			var fileNm = $('.regFileList').text();
+			var coNm = $('#agencyNm').data('value');
+			if(coNm == null || coNm == ""){
+				alert("법인명은 필수입니다");
+			}else if(fileNm == null || fileNm == "") {
+				alert("첨부파일은 필수입니다");
+			}else if (confirm("등록 하시겠습니까?")) {
+				$inspectionHist.event.insertFile(params);
 			}
 			
 		},
@@ -675,10 +669,6 @@
 			params.rslt = $("#detailRslt").val();
 			params.signYn = $("#detailSignYn").val();
 			params.regCmptncCd = $('#detailJurisdiction').data('value');
-//			params.fileAtchSn1 = nvl($("#detailFileSn1").attr('value'), 0);
-//			params.fileAtchSn2 = nvl($("#detailFileSn2").attr('value'), 0);
-//			params.fileAtchSn3 = nvl($("#detailFileSn3").attr('value'), 0);
-//			params.fileAtchSn4 = nvl($("#detailFileSn4").attr('value'), 0);
 			
 			var j = 1;
 			for(var i=1; i<5; i++){
@@ -690,14 +680,16 @@
 				}
 			}
 			
-			
+			var coNm = $("#detailCoNm").val();
 			var fileNm = $('.detailFileList').text();
-			if (fileNm == null || fileNm == "") {
+			if(coNm == null || coNm == ""){
+				alert("법인명은 필수입니다");
+			}else if(fileNm == null || fileNm == "") {
 				alert("첨부파일은 필수입니다");
-				return;
-			}else{
+			}else if (confirm("등록 하시겠습니까?")) {
 				$inspectionHist.event.updateFile(params);
 			}
+			
 			
 //			
 //			var fileNm = $('#detailFileNm').val();
