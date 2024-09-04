@@ -39,7 +39,7 @@
 			        dataSource: data,
 					select: function(e) {
 	                    var dataItem = this.dataItem(e.item.index());
-	                    var crno = dataItem.crno || "데이터없음";
+	                    var crno =  dataItem.crno.trim() || "데이터없음";
 	                    var co_nm = dataItem ? dataItem.co_nm : null;
 	                    $("#inc_selec_01").data('value', crno);
 						$("#inc_selec_01").val(co_nm);
