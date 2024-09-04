@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
@@ -154,6 +155,13 @@ public class InspectionHistController extends CmmnAbstractServiceImpl{
 	public int updateDeleteYn(@RequestBody Map<String, Object> paramsMap) throws RimsException {
 		return inspectionHistService.updateDeleteYn(paramsMap);
 	}
+	
+	//파일업로드
+	@RequestMapping(value = "/inspectionHist/filesUpload")
+    @ResponseBody
+    public Object insertFilesUpload(@RequestParam("files") List<MultipartFile> multiPartFile, Map<String, Object> paramsMap) throws RimsException {
+    	return inspectionHistService.insertFilesUpload(multiPartFile, paramsMap);
+    }
 	
 	
 }

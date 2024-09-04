@@ -3,11 +3,11 @@
 	W.$inspectionHist = W.$inspectionHist || {};
 	
 	var fileCkd = false;
-	
+	var fileNo = 0;
+	var filesArr = [];
 	
 	$(document).ready(function() {
 		kendo.ui.progress($(document.body), true);
-		
 		$inspectionHist.ui.pageLoad();		//최초 페이지 로드 시
 		$inspectionHist.event.setUIEvent();
 		$inspectionHist.ui.agencyNmAutoComplete(); 
@@ -38,6 +38,13 @@
 		// 회사 검색
 		agencyNmAutoComplete: function(){
 			var param = {};
+			if(authrtCd=='G01'){
+				if(userCmptncZoneCd.substring(2, userCmptncZoneCd.length) == "00000000"){
+					param.userCmptncZoneCd = userCmptncZoneCd.substring(0,2);
+				}else{
+					param.userCmptncZoneCd=userCmptncZoneCd;
+				}
+			};
 			
 			ajax(false, contextPath + '/sys/inspectionHist/agencyList', 'body', '처리중입니다.', param, function(data) {
 				$("#agencyNm").kendoAutoComplete({
@@ -93,12 +100,15 @@
 						} else {
 						    param.ctpvCd = this.value();
 							ajax(true, contextPath+'/sys/inspectionHist/sggNm', 'body', '처리중입니다.', param, function (data) {
+								if(data.length==0){
+									data = [{ "sgg_nm": '',"sgg_cd": '' }];
+								}
 								$('#searchSggNm').kendoDropDownList({
 						            optionLabel: "시군구(전체)",
 						            dataTextField: "sgg_nm",
-						            dataValueField: "stdg_cd",
+						            dataValueField: "sgg_cd",
 						            dataSource: data,
-									value : "stdg_cd"
+									value : "sgg_cd"
 						        });
 							});
 						}
@@ -177,8 +187,9 @@
 							}
 						},
 						parameterMap: function(options) {
+							var sd = $("#searchCtpvNm").val();
 							var sgg = $("#searchSggNm").val();
-							options.cmptncZoneCd = sgg;
+							options.cmptncZoneCd = sd+sgg;
 							options.bzmnSeCd     = $('#searchBzmnSeCd').val();
 							options.bsnSttsCd    = $('#searchBsnSttsCd').val();
 							options.rslt         = $('#searchRslt').val();
@@ -265,6 +276,12 @@
 			$(".detailClose").on("click",function(){
 				var grid = $("#inspectionHistGrid").data("kendoGrid");
 				grid.dataSource.read();
+				$("#detailFileUpload").val("");
+				$(".detailFileList").empty();
+				grid.clearSelection();  // 상세보기 팝업창 닫았을 때, select 해제
+			    $(".scrollBar02").scrollTop(0);
+			    $("body").css("overflow", "auto");
+				filesArr = []; 
 			});
 			
 			$("#searchBtn").on("click", function() {
@@ -273,94 +290,206 @@
 			
 			// 등록팝업 버튼
 			$(".insertPopupBtn").on("click", function() {
-				//$inspectionHist.ui.insertSearch(); // 등록팝업
-				$(".register_popup").addClass("view");
-//				$("body").css("overflow", "hidden");
-//				if (authrtCd === 'G01') {
-//					var params = { stdgCd: getCmptncZoneCd };
-//					ajax(false, contextPath + '/sys/companyManage/area', 'body', '처리중입니다.', params, function(data) {
-//						$('#cmptncZoneCdCtpvNm').val(data.ctpvNm);
-//						$('#cmptncZoneCdSggNm').val(data.sggNm);
-//					});
-//				}
-			});
-			
-			//직접입력 팝업
-			$(".insertPopupBtn").on("click", function() {
 				$(".register_popup").addClass("view");
 			});
 			
+			//등록버튼
 			$(".insertBtn").on("click", function() {
             	$inspectionHist.event.insertBtn();
         	});
 
+			//엑셀 다운로드 버튼
 			$(".excelDownBtn").on("click", function() {
             	$inspectionHist.event.excelDownBtn();
         	});
-
-			$(".updateBtn ").on("click", function() {
-            	$inspectionHist.event.updateParam();
-        	});
-        	
-//        	$(".insertBtn").on("click", function() {
-//				$inspectionHist.event.insertFile();
-//			});
 			
-			$('#fileBtn').on("click", function() {
+			//수정 버튼
+			$(".updateBtn ").on("click", function() {
+            	$inspectionHist.event.updateBtn();
+        	});
+			
+			//등록팝업 파일업로드 버튼
+			$('#fileUploadBtn').on("click", function() {
 				$("#fileUpload").click();
 				$("#fileUpload").change(function() {
-					var ext = $("#fileUpload").val().split(".").pop().toLowerCase();
-					var files = ["jpg", "jpeg", "gif", "png", "pdf"];
+					var fileList =  $("#fileUpload")[0];
+//					var ext = $("#fileUpload").val().split(".").pop().toLowerCase();
+//					var files = ["jpg", "jpeg", "gif", "png", "pdf"];
+//
+//					if (ext.length > 0) {
+//						if ($.inArray(ext, files) == -1) {
+//							alert("첨부파일 형식을 다시 확인해주세요. \n 첨부가능 확장자 : jpg, jpeg, gif, png, pdf");
+//							$("#fileUpload").val("");
+//							$("#fileNm").val("");
+//							return false;
+//						} else {
+//							var file = $(this).prop("files")[0]; // 선택된 파일 가져오기
+//							var fileName = file.name; // 파일명 가져오기
+//							$("#fileNm").val(fileName); // 파일명을 사업자등록증 input 태그에 설정
+//						}
+//					}
 
-					if (ext.length > 0) {
-						if ($.inArray(ext, files) == -1) {
-							alert("첨부파일 형식을 다시 확인해주세요. \n 첨부가능 확장자 : jpg, jpeg, gif, png, pdf");
-							$("#fileUpload").val("");
-							$("#fileNm").val("");
-							return false;
-						} else {
-							var file = $(this).prop("files")[0]; // 선택된 파일 가져오기
-							var fileName = file.name; // 파일명 가져오기
-							$("#fileNm").val(fileName); // 파일명을 사업자등록증 input 태그에 설정
-						}
-					}
-				});
-			});
-			
-			$('.detailFileBtn').on("click", function() {
-				$("#detailFile").click();
-				$("#detailFile").change(function() {
-					var ext = $("#detailFile").val().split(".").pop().toLowerCase();
-					var files = ["jpg", "jpeg", "gif", "png", "pdf"];
 
-					if (ext.length > 0) {
-						if ($.inArray(ext, files) == -1) {
-							alert("첨부파일 형식을 다시 확인해주세요. \n 첨부가능 확장자 : jpg, jpeg, gif, png, pdf");
-							$("#detailFile").val("");
-							$("#detailFileNm").val("");
-							return false;
-						} else {
-							var file = $(this).prop("files")[0]; // 선택된 파일 가져오기
-							var fileName = file.name; // 파일명 가져오기
-							$("#detailFileNm").val(fileName); // 파일명을 사업자등록증 input 태그에 설정
+
+					var maxFileCnt = 4;   // 첨부파일 최대 개수
+				    var attFileCnt = document.querySelectorAll('.regFilebox').length;    // 기존 추가된 첨부파일 개수
+				    var remainFileCnt = maxFileCnt - attFileCnt;    // 추가로 첨부가능한 개수
+				    var curFileCnt = fileList.files.length;  // 현재 선택된 첨부파일 개수
+
+					// 첨부파일 개수 확인
+				    if (curFileCnt > remainFileCnt) {
+				        alert("첨부파일은 최대 " + maxFileCnt + "개 까지 첨부 가능합니다.");
+				    }
+				
+				    for (var i = 0; i < Math.min(curFileCnt, remainFileCnt); i++) {
+				
+				        const file = fileList.files[i];
+				
+				        // 첨부파일 검증
+				        if ($inspectionHist.event.fileValidation(file)) {
+				            // 파일 배열에 담기
+				            var reader = new FileReader();
+				            reader.onload = function () {
+				                filesArr.push(file);
+				            };
+				            reader.readAsDataURL(file)
+				
+				            // 목록 추가
+				            let htmlData = '';
+				            htmlData += '<div id="file' + fileNo + '" class="filebox regFilebox">';
+				            htmlData += '   <p class="name">' + file.name + '</p>';
+				            htmlData += '   <a class="delete" onclick="$inspectionHist.event.deleteEachFile(' + fileNo + ');" value=' + fileNo + '><img src="'+contextPath+'/images/ico_close.png" /></a>';
+				            htmlData += '</div>';
+				            $('.regFileList').append(htmlData);
+				            fileNo++;
 							fileCkd = true;
-						}
-					}
+				        } else {
+				            continue;
+				        }
+				    }
+				    // 초기화
+				    $("#fileUpload").val("");
+
 				});
 			});
 			
+			//상세팝업 파일업로드 버튼
+			$('#detailFileUploadBtn').on("click", function() {
+				$("#detailFileUpload").click();
+				$("#detailFileUpload").change(function() {
+					var fileList =  $("#detailFileUpload")[0];
+//					var ext = $("#fileUpload").val().split(".").pop().toLowerCase();
+//					var files = ["jpg", "jpeg", "gif", "png", "pdf"];
+//
+//					if (ext.length > 0) {
+//						if ($.inArray(ext, files) == -1) {
+//							alert("첨부파일 형식을 다시 확인해주세요. \n 첨부가능 확장자 : jpg, jpeg, gif, png, pdf");
+//							$("#fileUpload").val("");
+//							$("#fileNm").val("");
+//							return false;
+//						} else {
+//							var file = $(this).prop("files")[0]; // 선택된 파일 가져오기
+//							var fileName = file.name; // 파일명 가져오기
+//							$("#fileNm").val(fileName); // 파일명을 사업자등록증 input 태그에 설정
+//						}
+//					}
 
-			// 상세팝업
-			$('#detailFileNm').on("click", function() {
-				var atchFileSn = $("#detailFileNo").val();
-				var atchFileNm = $("#detailFileNm").val();
-				fileDownloadget(atchFileSn, atchFileNm);
+
+
+					var maxFileCnt = 4;   // 첨부파일 최대 개수
+				    var attFileCnt = document.querySelectorAll('.detailFilebox').length;    // 기존 추가된 첨부파일 개수
+				    var remainFileCnt = maxFileCnt - attFileCnt;    // 추가로 첨부가능한 개수
+				    var curFileCnt = fileList.files.length;  // 현재 선택된 첨부파일 개수
+
+					// 첨부파일 개수 확인
+				    if (curFileCnt > remainFileCnt) {
+				        alert("첨부파일은 최대 " + maxFileCnt + "개 까지 첨부 가능합니다.");
+				    }
+				
+				    for (var i = 0; i < Math.min(curFileCnt, remainFileCnt); i++) {
+				
+				        const file = fileList.files[i];
+				
+				        // 첨부파일 검증
+				        if ($inspectionHist.event.fileValidation(file)) {
+				            // 파일 배열에 담기
+				            var reader = new FileReader();
+				            reader.onload = function () {
+				                filesArr.push(file);
+				            };
+				            reader.readAsDataURL(file)
+				
+				            // 목록 추가
+				            let htmlData = '';
+				            htmlData += '<div id="file' + fileNo + '" class="filebox detailFilebox">';
+				            htmlData += '   <p class="name">' + file.name + '</p>';
+				            htmlData += '   <a class="delete" onclick="$inspectionHist.event.deleteEachFile(' + fileNo + ');" value=' + fileNo + '><img src="'+contextPath+'/images/ico_close.png" /></a>';
+				            htmlData += '</div>';
+				            $('.detailFileList').append(htmlData);
+				            fileNo++;
+							fileCkd = true;
+				        } else {
+				            continue;
+				        }
+				    }
+				    // 초기화
+				    $("#detailFileUpload").val("");
+
+				});
 			});
+			
+			
+//			$('#detailFileUploadBtn').on("click", function() {
+//				$("#detailFile").click();
+//				$("#detailFile").change(function() {
+//					var ext = $("#detailFile").val().split(".").pop().toLowerCase();
+//					var files = ["jpg", "jpeg", "gif", "png", "pdf"];
+//
+//					if (ext.length > 0) {
+//						if ($.inArray(ext, files) == -1) {
+//							alert("첨부파일 형식을 다시 확인해주세요. \n 첨부가능 확장자 : jpg, jpeg, gif, png, pdf");
+//							$("#detailFile").val("");
+//							$("#detailFileNm").val("");
+//							return false;
+//						} else {
+//							var file = $(this).prop("files")[0]; // 선택된 파일 가져오기
+//							var fileName = file.name; // 파일명 가져오기
+//							$("#detailFileNm").val(fileName); // 파일명을 사업자등록증 input 태그에 설정
+//							fileCkd = true;
+//						}
+//					}
+//				});
+//			});
+			
+
+			
         	
         	// 상세팝업 - 삭제버튼 (마스터 관리자 / 사업자 전체 삭제 됨 - 요청, 마스터, 이력)
 			$(".deleteBtn").on("click", function() {
 				$inspectionHist.event.updateDeleteYn();
 			});
+		},
+		
+		fileValidation: function(obj) {
+		    var fileTypes = ['application/pdf', 'image/gif', 'image/jpeg', 'image/png', 'image/jpg'];
+		    if (obj.size > (2 * 1024 * 1024)) {
+		        alert("첨부파일 사이즈는 2MB 이내로 등록 가능합니다.");
+		        return false;
+		    } else if (obj.name.lastIndexOf('.') == -1) {
+		        alert("확장자가 없는 파일은 제외되었습니다.");
+		        return false;
+		    } else if (!fileTypes.includes(obj.type)) {
+		        alert("첨부파일 형식을 다시 확인해주세요. \n 첨부가능 확장자 : jpg, jpeg, gif, png, pdf");
+		        return false;
+		    } else {
+		        return true;
+		    }
+			
+		},
+		
+		deleteEachFile: function(num) {
+			 document.querySelector("#file" + num).remove();
+   			 filesArr[num].is_delete = true;
 		},
 		
 		detailInfoPopup: function(data) {
@@ -384,8 +513,27 @@
 			$('#detailChckPlc').val(data.chckPlc);
 			$('#detailJurisdiction').val(data.jurisdiction);
 			$('#detailJurisdiction').data('value', data.regCmptncCd);
-			$('#detailFileNm').val(data.atchFileNm);
-			$('#detailFileNo').val(data.fileatchsn);
+			//$('#detailFileNm').val(data.atchFileNm);
+			//$('#detailFileNo').val(data.fileatchsn1);
+			//$('.detailFileList').text(data.atchFileNm);
+			
+			
+			
+			
+			for (var i = 1; i < 5; i++) {
+			    var fileSnNum = 'fileAtchSn' + i;
+			    var fileNmNum = 'fileAtchNm' + i;
+			    if (data[fileSnNum] != '' && data[fileSnNum] != null&& data[fileSnNum] != 0) {
+			        var htmlData = '';
+			        htmlData += '<div id="detailFileSn' + i + '" value= "' + data[fileSnNum] + '" class="filebox detailFilebox">';
+			        htmlData += '   <p class="name" onclick="$inspectionHist.event.fileDownBtn(this);" data-value=' + data[fileSnNum] + '>' + data[fileNmNum] + '</p>';
+			        htmlData += '   <a class="delete" onclick="$inspectionHist.event.deleteFile(' + i +');" value=' + data[fileSnNum] + '><img src="'+contextPath+'/images/ico_close.png" /></a>';
+			        htmlData += '</div>';
+			        
+			        $('.detailFileList').append(htmlData);
+			    }
+			}
+			
 			
 			
 			
@@ -420,8 +568,7 @@
 			params.rslt = $("#regRslt").val();
 			params.signYn = $("#regSignYn").val();
 			params.bzmnSn = $('#agencyNm').data('value');
-			params.fileatchsn = '';
-			var fileNm = $('#fileNm').val();
+			var fileNm = $('.regFileList').text();
 			if (fileNm == null || fileNm == "") {
 				alert("첨부파일은 필수입니다");
 				return;
@@ -429,15 +576,7 @@
 			
 			if (fileNm != '') {
 				if (confirm("등록 하시겠습니까?")) {
-					var formData = new FormData();
-					formData.append('files', document.getElementById('fileUpload').files[0]);
-		
-					fileAjax(contextPath + "/cmmn/fileUpload", formData, function(response) {
-						if (response != null) {
-							params.fileatchsn = nvl(response.fileSn, 0);
-							$inspectionHist.event.insertInspection(params);
-						}
-					});
+					$inspectionHist.event.insertFile(params);
 				}
 			} else {
 				if (confirm("등록 하시겠습니까?")) {
@@ -449,34 +588,49 @@
 		
 		insertInspection: function(params){
 			ajax(true, contextPath + '/sys/inspectionHist/insertInspectionHist', 'body', '확인인중입니다.', params, function (data) {
-					alert("등록을 성공하셨습니다");
-					$("#insertPopup").removeClass("view");
-					location.reload();
-			        //$("#inspectionHistGrid").data("kendoGrid").dataSource.page(1);
-			    });
+				alert("등록을 성공하셨습니다");
+				$("#insertPopup").removeClass("view");
+				location.reload();
+		        //$("#inspectionHistGrid").data("kendoGrid").dataSource.page(1);
+		    });
 		},
 		
-		insertFile: function(){
-			var params ={};
-			var fileNm = $('#fileNm').val();
+		insertFile: function(params){
 			
-			if (fileNm == null || fileNm == "") {
-				alert("첨부파일은 필수입니다");
-				return;
+			if (fileCkd == true) {
+				// 폼데이터 담기
+			    var formData = new FormData();
+			    for (var i = 0; i < filesArr.length; i++) {
+			        // 삭제되지 않은 파일만 폼데이터에 담기
+			        if (!filesArr[i].is_delete) {
+			            formData.append("files", filesArr[i]);
+						
+			        }
+			    }
+
+				fileAjax(contextPath + "/sys/inspectionHist/filesUpload", formData, function(response) {
+					if (response != null) {
+						var fileSnString = String(response.fileSn);
+						if (fileSnString.includes(',')) {
+						    var fileSnList = response.fileSn.split(',');
+							fileSnList.forEach((element, index) => {
+								var num = index+1;
+								var paramsNm = "fileAtchSn"+num;
+								params[paramsNm] = nvl(element, 0);
+							    //console.log(params.fileatchsn1);
+							});
+						}else{
+							params.fileAtchSn1 = nvl(response.fileSn, 0);
+						}
+						
+						//params.fileatchsn = nvl(response.fileSn, 0);
+						$inspectionHist.event.insertInspection(params);
+					}
+				});
+			}else{
+				$inspectionHist.event.insertInspection(params);
 			}
 			
-			if (fileNm != '') {
-				if (confirm("등록 하시겠습니까?")) {
-					var formData = new FormData();
-					formData.append('files', document.getElementById('fileUpload').files[0]);
-		
-					fileAjax(contextPath + "/cmmn/fileUpload", formData, function(response) {
-						if (response != null) {
-							params.fileatchsn = nvl(response.fileSn, 0);
-						}
-					});
-				}
-			} 
 		},
 		
 		issued: function(bzmnSn){
@@ -505,7 +659,7 @@
 			
         },
 
-		updateParam : function(){
+		updateBtn : function(){
 			var params ={};
 			
 			params.bzmnSn = $('#detailCoNm').data('value');
@@ -521,36 +675,91 @@
 			params.rslt = $("#detailRslt").val();
 			params.signYn = $("#detailSignYn").val();
 			params.regCmptncCd = $('#detailJurisdiction').data('value');
-			params.fileatchsn = $("#detailFileNo").val();
+//			params.fileAtchSn1 = nvl($("#detailFileSn1").attr('value'), 0);
+//			params.fileAtchSn2 = nvl($("#detailFileSn2").attr('value'), 0);
+//			params.fileAtchSn3 = nvl($("#detailFileSn3").attr('value'), 0);
+//			params.fileAtchSn4 = nvl($("#detailFileSn4").attr('value'), 0);
 			
-			var fileNm = $('#detailFileNm').val();
+			var j = 1;
+			for(var i=1; i<5; i++){
+				var detailFileSnNum = "#detailFileSn"+i;
+				if ($(detailFileSnNum).attr('value')) {
+					fileAtchSnNum = "fileAtchSn"+j;
+					j++;
+					params[fileAtchSnNum] = $(detailFileSnNum).attr('value');
+				}
+			}
+			
+			
+			var fileNm = $('.detailFileList').text();
 			if (fileNm == null || fileNm == "") {
 				alert("첨부파일은 필수입니다");
 				return;
-			}
-			
-			if (confirm("수정 하시겠습니까?")) {
-				if(fileNm != null || fileNm != ""){
-					
-				}
+			}else{
 				$inspectionHist.event.updateFile(params);
 			}
+			
+//			
+//			var fileNm = $('#detailFileNm').val();
+//			if (fileNm == null || fileNm == "") {
+//				alert("첨부파일은 필수입니다");
+//				return;
+//			}
+//			
+//			if (confirm("수정 하시겠습니까?")) {
+//				if(fileNm != null || fileNm != ""){
+//					
+//				}
+//				$inspectionHist.event.updateFile(params);
+//			}
 
 		},
 
 		updateFile: function(params) {
 			if (fileCkd == true) {
-				// 기존 파일 삭제
-				if (params.fileatchsn != null && params.fileatchsn != '') {
-					$inspectionHist.event.deleteFile(params.fileatchsn);
-				}
-	
-				var formData = new FormData();
-				formData.append('files', document.getElementById('detailFile').files[0]);
-			
-				fileAjax(contextPath + "/cmmn/fileUpload", formData, function(response) {
+				
+				// 폼데이터 담기
+			    var formData = new FormData();
+			    for (var i = 0; i < filesArr.length; i++) {
+			        // 삭제되지 않은 파일만 폼데이터에 담기
+			        if (!filesArr[i].is_delete) {
+			            formData.append("files", filesArr[i]);
+			        }
+			    }
+
+				fileAjax(contextPath + "/sys/inspectionHist/filesUpload", formData, function(response) {
 					if (response != null) {
-						params.fileatchsn = nvl(response.fileSn, 0);
+						var fileSnString = String(response.fileSn);
+						if (fileSnString.includes(',')) {
+						    var fileSnList = response.fileSn.split(',');
+							fileSnList.forEach((element, index) => {
+								//var num = index+1;
+								
+								for(var i=1; i<5; i++){
+									var fileAtchSnNum = "fileAtchSn"+i;
+									if (!params[fileAtchSnNum]) {
+											params[fileAtchSnNum] = element;
+											break;
+									}
+									
+								}
+								
+//								var paramsNm = "fileAtchSn"+num;
+//								params[paramsNm] = nvl(element, 0);
+							    //console.log(params.fileatchsn1);
+							});
+						}else{
+							for(var i=1; i<5; i++){
+								var fileAtchSnNum = "fileAtchSn"+i;
+								if (!params[fileAtchSnNum]) {
+										params[fileAtchSnNum] = response.fileSn;
+										break;
+								}
+								
+							}
+						}
+						
+						//params.fileatchsn = nvl(response.fileSn, 0);
 						$inspectionHist.event.updateInspection(params);
 					}
 				});
@@ -560,11 +769,13 @@
 		},
 		
 		// 파일 삭제
-		deleteFile: function(file_sn) {
-			var param = {};
-			param.fileSn = file_sn;
-			ajax(true, contextPath + '/cmmn/deleteFile', 'body', '처리중입니다.', param, function(data) {
-			});
+		deleteFile: function(num) {
+			var detailFileSnNum = '#detailFileSn'+num;
+			param={};
+			param.fileSn = $(detailFileSnNum).attr('value');
+			$(detailFileSnNum).remove();
+//			ajax(true, contextPath + '/cmmn/deleteFile', 'body', '처리중입니다.', param, function(data) {
+//			});
 		},
 		
 		updateInspection: function(params) {
@@ -574,16 +785,6 @@
 				$(".register_popup").removeClass("view");
 				location.reload();
 			});
-		},
-		
-		autoTextarea: function(event) {
-			var defaultHeight = 30; // textarea 기본 height
-			var textarea = $('.chckCn');
-			var target = event.target;
-
-			target.style.height = 0;
-			target.style.height = defaultHeight + target.scrollHeight + 'px';
-			
 		},
 		
 		updateDeleteYn : function(){
@@ -597,6 +798,13 @@
 					location.reload();
 				});
 			}
+		},
+		
+		fileDownBtn : function(element){
+			var atchFileSn = element.getAttribute('data-value');
+			var atchFileNm = element.innerText;
+			
+			fileDownloadget(atchFileSn, atchFileNm);
 		},
 		
 		

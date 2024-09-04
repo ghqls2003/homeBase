@@ -49,3 +49,28 @@ button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff
 
 /*  */
 #insertPopup #agencyNm{height: 36px;}
+
+#fileUploadBtn, #detailFileUploadBtn {
+	margin-left:0 !important;
+}
+
+.fileDiv .file-list {
+    height: 160px;
+    overflow: auto;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #DBE0EC;
+    border-radius: 8px;
+    margin-top : 10px;
+}
+.fileDiv .file-list .filebox {
+	margin: 5px 0;
+}
+.fileDiv .file-list .filebox p {
+    font-size: 14px;
+    display: inline-block;
+}
+.fileDiv .file-list .filebox .delete img{
+    margin-left: 5px;
+    width : 20px;
+}

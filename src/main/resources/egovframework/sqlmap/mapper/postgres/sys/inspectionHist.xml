@@ -11,6 +11,9 @@
 			dqvs.dvs_rac_mt_agency
 		where 1=1
 		and bsn_stts_cd = '0'
+		<if test="userCmptncZoneCd != '' and userCmptncZoneCd != null">
+			and reg_cmptnc_cd like #{userCmptncZoneCd} || '%'
+		</if>
     </select>
     
     <!-- 회사 정보 검색 -->
@@ -69,18 +72,18 @@
 
     <!-- 검색/등록팝업 옵션 - 시군구(전체) -->
 	<select id="SggNm" resultType="map">
-        SELECT DISTINCT stdg_cd
-        	, sgg_nm
-		FROM 
-			dqvs.dvs_cmm_mt_area
-		WHERE mtnabn_yn = 'Y' AND sgg_nm != ''
+        select distinct
+			SUBSTRING(stdg_cd, 3, 3) AS sgg_cd, sgg_nm
+		from dqvs.dvs_cmm_mt_area
+		where mtnabn_yn = 'Y'
+			and sgg_nm != ''
 		<if test="ctpvCd != null and ctpvCd != ''">
-			AND stdg_cd LIKE CONCAT(#{ctpvCd}, '%')
+			and stdg_cd LIKE CONCAT(#{ctpvCd}, '%')
 		</if>
 		<if test="regCmptncCd != null and regCmptncCd != ''">
-			AND stdg_cd = #{regCmptncCd}
+			and stdg_cd = #{regCmptncCd}
 		</if>
-		ORDER BY stdg_cd
+		order by sgg_cd
     </select>
     
     <!-- 검색옵션 - 영업상태(전체) -->
@@ -130,7 +133,10 @@
 				, inspctn.sign_yn
 				, inspctn.rslt
 				, inspctn.prcs_yn
-				, inspctn.fileatchsn
+				, inspctn.file_atch_sn1
+				, inspctn.file_atch_sn2
+				, inspctn.file_atch_sn3
+				, inspctn.file_atch_sn4
 				, agency.brno
 				, agency.crno
 				, agency.rprsv_nm
@@ -170,11 +176,36 @@
 						dqvs.dvs_cmm_mt_area
 					where
 						stdg_cd = agency.reg_cmptnc_cd)) jurisdiction
-				, file.file_sn
-				, file.atch_file_nm
+				,(
+				select
+					atch_file_nm
+				from
+					dqvs.dvs_cmm_mt_file
+				where
+					file_sn = inspctn.file_atch_sn1) as file_atch_nm1,
+				(
+				select
+					atch_file_nm
+				from
+					dqvs.dvs_cmm_mt_file
+				where
+					file_sn = inspctn.file_atch_sn2) as file_atch_nm2,
+				(
+				select
+					atch_file_nm
+				from
+					dqvs.dvs_cmm_mt_file
+				where
+					file_sn = inspctn.file_atch_sn3) as file_atch_nm3,
+				(
+				select
+					atch_file_nm
+				from
+					dqvs.dvs_cmm_mt_file
+				where
+					file_sn = inspctn.file_atch_sn4) as file_atch_nm4
 			from dqvs.dvs_spv_hs_inspctn inspctn
 			left join dqvs.dvs_rac_mt_agency agency on agency.bzmn_sn = inspctn.bzmn_sn
-			left join dqvs.dvs_cmm_mt_file file on file_sn = inspctn.fileatchsn
 			) as T1
 			WHERE 1 = 1
 			and T1.prcs_yn != 'Y'
@@ -228,7 +259,10 @@
 				, chck_plc
 				, sign_yn
 				, rslt
-				, fileatchsn
+				, file_atch_sn1
+				, file_atch_sn2
+				, file_atch_sn3
+				, file_atch_sn4
 				)
 			SELECT 
 				bzmn_sn
@@ -243,7 +277,10 @@
 				, #{chckPlc}
 				, #{signYn}
 				, #{rslt}
-				, #{fileatchsn}
+				, #{fileAtchSn1}::NUMERIC
+				, #{fileAtchSn2}::NUMERIC
+				, #{fileAtchSn3}::NUMERIC
+				, #{fileAtchSn4}::NUMERIC
 			FROM dqvs.dvs_rac_mt_agency
 			where bzmn_sn = #{bzmnSn}
 	</insert>
@@ -263,7 +300,19 @@
 			chck_plc = #{chckPlc},
 			sign_yn = #{signYn},
 			rslt = #{rslt},
-			fileatchsn = #{fileatchsn}::NUMERIC
+			file_atch_sn1 = #{fileAtchSn1}::NUMERIC,
+			file_atch_sn2 = #{fileAtchSn2}::NUMERIC,
+			file_atch_sn3 = #{fileAtchSn3}::NUMERIC,
+			file_atch_sn4 = #{fileAtchSn4}::NUMERIC
+		where
+			bzmn_sn = #{bzmnSn}
+	</update>
+	
+	<update id="updateFile">
+		update
+			dqvs.dvs_spv_hs_inspctn
+		set
+			file_atch_sn1 = #{fileAtchSn1}::NUMERIC
 		where
 			bzmn_sn = #{bzmnSn}
 	</update>

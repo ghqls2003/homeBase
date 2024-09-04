@@ -11,6 +11,7 @@
 	
 <script>
     var authrtCd = '${authrtCd}';
+    var userCmptncZoneCd = '${userCmptncZoneCd}';
 </script>
 
 <div class="subPage sub03">
@@ -155,13 +156,13 @@
 								           	순번
 								           	</th>
 								           	<th>
-								           	성명
+								           	<span class="asterisk">*</span>성명
 								           	</th>
 								           	<th>
-								           	직급
+								           	<span class="asterisk">*</span>직급
 								           	</th>
 								           	<th>
-								           	소속
+								           	<span class="asterisk">*</span>소속
 								           	</th>
 								           </tr>
 								           <tr>
@@ -268,7 +269,7 @@
 								                </td>
 								            </tr>
 								            <tr>
-								                <th scope="col">사업자번호</th>
+								                <th scope="col"><span class="asterisk">*</span>사업자번호</th>
 								                <td>
 								                    <div class="tb_flex">
 								                        <label for="brno">사업자번호</label>
@@ -278,7 +279,7 @@
 								                </td>
 								            </tr>
 								             <tr>
-								                <th scope="col">소재지</th>
+								                <th scope="col"><span class="asterisk">*</span>소재지</th>
 								                <td>
 								                    <div class="tb_flex">
 								                        <label for="jurisdiction">소재지</label>
@@ -308,22 +309,15 @@
 								                </td>
 								            </tr>
 								           	<tr>
-								                <th scope="col">첨부파일</th>
+								                <th scope="col"><span class="asterisk">*</span>지도장소</th>
 								                <td>
 								                    <div class="tb_flex">
-									                    <input id="fileNm" type="text" placeholder="지도점검결과 파일을 등록해주세요" class="input inp filetype" disabled="disabled" readonly />
-														<input
-															type="file" id="fileUpload" name="files"
-															onchange="fileAddCheck(this)" class="upload-hidden"
-															style="display: none;" accept=".jpg, .jpeg, .png, .pdf" />
-<!-- 														<button id="fileBtn" class="yellow_btn"> -->
-<%-- 															<img src="${contextPath}/images/sub/ico_search02.png" alt="검색아이콘"> --%>
-<!-- 														</button> -->
-														<button class="yellow_btn" id="fileBtn">파일첨부</button>
+								                        <label for="regChckPlc">지도장소</label>
+								                        <input type="text" id="regChckPlc" name="regChckPlc" class="input" maxLength="80" aria-label="지도장소"
+								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
 								            </tr>
-								            
 								        </table>
 								        <table class="tb rental_tb01">
 								            <tr>
@@ -332,16 +326,6 @@
 								                    <div class="tb_flex">
 								                        <label for="regEtcArtcl">기타항목</label>
 								                        <input type="text" id="regEtcArtcl" name="regEtcArtcl" class="input" maxLength="80" aria-label="기타항목"
-								                               oninput="charOnly(this)" />
-								                    </div>
-								                </td>
-								            </tr>
-								            <tr>
-								                <th scope="col">지도장소</th>
-								                <td>
-								                    <div class="tb_flex">
-								                        <label for="regChckPlc">지도장소</label>
-								                        <input type="text" id="regChckPlc" name="regChckPlc" class="input" maxLength="80" aria-label="지도장소"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
@@ -372,6 +356,27 @@
 								                </td>
 								            </tr>
 						            	</table>
+								    </div>
+								    <div class="cont inspection02">
+								    	<table class="tb rental_tb01">
+								    		<tr>
+								                <th scope="col"><span class="asterisk">*</span>첨부파일</th>
+								                <td>
+								                    <div class="fileDiv">
+<!-- 									                    <input id="fileNm" hidden type="text" placeholder="지도점검결과 파일을 등록해주세요" class="input inp filetype" disabled="disabled" readonly /> -->
+														<input
+															type="file" multiple id="fileUpload" name="files"
+															onchange="fileAddCheck(this)" class="upload-hidden"
+															style="display: none;" accept=".jpg, .jpeg, .png, .pdf" />
+<!-- 														<button id="fileBtn" class="yellow_btn"> -->
+<%-- 															<img src="${contextPath}/images/sub/ico_search02.png" alt="검색아이콘"> --%>
+<!-- 														</button> -->
+														<button class="yellow_btn" id="fileUploadBtn">파일첨부</button>
+														<div class="file-list regFileList"></div>
+								                    </div>
+								                </td>
+								            </tr>
+								    	</table>
 								    </div>
 								</div>
 
@@ -450,51 +455,65 @@
 								    <div class="nameBox nameBox-flex">
 								        <h4 class="name">지도 후속 처리 내용</h4>
 								    </div>
-								    <div class="cont cont-flex a-flex">
-								   	 	<div class="aaa">
-								    	<table class="tb rental_tb01">
-								    		<tr>
-								    		<th>1차</th>
-								    		</tr>
-								    	</table>
-								    	</div>
-								    	<div class="aaaa b-flex">
-								    	<table class="tb bbb rental_tb01">
-								    		<tr>
-								                <th scope="col"><span class="asterisk">*</span>지도여부</th>
+								    <div class="cont cont-flex">
+								        <table class="tb rental_tb01">
+								       	 	<tr>
+								                <th scope="col"><span class="asterisk">*</span>후속처리내용</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="">지도여부</label>
-								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="회사명"
+								                        <label for="">후속처리내용</label>
+								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="확인자"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
 								            </tr>
-							    			<tr>
-								                <th scope="col"><span class="asterisk">*</span>조치현황</th>
-								                <td>
-								                    <div class="tb_flex">
-								                        <label for="">조치현황</label>
-								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="회사명"
-								                               oninput="charOnly(this)" />
-								                    </div>
-								                </td>
-								            </tr>
-								    	</table>
-								    	<table class="tb bbb rental_tb01">
-								    		<tr>
-								                <th scope="col"><span class="asterisk">*</span>지도여부</th>
-								                <td>
-								                    <div class="tb_flex">
-								                        <label for="coNm">영업상태</label>
-								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="회사명"
-								                               oninput="charOnly(this)" />
-								                    </div>
-								                </td>
-								            </tr>
-								    	</table>
-								    	</div>
+								        </table>
 								    </div>
+<!-- 								    <div class="cont cont-flex a-flex"> -->
+<!-- 								   	 	<div class="aaa"> -->
+<!-- 								    	<table class="tb rental_tb01"> -->
+<!-- 								    		<tr> -->
+<!-- 								    		<th>1차</th> -->
+<!-- 								    		</tr> -->
+<!-- 								    	</table> -->
+<!-- 								    	</div> -->
+<!-- 								    	<div class="aaaa b-flex"> -->
+<!-- 								    	<table class="tb bbb rental_tb01"> -->
+<!-- 								    		<tr> -->
+<!-- 								                <th scope="col"><span class="asterisk">*</span>지도여부</th> -->
+<!-- 								                <td> -->
+<!-- 								                    <div class="tb_flex"> -->
+<!-- 								                        <label for="">지도여부</label> -->
+<!-- 								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="회사명" -->
+<!-- 								                               oninput="charOnly(this)" /> -->
+<!-- 								                    </div> -->
+<!-- 								                </td> -->
+<!-- 								            </tr> -->
+<!-- 							    			<tr> -->
+<!-- 								                <th scope="col"><span class="asterisk">*</span>조치현황</th> -->
+<!-- 								                <td> -->
+<!-- 								                    <div class="tb_flex"> -->
+<!-- 								                        <label for="">조치현황</label> -->
+<!-- 								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="회사명" -->
+<!-- 								                               oninput="charOnly(this)" /> -->
+<!-- 								                    </div> -->
+<!-- 								                </td> -->
+<!-- 								            </tr> -->
+<!-- 								    	</table> -->
+<!-- 								    	<table class="tb bbb rental_tb01"> -->
+<!-- 								    		<tr> -->
+<!-- 								                <th scope="col"><span class="asterisk">*</span>지도여부</th> -->
+<!-- 								                <td> -->
+<!-- 								                    <div class="tb_flex"> -->
+<!-- 								                        <label for="coNm">영업상태</label> -->
+<!-- 								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="회사명" -->
+<!-- 								                               oninput="charOnly(this)" /> -->
+<!-- 								                    </div> -->
+<!-- 								                </td> -->
+<!-- 								            </tr> -->
+<!-- 								    	</table> -->
+<!-- 								    	</div> -->
+<!-- 								    </div> -->
 								</div>
 							</div>
 						</div>
@@ -686,15 +705,12 @@
 								                </td>
 								            </tr>
 								            <tr>
-								                <th scope="col">첨부파일</th>
+								                <th scope="col">지도장소</th>
 								                <td>
 								                    <div class="tb_flex">
-								                    	<label for="detailFileNm">첨부파일</label>
-														<input style="display: none;" id="detailFileNo" name ="detailFileNo" style="display: none;" aria-label="첨부파일 번호" readonly />
-														<input id="detailFileNm" name="detailFileNm" class="input" aria-label="첨부파일" readonly />
-														<label for="detailFile" style="display: none;">첨부파일</label>
-														<input type="file" id="detailFile" name="files" style="display: none;" aria-label="첨부파일"  onchange='fileAddCheck(this)' accept=".jpg, .jpeg, .gif, .png, .pdf">
-														<button class="yellow_btn detailFileBtn">파일첨부</button>
+								                        <label for="detailChckPlc">지도장소</label>
+								                        <input type="text" id="detailChckPlc" name="detailChckPlc" class="input" maxLength="80" aria-label="지도장소"
+								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
 								            </tr>
@@ -706,16 +722,6 @@
 								                    <div class="tb_flex">
 								                        <label for="detailEtcArtcl">기타항목</label>
 								                        <input type="text" id="detailEtcArtcl" name="detailEtcArtcl" class="input" maxLength="80" aria-label="기타항목"
-								                               oninput="charOnly(this)" />
-								                    </div>
-								                </td>
-								            </tr>
-								            <tr>
-								                <th scope="col">지도장소</th>
-								                <td>
-								                    <div class="tb_flex">
-								                        <label for="detailChckPlc">지도장소</label>
-								                        <input type="text" id="detailChckPlc" name="detailChckPlc" class="input" maxLength="80" aria-label="지도장소"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
@@ -734,6 +740,27 @@
 								                </td>
 								            </tr>
 						            	</table>
+								    </div>
+								    <div class="cont inspection02">
+								    	<table class="tb rental_tb01">
+								    		<tr>
+								                <th scope="col"><span class="asterisk">*</span>첨부파일</th>
+								                <td>
+								                    <div class="fileDiv">
+<!-- 									                    <input id="fileNm" hidden type="text" placeholder="지도점검결과 파일을 등록해주세요" class="input inp filetype" disabled="disabled" readonly /> -->
+														<input
+															type="file" multiple id="detailFileUpload" name="files"
+															onchange="fileAddCheck(this)" class="upload-hidden"
+															style="display: none;" accept=".jpg, .jpeg, .png, .pdf" />
+<!-- 														<button id="fileBtn" class="yellow_btn"> -->
+<%-- 															<img src="${contextPath}/images/sub/ico_search02.png" alt="검색아이콘"> --%>
+<!-- 														</button> -->
+														<button class="yellow_btn" id="detailFileUploadBtn">파일첨부</button>
+														<div class="file-list detailFileList"></div>
+								                    </div>
+								                </td>
+								            </tr>
+								    	</table>
 								    </div>
 								</div>
 
@@ -812,51 +839,65 @@
 								    <div class="nameBox nameBox-flex">
 								        <h4 class="name">지도 후속 처리 내용</h4>
 								    </div>
-								    <div class="cont cont-flex a-flex">
-								   	 	<div class="aaa">
-								    	<table class="tb rental_tb01">
-								    		<tr>
-								    		<th>1차</th>
-								    		</tr>
-								    	</table>
-								    	</div>
-								    	<div class="aaaa b-flex">
-								    	<table class="tb bbb rental_tb01">
-								    		<tr>
-								                <th scope="col"><span class="asterisk">*</span>지도여부</th>
+								    <div class="cont cont-flex">
+								        <table class="tb rental_tb01">
+								            <tr>
+								                <th scope="col"><span class="asterisk">*</span>후속처리내용</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for=""></label>
-								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label=""
+								                        <label for="">후속처리내용</label>
+								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="후속처리내용"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
 								            </tr>
-							    			<tr>
-								                <th scope="col"><span class="asterisk">*</span>조치현황</th>
-								                <td>
-								                    <div class="tb_flex">
-								                        <label for=""></label>
-								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label=""
-								                               oninput="charOnly(this)" />
-								                    </div>
-								                </td>
-								            </tr>
-								    	</table>
-								    	<table class="tb bbb rental_tb01">
-								    		<tr>
-								                <th scope="col"><span class="asterisk">*</span>지도여부</th>
-								                <td>
-								                    <div class="tb_flex">
-								                        <label for=""></label>
-								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label=""
-								                               oninput="charOnly(this)" />
-								                    </div>
-								                </td>
-								            </tr>
-								    	</table>
-								    	</div>
+								        </table>
 								    </div>
+<!-- 								    <div class="cont cont-flex a-flex"> -->
+<!-- 								   	 	<div class="aaa"> -->
+<!-- 								    	<table class="tb rental_tb01"> -->
+<!-- 								    		<tr> -->
+<!-- 								    		<th>1차</th> -->
+<!-- 								    		</tr> -->
+<!-- 								    	</table> -->
+<!-- 								    	</div> -->
+<!-- 								    	<div class="aaaa b-flex"> -->
+<!-- 								    	<table class="tb bbb rental_tb01"> -->
+<!-- 								    		<tr> -->
+<!-- 								                <th scope="col"><span class="asterisk">*</span>지도여부</th> -->
+<!-- 								                <td> -->
+<!-- 								                    <div class="tb_flex"> -->
+<!-- 								                        <label for=""></label> -->
+<!-- 								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="" -->
+<!-- 								                               oninput="charOnly(this)" /> -->
+<!-- 								                    </div> -->
+<!-- 								                </td> -->
+<!-- 								            </tr> -->
+<!-- 							    			<tr> -->
+<!-- 								                <th scope="col"><span class="asterisk">*</span>조치현황</th> -->
+<!-- 								                <td> -->
+<!-- 								                    <div class="tb_flex"> -->
+<!-- 								                        <label for=""></label> -->
+<!-- 								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="" -->
+<!-- 								                               oninput="charOnly(this)" /> -->
+<!-- 								                    </div> -->
+<!-- 								                </td> -->
+<!-- 								            </tr> -->
+<!-- 								    	</table> -->
+<!-- 								    	<table class="tb bbb rental_tb01"> -->
+<!-- 								    		<tr> -->
+<!-- 								                <th scope="col"><span class="asterisk">*</span>지도여부</th> -->
+<!-- 								                <td> -->
+<!-- 								                    <div class="tb_flex"> -->
+<!-- 								                        <label for=""></label> -->
+<!-- 								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="" -->
+<!-- 								                               oninput="charOnly(this)" /> -->
+<!-- 								                    </div> -->
+<!-- 								                </td> -->
+<!-- 								            </tr> -->
+<!-- 								    	</table> -->
+<!-- 								    	</div> -->
+<!-- 								    </div> -->
 								</div>
 			                </div>
 			            </div>

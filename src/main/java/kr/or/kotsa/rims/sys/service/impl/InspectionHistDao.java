@@ -1,11 +1,13 @@
 package kr.or.kotsa.rims.sys.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
 import kr.or.kotsa.rims.cmmn.sys.dao.CmmnAbstractMapper;
+import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
 
 @Repository
 public class InspectionHistDao extends CmmnAbstractMapper {
@@ -52,6 +54,15 @@ public class InspectionHistDao extends CmmnAbstractMapper {
 
 	public int updateDeleteYn(Map<String, Object> paramsMap) {
 		return update("sys.inspectionHist.updateDeleteYn", paramsMap);
+	}
+
+	public Map<String, Object> insertFilesUpload(Map<String, Object> paramsMap) throws RimsException {
+		Map<String, Object> result = new HashMap<>();
+    	insert("cmmn.file.insertFileUpload", paramsMap);
+    	result.put("fileSn", paramsMap.get("file_sn"));
+    	System.out.println("paramsMapparamsMap : " + paramsMap);
+    	
+    	return result;
 	}
 
 
