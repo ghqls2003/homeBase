@@ -148,7 +148,7 @@
 	<!-- 대여정보이력 조회 쿼리 재구성 -->
 	<sql id="RentalHistListSql">
 		(
-		SELECT ROW_NUMBER() OVER(ORDER BY T.rent_no) rn
+		SELECT ROW_NUMBER() OVER(ORDER BY T.reg_dt DESC) rn
 			, *
 		FROM 
 			(
@@ -641,8 +641,8 @@
 			, CASE rent.rent_stts_cd WHEN '1' THEN '미확정' WHEN '2' THEN '대여확정' WHEN '9' THEN '대여취소' 
 				ELSE rent.rent_stts_cd END rent_stts_nm
 		FROM
-			dqvs.dvs_dqv_mt_rent_dump rent
-<!-- 			dqvs.dvs_dqv_mt_rent rent -->
+<!-- 			dqvs.dvs_dqv_mt_rent_dump rent -->
+			dqvs.dvs_dqv_mt_rent rent
 		LEFT JOIN
 			dqvs.dvs_rac_mt_car car
 		ON rent.vin = car.vin
