@@ -72,15 +72,18 @@
 							    param.ctpvCd = this.value();
 								ajax(true, contextPath+'/sys/smsSend/selectSggNm', 'body', '처리중입니다.', param, function (data) {
 									if(data.length==0){
-										data = [{ "sgg_nm": '',"sgg_cd": '' }];
+										$('.sub04 #searchSggNm').kendoDropDownList({
+								            optionLabel: "시군구"
+								        });
+									}else{
+										$('.sub04 #searchSggNm').kendoDropDownList({
+								            optionLabel: "시군구",
+								            dataTextField: "sgg_nm",
+								            dataValueField: "sgg_cd",
+								            dataSource: data,
+											value : "sgg_cd"
+								        });
 									}
-									$('.sub04 #searchSggNm').kendoDropDownList({
-							            optionLabel: "시군구",
-							            dataTextField: "sgg_nm",
-							            dataValueField: "sgg_cd",
-							            dataSource: data,
-										value : "sgg_cd"
-							        });
 								});
 							}
 						}
@@ -808,7 +811,7 @@
 				searchTriggered = true;
 				var sd = $("#searchCtpvNm").val();
 				var sgg = $("#searchSggNm").val();
-				receiverParams.cmptnc_zone_cd = sd+=sgg;
+				receiverParams.cmptnc_zone_cd = sd+sgg;
 				receiverParams.authrt_cd = $("#searchAuthrtCd").val();
 				receiverParams.stts_cd = $("#searchSttsCd").val();
 				receiverParams.search_other_condition = $("#searchOtherCondition").val();

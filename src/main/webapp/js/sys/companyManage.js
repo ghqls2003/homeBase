@@ -3379,15 +3379,18 @@
 							param.ctpvCd = this.value();
 							$cmpnymanage.comm.syncAjax(true, true, contextPath + '/sys/companyManage/sggNm', 'body', '처리중입니다.', param, function(data) {
 								if(data.length==0) {
-									data = [{"sgg_nm": null, "stdg_cd": null}]
+									$(sggId).kendoDropDownList({
+										optionLabel: "시군구"
+								    });
+								}else{
+									$(sggId).kendoDropDownList({
+										optionLabel: label.sgg,
+										dataTextField: "sgg_nm",
+										dataValueField: "stdg_cd",
+										dataSource: data,
+										value: "sgg_nm"
+									});
 								}
-								$(sggId).kendoDropDownList({
-									optionLabel: label.sgg,
-									dataTextField: "sgg_nm",
-									dataValueField: "stdg_cd",
-									dataSource: data,
-									value: "sgg_nm"
-								});
 							});
 						}
 					}
