@@ -5,12 +5,13 @@
 	var fileCkd = false;
 	var fileNo = 0;
 	var filesArr = [];
+	var rowClickChk = false;
 	
 	$(document).ready(function() {
 		kendo.ui.progress($(document.body), true);
 		$inspectionHist.ui.pageLoad();		//최초 페이지 로드 시
 		$inspectionHist.event.setUIEvent();
-		$inspectionHist.ui.agencyNmAutoComplete(); 
+		//$inspectionHist.ui.agencyNmAutoComplete(); 
 	});
 	
 	var excelDownArc = {};
@@ -18,8 +19,9 @@
 	$inspectionHist.ui = {
 		pageLoad: function() {
 			$inspectionHist.ui.autoTextarea();
-			$inspectionHist.ui.inspectionHistInfo();
 			$inspectionHist.ui.search();
+			$inspectionHist.ui.areaSearch();
+//			$inspectionHist.ui.inspectionHistInfo();
 			
 		},
 		
@@ -36,7 +38,7 @@
 		},
 		
 		// 회사 검색
-		agencyNmAutoComplete: function(){
+		agencyNmAutoComplete: function(element){
 			var param = {};
 			if(authrtCd=='G01'){
 				if(userCmptncZoneCd.substring(2, userCmptncZoneCd.length) == "00000000"){
@@ -47,7 +49,7 @@
 			};
 			
 			ajax(false, contextPath + '/sys/inspectionHist/agencyList', 'body', '처리중입니다.', param, function(data) {
-				$("#agencyNm").kendoAutoComplete({
+				$(element).kendoAutoComplete({
 	              filter: "contains",
 					placeholder: '법인명을 입력하세요.',
 					dataTextField: "coNm",
@@ -56,71 +58,202 @@
 	                    var dataItem = this.dataItem(e.item.index());
 	                    var bzmnSn = dataItem ? dataItem.bzmnSn : null;
 	                    var coNm = dataItem ? dataItem.coNm : null;
-	                    $("#agencyNm").data('value', bzmnSn);
-						$("#agencyNm").val(coNm);
-						$inspectionHist.ui.agencyInfo();
+						if(element=="#agencyNm"){
+							$(element).data('value', bzmnSn);
+						}else if(element=="#detailCoNm"){
+							$(element).data('newBzmnSn', bzmnSn);
+						}
+						$(element).val(coNm);
+						$inspectionHist.ui.agencyInfo(element);
                 	}
 				}).data("kendoAutoComplete");
 			});
 		},
 		
-		agencyInfo: function(){
+		agencyInfo: function(element){
 			//$('.inc_receiver_lists div').remove();
 			//$('#inc_selec_01').data('value', '');
+			if(element=="#agencyNm"){
+				var param = $(element).data('value');
+			}else if(element=="#detailCoNm"){
+				var param = $(element).data('newBzmnSn');
+			}
 			var parameterMap={
-					bzmnSn : $('#agencyNm').data('value'),
+					bzmnSn : param,
 			};
 			ajax(true, contextPath+'/sys/inspectionHist/agencyInfo', 'body', '처리중입니다.', parameterMap, function (data) {
-				if($("#agencyNm").val() != ""){
-					$('#bsnSttsNm').val(data[0].bsnSttsNm);;
-					$('#bsnSttsMdfcnDt').val(data[0].bsnSttsMdfcnDt);;
-					$('#agencyTelno').val(data[0].agencyTelno);;
-					$('#rprsvNm').val(data[0].rprsvNm);;
-					$('#brno').val(data[0].brno);;
-					$('#jurisdiction').val(data[0].jurisdiction);;
+				var bsnSttsMdfcnDt = !data[0].bsnSttsMdfcnDt ? '-' :  dateFormatting(data[0].bsnSttsMdfcnDt);
+				var agencyTelno = !data[0].agencyTelno ? '-' :  toTelNum(data[0].agencyTelno);
+				var brno = !data[0].brno ? '-' :  toBizrnoNumFormat(data[0].brno);
+				if(element=="#agencyNm"){
+					if($(element).val() != ""){
+						$('#bsnSttsNm').val(data[0].bsnSttsNm || '-');
+						$('#bsnSttsMdfcnDt').val(bsnSttsMdfcnDt);
+						$('#agencyTelno').val(agencyTelno);
+						$('#rprsvNm').val(data[0].rprsvNm || '-');
+						$('#brno').val(brno);
+						$('#jurisdiction').val(data[0].jurisdiction || '-');
+						$('#jurisdiction').data('value', data[0].regCmptncCd || '-');
+					}
+				}else if(element=="#detailCoNm"){
+					if($(element).val() != ""){
+						$('#detailBsnSttsNm').val(data[0].bsnSttsNm || '-');
+						$('#BsnSttsMdfcnDt').val(bsnSttsMdfcnDt);
+						$('#detailAgencyTelno').val(agencyTelno);
+						$('#detailRprsvNm').val(data[0].rprsvNm || '-');
+						$('#detailBrno').val(brno);
+						$('#detailJurisdiction').val(data[0].jurisdiction || '-');
+						$('#detailJurisdiction').data('value', data[0].regCmptncCd || '-');
+					}
 				}
+				
 				
 			})
 		},
 		
-		// 검색옵션
-		search: function() {
+		areaSearch: function() {
 			var param = {};
 			
-			ajax(true, contextPath+'/sys/inspectionHist/ctpvNm', 'body', '처리중입니다.', param, function (data) {
-				$('#searchCtpvNm').kendoDropDownList({
-		            optionLabel: "시도(전체)",
-		            dataTextField: "ctpv_nm",
-		            dataValueField: "ctpv_cd",
-		            dataSource: data,
-					value : "ctpv_cd",
-					change: function() {
-						if(this.value() == '') {
-							$('#searchSggNm').data("kendoDropDownList").setDataSource(null);
-						} else {
-						    param.ctpvCd = this.value();
-							ajax(true, contextPath+'/sys/inspectionHist/sggNm', 'body', '처리중입니다.', param, function (data) {
-								if(data.length==0){
-									data = [{ "sgg_nm": '',"sgg_cd": '' }];
-								}
-								$('#searchSggNm').kendoDropDownList({
-						            optionLabel: "시군구(전체)",
-						            dataTextField: "sgg_nm",
-						            dataValueField: "sgg_cd",
-						            dataSource: data,
-									value : "sgg_cd"
-						        });
-							});
+			if (authrtCd == 'G01') {
+				param.userCmptncZoneCd = userCmptncZoneCd;
+				ajax(true, contextPath+'/sys/inspectionHist/ctpvNm', 'body', '처리중입니다.', param, function (data) {
+					$('#searchCtpvNm').kendoDropDownList({
+			            dataTextField: "ctpv_nm",
+			            dataValueField: "ctpv_cd",
+			            dataSource: data,
+						value : "ctpv_cd",
+			        });
+
+
+					ajax(true, contextPath+'/sys/inspectionHist/sggNm', 'body', '처리중입니다.', param, function (data) {
+						if(data.length!=0){
+							$('#searchSggNm').kendoDropDownList({
+					            dataTextField: "sgg_nm",
+					            dataValueField: "sgg_cd",
+					            dataSource: data,
+								value : "sgg_cd"
+					        });
 						}
-					}
-		        });
-			});
+						$inspectionHist.ui.inspectionHistInfo();
+					});
+				});
+				
+				
+				
+			
+			
+							
+			}else{
+				ajax(true, contextPath+'/sys/inspectionHist/ctpvNm', 'body', '처리중입니다.', param, function (data) {
+					$('#searchCtpvNm').kendoDropDownList({
+			            optionLabel: "시도(전체)",
+			            dataTextField: "ctpv_nm",
+			            dataValueField: "ctpv_cd",
+			            dataSource: data,
+						value : "ctpv_cd",
+						change: function() {
+							if(this.value() == '') {
+								$('#searchSggNm').data("kendoDropDownList").setDataSource(null);
+							} else {
+							    param.ctpvCd = this.value();
+								ajax(true, contextPath+'/sys/inspectionHist/sggNm', 'body', '처리중입니다.', param, function (data) {
+									if(data.length==0){
+										data = [{ "sgg_nm": '',"sgg_cd": '' }];
+									}
+									$('#searchSggNm').kendoDropDownList({
+							            optionLabel: "시군구(전체)",
+							            dataTextField: "sgg_nm",
+							            dataValueField: "sgg_cd",
+							            dataSource: data,
+										value : "sgg_cd"
+							        });
+								});
+							}
+						}
+			        });
+					$inspectionHist.ui.inspectionHistInfo();
+				});
+			}
+			
 			
 			// 시구군
 			$('#searchSggNm').kendoDropDownList({
 	            optionLabel: "시군구(전체)",
 	            dataSource: {}
 	        });
+		},
+		
+		// 검색옵션
+		search: function() {
+			
+			var param = {};
+//			
+//			
+//			
+//			if (authrtCd == 'G01') {
+//				param.userCmptncZoneCd = userCmptncZoneCd;
+//				ajax(true, contextPath+'/sys/inspectionHist/ctpvNm', 'body', '처리중입니다.', param, function (data) {
+//					$('#searchCtpvNm').kendoDropDownList({
+//			            dataTextField: "ctpv_nm",
+//			            dataValueField: "ctpv_cd",
+//			            dataSource: data,
+//						value : "ctpv_cd",
+//			        });
+//				});
+//				
+//				
+//				ajax(true, contextPath+'/sys/inspectionHist/sggNm', 'body', '처리중입니다.', param, function (data) {
+//					if(data.length!=0){
+//						$('#searchSggNm').kendoDropDownList({
+//				            dataTextField: "sgg_nm",
+//				            dataValueField: "sgg_cd",
+//				            dataSource: data,
+//							value : "sgg_cd"
+//				        });
+//					}
+//					callback();
+//				});
+//			
+//			
+//							
+//			}else{
+//				ajax(true, contextPath+'/sys/inspectionHist/ctpvNm', 'body', '처리중입니다.', param, function (data) {
+//					$('#searchCtpvNm').kendoDropDownList({
+//			            optionLabel: "시도(전체)",
+//			            dataTextField: "ctpv_nm",
+//			            dataValueField: "ctpv_cd",
+//			            dataSource: data,
+//						value : "ctpv_cd",
+//						change: function() {
+//							if(this.value() == '') {
+//								$('#searchSggNm').data("kendoDropDownList").setDataSource(null);
+//							} else {
+//							    param.ctpvCd = this.value();
+//								ajax(true, contextPath+'/sys/inspectionHist/sggNm', 'body', '처리중입니다.', param, function (data) {
+//									if(data.length==0){
+//										data = [{ "sgg_nm": '',"sgg_cd": '' }];
+//									}
+//									$('#searchSggNm').kendoDropDownList({
+//							            optionLabel: "시군구(전체)",
+//							            dataTextField: "sgg_nm",
+//							            dataValueField: "sgg_cd",
+//							            dataSource: data,
+//										value : "sgg_cd"
+//							        });
+//								});
+//							}
+//						}
+//			        });
+//					callback();
+//				});
+//			}
+//			
+//			
+//			// 시구군
+//			$('#searchSggNm').kendoDropDownList({
+//	            optionLabel: "시군구(전체)",
+//	            dataSource: {}
+//	        });
 	        
 			// 권한
 			ajax(false, contextPath + '/sys/inspectionHist/selectAuth', 'body', '처리중입니다.', param, function(data) {
@@ -158,17 +291,18 @@
 				dataSource: rsltData,
 			});
 			
-			$("#regRslt").kendoDropDownList({
+			$("#regChckRslt").kendoDropDownList({
 				dataTextField: "cd",
 				dataValueField: "cd",
 				dataSource: rsltData,
 			});
 			
-			$("#detailRslt").kendoDropDownList({
+			$("#detailChckRslt").kendoDropDownList({
 				dataTextField: "cd",
 				dataValueField: "cd",
 				dataSource: rsltData,
 			});
+			
 			
 		},
 		
@@ -215,7 +349,7 @@
 					{ field: "bzmnSeNm", title: "권한", width: "30px", template: "#= bzmnSeNm != null ? bzmnSeNm : '-' #", sortable: true },
 					{ field: "brno", title: "사업자번호", width: "50px", template: "#= brno != null ? brno : '-' #", sortable: true },
 					{ field: "crno", title: "법인번호", width: "50px", template: "#= crno != null ? crno : '-' #", sortable: true },
-					{ field: "rslt", title: "결과", width: "30px", template: "#= rslt != null ? rslt : '-' #", sortable: true },
+					{ field: "chckRslt", title: "결과", width: "30px", template: "#= chckRslt != null ? chckRslt : '-' #", sortable: true },
 					{ field: "roadNmAddr", title: "주소", width: "100px", template: "#= roadNmAddr != null ? roadNmAddr : '-' #", sortable: true },
 					{ title: "결과서", width: "30px", exportable: false, template: "<button class='gray_btn' style='width: 70px;height: 30px;' onclick='javascript:$inspectionHist.event.issued(`#:bzmnSn#`);'>발급</button>" },
 				],
@@ -240,6 +374,12 @@
 		},
 		// row 상세팝업
 		rowClickEvent : function(e) {
+			var param = "#detailCoNm";
+			
+			if(!rowClickChk){
+				$inspectionHist.ui.agencyNmAutoComplete(param); 
+				rowClickChk = true;
+			}
 			var rows = e.sender.select();
 			var data;
 			
@@ -282,11 +422,19 @@
 			});
 			
 			$("#searchBtn").on("click", function() {
+				var sd = $("#searchCtpvNm").val();
+				var sgg = $("#searchSggNm").val();
+				excelDownArc.cmptncZoneCd = sd+sgg;
+				excelDownArc.bzmnSeCd     = $('#searchBzmnSeCd').val();
+				excelDownArc.bsnSttsCd    = $('#searchBsnSttsCd').val();
+				excelDownArc.rslt         = $('#searchRslt').val();
 				$("#inspectionHistGrid").data("kendoGrid").dataSource.page(1);
             });
 			
 			// 등록팝업 버튼
 			$(".insertPopupBtn").on("click", function() {
+				var param = "#agencyNm"
+				$inspectionHist.ui.agencyNmAutoComplete(param); 
 				$(".register_popup").addClass("view");
 			});
 			
@@ -492,26 +640,37 @@
 		detailInfoPopup: function(data) {
 			var brno = !data.brno ? '-' : toBizrnoNumFormat(data.brno);
 			var agencyTelno = !data.agencyTelno ? '-' : toTelNum(data.agencyTelno);
+			var telno = !data.telno ? '-' : toTelNum(data.telno);
 			var bsnSttsMdfcnDt = !data.bsnSttsMdfcnDt ? '-' :  dateFormatting(data.bsnSttsMdfcnDt);
-			$('#detailCoNm').val(data.coNm);
+			$('#detailCoNm').val(data.coNm || '-');
 			$('#detailCoNm').data('value', data.bzmnSn);
 			$('#detailBrno').val(brno);
-			$('#detailExmnr').val(data.exmnr);
-			$('#detailJbgd').val(data.jbgd);
-			$('#detailOgdp').val(data.ogdp);
-			$('#detailBsnSttsNm').val(data.bsnSttsNm);
+			$('#detailExmnr').val(data.exmnr || '-');
+			$('#detailExmnr2').val(data.exmnr || '-');
+			$('#detailExmnr3').val(data.exmnr || '-');
+			$('#detailJbgd').val(data.jbgd || '-');
+			$('#detailJbgd2').val(data.jbgd || '-');
+			$('#detailJbgd3').val(data.jbgd || '-');
+			$('#detailOgdp').val(data.ogdp || '-');
+			$('#detailOgdp2').val(data.ogdp || '-');
+			$('#detailOgdp3').val(data.ogdp || '-');
+			$('#detailBsnSttsNm').val(data.bsnSttsNm || '-');
 			$('#detailBsnSttsMdfcnDt').val(bsnSttsMdfcnDt);
 			$('#detailAgencyTelno').val(agencyTelno);
-			$('#detailChckArtcl').val(data.chckArtcl);
-			$('#detailEtcArtcl').val(data.etcArtcl);
-			$('#detailRslt').data("kendoDropDownList").value(data.rslt);
-			$('#detailSignYn').val(data.signYn);
-			$('#detailTelno').val(data.telno);
-			$('#detailRprsvNm').val(data.rprsvNm);
-			$('#detailChckCn').val(data.chckCn);
-			$('#detailChckPlc').val(data.chckPlc);
-			$('#detailJurisdiction').val(data.jurisdiction);
+			$('#detailChckArtcl').val(data.chckArtcl || '-');
+			$('#detailEtcArtcl').val(data.etcArtcl || '-');
+			$('#detailChckRslt').data("kendoDropDownList").value(data.chckRslt);
+			$('#detailChckIdfr').val(data.chckIdfr || '-');
+			$('#detailIdfrOgdp').val(data.idfrOgdp || '-');
+			$('#detailIdfrJbgd').val(data.idfrJbgd || '-');
+			$('#detailSignYn').val(data.signYn || '-');
+			$('#detailTelno').val(telno);
+			$('#detailRprsvNm').val(data.rprsvNm || '-');
+			$('#detailChckCn').val(data.chckCn || '-');
+			$('#detailChckPlc').val(data.chckPlc || '-');
+			$('#detailJurisdiction').val(data.jurisdiction || '-');
 			$('#detailJurisdiction').data('value', data.regCmptncCd);
+			$('#detailPrcsCn').val(data.prcsCn || '-');
 			//$('#detailFileNm').val(data.atchFileNm);
 			//$('#detailFileNo').val(data.fileatchsn1);
 			//$('.detailFileList').text(data.atchFileNm);
@@ -556,17 +715,29 @@
 		insertBtn: function(){
 			var params ={};
 			//var brno = insertBrno.replace(/[^0-9]/g, "");
+			var tel = nvl($("#regTelno").val());
+			var telno = tel.replace(/-/g, "");
 			params.exmnr = $("#regExmnr").val();
+			params.exmnr2 = $("#regExmnr2").val();
+			params.exmnr3 = $("#regExmnr3").val();
 			params.jbgd = $("#regJbgd").val();
+			params.jbgd2 = $("#regJbgd2").val();
+			params.jbgd3 = $("#regJbgd3").val();
 			params.ogdp = $("#regOgdp").val();
-			params.telno = $("#regTelno").val();
+			params.ogdp2 = $("#regOgdp2").val();
+			params.ogdp3 = $("#regOgdp3").val();
+			params.telno = telno;
 			params.chckArtcl = $("#regChckArtcl").val();
 			params.etcArtcl = $("#regEtcArtcl").val();
-			params.chckCn = $("#regChckCn").val();
 			params.chckPlc = $("#regChckPlc").val();
-			params.rslt = $("#regRslt").val();
+			params.chckRslt = $("#regChckRslt").val();
+			params.chckIdfr = $("#regChckIdfr").val();
+			params.idfrJbgd = $("#regIdfrJbgd").val();
+			params.idfrOgdp = $("#regIdfrOgdp").val();
 			params.signYn = $("#regSignYn").val();
 			params.bzmnSn = $('#agencyNm').data('value');
+			params.prcsCn = $("#regPrcsCn").val();
+			params.regCmptncCd = $('#jurisdiction').data('value');
 			
 			var fileNm = $('.regFileList').text();
 			var coNm = $('#agencyNm').data('value');
@@ -646,6 +817,12 @@
 				alert("데이터가 존재하지 않습니다.");
 			} else {
 				if(Object.keys(excelDownArc).length === 0) {
+					var sd = $("#searchCtpvNm").val();
+					var sgg = $("#searchSggNm").val();
+					excelDownArc.cmptncZoneCd = sd+sgg;
+					excelDownArc.bzmnSeCd     = $('#searchBzmnSeCd').val();
+					excelDownArc.bsnSttsCd    = $('#searchBsnSttsCd').val();
+					excelDownArc.rslt         = $('#searchRslt').val();
 				}
 				excelDown("/sys/inspectionHist/excelDown", excelDownArc, "inspectionHist", totalRowCount);
 			}
@@ -655,20 +832,32 @@
 
 		updateBtn : function(){
 			var params ={};
-			
+			var tel = nvl($("#detailTelno").val());
+			var telno = tel.replace(/-/g, "");
 			params.bzmnSn = $('#detailCoNm').data('value');
+			params.newBzmnSn = $('#detailCoNm').data('newBzmnSn')||$('#detailCoNm').data('value');
 			params.coNm = $("#detailCoNm").val();
 			params.exmnr = $("#detailExmnr").val();
+			params.exmnr2 = $("#detailExmnr2").val();
+			params.exmnr3 = $("#detailExmnr3").val();
 			params.jbgd = $("#detailJbgd").val();
+			params.jbgd2 = $("#detailJbgd2").val();
+			params.jbgd3 = $("#detailJbgd3").val();
 			params.ogdp = $("#detailOgdp").val();
-			params.telno = $("#detailTelno").val();
+			params.ogdp2 = $("#detailOgdp2").val();
+			params.ogdp3 = $("#detailOgdp3").val();
+			params.telno = telno;
 			params.chckArtcl = $("#detailChckArtcl").val();
 			params.etcArtcl = $("#detailEtcArtcl").val();
 			params.chckCn = $("#detailChckCn").val();
 			params.chckPlc = $("#detailChckPlc").val();
-			params.rslt = $("#detailRslt").val();
+			params.chckRslt = $("#detailChckRslt").val();
+			params.chckIdfr = $("#detailChckIdfr").val();
+			params.idfrJbgd = $("#detailIdfrJbgd").val();
+			params.idfrOgdp = $("#detailIdfrOgdp").val();
 			params.signYn = $("#detailSignYn").val();
 			params.regCmptncCd = $('#detailJurisdiction').data('value');
+			params.prcsCn = $("#detailPrcsCn").val();
 			
 			var j = 1;
 			for(var i=1; i<5; i++){

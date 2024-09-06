@@ -49,6 +49,7 @@ button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff
 
 /*  */
 #insertPopup #agencyNm{height: 36px;}
+.detail_popup #detailCoNm{height: 36px;}
 
 #fileUploadBtn, #detailFileUploadBtn {
 	margin-left:0 !important;

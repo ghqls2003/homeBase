@@ -38,11 +38,14 @@ public class InspectionHistController extends CmmnAbstractServiceImpl{
 	public ModelAndView viewInspectionHist(@RequestParam Map<String, Object> paramsMap, ModelAndView mav,
 			HttpServletRequest request, HttpServletResponse response, HttpSession session) throws RimsException {
 		
- 		String [] validAuth = {"Z01", "K01", "M01", "D01", "G01", "G02"};
+ 		String [] validAuth = {"Z02", "K01", "M01", "D01", "G01"};
 		if(Arrays.asList(validAuth).contains(getAuthrtCd())) {
 		} else {
 			mav.setViewName("redirect:/");
 		}		
+		
+		mav.addObject("userCmptncZoneCd", getCmptncZoneCd()); // 관할지
+		
 		return mav;
 	}
 	
@@ -77,13 +80,13 @@ public class InspectionHistController extends CmmnAbstractServiceImpl{
 	@PostMapping("/inspectionHist/selectInspectionHistInfo")
 	@ResponseBody
 	public Map<String, Object> selectInspectionHistInfo(@RequestBody Map<String, Object> paramsMap){
-		Map<String, Object> aa = inspectionHistService.selectInspectionHistInfo(paramsMap);
-		return aa;
+		return inspectionHistService.selectInspectionHistInfo(paramsMap);
 	}
 	
 	@RequestMapping("/inspectionHist/insertInspectionHist")
 	@ResponseBody
 	public int insertInspectionHist(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		paramsMap.put("regIp", getClientIP());
 		return inspectionHistService.insertInspectionHist(paramsMap);
 	}
 	
@@ -103,8 +106,8 @@ public class InspectionHistController extends CmmnAbstractServiceImpl{
                                       HttpServletRequest request, HttpServletResponse response) throws RimsException {
 
 		String fileName = "inspectionHist" + (new java.text.SimpleDateFormat("yyyyMMddHHmmss")).format(new java.util.Date());
-        String colName[] = {"순번", "관할지역", "조사원", "회사명", "권한", "사업자번호", "법인번호", "결과", "주소", "후속처리여부"};
-        String valName[] = {"rn", "", "exmnr", "coNm", "bzmnSeCd", "brno", "crno", "rslt", "roadNmAddr", "prcsYn"};
+        String colName[] = {"순번", "관할지역",        "조사원",  "회사명",    "권한",  "사업자번호", "법인번호", "결과",    "주소",     "후속처리여부"};
+        String valName[] = {"rn", "jurisdiction", "exmnr", "coNm", "bzmnSeNm", "brno", "crno", "chckRslt", "roadNmAddr", "prcsYn"};
 
 
         List<Map<String, Object>> colValue = inspectionHistDao.selectInspectionHistInfo(paramsMap);
@@ -123,7 +126,7 @@ public class InspectionHistController extends CmmnAbstractServiceImpl{
     @ResponseBody
     public int updateInspectionHist(@RequestBody Map<String, Object> paramsMap) {
         //paramsMap.put("mdfrSn", getUserSn());
-        //paramsMap.put("mdfcnIp", getClientIP());
+        paramsMap.put("mdfcnIp", getClientIP());
 
         return inspectionHistService.updateInspectionHist(paramsMap);
     }
@@ -153,6 +156,7 @@ public class InspectionHistController extends CmmnAbstractServiceImpl{
 	@RequestMapping(value = "/inspectionHist/updateDeleteYn")
 	@ResponseBody
 	public int updateDeleteYn(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		paramsMap.put("mdfcnIp", getClientIP());
 		return inspectionHistService.updateDeleteYn(paramsMap);
 	}
 	

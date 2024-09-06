@@ -184,13 +184,13 @@
 								           	2
 								           	</td>
 								           	<td>
-								           	<input class="input" type="text" oninput="charOnly(this)" />
+								           	<input id="regExmnr2" class="input" type="text" oninput="charOnly(this)" />
 								           	</td>
 								           	<td>
-								           	<input class="input" type="text" oninput="charOnly(this)" />
+								           	<input id="regJbgd2" class="input" type="text" oninput="charOnly(this)" />
 								           	</td>
 								           	<td>
-								           	<input class="input" type="text" oninput="charOnly(this)" />
+								           	<input id="regOgdp2" class="input" type="text" oninput="charOnly(this)" />
 								           	</td>
 								           </tr>
 								            <tr>
@@ -198,13 +198,13 @@
 								           	3
 								           	</td>
 								           	<td>
-								           	<input class="input" type="text" oninput="charOnly(this)" />
+								           	<input id="regExmnr3" class="input" type="text" oninput="charOnly(this)" />
 								           	</td>
 								           	<td>
-								           	<input class="input" type="text" oninput="charOnly(this)" />
+								           	<input id="regJbgd3" class="input" type="text" oninput="charOnly(this)" />
 								           	</td>
 								           	<td>
-								           	<input class="input" type="text" oninput="charOnly(this)" />
+								           	<input id="regOgdp3" class="input" type="text" oninput="charOnly(this)" />
 								           	</td>
 								           </tr>
 								        </table>
@@ -294,26 +294,26 @@
 
 							<div class="contBox">
 								    <div class="nameBox nameBox-flex">
-								        <h4 class="name">지도 내용</h4>
+								        <h4 class="name">지도점검 내용</h4>
 								    </div>
 								    <div class="cont cont-flex inspection01">
 								        <table class="tb rental_tb01">
 								            <tr>
-								                <th scope="col"><span class="asterisk">*</span>지도항목</th>
+								                <th scope="col"><span class="asterisk">*</span>점검항목</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="regChckArtcl">지도항목</label>
-								                        <input type="text" id="regChckArtcl" name="regChckArtcl" class="input" maxLength="80" aria-label="지도항목"
+								                        <label for="regChckArtcl">점검항목</label>
+								                        <input type="text" id="regChckArtcl" name="regChckArtcl" class="input" maxLength="80" aria-label="점검항목"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
 								            </tr>
 								           	<tr>
-								                <th scope="col"><span class="asterisk">*</span>지도장소</th>
+								                <th scope="col"><span class="asterisk">*</span>점검장소</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="regChckPlc">지도장소</label>
-								                        <input type="text" id="regChckPlc" name="regChckPlc" class="input" maxLength="80" aria-label="지도장소"
+								                        <label for="regChckPlc">점검장소</label>
+								                        <input type="text" id="regChckPlc" name="regChckPlc" class="input" maxLength="80" aria-label="점검장소"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
@@ -345,10 +345,10 @@
 								    <div class="cont inspection02">
 								    	<table class="tb rental_tb01">
 								    	   <tr>
-								                <th scope="col"><span class="asterisk">*</span>지도내용</th>
+								                <th scope="col"><span class="asterisk">*</span>점검내용</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="regChckCn">지도내용</label>
+								                        <label for="regChckCn"></label>
 <!-- 								                        <input type="text" id="regChckCn" name="regChckCn" class="input" maxLength="80" aria-label="지도내용" -->
 <!-- 								                               oninput="charOnly(this)" /> -->
 								                        <textarea class="input chckCn" name="regChckCn" id="regChckCn" ></textarea>
@@ -382,7 +382,7 @@
 
 								<div class="contBox">
 								    <div class="nameBox nameBox-flex">
-								        <h4 class="name">지도 사실확인</h4>
+								        <h4 class="name">지도점검 사실확인</h4>
 								    </div>
 								    <div class="cont cont-flex">
 								    	<table class="tb rental_tb01">
@@ -390,8 +390,8 @@
 								                <th scope="col"><span class="asterisk">*</span>점검결과</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="regRslt">점검결과</label>
-								                        <input type="text" id="regRslt" name="regRslt" maxLength="80" aria-label="점검결과"
+								                        <label for="regChckRslt">점검결과</label>
+								                        <input type="text" id="regChckRslt" name="regChckRslt" maxLength="80" aria-label="점검결과"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
@@ -400,8 +400,8 @@
 								                <th scope="col"><span class="asterisk">*</span>직급</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="">직급</label>
-								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="직급"
+								                        <label for="regIdfrJbgd">직급</label>
+								                        <input type="text" id="regIdfrJbgd" name="regIdfrJbgd" class="input" maxLength="80" aria-label="직급"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
@@ -422,8 +422,8 @@
 								                <th scope="col"><span class="asterisk">*</span>확인자</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="">확인자</label>
-								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="확인자"
+								                        <label for="regChckIdfr">확인자</label>
+								                        <input type="text" id="regChckIdfr" name="regChckIdfr" class="input" maxLength="80" aria-label="확인자"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
@@ -432,8 +432,8 @@
 								                <th scope="col"><span class="asterisk">*</span>소속</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="">소속</label>
-								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="소속"
+								                        <label for="regIdfrOgdp">소속</label>
+								                        <input type="text" id="regIdfrOgdp" name="regIdfrOgdp" class="input" maxLength="80" aria-label="소속"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
@@ -453,7 +453,7 @@
 								</div>
 								<div class="contBox">
 								    <div class="nameBox nameBox-flex">
-								        <h4 class="name">지도 후속 처리 내용</h4>
+								        <h4 class="name">지도점검 후속 처리 내용</h4>
 								    </div>
 								    <div class="cont cont-flex">
 								        <table class="tb rental_tb01">
@@ -461,8 +461,8 @@
 								                <th scope="col"><span class="asterisk">*</span>후속처리내용</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="">후속처리내용</label>
-								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="확인자"
+								                        <label for="regPrcsCn">후속처리내용</label>
+								                        <input type="text" id="regPrcsCn" name="regPrcsCn" class="input" maxLength="80" aria-label="확인자"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
@@ -579,13 +579,13 @@
 								           	2
 								           	</td>
 								           	<td>
-								           	<input id="" class="input" type="text" oninput="charOnly(this)" />
+								           	<input id="detailExmnr2" class="input" type="text" oninput="charOnly(this)" />
 								           	</td>
 								           	<td>
-								           	<input id="" class="input" type="text" oninput="charOnly(this)" />
+								           	<input id="detailJbgd2" class="input" type="text" oninput="charOnly(this)" />
 								           	</td>
 								           	<td>
-								           	<input id="" class="input" type="text" oninput="charOnly(this)" />
+								           	<input id="detailOgdp2" class="input" type="text" oninput="charOnly(this)" />
 								           	</td>
 								           </tr>
 								            <tr>
@@ -593,13 +593,13 @@
 								           	3
 								           	</td>
 								           	<td>
-								           	<input id="" class="input" type="text" oninput="charOnly(this)" />
+								           	<input id="detailExmnr3" class="input" type="text" oninput="charOnly(this)" />
 								           	</td>
 								           	<td>
-								           	<input id="" class="input" type="text" oninput="charOnly(this)" />
+								           	<input id="detailJbgd3" class="input" type="text" oninput="charOnly(this)" />
 								           	</td>
 								           	<td>
-								           	<input id="" class="input" type="text" oninput="charOnly(this)" />
+								           	<input id="detailOgdp3" class="input" type="text" oninput="charOnly(this)" />
 								           	</td>
 								           </tr>
 								        </table>
@@ -617,8 +617,7 @@
 								                <td>
 								                    <div class="tb_flex">
 								                        <label for="detailCoNm">회사명</label>
-								                        <input type="text" id="detailCoNm" name="detailCoNm" class="input no_line" maxLength="80" aria-label="회사명"
-								                               readonly/>
+								                        <input id="detailCoNm" name="detailCoNm" />
 								                    </div>
 								                </td>
 								            </tr>
@@ -690,26 +689,26 @@
 								
 								<div class="contBox">
 								    <div class="nameBox nameBox-flex">
-								        <h4 class="name">지도 내용</h4>
+								        <h4 class="name">지도점검 내용</h4>
 								    </div>
 								    <div class="cont cont-flex inspection01">
 								        <table class="tb rental_tb01">
 								            <tr>
-								                <th scope="col"><span class="asterisk">*</span>지도항목</th>
+								                <th scope="col"><span class="asterisk">*</span>점검항목</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="detailChckArtcl">지도항목</label>
-								                        <input type="text" id="detailChckArtcl" name="detailChckArtcl" class="input" maxLength="80" aria-label="지도항목"
+								                        <label for="detailChckArtcl">점검항목</label>
+								                        <input type="text" id="detailChckArtcl" name="detailChckArtcl" class="input" maxLength="80" aria-label="점검항목"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
 								            </tr>
 								            <tr>
-								                <th scope="col">지도장소</th>
+								                <th scope="col">점검장소</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="detailChckPlc">지도장소</label>
-								                        <input type="text" id="detailChckPlc" name="detailChckPlc" class="input" maxLength="80" aria-label="지도장소"
+								                        <label for="detailChckPlc">점검장소</label>
+								                        <input type="text" id="detailChckPlc" name="detailChckPlc" class="input" maxLength="80" aria-label="점검장소"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
@@ -731,10 +730,10 @@
 								    <div class="cont inspection02">
 								    	<table class="tb rental_tb01">
 								    	   <tr>
-								                <th scope="col"><span class="asterisk">*</span>지도내용</th>
+								                <th scope="col"><span class="asterisk">*</span>점검내용</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="detailChckCn">지도내용</label>
+								                        <label for="detailChckCn">점검내용</label>
 								                        <textarea class="input chckCn" name="detailChckCn" id="detailChckCn" ></textarea>
 								                    </div>
 								                </td>
@@ -766,7 +765,7 @@
 
 								<div class="contBox">
 								    <div class="nameBox nameBox-flex">
-								        <h4 class="name">지도 사실확인</h4>
+								        <h4 class="name">지도점검 사실확인</h4>
 								    </div>
 								    <div class="cont cont-flex">
 								    	<table class="tb rental_tb01">
@@ -774,8 +773,8 @@
 								                <th scope="col"><span class="asterisk">*</span>점검결과</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="detailRslt">점검결과</label>
-								                        <input type="text" id="detailRslt" name="detailRslt"  maxLength="80" aria-label="점검결과"
+								                        <label for="detailChckRslt">점검결과</label>
+								                        <input type="text" id="detailChckRslt" name="detailChckRslt"  maxLength="80" aria-label="점검결과"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
@@ -784,8 +783,8 @@
 								                <th scope="col"><span class="asterisk">*</span>직급</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="detailJbgd">직급</label>
-								                        <input type="text" id="detailJbgd" name="detailJbgd" class="input" maxLength="80" aria-label="직급"
+								                        <label for="detailIdfrJbgd">직급</label>
+								                        <input type="text" id="detailIdfrJbgd" name="detailIdfrJbgd" class="input" maxLength="80" aria-label="직급"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
@@ -806,8 +805,8 @@
 								                <th scope="col"><span class="asterisk">*</span>확인자</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="detailExmnr">확인자</label>
-								                        <input type="text" id="detailExmnr" name="detailExmnr" class="input" maxLength="80" aria-label="확인자"
+								                        <label for="detailChckIdfr">확인자</label>
+								                        <input type="text" id="detailChckIdfr" name="detailChckIdfr" class="input" maxLength="80" aria-label="확인자"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
@@ -816,8 +815,8 @@
 								                <th scope="col"><span class="asterisk">*</span>소속</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="detailOgdp">소속</label>
-								                        <input type="text" id="detailOgdp" name="detailOgdp" class="input" maxLength="80" aria-label="소속"
+								                        <label for="detailIdfrOgdp">소속</label>
+								                        <input type="text" id="detailIdfrOgdp" name="detailIdfrOgdp" class="input" maxLength="80" aria-label="소속"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
@@ -837,7 +836,7 @@
 								</div>
 								<div class="contBox">
 								    <div class="nameBox nameBox-flex">
-								        <h4 class="name">지도 후속 처리 내용</h4>
+								        <h4 class="name">지도점검 후속 처리 내용</h4>
 								    </div>
 								    <div class="cont cont-flex">
 								        <table class="tb rental_tb01">
@@ -845,8 +844,8 @@
 								                <th scope="col"><span class="asterisk">*</span>후속처리내용</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="">후속처리내용</label>
-								                        <input type="text" id="" name="" class="input" maxLength="80" aria-label="후속처리내용"
+								                        <label for="detailPrcsCn">후속처리내용</label>
+								                        <input type="text" id="detailPrcsCn" name="detailPrcsCn" class="input" maxLength="80" aria-label="후속처리내용"
 								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
