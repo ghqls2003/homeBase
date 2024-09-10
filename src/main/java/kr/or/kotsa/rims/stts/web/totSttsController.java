@@ -65,23 +65,6 @@ public class totSttsController extends CmmnAbstractServiceImpl {
 	}
 	
 	/**
-	 * 대여사업자 영업현황 통계
-	 *
-	 * @param paramsMap
-	 * @return
-	 * @throws RimsException
-	 */
-	@RequestMapping("totStts/agencyArea")
-	@ResponseBody
-	public Object selectAgencyArea(@RequestBody Map<String, Object> paramsMap) throws RimsException {
-		Map<String, Object> aa = new HashMap<>();
-		List<Map<String, Object>> agencyArea = totSttsService.agencyArea(paramsMap);
-		aa.put("agencyArea", agencyArea);
-		
-		return aa;
-	}
-	
-	/**
 	 * 대여사업자 현황 그리드
 	 *
 	 * @param paramsMap
@@ -102,18 +85,18 @@ public class totSttsController extends CmmnAbstractServiceImpl {
 	}
 	
 	/**
-	 * 사업 개시 및 폐업 비율 통계
+	 * 대여사업자 가입 현황
 	 *
 	 * @param paramsMap
 	 * @return
 	 * @throws RimsException
 	 */
-	@RequestMapping("totStts/agencyOpenCloseChart")
+	@RequestMapping("totStts/agencyAccessionChart")
 	@ResponseBody
-	public Object selectAgencyOpenCloseChart(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+	public Object agencyAccessionChart(@RequestBody Map<String, Object> paramsMap) throws RimsException {
 		Map<String, Object> aocc = new HashMap<>();
-		List<Map<String, Object>> agencyOpenCloseChart = totSttsService.agencyOpenCloseChart(paramsMap);
-		aocc.put("agencyOpenCloseChart", agencyOpenCloseChart);
+		List<Map<String, Object>> agencyAccessionChart = totSttsService.agencyAccessionChart(paramsMap);
+		aocc.put("agencyAccessionChart", agencyAccessionChart);
 		
 		return aocc;
 	}

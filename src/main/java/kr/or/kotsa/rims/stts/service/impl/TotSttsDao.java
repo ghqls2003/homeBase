@@ -10,17 +10,6 @@ import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
 
 @Repository
 public class TotSttsDao extends CmmnAbstractMapper {
-	
-	/**
-	 * 대여사업자 영업현황 통계
-	 * @param paramsMap
-	 * @return List<Map<String, Object>>
-	 * @throws RimsException
-	 */
-	public List<Map<String, Object>> agencyArea(Map<String, Object> paramsMap)throws RimsException {
-		return selectList("stts.totStts.agencyArea", paramsMap);
-	}
-	
 	/**
 	 * 대여사업자 현황 그리드
 	 * @param paramsMap
@@ -35,12 +24,12 @@ public class TotSttsDao extends CmmnAbstractMapper {
 	}
 	
 	/**
-	 * 사업 개시 및 폐업 비율 통계
+	 * 대여사업자 가입 현황
 	 * @param paramsMap
 	 * @return List<Map<String, Object>>
 	 * @throws RimsException
 	 */
-	public List<Map<String, Object>> agencyOpenCloseChart(Map<String, Object> paramsMap)throws RimsException {
-		return selectList("stts.totStts.agencyOpenCloseChart", paramsMap);
+	public List<Map<String, Object>> agencyAccessionChart(Map<String, Object> paramsMap)throws RimsException {
+		return selectList("stts.totStts.agencyAccessionChart", paramsMap);
 	}
 }

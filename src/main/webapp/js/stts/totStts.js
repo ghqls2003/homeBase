@@ -10,14 +10,12 @@
 
     W.$statistics = W.$statistics || {};
     
-    var authPage = {};
-    
     var toDayDate = new Date();
     var agoYearDate = new Date(toDayDate);
     	agoYearDate.setFullYear(toDayDate.getFullYear()-1);
     var areaDetailData = [];
     
-    var ocMonth = [], ocNormal = [], ocEtc = [], ocNormalPer = [];
+    var accSd = [], accData = [];
     	
 	var excelDetailData = null;
 	
@@ -25,31 +23,26 @@
 	var gridAreaColumns = [
 		{template: "#if(sdNm == '시도 합계') {#<span style='font-weight: bold;'>#: sdNm#</span>#"
 				+ "} else {##: sdNm##}#", title: "시도", width: "150px", field: "sdNm"},
-		{template: "#: tot#", title: "합계", width: "100px", field: "tot"},
-		{template: "#: sttsNormal#", title: "정상", width: "100px", field: "sttsNormal"},
-		{template: "#: sttsRest#", title: "휴업", width: "100px", field: "sttsRest"},
-		{template: "#: sttsClose#", title: "폐업", width: "100px", field: "sttsClose"},
-		{template: "#: sttsBreak#", title: "정지", width: "100px", field: "sttsBreak"},
-		{template: "#: sttsEtc#", title: "기타", width: "100px", field: "sttsEtc"},
-		{template: "#: vhclCount#", title: "차량합계", width: "150px", field: "vhclCount"},
+		{template: "#: sttsNormal#", title: "전체사업자수", width: "100px", field: "sttsNormal"},
+		{template: "#: accession#", title: "가입사업자수", width: "100px", field: "accession"},
+		{template: "#: accessionPer#", title: "가입비율(%)", width: "100px", field: "accessionPer"},
+		{template: "#: sedan#", title: "승용차", width: "100px", field: "sedan"},
+		{template: "#: van#", title: "승합차", width: "100px", field: "van"},
+		{template: "#: special#", title: "특수차", width: "100px", field: "special"},
 		{template: "#: conn#", title: "valued", width: "15%", field: "conn", hidden: "true"},
 	];
 	var gridAreaDetailColumns = [
 		{template: "#: sggNm#", title: "<span style='font-weight: bold;'>시군구</span>", width: "150px", field: "sggNm"},
-		{template: "#: tot#", title: "&nbsp;", width: "100px", field: "tot"},
 		{template: "#: sttsNormal#", title: "&nbsp;", width: "100px", field: "sttsNormal"},
-		{template: "#: sttsRest#", title: "&nbsp;", width: "100px", field: "sttsRest"},
-		{template: "#: sttsClose#", title: "&nbsp;", width: "100px", field: "sttsClose"},
-		{template: "#: sttsBreak#", title: "&nbsp;", width: "100px", field: "sttsBreak"},
-		{template: "#: sttsEtc#", title: "&nbsp;", width: "100px", field: "sttsEtc"},
-		{template: "#: vhclCount#", title: "&nbsp;", width: "150px", field: "vhclCount"},
+		{template: "#: accession#", title: "&nbsp;", width: "100px", field: "accession"},
+		{template: "#: accessionPer#", title: "&nbsp;", width: "100px", field: "accessionPer"},
+		{template: "#: sedan#", title: "&nbsp;", width: "100px", field: "sedan"},
+		{template: "#: van#", title: "&nbsp;", width: "100px", field: "van"},
+		{template: "#: special#", title: "&nbsp;", width: "100px", field: "special"},
 		{template: "#: conn#", title: "&nbsp;", width: "15%", field: "conn", hidden: "true"}
 	];
 	
     $(document).ready(function() {
-		/* 최초 권한 설정 */    
-	    authrtCd == "G01" ? authPage = {"authrtCd" : "G01", "cmptncZoneCd" : cmptncZoneCd} : authPage = {};
-		
         $statistics.ui.pageLoad();
     });
     
@@ -67,7 +60,7 @@
 			}
 
 			// 대여사업자 가입현황
-			$statistics.ui.agencyOpenCloseChartFunc(GAuthParams);
+			$statistics.ui.agencyAccessionChart(GAuthParams);
 			
 			// 대여사업자 현황 그리드
 			ajax(true, contextPath + '/stts/totStts/agencyAreaGrid', 'body', '조회중입니다', GAuthParams, function(data) {
@@ -80,7 +73,20 @@
         },
         
 		/* 대여사업자 가입현황 */
-		createChartMulti: function(ocMonth, ocNormal, ocEtc, ocNormalPer) {
+		createChartMulti: function(data) {
+			var series = data.map(function(item) {
+			    return {
+			        type: "column",
+			        data: [item.sttsNormal],
+			        stack: false,
+			        name: item.sdNm,
+			        color: item.color,
+			        overlay: { gradient: "none" },
+			        border: { width: 0 },
+			        axis: "stick"
+			    };
+			});
+			
 			$("#multi-chart").kendoChart({
 				title: {text: ""},
                 legend: {
@@ -89,50 +95,10 @@
 			            template: "#= series.name #", font: "20px sans-serif"
 			        }
 				},
-                series: [
-					{
-	                	type: "column",
-	                    data: ocNormal,
-	                    stack: false,
-	                    name: "정상운영",
-	                    color: "#45C596",
-	                    overlay: {gradient: "none"},
-	                    border: {width: 0},
-	                    axis: "stick"
-                    }, 
-                    {
-                    	type: "column",
-                        data: ocEtc,
-                        stack: false,
-                        name: "그외운영",
-                        color: "#F5CB68",
-                        overlay: {gradient: "none"},
-                        border: {width: 0},
-                        axis: "stick"
-					},
-                    {
-                    	type: "line",
-                        data: ocNormalPer,
-                        stack: false,
-                        name: "정상운영비율",
-                        color: "#0000FF",
-                        overlay: {gradient: "none"},
-                        border: {width: 0},
-                        axis: "line",
-                        tooltip: {
-							template: "#= series.name #: #= value +'%' #"
-						}
-					}
-				],
+                series: series,
 				valueAxes: [
-					{title: {text: "", font: "13px, Pretendard"}, name: "stick"},
-					{title: {text: "", font: "13px, Pretendard"}, name: "line", visible: false},
+					{title: {text: "", font: "13px, Pretendard"}, name: "stick"}
 				],
-                categoryAxis: {
-                	categories: ocMonth,
-                    axisCrossingValues: [0, 0, 10, 10],
-                    color: "#585858"
-				},
                 tooltip: {
                 	visible: true,
                     template: "#= series.name #: #= value +'건' #"
@@ -152,20 +118,22 @@
                 editable: false,
 				resizable: true,
 				scrollable: true,
+				height: "550px",
                 sortable: true,
                 detailInit: detailInit,
                 dataBound: function() {
 					detailExportPromises = [];
-					this.expandRow(this.tbody.find("tr.k-master-row").first());
-					$("#grid01 > tbody > tr:last-child > td.k-hierarchy-cell").css("visibility", "hidden");
+//					this.expandRow(this.tbody.find("tr.k-master-row").eq(1));  // 두번째 로우 확장
+//					this.expandRow(this.tbody.find("tr.k-master-row").first());  // 첫번째 로우 확장
+					$("#grid01 > tbody > tr:first-child > td.k-hierarchy-cell").css("visibility", "hidden");  // 확장 기능 제거
+					$("#grid01 > tbody > tr:last-child > td.k-hierarchy-cell").css("visibility", "hidden");  // 확장 기능 제거
 				},
 //                pageable: { pageSize: 5, buttonCount: 5 },
-                noRecords: { template : "데이터가 없습니다." },
+//                noRecords: { template : "데이터가 없습니다." },
                 toolbar: [{name: "excel", text:"다운로드"}],
                 excel: { allPages: true },
 				excelExport : function(e){
-					if($("#grid01").data("kendoGrid").dataSource.total() == 0 ||
-						$("#grid01").data("kendoGrid").dataSource.options.data[0].sdNm == '시도 합계') {
+					if($("#grid01").data("kendoGrid").dataSource.total() == 0) {
 						e.preventDefault();
 						alert("데이터가 없어 다운로드를 할 수 없습니다.");
 					} else {
@@ -271,13 +239,12 @@
 			    var exporter = new kendo.ExcelExporter({
 					columns: [
 			        	{title: "시군구", field: "sggNm"},
-						{title: " ", field: "tot"},
 						{title: " ", field: "sttsNormal"},
-						{title: " ", field: "sttsRest"},
-						{title: " ", field: "sttsClose"},
-						{title: " ", field: "sttsBreak"},
-						{title: " ", field: "sttsEtc"},
-						{title: " ", field: "vhclCount"},
+						{title: " ", field: "accession"},
+						{title: " ", field: "accessionPer"},
+						{title: " ", field: "dedan"},
+						{title: " ", field: "van"},
+						{title: " ", field: "special"},
 						{title: " ", field: "conn", hidden: "true"}
 			        ],
 					dataSource: dataSource
@@ -315,51 +282,33 @@
 		},
 		
 		/**
-		 * @name         : agencyOpenCloseChartFunc
+		 * @name         : agencyAccessionChart
 		 * @description  : 대여사업자 가입현황
 		 * @date         : 2023.07.25
 		 * @author       : 김경룡
 		 */
-		agencyOpenCloseChartFunc: function(params) {
-			ajax(false, contextPath + '/stts/totStts/agencyOpenCloseChart', 'body', '조회중입니다', params, function(data) {
-									
-				ocMonth = []; ocNormal = []; ocEtc = []; ocNormalPer = [];
-							
-				for(var i=0; i<data.agencyOpenCloseChart.length; i++) {
-					ocMonth.push(data.agencyOpenCloseChart[i].monthlist);
-					ocNormal.push(data.agencyOpenCloseChart[i].sttsNormal);
-					ocEtc.push(data.agencyOpenCloseChart[i].sttsEtc);
-					ocNormalPer.push(data.agencyOpenCloseChart[i].normalPer);
-				}
-							
-				$statistics.ui.createChartMulti(ocMonth, ocNormal, ocEtc, ocNormalPer);
+		agencyAccessionChart: function(params) {
+			ajax(false, contextPath + '/stts/totStts/agencyAccessionChart', 'body', '조회중입니다', params, function(data) {
+				var randomColors = 
+					[
+						"#FF6F61", "#FFB347", "#FFD700", "#90EE90", "#87CEFA", "#FF69B4", "#BA55D3", "#32CD32", "#FFB6C1",
+						"#FFA07A", "#98FB98", "#FFD700", "#40E0D0", "#9370DB", "#FFDAB9", "#7B68EE", "#FF1493", "#66CDAA"
+					];
+				    
+				data.agencyAccessionChart.forEach(function(item, index) {
+				    item.color = randomColors[index % randomColors.length];  // 색상 할당
+				});
+				
+				$statistics.ui.createChartMulti(data.agencyAccessionChart);
 			});
-			
-		},
-
-		/**
-		 * @name         : agencyAreaGridFunc
-		 * @description  : 대여사업자 현황 그리드
-		 * @date         : 2024.04.18
-		 * @author       : 김경룡
-		 */
-		agencyAreaGridFunc: function(params) {
-			var sggGridData = null;
-			ajax(true, contextPath + '/stts/totStts/agencyAreaGrid', 'body', '조회중입니다', params, function(data) {
-				sggGridData = data.agencyAreaGrid;
-				areaDetailData = [];
-				areaDetailData = data.agencyAreaDetailGrid;
-														
-				excelDetailData = data.agencyAreaDetailGrid;
-														
-				$("#grid01").data("kendoGrid").setDataSource(sggGridData);
-			});
-	    }
+		}
 	}
     
 	$statistics.event = {
-		excelDown: function() {
-			$("#areaGrid").data("kendoGrid").saveAsExcel();
+		excelDown: function(event) {
+			if(event.target.closest("#areaGrid") != null) {
+				$("#areaGrid").find(".k-grid-excel").click();
+			}
 		},
 		
 		/**

@@ -21,6 +21,12 @@
 #grid01 > thead {
 	font-weight: bold;
 }
+#zone1 {
+	width: 70%;
+}
+#areaGrid, #areaChart {
+	height : 570px;;
+}
 </style>
 
 <script>
@@ -49,11 +55,11 @@
 			</div>
 			<br />
 	        <div class="cont-flex">
-	        	<div id="mapToggle" class="left-bx cmn-bx">
+	        	<div id="zone1" class="left-bx cmn-bx">
 	            	<div id="areaGrid"  class="contBox flex-box">
-	                	<div class="nameBox">
+	                	<div class="nameBox" style="display: flex; justify-content: space-between;">
 	                    	<h4 class="name">대여사업자 현황</h4>
-	                    	<button class="download-btn" onClick="javaScript:$statistics.event.excelDown();">
+	                    	<button class="download-btn" onClick="javaScript:$statistics.event.excelDown(event);">
 			                	<img src="${contextPath}/images/sub/ico_down.png" alt="다운로드아이콘">다운로드
 							</button>
 						</div>
@@ -63,11 +69,11 @@
 					</div>
 				</div>
 	            <div class="right-bx cmn-bx">
-					<div class="contBox flex-box">
+					<div id="areaChart" class="contBox flex-box">
 	                	<div class="nameBox">
-	                    	<h4 class="name">운영상태 비율 통계</h4>
+	                    	<h4 class="name">대여사업자 가입 현황</h4>
 						</div>
-	                    <div class="cont chart-flex chart-flex02">
+	                    <div class="cont chart-flex chart-flex02" style="height: 100%; ">
 	                    	<div id="multi-chart" class="multi-chart" style="width:100%; height:100%; margin:0px;"></div>
 						</div>
 					</div>

@@ -7,13 +7,6 @@ import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
 
 public interface TotSttsService {
 	/**
-	 * 대여사업자 영업현황 통계
-	 * @return
-	 * @throws RimsException
-	 */
-	public List<Map<String, Object>> agencyArea(Map<String, Object> paramsMap) throws RimsException;
-	
-	/**
 	 * 대여사업자 현황 그리드
 	 * @return
 	 * @throws RimsException
@@ -22,9 +15,9 @@ public interface TotSttsService {
 	public List<Map<String, Object>> agencyAreaDetailGrid(Map<String, Object> paramsMap) throws RimsException;
 	
 	/**
-	 * 사업 개시 및 폐업 비율 통계
+	 * 대여사업자 가입 현황
 	 * @return
 	 * @throws RimsException
 	 */
-	public List<Map<String, Object>> agencyOpenCloseChart(Map<String, Object> paramsMap) throws RimsException;
+	public List<Map<String, Object>> agencyAccessionChart(Map<String, Object> paramsMap) throws RimsException;
 }

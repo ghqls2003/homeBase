@@ -15,17 +15,6 @@ public class TotSttsServiceImpl extends CmmnAbstractServiceImpl implements TotSt
 
 	@Autowired
 	private TotSttsDao totSttsDao;
-	
-    /**
-     * 대여사업자 영업현황 통계
-     * @return
-     * @throws RimsException
-     */
-    @Override
-    public List<Map<String, Object>> agencyArea(Map<String, Object> paramsMap) throws RimsException {
-    	return totSttsDao.agencyArea(paramsMap);
-    }
-    
     /**
      * 대여사업자 현황 그리드
      * @return
@@ -41,12 +30,12 @@ public class TotSttsServiceImpl extends CmmnAbstractServiceImpl implements TotSt
     }
     
     /**
-     * 사업 개시 및 폐업 비율 통계
+     * 대여사업자 가입 현황
      * @return
      * @throws RimsException
      */
     @Override
-    public List<Map<String, Object>> agencyOpenCloseChart(Map<String, Object> paramsMap) throws RimsException {
-    	return totSttsDao.agencyOpenCloseChart(paramsMap);
+    public List<Map<String, Object>> agencyAccessionChart(Map<String, Object> paramsMap) throws RimsException {
+    	return totSttsDao.agencyAccessionChart(paramsMap);
     }
 }
