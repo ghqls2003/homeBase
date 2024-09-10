@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="stts.totStts">
+
+
+	<resultMap id="getSttsGeomResult" type="egovframework.rte.psl.dataaccess.util.EgovMap">
+		<result property="geometry" column="geometry"  javaType="_byte[]" />
+		<result property="rr" column="rr" />
+	</resultMap>
+	
+	<!-- 대여사업자 지역 토탈 -->
+	<select id="agencyArea" parameterType="paraMap" resultType="resultMap">
+	/* 대여사업자 지역별 토탈 */
+		SELECT COALESCE(CASE SUM(t2.stts_normal)::NUMERIC WHEN 0 THEN 0 ELSE ROUND(SUM(t2.stts_normal)::NUMERIC/SUM(t2.tot)*100, 2) END, 0) stts_normal
+			, COALESCE(CASE SUM(t2.stts_rest)::NUMERIC WHEN 0 THEN 0 ELSE ROUND(SUM(t2.stts_rest)::NUMERIC/SUM(t2.tot)*100, 2) END, 0) stts_rest
+			, COALESCE(CASE SUM(t2.stts_close)::NUMERIC WHEN 0 THEN 0 ELSE ROUND(SUM(t2.stts_close)::NUMERIC/SUM(t2.tot)*100, 2) END, 0) stts_close
+			, COALESCE(CASE SUM(t2.stts_break)::NUMERIC WHEN 0 THEN 0 ELSE ROUND(SUM(t2.stts_break)::NUMERIC/SUM(t2.tot)*100, 2) END, 0) stts_break
+			, COALESCE(CASE SUM(t2.stts_etc)::NUMERIC WHEN 0 THEN 0 ELSE ROUND(SUM(t2.stts_etc)::NUMERIC/SUM(t2.tot)*100, 2) END, 0) stts_etc
+		FROM
+			(
+			SELECT SUM(t1.stts_normal) stts_normal
+				, SUM(t1.stts_rest) stts_rest
+				, SUM(t1.stts_close) stts_close
+				, SUM(t1.stts_break) stts_break
+				, SUM(t1.stts_etc) stts_etc
+				, SUM(t1.stts_normal)+SUM(t1.stts_rest)+SUM(t1.stts_close)+SUM(t1.stts_break)+SUM(t1.stts_etc) tot
+			FROM
+				(
+				SELECT LEFT(mstr.sgg_cd, 2) sgg_cd2
+					, LEFT(mstr.sgg_cd, 5) sgg_cd5
+					, CASE mstr.bsn_stts_cd WHEN '0' THEN 1 ELSE 0 END stts_normal
+					, CASE mstr.bsn_stts_cd WHEN '1' THEN 1 ELSE 0 END stts_rest
+					, CASE mstr.bsn_stts_cd WHEN '3' THEN 1 ELSE 0 END stts_close
+					, CASE mstr.bsn_stts_cd WHEN '4' THEN 1 ELSE 0 END stts_break
+					, CASE mstr.bsn_stts_cd WHEN '5' THEN 1 ELSE 0 END stts_etc
+					, CASE WHEN mstr.vhcl_reg_noh IN('0', NULL) THEN 0 ELSE mstr.vhcl_reg_noh END vhcl_count
+				FROM 
+					dqvs.dvs_rac_mt_agency mstr
+				) AS t1
+			WHERE 1=1
+			<if test="ctpvCd != null and ctpvCd != ''">
+				AND t1.sgg_cd2 = #{ctpvCd}
+			</if>
+			<if test="sggCd != null and sggCd != ''">
+				AND t1.sgg_cd5 = #{sggCd}
+			</if>
+			) AS t2	
+	</select>
+
+	<!-- 대여사업자 현황 그리드 지역별 조회(시도) -->
+	<select id="agencyAreaGrid" parameterType="paraMap" resultType="resultMap">
+	/* 대여사업자 현황 그리드 지역별 조회(시도) */
+		SELECT t2.sd_nm
+			, COALESCE(TO_CHAR(t2.stts_normal, 'FM999,999,999'), '-') stts_normal
+			, COALESCE(TO_CHAR(t2.stts_rest, 'FM999,999,999'), '-') stts_rest
+			, COALESCE(TO_CHAR(t2.stts_close, 'FM999,999,999'), '-') stts_close
+			, COALESCE(TO_CHAR(t2.stts_break, 'FM999,999,999'), '-') stts_break
+			, COALESCE(TO_CHAR(t2.stts_etc, 'FM999,999,999'), '-') stts_etc
+			, COALESCE(TO_CHAR(t2.vhcl_count, 'FM999,999,999'), '-') vhcl_count
+			, COALESCE(TO_CHAR(t2.tot, 'FM999,999,999'), '-') tot
+			, t2.sd_cd conn
+		FROM 
+			(
+			SELECT COALESCE(t1.sd_nm, '시도 합계') sd_nm
+				, SUM(t1.stts_normal) stts_normal
+				, SUM(t1.stts_rest) stts_rest
+				, SUM(t1.stts_close) stts_close
+				, SUM(t1.stts_break) stts_break
+				, SUM(t1.stts_etc) stts_etc
+				, SUM(t1.vhcl_count) vhcl_count
+				, SUM(t1.stts_normal)+SUM(t1.stts_rest)+SUM(t1.stts_close)+SUM(t1.stts_break)+SUM(t1.stts_etc) tot
+				, t1.sd_cd
+			FROM
+				(
+				SELECT LEFT(mstr.sgg_cd, 2) sd_cd
+					, COALESCE((SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_sd WHERE ctpv_cd = LEFT(mstr.sgg_cd, 2)), '-') sd_nm
+					, CASE mstr.bsn_stts_cd WHEN '0' THEN 1 ELSE 0 END stts_normal
+					, CASE mstr.bsn_stts_cd WHEN '1' THEN 1 ELSE 0 END stts_rest
+					, CASE mstr.bsn_stts_cd WHEN '3' THEN 1 ELSE 0 END stts_close
+					, CASE mstr.bsn_stts_cd WHEN '4' THEN 1 ELSE 0 END stts_break
+					, CASE mstr.bsn_stts_cd WHEN '5' THEN 1 ELSE 0 END stts_etc
+					, mstr.vhcl_reg_noh vhcl_count
+				FROM 
+					dqvs.dvs_rac_mt_agency mstr
+				) AS t1
+			WHERE 1=1
+			<if test="ctpvCd != null and ctpvCd != ''">
+				AND t1.sd_cd = #{ctpvCd}
+			</if>
+			<if test="sggCd != null and sggCd != ''">
+				AND t1.sd_cd = LEFT(#{sggCd}, 2)
+			</if>
+			GROUP BY ROLLUP((t1.sd_cd, t1.sd_nm))
+			) AS t2
+		ORDER BY t2.sd_cd ASC
+	</select>
+	
+	<!-- 대여사업자 현황 그리드 지역별 조회(시군구) -->
+	<select id="agencyAreaDetailGrid" parameterType="paraMap" resultType="resultMap">
+	/* 대여사업자 현황 그리드 지역별 조회(시군구) */
+		SELECT t2.sgg_nm
+			, TO_CHAR(t2.stts_normal, 'FM999,999,999') stts_normal
+			, TO_CHAR(t2.stts_rest, 'FM999,999,999') stts_rest
+			, TO_CHAR(t2.stts_close, 'FM999,999,999') stts_close
+			, TO_CHAR(t2.stts_break, 'FM999,999,999') stts_break
+			, TO_CHAR(t2.stts_etc, 'FM999,999,999') stts_etc
+			, TO_CHAR(t2.vhcl_count, 'FM999,999,999') vhcl_count
+			, TO_CHAR(t2.tot, 'FM999,999,999') tot
+			, t2.sgg_cd
+			, LEFT(t2.sgg_cd, 2) conn
+		FROM 
+			(
+			SELECT COALESCE(t1.sgg_nm, '합계') sgg_nm
+				, SUM(t1.stts_normal) stts_normal
+				, SUM(t1.stts_rest) stts_rest
+				, SUM(t1.stts_close) stts_close
+				, SUM(t1.stts_break) stts_break
+				, SUM(t1.stts_etc) stts_etc
+				, SUM(t1.vhcl_count) vhcl_count
+				, SUM(t1.stts_normal)+SUM(t1.stts_rest)+SUM(t1.stts_close)+SUM(t1.stts_break)+SUM(t1.stts_etc) tot
+				, COALESCE(t1.sgg_cd, '-') sgg_cd
+			FROM
+				(
+				SELECT LEFT(mstr.sgg_cd, 5) sgg_cd
+					, COALESCE((SELECT sgg_nm FROM dqvs.dvs_cmm_mt_sgg WHERE sgg_cd = LEFT(mstr.sgg_cd, 5)), '-') sgg_nm
+					, CASE mstr.bsn_stts_cd WHEN '0' THEN 1 ELSE 0 END stts_normal
+					, CASE mstr.bsn_stts_cd WHEN '1' THEN 1 ELSE 0 END stts_rest
+					, CASE mstr.bsn_stts_cd WHEN '3' THEN 1 ELSE 0 END stts_close
+					, CASE mstr.bsn_stts_cd WHEN '4' THEN 1 ELSE 0 END stts_break
+					, CASE mstr.bsn_stts_cd WHEN '5' THEN 1 ELSE 0 END stts_etc
+					, mstr.vhcl_reg_noh vhcl_count
+				FROM 
+					dqvs.dvs_rac_mt_agency mstr
+				) AS t1
+			WHERE 1=1
+			<if test="ctpvCd != null and ctpvCd != ''">
+				AND LEFT(t1.sgg_cd, 2) = #{ctpvCd}
+			</if>
+			<if test="sggCd != null and sggCd != ''">
+				AND t1.sgg_cd = #{sggCd}
+			</if>
+			GROUP BY t1.sgg_nm, t1.sgg_cd
+			ORDER BY t1.sgg_cd ASC
+			) AS t2
+	</select>
+	
+	<!-- 운영상태 비율 통계 -->
+	<select id="agencyOpenCloseChart" parameterType="paraMap" resultType="resultMap">
+	/* 운영상태 비율 통계 */	
+		SELECT bs_date.monthlist
+			, COALESCE(t1.stts_normal, 0) stts_normal
+			, COALESCE(t1.stts_etc, 0) stts_etc
+			, COALESCE(t1.stts_total, 0) stts_total
+			, CASE WHEN t1.stts_normal != 0 AND t1.stts_total != 0 THEN TRUNC((t1.stts_normal::NUMERIC/t1.stts_total::NUMERIC*100), 2)
+					ELSE 0 END normal_per
+		FROM
+			(
+			SELECT main.bs_date
+				, COALESCE(SUM(main.stts_normal), 0) stts_normal
+				, COALESCE(SUM(main.stts_rest)+SUM(main.stts_close)+SUM(main.stts_break)+SUM(main.stts_etc), 0) stts_etc
+				, COALESCE(SUM(main.stts_normal)+SUM(main.stts_rest)+SUM(main.stts_close)+SUM(main.stts_break)+SUM(main.stts_etc), 0) stts_total
+			FROM
+				(
+				SELECT COALESCE(
+						CASE mstr.bsn_stts_mdfcn_dt WHEN '' THEN NULL ELSE TO_CHAR(TO_TIMESTAMP(mstr.bsn_stts_mdfcn_dt, 'YYYYMMDD'), 'YYYY-MM') END,
+						CASE mstr.biz_strt_day WHEN '' THEN NULL ELSE TO_CHAR(TO_TIMESTAMP(mstr.biz_strt_day, 'YYYYMMDD'), 'YYYY-MM') END, NULL
+						) bs_date
+					, CASE mstr.bsn_stts_cd WHEN '0' THEN 1 ELSE 0 END stts_normal
+					, CASE mstr.bsn_stts_cd WHEN '1' THEN 1 ELSE 0 END stts_rest
+					, CASE mstr.bsn_stts_cd WHEN '3' THEN 1 ELSE 0 END stts_close
+					, CASE mstr.bsn_stts_cd WHEN '4' THEN 1 ELSE 0 END stts_break
+					, CASE mstr.bsn_stts_cd WHEN '5' THEN 1 ELSE 0 END stts_etc
+					, LEFT(mstr.sgg_cd, 2) sgg_cd
+				FROM 
+					dqvs.dvs_rac_mt_agency mstr
+				WHERE 1=1
+				<if test="ctpvCd != null and ctpvCd != ''">
+					AND LEFT(mstr.sgg_cd, 2) = #{ctpvCd}
+				</if>
+				<if test="sggCd != null and sggCd != ''">
+					AND LEFT(mstr.sgg_cd, 5) = #{sggCd}
+				</if>
+				) AS main
+			GROUP BY main.bs_date
+			) AS t1
+		RIGHT OUTER JOIN
+			(
+			SELECT CONCAT(EXTRACT(MONTH FROM (GENERATE_SERIES((CURRENT_TIMESTAMP+'-12months'), (CURRENT_TIMESTAMP+'-1months'), '1month'))), '월') monthList
+				, TO_CHAR(GENERATE_SERIES((CURRENT_TIMESTAMP+'-12months'), (CURRENT_TIMESTAMP+'-1months'), '1month'), 'YYYY-MM') yearMonthList
+			) bs_date
+		ON bs_date.yearMonthList = t1.bs_date
+	</select>
+</mapper>
