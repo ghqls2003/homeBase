@@ -77,12 +77,14 @@ public class InspectionHistController extends CmmnAbstractServiceImpl{
 		return inspectionHistService.selectAuth(paramsMap);
 	}
 	
+	//지도점검이력 목록
 	@PostMapping("/inspectionHist/selectInspectionHistInfo")
 	@ResponseBody
 	public Map<String, Object> selectInspectionHistInfo(@RequestBody Map<String, Object> paramsMap){
 		return inspectionHistService.selectInspectionHistInfo(paramsMap);
 	}
 	
+	//지도점검이력 등록
 	@RequestMapping("/inspectionHist/insertInspectionHist")
 	@ResponseBody
 	public int insertInspectionHist(@RequestBody Map<String, Object> paramsMap) throws RimsException {
@@ -101,13 +103,14 @@ public class InspectionHistController extends CmmnAbstractServiceImpl{
 	}
 	
 	
+	//엑셀다운
 	@PostMapping("/inspectionHist/excelDown")
     public GenericExcelView excelDown(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
                                       HttpServletRequest request, HttpServletResponse response) throws RimsException {
 
 		String fileName = "inspectionHist" + (new java.text.SimpleDateFormat("yyyyMMddHHmmss")).format(new java.util.Date());
-        String colName[] = {"순번", "관할지역",        "조사원",  "회사명",    "권한",  "사업자번호", "법인번호", "결과",    "주소",     "후속처리여부"};
-        String valName[] = {"rn", "jurisdiction", "exmnr", "coNm", "bzmnSeNm", "brno", "crno", "chckRslt", "roadNmAddr", "prcsYn"};
+        String colName[] = {"순번", "등록일", "점검일", "관할지역", "지도원", "회사명", "권한", "사업자등록번호", "법인등록번호", "점검결과"};
+        String valName[] = {"rn", "regDt","chckYmd","jurisdiction", "exmnr", "coNm", "bzmnSeNm", "brno", "crno", "chckRslt"};
 
 
         List<Map<String, Object>> colValue = inspectionHistDao.selectInspectionHistInfo(paramsMap);
@@ -122,15 +125,16 @@ public class InspectionHistController extends CmmnAbstractServiceImpl{
         return new GenericExcelView();
     }
 	
+	//지도점검이력 수정
 	@RequestMapping("/inspectionHist/updateInspectionHist")
     @ResponseBody
     public int updateInspectionHist(@RequestBody Map<String, Object> paramsMap) {
-        //paramsMap.put("mdfrSn", getUserSn());
         paramsMap.put("mdfcnIp", getClientIP());
 
         return inspectionHistService.updateInspectionHist(paramsMap);
     }
 	
+	//회사목록
 	@RequestMapping(value = "/inspectionHist/agencyList")
 	public ModelAndView agencyList(@RequestBody Map<String, Object> paramsMap) throws RimsException {
 		List<Map<String, Object>> result = inspectionHistService.agencyList(paramsMap);
@@ -141,18 +145,14 @@ public class InspectionHistController extends CmmnAbstractServiceImpl{
 		return mav;
 	}
 	
+	//회사정보
 	@RequestMapping(value = "/inspectionHist/agencyInfo")
 	@ResponseBody
 	public List<Map<String, Object>> agencyInfo(@RequestBody Map<String, Object> paramsMap) throws RimsException {
 		return inspectionHistService.agencyInfo(paramsMap);
 	}
 	
-	/**
-     * 지도점검이력 삭제
-     * @param paramsMap
-     * @return
-     * @throws RimsException
-     */
+    //지도점검이력 삭제
 	@RequestMapping(value = "/inspectionHist/updateDeleteYn")
 	@ResponseBody
 	public int updateDeleteYn(@RequestBody Map<String, Object> paramsMap) throws RimsException {

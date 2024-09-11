@@ -18,21 +18,21 @@ OOFDocument oof = OOFDocument.newOOF();
 //서식파일 연결
 OOFFile file = oof.addFile("crf.root", "%root%/crf/inspection.crf");
 
-//String bzmnSn = request.getParameter("bzmnSn");
+String bzmnSn = request.getParameter("bzmnSn");
 
 Map<String, Object> userMap = (Map<String, Object>)session.getAttribute("userData");
 
 //리포트에 파라메터 전달
-//oof.addField ("BZMN_SN", bzmnSn);
+oof.addField ("BZMN_SN", bzmnSn);
 if(session.getAttribute("SSO_NAME")!=null) {
 	oof.addField ("USER_NM", (String)session.getAttribute("SSO_NAME"));
 }
 if(session.getAttribute("SSO_ID")!=null) {
 	oof.addField ("USER_ID", (String)session.getAttribute("SSO_ID"));
 }
-if((String)userMap.get("bzmnSn")!=null) {
-	oof.addField ("BZMN_SN", (String)userMap.get("bzmnSn"));
-}
+// if((String)userMap.get("bzmnSn")!=null) {
+// 	oof.addField ("BZMN_SN", (String)userMap.get("bzmnSn"));
+// }
 
 String mode = (String) pageContext.getAttribute("mode");
 if(mode.contains("dev")){
@@ -48,7 +48,7 @@ else if(mode.contains("op")){
 <c:set var="contextPath" value="${pageContext.request.contextPath }" />
 
 <script src="${contextPath}/js/sys/inspectionReport.js"></script>
-<link rel="stylesheet" type="text/css" href="${contextPath}/css/custom/rentalHistManage.css" />
+<link rel="stylesheet" type="text/css" href="${contextPath}/css/custom/inspectionHist.css" />
 
 <link rel="stylesheet" type="text/css" href="${contextPath}/ext-lib/ClipReport5/css/clipreport5.css">
 <link rel="stylesheet" type="text/css" href="${contextPath}/ext-lib/ClipReport5/css/UserConfig5.css">

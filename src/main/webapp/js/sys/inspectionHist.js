@@ -2,6 +2,7 @@
 	
 	W.$inspectionHist = W.$inspectionHist || {};
 	
+	var maxFileCnt = 4;
 	var fileCkd = false;
 	var fileNo = 0;
 	var filesArr = [];
@@ -11,7 +12,6 @@
 		kendo.ui.progress($(document.body), true);
 		$inspectionHist.ui.pageLoad();		//최초 페이지 로드 시
 		$inspectionHist.event.setUIEvent();
-		//$inspectionHist.ui.agencyNmAutoComplete(); 
 	});
 	
 	var excelDownArc = {};
@@ -20,21 +20,110 @@
 		pageLoad: function() {
 			$inspectionHist.ui.autoTextarea();
 			$inspectionHist.ui.search();
+			$inspectionHist.ui.detailSearch();
 			$inspectionHist.ui.areaSearch();
-//			$inspectionHist.ui.inspectionHistInfo();
+		},
+		
+		detailSearch: function(){
+			$("#detailChckYmd").kendoDatePicker({
+				value: new Date(),
+				dateInput: true,
+				format: "yyyy-MM-dd",
+				max: new Date()
+			});
 			
+			//서명여부
+			var signYn = [
+			   	{ text: "Y"},
+				{ text: "N"},
+			];
+			
+			$("#detailSignYn").kendoDropDownList({
+				dataTextField: "text",
+				dataValueField: "text",
+				dataSource: signYn,
+    		});
+
+			//지도점검결과
+			var rsltData = [
+				{ cd: "합격" },
+				{ cd: "불합격" }
+			];
+			
+			$("#detailChckRslt").kendoDropDownList({
+				dataTextField: "cd",
+				dataValueField: "cd",
+				dataSource: rsltData,
+			});
+			
+			//후속처리여부
+			var prcsCn = [
+				{ text: "경고" },
+				{ text: "벌금" },
+				{ text: "휴업" },
+			];
+			
+			$("#detailPrcsCn").kendoDropDownList({
+				dataTextField: "text",
+				dataValueField: "text",
+				dataSource: prcsCn,
+			});
+		},
+		
+		insertSearch: function(){
+			$("#regChckYmd").kendoDatePicker({
+				value: new Date(),
+				dateInput: true,
+				format: "yyyy-MM-dd",
+				max: new Date()
+			});
+			
+			//서명여부
+			var signYn = [
+			   	{ text: "Y"},
+				{ text: "N"},
+			];
+			
+			$("#regSignYn").kendoDropDownList({
+				dataTextField: "text",
+				dataValueField: "text",
+				dataSource: signYn,
+    		});
+
+			//지도점검결과
+			var rsltData = [
+				{ cd: "합격" },
+				{ cd: "불합격" }
+			];
+			
+			$("#regChckRslt").kendoDropDownList({
+				dataTextField: "cd",
+				dataValueField: "cd",
+				dataSource: rsltData,
+			});
+			
+			//후속처리여부
+			var prcsCn = [
+				{ text: "경고" },
+				{ text: "벌금" },
+				{ text: "휴업" },
+			];
+			
+			$("#regPrcsCn").kendoDropDownList({
+				dataTextField: "text",
+				dataValueField: "text",
+				dataSource: prcsCn,
+			});
 		},
 		
 		autoTextarea: function(){
-		    var textareas = $('.chckCn');
-
+			var textareas = $('.chckCn');
 			textareas.each(function() {
 			    $(this).on('input', function() {
 			        $(this).css('height', '0');
 			        $(this).css('height', this.scrollHeight + 'px');
 			    });
 			});
-			
 		},
 		
 		// 회사 검색
@@ -51,7 +140,7 @@
 			ajax(false, contextPath + '/sys/inspectionHist/agencyList', 'body', '처리중입니다.', param, function(data) {
 				$(element).kendoAutoComplete({
 	              filter: "contains",
-					placeholder: '법인명을 입력하세요.',
+					placeholder: '회사명을 입력하세요.',
 					dataTextField: "coNm",
 			        dataSource: data,
 					select: function(e) {
@@ -71,8 +160,6 @@
 		},
 		
 		agencyInfo: function(element){
-			//$('.inc_receiver_lists div').remove();
-			//$('#inc_selec_01').data('value', '');
 			if(element=="#agencyNm"){
 				var param = $(element).data('value');
 			}else if(element=="#detailCoNm"){
@@ -82,38 +169,35 @@
 					bzmnSn : param,
 			};
 			ajax(true, contextPath+'/sys/inspectionHist/agencyInfo', 'body', '처리중입니다.', parameterMap, function (data) {
-				var bsnSttsMdfcnDt = !data[0].bsnSttsMdfcnDt ? '-' :  dateFormatting(data[0].bsnSttsMdfcnDt);
-				var agencyTelno = !data[0].agencyTelno ? '-' :  toTelNum(data[0].agencyTelno);
-				var brno = !data[0].brno ? '-' :  toBizrnoNumFormat(data[0].brno);
+				var bsnSttsMdfcnDt = !data[0].bsnSttsMdfcnDt ? '' :  dateFormatting(data[0].bsnSttsMdfcnDt);
+				var agencyTelno = !data[0].agencyTelno ? '' :  toTelNum(data[0].agencyTelno);
+				var brno = !data[0].brno ? '' :  toBizrnoNumFormat(data[0].brno);
 				if(element=="#agencyNm"){
 					if($(element).val() != ""){
-						$('#bsnSttsNm').val(data[0].bsnSttsNm || '-');
+						$('#bsnSttsNm').val(data[0].bsnSttsNm);
 						$('#bsnSttsMdfcnDt').val(bsnSttsMdfcnDt);
 						$('#agencyTelno').val(agencyTelno);
-						$('#rprsvNm').val(data[0].rprsvNm || '-');
+						$('#rprsvNm').val(data[0].rprsvNm);
 						$('#brno').val(brno);
-						$('#jurisdiction').val(data[0].jurisdiction || '-');
-						$('#jurisdiction').data('value', data[0].regCmptncCd || '-');
+						$('#locgov').val(data[0].locgov);
+						$('#agencyNm').data('regCmptncCd', data[0].regCmptncCd);
 					}
 				}else if(element=="#detailCoNm"){
 					if($(element).val() != ""){
-						$('#detailBsnSttsNm').val(data[0].bsnSttsNm || '-');
+						$('#detailBsnSttsNm').val(data[0].bsnSttsNm);
 						$('#BsnSttsMdfcnDt').val(bsnSttsMdfcnDt);
 						$('#detailAgencyTelno').val(agencyTelno);
-						$('#detailRprsvNm').val(data[0].rprsvNm || '-');
+						$('#detailRprsvNm').val(data[0].rprsvNm);
 						$('#detailBrno').val(brno);
-						$('#detailJurisdiction').val(data[0].jurisdiction || '-');
-						$('#detailJurisdiction').data('value', data[0].regCmptncCd || '-');
+						$('#detailLocgov').val(data[0].locgov);
+						$('#detailCoNm').data('regCmptncCd', data[0].regCmptncCd);
 					}
 				}
-				
-				
 			})
 		},
 		
 		areaSearch: function() {
 			var param = {};
-			
 			if (authrtCd == 'G01') {
 				param.userCmptncZoneCd = userCmptncZoneCd;
 				ajax(true, contextPath+'/sys/inspectionHist/ctpvNm', 'body', '처리중입니다.', param, function (data) {
@@ -123,7 +207,6 @@
 			            dataSource: data,
 						value : "ctpv_cd",
 			        });
-
 
 					ajax(true, contextPath+'/sys/inspectionHist/sggNm', 'body', '처리중입니다.', param, function (data) {
 						if(data.length!=0){
@@ -137,12 +220,6 @@
 						$inspectionHist.ui.inspectionHistInfo();
 					});
 				});
-				
-				
-				
-			
-			
-							
 			}else{
 				ajax(true, contextPath+'/sys/inspectionHist/ctpvNm', 'body', '처리중입니다.', param, function (data) {
 					$('#searchCtpvNm').kendoDropDownList({
@@ -175,7 +252,6 @@
 				});
 			}
 			
-			
 			// 시구군
 			$('#searchSggNm').kendoDropDownList({
 	            optionLabel: "시군구(전체)",
@@ -187,73 +263,35 @@
 		search: function() {
 			
 			var param = {};
-//			
-//			
-//			
-//			if (authrtCd == 'G01') {
-//				param.userCmptncZoneCd = userCmptncZoneCd;
-//				ajax(true, contextPath+'/sys/inspectionHist/ctpvNm', 'body', '처리중입니다.', param, function (data) {
-//					$('#searchCtpvNm').kendoDropDownList({
-//			            dataTextField: "ctpv_nm",
-//			            dataValueField: "ctpv_cd",
-//			            dataSource: data,
-//						value : "ctpv_cd",
-//			        });
-//				});
-//				
-//				
-//				ajax(true, contextPath+'/sys/inspectionHist/sggNm', 'body', '처리중입니다.', param, function (data) {
-//					if(data.length!=0){
-//						$('#searchSggNm').kendoDropDownList({
-//				            dataTextField: "sgg_nm",
-//				            dataValueField: "sgg_cd",
-//				            dataSource: data,
-//							value : "sgg_cd"
-//				        });
-//					}
-//					callback();
-//				});
-//			
-//			
-//							
-//			}else{
-//				ajax(true, contextPath+'/sys/inspectionHist/ctpvNm', 'body', '처리중입니다.', param, function (data) {
-//					$('#searchCtpvNm').kendoDropDownList({
-//			            optionLabel: "시도(전체)",
-//			            dataTextField: "ctpv_nm",
-//			            dataValueField: "ctpv_cd",
-//			            dataSource: data,
-//						value : "ctpv_cd",
-//						change: function() {
-//							if(this.value() == '') {
-//								$('#searchSggNm').data("kendoDropDownList").setDataSource(null);
-//							} else {
-//							    param.ctpvCd = this.value();
-//								ajax(true, contextPath+'/sys/inspectionHist/sggNm', 'body', '처리중입니다.', param, function (data) {
-//									if(data.length==0){
-//										data = [{ "sgg_nm": '',"sgg_cd": '' }];
-//									}
-//									$('#searchSggNm').kendoDropDownList({
-//							            optionLabel: "시군구(전체)",
-//							            dataTextField: "sgg_nm",
-//							            dataValueField: "sgg_cd",
-//							            dataSource: data,
-//										value : "sgg_cd"
-//							        });
-//								});
-//							}
-//						}
-//			        });
-//					callback();
-//				});
-//			}
-//			
-//			
-//			// 시구군
-//			$('#searchSggNm').kendoDropDownList({
-//	            optionLabel: "시군구(전체)",
-//	            dataSource: {}
-//	        });
+			
+			// 기간 유형
+			var dateType = [
+			   	{ value: "type_regDt", text: "등록일"},
+				{ value: "type_chckYmd", text: "점검일"},
+			];
+			
+			$("#dateType").kendoDropDownList({
+				dataTextField: "text",
+				dataValueField: "value",
+				dataSource: dateType,
+				value: "value"
+    		});
+			
+			// 기간 검색
+			var oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1));
+			
+			$("#start-picker01").kendoDatePicker({
+				format: "yyyy-MM-dd",
+				value: new Date(oneMonthAgo),
+			});
+
+			$("#end-picker01").kendoDatePicker({
+				format: "yyyy-MM-dd",
+				value: new Date(),
+			});
+			
+			$("#start-picker01").attr("readonly", true);
+			$("#end-picker01").attr("readonly", true);
 	        
 			// 권한
 			ajax(false, contextPath + '/sys/inspectionHist/selectAuth', 'body', '처리중입니다.', param, function(data) {
@@ -291,19 +329,11 @@
 				dataSource: rsltData,
 			});
 			
-			$("#regChckRslt").kendoDropDownList({
-				dataTextField: "cd",
-				dataValueField: "cd",
-				dataSource: rsltData,
-			});
-			
 			$("#detailChckRslt").kendoDropDownList({
 				dataTextField: "cd",
 				dataValueField: "cd",
 				dataSource: rsltData,
 			});
-			
-			
 		},
 		
 		inspectionHistInfo: function() {
@@ -323,10 +353,14 @@
 						parameterMap: function(options) {
 							var sd = $("#searchCtpvNm").val();
 							var sgg = $("#searchSggNm").val();
+							
+							options.startDt = $("#start-picker01").val();
+							options.endDt = $("#end-picker01").val();
+							options.dateType = $("#dateType").val();
 							options.cmptncZoneCd = sd+sgg;
 							options.bzmnSeCd     = $('#searchBzmnSeCd').val();
 							options.bsnSttsCd    = $('#searchBsnSttsCd').val();
-							options.rslt         = $('#searchRslt').val();
+							options.chckRslt         = $('#searchRslt').val();
 							
 							return JSON.stringify(options);
 						}
@@ -343,14 +377,34 @@
 				},
 				columns: [
 					{ field: "rn", title: "순번", width: "30px", template: "#: rn #", sortable: false },
-					{ field: "jurisdiction", title: "관할지역", width: "50px", template: "#= jurisdiction != null ? jurisdiction : '-' #", sortable: true },
-					{ field: "exmnr", title: "조사원", width: "30px", template: "#= exmnr != null ? exmnr : '-' #", sortable: true },
+					{ field: "regDt", title: "등록일", width: "30px", template: "#= regDt.split(' ')[0] != null ? regDt.split(' ')[0] : '-' #", sortable: true },
+					{ field: "chckYmd", title: "점검일", width: "30px", template: "#= chckYmd != null ? chckYmd : '-' #", sortable: true },
+					{ field: "jurisdiction", title: "관할지역", width: "50px", template: "#= jurisdiction != null && jurisdiction.trim() !== '' ? jurisdiction : '-' #", sortable: true },
+					{ field: "exmnr", title: "지도원", width: "30px", template:function(dataItem) {
+						var exmnrArr = [];
+						
+						if(dataItem.exmnr!=null && dataItem.exmnr!=''){
+							exmnrArr.push(dataItem.exmnr);
+						}
+						if(dataItem.exmnr2!=null && dataItem.exmnr2!=''){
+							exmnrArr.push(dataItem.exmnr2);
+						}
+						if(dataItem.exmnr3!=null && dataItem.exmnr3!=''){
+							exmnrArr.push(dataItem.exmnr3);
+						}
+						var exmnrCnt = exmnrArr.length - 1
+						
+						if(exmnrArr.length <= 1){
+							return exmnrArr[0] != null ? exmnrArr[0] : '-'
+						}else{
+							return exmnrArr[0] != null ?  exmnrArr[0] +" 외 " + exmnrCnt + "명" : '-'
+						}
+					}, sortable: true },
 					{ field: "coNm", title: "회사명", width: "30px", template: "#= coNm != null ? coNm : '-' #", sortable: true },
 					{ field: "bzmnSeNm", title: "권한", width: "30px", template: "#= bzmnSeNm != null ? bzmnSeNm : '-' #", sortable: true },
-					{ field: "brno", title: "사업자번호", width: "50px", template: "#= brno != null ? brno : '-' #", sortable: true },
-					{ field: "crno", title: "법인번호", width: "50px", template: "#= crno != null ? crno : '-' #", sortable: true },
+					{ field: "brno", title: "사업자등록번호", width: "40px", template: "#= brno != null ? brno : '-' #", sortable: true },
+					{ field: "crno", title: "법인등록번호", width: "40px", template: "#= crno != null ? crno : '-' #", sortable: true },
 					{ field: "chckRslt", title: "결과", width: "30px", template: "#= chckRslt != null ? chckRslt : '-' #", sortable: true },
-					{ field: "roadNmAddr", title: "주소", width: "100px", template: "#= roadNmAddr != null ? roadNmAddr : '-' #", sortable: true },
 					{ title: "결과서", width: "30px", exportable: false, template: "<button class='gray_btn' style='width: 70px;height: 30px;' onclick='javascript:$inspectionHist.event.issued(`#:bzmnSn#`);'>발급</button>" },
 				],
 				navigatable: true,
@@ -370,8 +424,28 @@
 				},
 				change: $inspectionHist.ui.rowClickEvent
 			})
-			
 		},
+		
+		exmnrNum : function(e) {
+			var num = 0;
+			var exmnrArr = [];
+			var data = {};
+			if(e.exmnr!=null && e.exmnr!=''){
+				exmnrArr.push(e.exmnr);
+				num++;
+			}else if(e.exmnr2!=null && e.exmnr2!=''){
+				exmnrArr.push(e.exmnr2);
+				num++;
+			}else if(e.exmnr3!=null && e.exmnr3!=''){
+				exmnrArr.push(e.exmn3);
+				num++;
+			}
+			
+			data[exmnrArr] = exmnrArr;
+			data[exmnrNum] = num;
+			return data;
+		},
+		
 		// row 상세팝업
 		rowClickEvent : function(e) {
 			var param = "#detailCoNm";
@@ -389,14 +463,10 @@
                 data = dataItem;
             });
 			$inspectionHist.event.detailInfoPopup(data);
-
-//			var crno = !data.crno ? '-' : toCorporateNumFormat(data.crno);
-//			$('#crno').val(crno);
-//			$('#detailExmnr').val(data.exmnr);
-//			$('#detailJbgd').val(data.jbgd);
-//			$('#detailOgdp').val(data.ogdp);
 			
-//			$(".detail_popup").addClass("view");
+			$('.chckCn').each(function() {
+			    $(this).trigger('input');
+			  });
 		},
 		
 	}
@@ -422,18 +492,37 @@
 			});
 			
 			$("#searchBtn").on("click", function() {
+				var start = new Date($("#start-picker01").val());
+				var end = new Date($("#end-picker01").val());
+				if(end > new Date(new Date(start).setMonth(start.getMonth() + 1))){
+					alert("한 달 이상으로 선택할 수 없습니다.");
+					$('#start-picker01').data("kendoDatePicker").value(new Date(new Date(end).setMonth(end.getMonth() - 1)));
+					return;
+				}
+				if(new Date($('#start-picker01').val()) > new Date($('#end-picker01').val())){
+					alert("시작일은 종료일보다 늦을 수 없습니다.");
+					$('#end-picker01').data("kendoDatePicker").value(new Date($('#start-picker01').val()));
+					return;
+				}
+				
 				var sd = $("#searchCtpvNm").val();
 				var sgg = $("#searchSggNm").val();
 				excelDownArc.cmptncZoneCd = sd+sgg;
+				excelDownArc.startDt = $("#start-picker01").val();
+				excelDownArc.endDt = $("#end-picker01").val();
+				excelDownArc.dateType = $("#dateType").val();
 				excelDownArc.bzmnSeCd     = $('#searchBzmnSeCd').val();
 				excelDownArc.bsnSttsCd    = $('#searchBsnSttsCd').val();
 				excelDownArc.rslt         = $('#searchRslt').val();
+				
 				$("#inspectionHistGrid").data("kendoGrid").dataSource.page(1);
             });
 			
 			// 등록팝업 버튼
 			$(".insertPopupBtn").on("click", function() {
 				var param = "#agencyNm"
+				
+				$inspectionHist.ui.insertSearch(); 
 				$inspectionHist.ui.agencyNmAutoComplete(param); 
 				$(".register_popup").addClass("view");
 			});
@@ -458,25 +547,6 @@
 				$("#fileUpload").click();
 				$("#fileUpload").change(function() {
 					var fileList =  $("#fileUpload")[0];
-//					var ext = $("#fileUpload").val().split(".").pop().toLowerCase();
-//					var files = ["jpg", "jpeg", "gif", "png", "pdf"];
-//
-//					if (ext.length > 0) {
-//						if ($.inArray(ext, files) == -1) {
-//							alert("첨부파일 형식을 다시 확인해주세요. \n 첨부가능 확장자 : jpg, jpeg, gif, png, pdf");
-//							$("#fileUpload").val("");
-//							$("#fileNm").val("");
-//							return false;
-//						} else {
-//							var file = $(this).prop("files")[0]; // 선택된 파일 가져오기
-//							var fileName = file.name; // 파일명 가져오기
-//							$("#fileNm").val(fileName); // 파일명을 사업자등록증 input 태그에 설정
-//						}
-//					}
-
-
-
-					var maxFileCnt = 4;   // 첨부파일 최대 개수
 				    var attFileCnt = document.querySelectorAll('.regFilebox').length;    // 기존 추가된 첨부파일 개수
 				    var remainFileCnt = maxFileCnt - attFileCnt;    // 추가로 첨부가능한 개수
 				    var curFileCnt = fileList.files.length;  // 현재 선택된 첨부파일 개수
@@ -523,25 +593,6 @@
 				$("#detailFileUpload").click();
 				$("#detailFileUpload").change(function() {
 					var fileList =  $("#detailFileUpload")[0];
-//					var ext = $("#fileUpload").val().split(".").pop().toLowerCase();
-//					var files = ["jpg", "jpeg", "gif", "png", "pdf"];
-//
-//					if (ext.length > 0) {
-//						if ($.inArray(ext, files) == -1) {
-//							alert("첨부파일 형식을 다시 확인해주세요. \n 첨부가능 확장자 : jpg, jpeg, gif, png, pdf");
-//							$("#fileUpload").val("");
-//							$("#fileNm").val("");
-//							return false;
-//						} else {
-//							var file = $(this).prop("files")[0]; // 선택된 파일 가져오기
-//							var fileName = file.name; // 파일명 가져오기
-//							$("#fileNm").val(fileName); // 파일명을 사업자등록증 input 태그에 설정
-//						}
-//					}
-
-
-
-					var maxFileCnt = 4;   // 첨부파일 최대 개수
 				    var attFileCnt = document.querySelectorAll('.detailFilebox').length;    // 기존 추가된 첨부파일 개수
 				    var remainFileCnt = maxFileCnt - attFileCnt;    // 추가로 첨부가능한 개수
 				    var curFileCnt = fileList.files.length;  // 현재 선택된 첨부파일 개수
@@ -583,33 +634,6 @@
 				});
 			});
 			
-			
-//			$('#detailFileUploadBtn').on("click", function() {
-//				$("#detailFile").click();
-//				$("#detailFile").change(function() {
-//					var ext = $("#detailFile").val().split(".").pop().toLowerCase();
-//					var files = ["jpg", "jpeg", "gif", "png", "pdf"];
-//
-//					if (ext.length > 0) {
-//						if ($.inArray(ext, files) == -1) {
-//							alert("첨부파일 형식을 다시 확인해주세요. \n 첨부가능 확장자 : jpg, jpeg, gif, png, pdf");
-//							$("#detailFile").val("");
-//							$("#detailFileNm").val("");
-//							return false;
-//						} else {
-//							var file = $(this).prop("files")[0]; // 선택된 파일 가져오기
-//							var fileName = file.name; // 파일명 가져오기
-//							$("#detailFileNm").val(fileName); // 파일명을 사업자등록증 input 태그에 설정
-//							fileCkd = true;
-//						}
-//					}
-//				});
-//			});
-			
-
-			
-        	
-        	// 상세팝업 - 삭제버튼 (마스터 관리자 / 사업자 전체 삭제 됨 - 요청, 마스터, 이력)
 			$(".deleteBtn").on("click", function() {
 				$inspectionHist.event.updateDeleteYn();
 			});
@@ -638,45 +662,49 @@
 		},
 		
 		detailInfoPopup: function(data) {
-			var brno = !data.brno ? '-' : toBizrnoNumFormat(data.brno);
-			var agencyTelno = !data.agencyTelno ? '-' : toTelNum(data.agencyTelno);
-			var telno = !data.telno ? '-' : toTelNum(data.telno);
-			var bsnSttsMdfcnDt = !data.bsnSttsMdfcnDt ? '-' :  dateFormatting(data.bsnSttsMdfcnDt);
-			$('#detailCoNm').val(data.coNm || '-');
+			var brno = toBizrnoNumFormat(data.brno);
+			var agencyTelno = toTelNum(data.agencyTelno);
+			var telno = toTelNum(data.telno);
+			var bsnSttsMdfcnDt = dateFormatting(data.bsnSttsMdfcnDt);
+			
+			var day = new Date();
+			if (data.chckYmd != '' && data.chckYmd != null) {
+				var chckYmd = data.chckYmd;
+			} else {
+				var chckYmd = dateToStr(day);
+			}
+			
+			$('#detailCoNm').val(data.coNm);
 			$('#detailCoNm').data('value', data.bzmnSn);
+			$('#detailCoNm').data('regDt', data.regDt);
+			$('#detailCoNm').data('regCmptncCd', data.regCmptncCd);
 			$('#detailBrno').val(brno);
-			$('#detailExmnr').val(data.exmnr || '-');
-			$('#detailExmnr2').val(data.exmnr || '-');
-			$('#detailExmnr3').val(data.exmnr || '-');
-			$('#detailJbgd').val(data.jbgd || '-');
-			$('#detailJbgd2').val(data.jbgd || '-');
-			$('#detailJbgd3').val(data.jbgd || '-');
-			$('#detailOgdp').val(data.ogdp || '-');
-			$('#detailOgdp2').val(data.ogdp || '-');
-			$('#detailOgdp3').val(data.ogdp || '-');
-			$('#detailBsnSttsNm').val(data.bsnSttsNm || '-');
+			$('#detailExmnr').val(data.exmnr);
+			$('#detailExmnr2').val(data.exmnr2);
+			$('#detailExmnr3').val(data.exmnr3);
+			$('#detailJbgd').val(data.jbgd);
+			$('#detailJbgd2').val(data.jbgd2);
+			$('#detailJbgd3').val(data.jbgd3);
+			$('#detailOgdp').val(data.ogdp);
+			$('#detailOgdp2').val(data.ogdp2);
+			$('#detailOgdp3').val(data.ogdp3 );
+			$('#detailBsnSttsNm').val(data.bsnSttsNm);
 			$('#detailBsnSttsMdfcnDt').val(bsnSttsMdfcnDt);
 			$('#detailAgencyTelno').val(agencyTelno);
-			$('#detailChckArtcl').val(data.chckArtcl || '-');
-			$('#detailEtcArtcl').val(data.etcArtcl || '-');
+			$('#detailChckArtcl').val(data.chckArtcl);
+			$('#detailEtcArtcl').val(data.etcArtcl);
+			$('#detailChckYmd').val(chckYmd);
 			$('#detailChckRslt').data("kendoDropDownList").value(data.chckRslt);
-			$('#detailChckIdfr').val(data.chckIdfr || '-');
-			$('#detailIdfrOgdp').val(data.idfrOgdp || '-');
-			$('#detailIdfrJbgd').val(data.idfrJbgd || '-');
-			$('#detailSignYn').val(data.signYn || '-');
+			$('#detailChckIdfr').val(data.chckIdfr);
+			$('#detailIdfrOgdp').val(data.idfrOgdp);
+			$('#detailIdfrJbgd').val(data.idfrJbgd);
+			$('#detailSignYn').data("kendoDropDownList").value(data.signYn);
 			$('#detailTelno').val(telno);
-			$('#detailRprsvNm').val(data.rprsvNm || '-');
-			$('#detailChckCn').val(data.chckCn || '-');
-			$('#detailChckPlc').val(data.chckPlc || '-');
-			$('#detailJurisdiction').val(data.jurisdiction || '-');
-			$('#detailJurisdiction').data('value', data.regCmptncCd);
-			$('#detailPrcsCn').val(data.prcsCn || '-');
-			//$('#detailFileNm').val(data.atchFileNm);
-			//$('#detailFileNo').val(data.fileatchsn1);
-			//$('.detailFileList').text(data.atchFileNm);
-			
-			
-			
+			$('#detailRprsvNm').val(data.rprsvNm);
+			$('#detailChckCn').val(data.chckCn);
+			$('#detailChckPlc').val(data.chckPlc);
+			$('#detailLocgov').val(data.locgov);
+			$('#detailPrcsCn').data("kendoDropDownList").value(data.prcsCn);
 			
 			for (var i = 1; i < 5; i++) {
 			    var fileSnNum = 'fileAtchSn' + i;
@@ -692,31 +720,15 @@
 			    }
 			}
 			
-			
-			
-			
-			
 			$(".detail_popup").addClass("view");
-//			var params = {};
-//
-//			ajax(true, contextPath + '/vfc/rntCnfCrtIsnHstr/selectDetailConfInfo', 'body', '확인인중입니다.', params, function(data) {
-//				$("#detailRentNo").val(data[0].rentNo);
-//				$("#detailVhclRegNo").val(data[0].vhclRegNo);
-//				$("#detailRentSttsNm").val(data[0].rentSttsNm);
-//				$("#detailRentHstryNo").val(data[0].rentHstryNo);
-//				$("#startDt").val(data[0].rentBgngDt);
-//				$("#endDt").val(data[0].rentEndDt);
-//				$("#mdfcnDt").val(data[0].mdfcnDt);
-//			});
-//
-//			$("#detailInfoPopup").addClass("view");
 		},
 		
 		insertBtn: function(){
 			var params ={};
-			//var brno = insertBrno.replace(/[^0-9]/g, "");
 			var tel = nvl($("#regTelno").val());
 			var telno = tel.replace(/-/g, "");
+			var regChckYmd = $("#regChckYmd").val();
+			var chckYmd = regChckYmd.replace(/-/g, "");
 			params.exmnr = $("#regExmnr").val();
 			params.exmnr2 = $("#regExmnr2").val();
 			params.exmnr3 = $("#regExmnr3").val();
@@ -729,26 +741,23 @@
 			params.telno = telno;
 			params.chckArtcl = $("#regChckArtcl").val();
 			params.etcArtcl = $("#regEtcArtcl").val();
+			params.chckCn = $("#regChckCn").val();
 			params.chckPlc = $("#regChckPlc").val();
 			params.chckRslt = $("#regChckRslt").val();
 			params.chckIdfr = $("#regChckIdfr").val();
+			params.chckYmd = chckYmd;
 			params.idfrJbgd = $("#regIdfrJbgd").val();
 			params.idfrOgdp = $("#regIdfrOgdp").val();
 			params.signYn = $("#regSignYn").val();
-			params.bzmnSn = $('#agencyNm').data('value');
+			params.bzmnSn = $("#agencyNm").data('value');
+			params.regCmptncCd = $("#agencyNm").data('regCmptncCd');
 			params.prcsCn = $("#regPrcsCn").val();
-			params.regCmptncCd = $('#jurisdiction').data('value');
+			params.locgov = $("#locgov").val();
+			params.fileNm = $(".regFileList").text();
+			params.coNm = $('#agencyNm').data('value');
+			params.transferFn = "insertFile";
 			
-			var fileNm = $('.regFileList').text();
-			var coNm = $('#agencyNm').data('value');
-			if(coNm == null || coNm == ""){
-				alert("법인명은 필수입니다");
-			}else if(fileNm == null || fileNm == "") {
-				alert("첨부파일은 필수입니다");
-			}else if (confirm("등록 하시겠습니까?")) {
-				$inspectionHist.event.insertFile(params);
-			}
-			
+			$inspectionHist.event.paramsValidation(params);
 		},
 		
 		insertInspection: function(params){
@@ -756,7 +765,6 @@
 				alert("등록을 성공하셨습니다");
 				$("#insertPopup").removeClass("view");
 				location.reload();
-		        //$("#inspectionHistGrid").data("kendoGrid").dataSource.page(1);
 		    });
 		},
 		
@@ -769,7 +777,6 @@
 			        // 삭제되지 않은 파일만 폼데이터에 담기
 			        if (!filesArr[i].is_delete) {
 			            formData.append("files", filesArr[i]);
-						
 			        }
 			    }
 
@@ -782,13 +789,10 @@
 								var num = index+1;
 								var paramsNm = "fileAtchSn"+num;
 								params[paramsNm] = nvl(element, 0);
-							    //console.log(params.fileatchsn1);
 							});
 						}else{
 							params.fileAtchSn1 = nvl(response.fileSn, 0);
 						}
-						
-						//params.fileatchsn = nvl(response.fileSn, 0);
 						$inspectionHist.event.insertInspection(params);
 					}
 				});
@@ -800,9 +804,7 @@
 		
 		issued: function(bzmnSn){
 			var params = {}
-
 			params.bzmnSn = bzmnSn;
-
 			if (bzmnSn == null || bzmnSn == '')
 				alert('결과서를 발급할 수 없습니다.');
 			else {
@@ -820,21 +822,26 @@
 					var sd = $("#searchCtpvNm").val();
 					var sgg = $("#searchSggNm").val();
 					excelDownArc.cmptncZoneCd = sd+sgg;
+					excelDownArc.startDt = $("#start-picker01").val();
+					excelDownArc.endDt = $("#end-picker01").val();
+					excelDownArc.dateType = $("#dateType").val();
 					excelDownArc.bzmnSeCd     = $('#searchBzmnSeCd').val();
 					excelDownArc.bsnSttsCd    = $('#searchBsnSttsCd').val();
 					excelDownArc.rslt         = $('#searchRslt').val();
 				}
 				excelDown("/sys/inspectionHist/excelDown", excelDownArc, "inspectionHist", totalRowCount);
 			}
-			
-			
         },
 
 		updateBtn : function(){
 			var params ={};
 			var tel = nvl($("#detailTelno").val());
 			var telno = tel.replace(/-/g, "");
+			var detailChckYmd = $("#detailChckYmd").val();
+			var chckYmd = detailChckYmd.replace(/-/g, "");
 			params.bzmnSn = $('#detailCoNm').data('value');
+			params.regCmptncCd = $("#detailCoNm").data('regCmptncCd');
+			params.regDt = $('#detailCoNm').data('regDt');
 			params.newBzmnSn = $('#detailCoNm').data('newBzmnSn')||$('#detailCoNm').data('value');
 			params.coNm = $("#detailCoNm").val();
 			params.exmnr = $("#detailExmnr").val();
@@ -849,6 +856,7 @@
 			params.telno = telno;
 			params.chckArtcl = $("#detailChckArtcl").val();
 			params.etcArtcl = $("#detailEtcArtcl").val();
+			params.chckYmd = chckYmd;
 			params.chckCn = $("#detailChckCn").val();
 			params.chckPlc = $("#detailChckPlc").val();
 			params.chckRslt = $("#detailChckRslt").val();
@@ -856,8 +864,12 @@
 			params.idfrJbgd = $("#detailIdfrJbgd").val();
 			params.idfrOgdp = $("#detailIdfrOgdp").val();
 			params.signYn = $("#detailSignYn").val();
-			params.regCmptncCd = $('#detailJurisdiction').data('value');
+			params.locgov = $('#detailLocgov').val();
 			params.prcsCn = $("#detailPrcsCn").val();
+			params.coNm = $("#detailCoNm").val();
+			params.prcsCn = $("#detailPrcsCn").val();
+			params.fileNm = $('.detailFileList').text();
+			params.transferFn = "updateFile";
 			
 			var j = 1;
 			for(var i=1; i<5; i++){
@@ -868,37 +880,11 @@
 					params[fileAtchSnNum] = $(detailFileSnNum).attr('value');
 				}
 			}
-			
-			var coNm = $("#detailCoNm").val();
-			var fileNm = $('.detailFileList').text();
-			if(coNm == null || coNm == ""){
-				alert("법인명은 필수입니다");
-			}else if(fileNm == null || fileNm == "") {
-				alert("첨부파일은 필수입니다");
-			}else if (confirm("등록 하시겠습니까?")) {
-				$inspectionHist.event.updateFile(params);
-			}
-			
-			
-//			
-//			var fileNm = $('#detailFileNm').val();
-//			if (fileNm == null || fileNm == "") {
-//				alert("첨부파일은 필수입니다");
-//				return;
-//			}
-//			
-//			if (confirm("수정 하시겠습니까?")) {
-//				if(fileNm != null || fileNm != ""){
-//					
-//				}
-//				$inspectionHist.event.updateFile(params);
-//			}
-
+			$inspectionHist.event.paramsValidation(params);
 		},
-
+		
 		updateFile: function(params) {
 			if (fileCkd == true) {
-				
 				// 폼데이터 담기
 			    var formData = new FormData();
 			    for (var i = 0; i < filesArr.length; i++) {
@@ -914,33 +900,23 @@
 						if (fileSnString.includes(',')) {
 						    var fileSnList = response.fileSn.split(',');
 							fileSnList.forEach((element, index) => {
-								//var num = index+1;
-								
 								for(var i=1; i<5; i++){
 									var fileAtchSnNum = "fileAtchSn"+i;
 									if (!params[fileAtchSnNum]) {
-											params[fileAtchSnNum] = element;
-											break;
+										params[fileAtchSnNum] = element;
+										break;
 									}
-									
 								}
-								
-//								var paramsNm = "fileAtchSn"+num;
-//								params[paramsNm] = nvl(element, 0);
-							    //console.log(params.fileatchsn1);
 							});
 						}else{
 							for(var i=1; i<5; i++){
 								var fileAtchSnNum = "fileAtchSn"+i;
 								if (!params[fileAtchSnNum]) {
-										params[fileAtchSnNum] = response.fileSn;
-										break;
+									params[fileAtchSnNum] = response.fileSn;
+									break;
 								}
-								
 							}
 						}
-						
-						//params.fileatchsn = nvl(response.fileSn, 0);
 						$inspectionHist.event.updateInspection(params);
 					}
 				});
@@ -955,13 +931,10 @@
 			param={};
 			param.fileSn = $(detailFileSnNum).attr('value');
 			$(detailFileSnNum).remove();
-//			ajax(true, contextPath + '/cmmn/deleteFile', 'body', '처리중입니다.', param, function(data) {
-//			});
 		},
 		
 		updateInspection: function(params) {
 			ajax(true, contextPath + '/sys/inspectionHist/updateInspectionHist', 'body', '처리중입니다.', params, function(data) {
-				//alert(data.message);
 				alert("수정되었습니다");
 				$(".register_popup").removeClass("view");
 				location.reload();
@@ -970,10 +943,9 @@
 		
 		updateDeleteYn : function(){
 			if(confirm("삭제하시겠습니까?")){
-
 				var params = {};
-
 				params.bzmnSn = $('#detailCoNm').data('value');
+				params.regDt = $('#detailCoNm').data('regDt');
 				ajax(true, contextPath + '/sys/inspectionHist/updateDeleteYn', 'body', '확인인중입니다.', params, function (data) {
 					alert("지도점검이력이 삭제되었습니다.");
 					location.reload();
@@ -984,12 +956,49 @@
 		fileDownBtn : function(element){
 			var atchFileSn = element.getAttribute('data-value');
 			var atchFileNm = element.innerText;
-			
 			fileDownloadget(atchFileSn, atchFileNm);
 		},
 		
-		
-		
+		paramsValidation: function(params) {
+			if((params.exmnr == null || params.exmnr == "" || params.jbgd == null || params.jbgd == "" || params.ogdp == null || params.ogdp == "")
+				&&(params.exmnr2 == null || params.exmnr2 == "" || params.jbgd2 == null || params.jbgd2 == "" || params.ogdp2 == null || params.ogdp2 == "")
+				&&(params.exmnr3 == null || params.exmnr3 == "" || params.jbgd3 == null || params.jbgd3 == "" || params.ogdp3 == null || params.ogdp3 == "")){
+				alert("지도원 정보를 확인해주세요.");
+			}else if(params.coNm == null || params.coNm == "") {
+				alert("회사명은 필수입니다");
+			}else if(params.chckArtcl == null || params.chckArtcl == "") {
+				alert("점검항목은 필수입니다");
+			}else if(params.chckPlc == null || params.chckPlc == "") {
+				alert("점검장소는 필수입니다");
+			}else if(params.chckYmd == null || params.chckYmd == "") {
+				alert("점검일자는 필수입니다");
+			}else if(params.chckCn == null || params.chckCn == "") {
+				alert("점검내용은 필수입니다");
+			}else if(params.fileNm == null || params.fileNm == "") {
+				alert("첨부파일은 필수입니다");
+			}else if(params.chckRslt == null || params.chckRslt == "") {
+				alert("점검결과는 필수입니다");
+			}else if(params.chckIdfr == null || params.chckIdfr == "") {
+				alert("확인자 성명은 필수입니다");
+			}else if(params.idfrJbgd == null || params.idfrJbgd == "") {
+				alert("확인자 직급은 필수입니다");
+			}else if(params.idfrOgdp == null || params.idfrOgdp == "") {
+				alert("확인자 소속은 필수입니다");
+			}else if(params.signYn == null || params.signYn == "") {
+				alert("서명여부는 필수입니다");
+			}else if(params.telno == null || params.telno == "") {
+				alert("확인자 연락처는 필수입니다");
+			}else if(params.prcsCn == null || params.prcsCn == "") {
+				alert("후속처리내용은 필수입니다");
+			}else if(params.transferFn == "insertFile"){
+				if(confirm("등록 하시겠습니까?")) {
+					$inspectionHist.event[params.transferFn](params);
+				}
+			}else if(params.transferFn == "updateFile"){
+				if(confirm("수정 하시겠습니까?")) {
+					$inspectionHist.event[params.transferFn](params);
+				}
+			}
+		},
 	}
-	
 }(window, document, jQuery));

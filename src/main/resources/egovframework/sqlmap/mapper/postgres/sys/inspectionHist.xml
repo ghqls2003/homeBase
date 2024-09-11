@@ -42,6 +42,9 @@
 					dqvs.dvs_cmm_mt_area
 			where
 					stdg_cd = reg_cmptnc_cd)) jurisdiction
+			, CONCAT(
+		    (SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd), ' ',
+		    (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd)) locgov		
 			, (
 			select
 				cd.cd_nm
@@ -114,13 +117,13 @@
 	
 	
 	<sql id="InspectionHistInfoSql">
+	<if test="dateType.equals('type_regDt') and startDt != '' and startDt != null and endDt != '' and endDt != null">
 		(
 		SELECT ROW_NUMBER() OVER(ORDER BY T1.reg_dt DESC) rn
 		, T1.*
 		from(
 			select
 				inspctn.bzmn_sn
-				, inspctn.reg_dt
 				, inspctn.reg_cmptnc_cd
 				, inspctn.exmnr
 				, inspctn.exmnr2
@@ -136,6 +139,8 @@
 				, inspctn.etc_artcl
 				, inspctn.chck_cn
 				, inspctn.chck_plc
+				, TO_CHAR(inspctn.chck_ymd, 'YYYY-MM-DD') as chck_ymd
+				, TO_CHAR(inspctn.reg_dt, 'YYYY-MM-DD HH24:MI:SS') as reg_dt
 				, inspctn.sign_yn
 				, inspctn.chck_rslt
 				, inspctn.chck_idfr
@@ -186,6 +191,9 @@
 						dqvs.dvs_cmm_mt_area
 					where
 						stdg_cd = agency.reg_cmptnc_cd)) jurisdiction
+				, CONCAT(
+			    (SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = agency.sgg_cd), ' ',
+			    (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = agency.sgg_cd)) locgov	
 				,(
 				select
 					atch_file_nm
@@ -219,6 +227,136 @@
 			) as T1
 			WHERE 1 = 1
 			and (T1.del_yn != 'Y' or T1.del_yn is null)
+			and (T1.reg_dt::timestamp BETWEEN #{startDt}::TIMESTAMP AND #{endDt}::DATE + '23:59:59'::INTERVAL)
+			<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
+				and T1.reg_cmptnc_cd like #{cmptncZoneCd} || '%'
+			</if>
+			<if test='bzmnSeCd != "" and bzmnSeCd != null'>
+				AND T1.bzmn_se_cd = #{bzmnSeCd}
+			</if>
+			<if test='bsnSttsCd != "" and bsnSttsCd != null'>
+				AND T1.bsn_stts_cd = #{bsnSttsCd}
+			</if> 
+			<if test="chckRslt != null and chckRslt != ''">
+				AND T1.chck_rslt = #{chckRslt}
+			</if>
+			ORDER BY rn asc
+		)as T2
+	</if>
+	<if test="dateType.equals('type_chckYmd') and startDt != '' and startDt != null and endDt != '' and endDt != null">
+		(
+		SELECT ROW_NUMBER() OVER(ORDER BY T1.chck_ymd DESC) rn
+		, T1.*
+		from(
+			select
+				inspctn.bzmn_sn
+				, inspctn.reg_cmptnc_cd
+				, inspctn.exmnr
+				, inspctn.exmnr2
+				, inspctn.exmnr3
+				, inspctn.jbgd
+				, inspctn.jbgd2
+				, inspctn.jbgd3
+				, inspctn.ogdp
+				, inspctn.ogdp2
+				, inspctn.ogdp3
+				, dqvs.pca_decrypt(inspctn.telno, '150') as telno
+				, inspctn.chck_artcl
+				, inspctn.etc_artcl
+				, inspctn.chck_cn
+				, inspctn.chck_plc
+				, TO_CHAR(inspctn.chck_ymd, 'YYYY-MM-DD') as chck_ymd
+				, TO_CHAR(inspctn.reg_dt, 'YYYY-MM-DD HH24:MI:SS') as reg_dt
+				, inspctn.sign_yn
+				, inspctn.chck_rslt
+				, inspctn.chck_idfr
+				, inspctn.idfr_jbgd
+				, inspctn.idfr_ogdp
+				, inspctn.prcs_cn
+				, inspctn.del_yn
+				, inspctn.file_atch_sn1
+				, inspctn.file_atch_sn2
+				, inspctn.file_atch_sn3
+				, inspctn.file_atch_sn4
+				, agency.brno
+				, agency.crno
+				, agency.rprsv_nm
+				, agency.bsn_stts_cd
+				, agency.bzmn_se_cd
+				, (select
+					cd_nm
+				from
+					dqvs.dvs_cmm_mt_code
+				where
+					cd_group = 'bzmn_se_cd'
+					and cd = bzmn_se_cd) as bzmn_se_nm
+				, agency.co_nm
+				, agency.road_nm_addr
+				, (
+				select
+					cd.cd_nm
+				from
+					dqvs.dvs_cmm_mt_code cd
+				where
+					cd.cd_group = 'bsn_stts_cd'
+					and cd.cd = agency.bsn_stts_cd) bsn_stts_nm
+				, agency.bsn_stts_mdfcn_dt
+				, dqvs.pca_decrypt(agency.telno, '150') as agency_telno
+				, CONCAT( (
+					select
+						ctpv_nm
+					from
+						dqvs.dvs_cmm_mt_area
+					where
+						stdg_cd = agency.reg_cmptnc_cd),
+					' ',
+					(
+					select
+						sgg_nm
+					from
+						dqvs.dvs_cmm_mt_area
+					where
+						stdg_cd = agency.reg_cmptnc_cd)) jurisdiction
+				, CONCAT(
+			    (SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = agency.sgg_cd), ' ',
+			    (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = agency.sgg_cd)) locgov	
+				,(
+				select
+					atch_file_nm
+				from
+					dqvs.dvs_cmm_mt_file
+				where
+					file_sn = inspctn.file_atch_sn1) as file_atch_nm1,
+				(
+				select
+					atch_file_nm
+				from
+					dqvs.dvs_cmm_mt_file
+				where
+					file_sn = inspctn.file_atch_sn2) as file_atch_nm2,
+				(
+				select
+					atch_file_nm
+				from
+					dqvs.dvs_cmm_mt_file
+				where
+					file_sn = inspctn.file_atch_sn3) as file_atch_nm3,
+				(
+				select
+					atch_file_nm
+				from
+					dqvs.dvs_cmm_mt_file
+				where
+					file_sn = inspctn.file_atch_sn4) as file_atch_nm4
+			from dqvs.dvs_spv_hs_inspctn inspctn
+			left join dqvs.dvs_rac_mt_agency agency on agency.bzmn_sn = inspctn.bzmn_sn
+			) as T1
+			WHERE 1 = 1
+			and (T1.del_yn != 'Y' or T1.del_yn is null)
+			and (T1.chck_ymd::timestamp BETWEEN #{startDt}::TIMESTAMP AND #{endDt}::DATE + '23:59:59'::INTERVAL)
+			<if test="rslt != null and rslt != ''">
+				AND T1.chck_rslt = #{chckRslt}
+			</if>
 			<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
 				and T1.reg_cmptnc_cd like #{cmptncZoneCd} || '%'
 			</if>
@@ -233,6 +371,7 @@
 			</if>
 			ORDER BY rn asc
 		)as T2
+	</if>
 	</sql>
 
 	<!-- 지도점검이력 그리드 -->
@@ -271,6 +410,7 @@
 				, telno
 				, chck_artcl
 				, etc_artcl
+				, chck_ymd
 				, chck_cn
 				, chck_plc
 				, sign_yn
@@ -301,6 +441,7 @@
 				, dqvs.pca_encrypt(#{telno}, '150')
 				, #{chckArtcl}
 				, #{etcArtcl}
+				, #{chckYmd}::date
 				, #{chckCn}
 				, #{chckPlc}
 				, #{signYn}
@@ -336,6 +477,7 @@
 			telno = dqvs.pca_encrypt(#{telno}, '150'),
 			chck_artcl = #{chckArtcl},
 			etc_artcl = #{etcArtcl},
+			chck_ymd = #{chckYmd}::date,
 			chck_cn = #{chckCn},
 			chck_plc = #{chckPlc},
 			sign_yn = #{signYn},
@@ -352,7 +494,7 @@
 			mdfcn_dt= now()::timestamp
 		where
 			bzmn_sn = #{bzmnSn}
-			and (del_yn != 'Y' OR del_yn IS NULL)
+			AND DATE_TRUNC('second', reg_dt) = #{regDt}::timestamp
 	</update>
 	
 	<update id="updateDeleteYn">
@@ -362,6 +504,7 @@
 			mdfcn_ip = #{mdfcnIp},
 			mdfcn_dt= now()::timestamp
 		WHERE bzmn_sn = #{bzmnSn}
+		AND DATE_TRUNC('second', reg_dt) = #{regDt}::timestamp
 	</update>
 
 </mapper>
