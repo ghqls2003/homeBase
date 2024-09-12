@@ -326,6 +326,7 @@
 							var sd = $("#searchCtpvNm").val();
 							var sgg = $("#searchSggNm").val();
 							
+							options.searchChk    = $("input[name='searchChk']:checked").val();
 							options.cmptncZoneCd = sd+sgg;
 							options.bzmnSeCd     = $('#searchBzmnSeCd').val();
 							options.bsnSttsCd    = $('#searchBsnSttsCd').val();

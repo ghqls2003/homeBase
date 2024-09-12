@@ -123,7 +123,6 @@
 		from(
 			select
 				inspctn.bzmn_sn
-				, inspctn.reg_cmptnc_cd
 				, inspctn.exmnr
 				, inspctn.exmnr2
 				, inspctn.exmnr3
@@ -151,6 +150,8 @@
 				, inspctn.file_atch_sn2
 				, inspctn.file_atch_sn3
 				, inspctn.file_atch_sn4
+				, agency.reg_cmptnc_cd
+				, agency.sgg_cd
 				, agency.brno
 				, agency.crno
 				, agency.rprsv_nm
@@ -226,9 +227,14 @@
 			) as T1
 			WHERE 1 = 1
 			and (T1.del_yn != 'Y' or T1.del_yn is null)
-			<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
-				and T1.reg_cmptnc_cd like #{cmptncZoneCd} || '%'
-			</if>
+			<choose>
+			    <when test='searchChk == "jurisdiction" and cmptncZoneCd != "" and cmptncZoneCd != null and authrtCd != "S01"' >
+			        AND T1.reg_cmptnc_cd like #{cmptncZoneCd} || '%'
+			    </when>
+			    <when test='searchChk == "location" and cmptncZoneCd != "" and cmptncZoneCd != null'>
+			        AND T1.sgg_cd like #{cmptncZoneCd} || '%'
+			    </when>
+			</choose>
 			<if test='bzmnSeCd != "" and bzmnSeCd != null'>
 				AND T1.bzmn_se_cd = #{bzmnSeCd}
 			</if>

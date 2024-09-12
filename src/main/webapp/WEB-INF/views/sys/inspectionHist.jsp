@@ -39,6 +39,14 @@
 				<input type="hidden" class="_csrf" name="${_csrf.parameterName}" value="${_csrf.token}" />
                 <div class="selec_wr">
                     <div class="mo_flex">
+                     	<ul class="selec_box mSelect_box">
+							<li class="li_slec">
+								<input id="searchChk01" type="radio" name="searchChk" aria-label="관할지 체크" value="jurisdiction" checked />
+ 			                    <label for="searchChk01" class="mSearchChk01">관할지</label>
+ 			                    <input id="searchChk02" type="radio" name="searchChk" aria-label="소재지 체크" value="location"/>
+ 			                    <label for="searchChk02">소재지</label>
+							</li>
+                        </ul>
                         <ul class="selec_box">
                            <li class="li_slec">
                                <label for="searchCtpvNm" hidden> 시도(전체)</label>
