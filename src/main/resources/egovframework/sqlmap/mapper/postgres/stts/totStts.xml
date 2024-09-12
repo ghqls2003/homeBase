@@ -78,20 +78,188 @@
 			) AS t2	
 	</select>
 	
-	<!-- 대여사업자 가입 현황 -->
+	<!-- 지자체별 가입 사용자 현황 그리드(시도) -->
+	<select id="gvAccUserGrid" parameterType="paraMap" resultType="resultMap">
+	/* 지자체별 가입 사용자 현황 그리드(시도) */
+		SELECT B.conn
+			, B.ctpv_nm
+			, TO_CHAR(B.user_cnt, 'FM999,999,999') user_cnt
+			, TO_CHAR(B.login_cnt, 'FM999,999,999') login_cnt
+			, TO_CHAR(B.mn_use_cnt, 'FM999,999,999') mn_use_cnt
+			, B.login_avg
+		FROM
+			(
+			SELECT A.cmptnc conn
+				, COALESCE(A.ctpv_nm, '시도 합계') ctpv_nm 
+				, SUM(user_cnt) user_cnt
+				, SUM(A.login_cnt) login_cnt
+				, SUM(A.mn_use_cnt) mn_use_cnt
+				, ROUND(SUM(A.login_cnt)/SUM(A.user_cnt), 2) login_avg
+			FROM
+				(
+				SELECT a1.user_sn
+					, a1.authrt_cd
+					, a1.cmptnc
+					, COALESCE(sd.ctpv_nm, '-') ctpv_nm
+					, a1.login_cnt
+					, a2.mn_use_cnt
+					, 1 user_cnt
+				FROM
+					(
+					SELECT t1.user_sn
+						, t1.authrt_cd
+						, t1.cmptnc
+						, SUM(CASE WHEN login.cntn_dt NOTNULL THEN 1 ELSE 0 END) login_cnt
+					FROM
+						(
+						SELECT main.user_sn
+							, main.authrt_cd
+							, LEFT(CASE WHEN main.cmptnc_zone_cd = '' THEN NULL 
+												WHEN main.cmptnc_zone_cd LIKE '42%' THEN '51' 
+												WHEN main.cmptnc_zone_cd LIKE '45%' THEN '52' 
+												ELSE main.cmptnc_zone_cd END, 2) cmptnc
+						FROM
+							dqvs.dvs_cmm_mt_user main
+						WHERE main.acnt_stts_cd NOT IN ('6', '5')
+						   	AND main.aprv_stts_cd = '2'
+						   	AND main.authrt_cd IN ('G01', 'G02', 'S01', 'S02', 'S03', 'S04')
+						) AS t1
+					LEFT OUTER JOIN
+						(SELECT * FROM dqvs.dvs_cmm_hs_login WHERE cntn_type_cd = 'I') login
+					ON t1.user_sn = login.user_sn
+					GROUP BY t1.user_sn
+						, t1.authrt_cd
+						, t1.cmptnc
+					) AS a1
+				LEFT OUTER JOIN
+					(
+					SELECT t1.user_sn
+						, SUM(CASE WHEN sys.dmnd_dt NOTNULL THEN 1 ELSE 0 END) mn_use_cnt
+					FROM
+						(
+						SELECT main.user_sn
+						FROM
+							dqvs.dvs_cmm_mt_user main
+						WHERE main.acnt_stts_cd NOT IN ('6', '5')
+						   	AND main.aprv_stts_cd = '2'
+						) AS t1
+					LEFT OUTER JOIN
+						dqvs.dvs_cmm_hs_sys sys
+					ON t1.user_sn = sys.user_sn
+					GROUP BY t1.user_sn
+					) AS a2
+				ON a1.user_sn = a2.user_sn
+				<if test="authrt != null and authrt != ''">
+					WHERE a1.authrt_cd = #{authrt}
+				</if>
+				LEFT OUTER JOIN
+					dqvs.dvs_cmm_mt_sd sd
+				ON a1.cmptnc = sd.ctpv_cd
+				) AS A
+			GROUP BY ROLLUP((A.cmptnc, A.ctpv_nm))
+			) AS B
+		ORDER BY CASE WHEN B.ctpv_nm = '시도 합계' THEN 0 ELSE 1 END, B.conn ASC
+	</select>
+	
+	<!-- 지자체별 가입 사용자 현황 그리드(시군구) -->
+	<select id="gvAccUserDetailGrid" parameterType="paraMap" resultType="resultMap">
+	/* 지자체별 가입 사용자 현황 그리드(시군구) */
+		SELECT B.conn
+			, B.sgg_nm
+			, TO_CHAR(B.user_cnt, 'FM999,999,999') user_cnt
+			, TO_CHAR(B.login_cnt, 'FM999,999,999') login_cnt
+			, TO_CHAR(B.mn_use_cnt, 'FM999,999,999') mn_use_cnt
+			, B.login_avg
+		FROM
+			(
+			SELECT LEFT(A.cmptnc, 2) conn
+				, A.sgg_nm
+				, SUM(user_cnt) user_cnt
+				, SUM(A.login_cnt) login_cnt
+				, SUM(A.mn_use_cnt) mn_use_cnt
+				, ROUND(SUM(A.login_cnt)/SUM(A.user_cnt), 2) login_avg
+			FROM
+				(
+				SELECT a1.user_sn
+					, a1.authrt_cd
+					, a1.cmptnc
+					, COALESCE(sgg.sgg_nm, '-') sgg_nm
+					, a1.login_cnt
+					, a2.mn_use_cnt
+					, 1 user_cnt
+				FROM
+					(
+					SELECT t1.user_sn
+						, t1.authrt_cd
+						, t1.cmptnc
+						, SUM(CASE WHEN login.cntn_dt NOTNULL THEN 1 ELSE 0 END) login_cnt
+					FROM
+						(
+						SELECT main.user_sn
+							, main.authrt_cd
+							, LEFT(CASE WHEN main.cmptnc_zone_cd = '' THEN NULL 
+												WHEN main.cmptnc_zone_cd LIKE '42%' THEN CONCAT('51', SUBSTRING(main.cmptnc_zone_cd, 3))
+												WHEN main.cmptnc_zone_cd LIKE '45%' THEN CONCAT('52', SUBSTRING(main.cmptnc_zone_cd, 3))
+												ELSE main.cmptnc_zone_cd END, 5) cmptnc
+						FROM
+							dqvs.dvs_cmm_mt_user main
+						WHERE main.acnt_stts_cd NOT IN ('6', '5')
+						   	AND main.aprv_stts_cd = '2'
+						   	AND main.authrt_cd IN ('G01', 'G02', 'S01', 'S02', 'S03', 'S04')
+						) AS t1
+					LEFT OUTER JOIN
+						(SELECT * FROM dqvs.dvs_cmm_hs_login WHERE cntn_type_cd = 'I') login
+					ON t1.user_sn = login.user_sn
+					GROUP BY t1.user_sn
+						, t1.authrt_cd
+						, t1.cmptnc
+					) AS a1
+				LEFT OUTER JOIN
+					(
+					SELECT t1.user_sn
+						, SUM(CASE WHEN sys.dmnd_dt NOTNULL THEN 1 ELSE 0 END) mn_use_cnt
+					FROM
+						(
+						SELECT main.user_sn
+						FROM
+							dqvs.dvs_cmm_mt_user main
+						WHERE main.acnt_stts_cd NOT IN ('6', '5')
+						   	AND main.aprv_stts_cd = '2'
+						) AS t1
+					LEFT OUTER JOIN
+						dqvs.dvs_cmm_hs_sys sys
+					ON t1.user_sn = sys.user_sn
+					GROUP BY t1.user_sn
+					) AS a2
+				ON a1.user_sn = a2.user_sn
+				<if test="authrt != null and authrt != ''">
+					WHERE a1.authrt_cd = #{authrt}
+				</if>
+				LEFT OUTER JOIN
+					dqvs.dvs_cmm_mt_sgg sgg
+				ON a1.cmptnc = sgg.sgg_cd
+				) AS A
+			GROUP BY A.sgg_nm, A.cmptnc
+			ORDER BY A.cmptnc
+			) AS B
+	</select>	
+	
+	<!-- 대여사업자 등록 현황 -->
 	<select id="agencyAccessionChart" parameterType="paraMap" resultType="resultMap">
 	/* 대여사업자 가입 현황 */	
 		SELECT t2.sd_nm
 			, COALESCE(t2.stts_normal, 0) stts_normal
 		FROM 
 			(
-			SELECT t1.sd_nm sd_nm
+			SELECT t1.sd_nm
 				, SUM(t1.stts_normal_cnt) stts_normal
 				, t1.sd_cd
 			FROM
 				(
 				SELECT LEFT(mstr.sgg_cd, 2) sd_cd
-					, COALESCE((SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_sd WHERE ctpv_cd = LEFT(mstr.sgg_cd, 2)), '-') sd_nm
+					, COALESCE((
+								SELECT CASE sd.ctpv_cd WHEN '46' THEN '전남' WHEN '47' THEN '경북' WHEN '48' THEN '경남' ELSE LEFT(sd.ctpv_nm, 2) END sd_nm 
+								FROM dqvs.dvs_cmm_mt_sd sd WHERE sd.ctpv_cd = LEFT(mstr.sgg_cd, 2)), '-') sd_nm
 					, 1 stts_normal_cnt
 				FROM 
 					dqvs.dvs_rac_mt_agency mstr
@@ -100,5 +268,16 @@
 			GROUP BY t1.sd_cd, t1.sd_nm
 			) AS t2
 		ORDER BY t2.sd_cd
+	</select>
+	
+	<!-- 권한 가져오기 -->
+	<select id="authrt" parameterType="paraMap" resultType="resultMap">
+	/* 권한 가져오기 */
+		SELECT authrt_cd
+			, authrt_nm
+		FROM
+			dqvs.dvs_cmm_mt_auth
+		WHERE authrt_cd IN ('G01', 'G02', 'S01', 'S02', 'S03', 'S04')
+		ORDER BY authrt_cd 
 	</select>
 </mapper>

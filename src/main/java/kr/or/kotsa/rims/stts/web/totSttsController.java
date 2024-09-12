@@ -85,7 +85,27 @@ public class totSttsController extends CmmnAbstractServiceImpl {
 	}
 	
 	/**
-	 * 대여사업자 가입 현황
+	 * 지자체별 가입 사용자 현황 그리드
+	 *
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping("totStts/gvAccUserGrid")
+	@ResponseBody
+	public Object gvAccUserGrid(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		Map<String, Object> result = new HashMap<>();
+		List<Map<String, Object>> gvAccUserGrid = totSttsService.gvAccUserGrid(paramsMap);
+		result.put("gvAccUserGrid", gvAccUserGrid);
+		
+		List<Map<String, Object>> gvAccUserDetailGrid = totSttsService.gvAccUserDetailGrid(paramsMap);
+		result.put("gvAccUserDetailGrid", gvAccUserDetailGrid);
+		
+		return result;
+	}
+	
+	/**
+	 * 대여사업자 등록 현황
 	 *
 	 * @param paramsMap
 	 * @return
@@ -99,5 +119,19 @@ public class totSttsController extends CmmnAbstractServiceImpl {
 		aocc.put("agencyAccessionChart", agencyAccessionChart);
 		
 		return aocc;
+	}
+	
+	/**
+	 * 권한 가져오기
+	 *
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping("totStts/authrt")
+	@ResponseBody
+	public Object authrt(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		List<Map<String, Object>> authrt = totSttsService.authrt(paramsMap);
+		return authrt;
 	}
 }

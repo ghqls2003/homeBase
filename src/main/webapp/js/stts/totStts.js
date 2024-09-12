@@ -13,13 +13,16 @@
     var toDayDate = new Date();
     var agoYearDate = new Date(toDayDate);
     	agoYearDate.setFullYear(toDayDate.getFullYear()-1);
-    var areaDetailData = [];
     
-    var accSd = [], accData = [];
-    	
-	var excelDetailData = null;
+	var now = new Date();
+	var year = now.getFullYear();
+	var month = now.getMonth()+1;
+	month = month < 10 ? "0"+month : month;
+	var day = now.getDate();
+	var setDate = year+"-"+month+"-"+day;
 	
 	/* 그리드 컬럼*/
+	// 대여사업자 현황
 	var gridAreaColumns = [
 		{template: "#if(sdNm == '시도 합계') {#<span style='font-weight: bold;'>#: sdNm#</span>#"
 				+ "} else {##: sdNm##}#", title: "시도", width: "150px", field: "sdNm"},
@@ -42,7 +45,27 @@
 		{template: "#: conn#", title: "&nbsp;", width: "15%", field: "conn", hidden: "true"}
 	];
 	
+	// 지자체별 가입 사용자 현황
+	var gvAccColumns = [
+		{template: "#if(ctpvNm == '시도 합계') {#<span style='font-weight: bold;'>#: ctpvNm#</span>#"
+				+ "} else {##: ctpvNm##}#", title: "시도", width: "100px", field: "sdNm"},
+		{template: "#: userCnt#", title: "사용자수", width: "110px", field: "userCnt"},
+		{template: "#: loginCnt#", title: "접속건수", width: "110px", field: "loginCnt"},
+		{template: "#: mnUseCnt#", title: "메뉴사용건수", width: "110px", field: "mnUseCnt"},
+		{template: "#: loginAvg#", title: "평균접속건수", width: "110px", field: "loginAvg"},
+		{template: "#: conn#", title: "valued", width: "15%", field: "conn", hidden: "true"},
+	];
+	var gvAccDetailColumns = [
+		{template: "#: sggNm#", title: "<span style='font-weight: bold;'>시군구</span>", width: "100px", field: "sggNm"},
+		{template: "#: userCnt#", title: "&nbsp;", width: "110px", field: "userCnt"},
+		{template: "#: loginCnt#", title: "&nbsp;", width: "110px", field: "loginCnt"},
+		{template: "#: mnUseCnt#", title: "&nbsp;", width: "110px", field: "mnUseCnt"},
+		{template: "#: loginAvg#", title: "&nbsp;", width: "110px", field: "loginAvg"},
+		{template: "#: conn#", title: "&nbsp;", width: "15%", field: "conn", hidden: "true"}
+	];
+	
     $(document).ready(function() {
+		$("#nowTime").text(setDate);
         $statistics.ui.pageLoad();
     });
     
@@ -58,21 +81,33 @@
 			} else {
 				GAuthParams = {};
 			}
-
-			// 대여사업자 가입현황
-			$statistics.ui.agencyAccessionChart(GAuthParams);
+			
+			ajax(true, contextPath + '/stts/totStts/authrt', 'body', '조회중입니다', GAuthParams, function(data) {
+				$("#auth").kendoDropDownList({
+					optionLabel: "(전체)",
+					dataTextField: "authrtNm",
+					dataValueField: "authrtCd",
+					dataSource: data,
+				});
+			});
 			
 			// 대여사업자 현황 그리드
 			ajax(true, contextPath + '/stts/totStts/agencyAreaGrid', 'body', '조회중입니다', GAuthParams, function(data) {
-				areaDetailData = [];
-				areaDetailData = data.agencyAreaDetailGrid;
-				excelDetailData = data.agencyAreaDetailGrid;
-				
-				$statistics.ui.createAreaGrid(data.agencyAreaGrid);
+				var grid1 = "#grid01";
+				$statistics.ui.createAreaGrid(grid1, gridAreaColumns, gridAreaDetailColumns, data.agencyAreaGrid, data.agencyAreaDetailGrid);
+			});
+
+			// 대여사업자 등록 현황
+			$statistics.ui.agencyAccessionChart(GAuthParams);
+			
+			// 지자체별 가입 사용자 현황
+			ajax(true, contextPath + '/stts/totStts/gvAccUserGrid', 'body', '조회중입니다', GAuthParams, function(data) {
+				var grid2 = "#gvAccGrid";
+				$statistics.ui.createAreaGrid(grid2, gvAccColumns, gvAccDetailColumns, data.gvAccUserGrid, data.gvAccUserDetailGrid);
 			});
         },
         
-		/* 대여사업자 가입현황 */
+		/* 대여사업자 등록 현황 */
 		createChartMulti: function(data) {
 			var series = data.map(function(item) {
 			    return {
@@ -102,38 +137,41 @@
                 tooltip: {
                 	visible: true,
                     template: "#= series.name #: #= value +'건' #"
+				},
+				chartArea: {
+					height: 480
 				}
 			});
 		},
 		
-		/*대여사업자 현황 지역별 그리드*/
-		createAreaGrid: function(gridData) {
+		/* 그리드 및 detailInit 공통 */
+		createAreaGrid: function(gridId, gridColumn, detailColumn, gridData, detailData) {
 			var detailExportPromises = [];
 			
-			$("#grid01").kendoGrid({
+			$(gridId).kendoGrid({
                 dataSource: gridData,
-                columns: gridAreaColumns,
+                columns: gridColumn,
                 navigatable: true,
                 selectable: "row",
                 editable: false,
 				resizable: true,
 				scrollable: true,
 				height: "550px",
-                sortable: true,
+                sortable: false,  // 문자열 FM으로 데이터 가져와서 솔팅 의미없음
                 detailInit: detailInit,
                 dataBound: function() {
 					detailExportPromises = [];
 //					this.expandRow(this.tbody.find("tr.k-master-row").eq(1));  // 두번째 로우 확장
 //					this.expandRow(this.tbody.find("tr.k-master-row").first());  // 첫번째 로우 확장
-					$("#grid01 > tbody > tr:first-child > td.k-hierarchy-cell").css("visibility", "hidden");  // 확장 기능 제거
-					$("#grid01 > tbody > tr:last-child > td.k-hierarchy-cell").css("visibility", "hidden");  // 확장 기능 제거
+					$(gridId+" > tbody > tr:first-child > td.k-hierarchy-cell").css("visibility", "hidden");  // 확장 기능 제거
+					$(gridId+" > tbody > tr:last-child > td.k-hierarchy-cell").css("visibility", "hidden");  // 확장 기능 제거
 				},
 //                pageable: { pageSize: 5, buttonCount: 5 },
 //                noRecords: { template : "데이터가 없습니다." },
                 toolbar: [{name: "excel", text:"다운로드"}],
                 excel: { allPages: true },
 				excelExport : function(e){
-					if($("#grid01").data("kendoGrid").dataSource.total() == 0) {
+					if($(gridId).data("kendoGrid").dataSource.total() == 0) {
 						e.preventDefault();
 						alert("데이터가 없어 다운로드를 할 수 없습니다.");
 					} else {
@@ -147,7 +185,7 @@
 					    detailExportPromises = [];
 					
 						for (var rowIndex = 0; rowIndex < masterData.length-1; rowIndex++) {
-					    	exportChildData(masterData[rowIndex].conn, rowIndex);
+					    	exportChildData(masterData[rowIndex].conn, rowIndex, gridId, detailData);
 						}
 						
 						var sheet = workbook.sheets[0];
@@ -216,18 +254,25 @@
 					        	[].splice.apply(workbook.sheets[0].rows, [masterRowIndex + 1, 0].concat(sheet.rows));
 					        }
 					        
-					        kendo.saveAs({
-								dataURI: new kendo.ooxml.Workbook(workbook).toDataURL(),
-								fileName: "대여사업자 현황.xlsx"
-					        });
+					        if(gridId == "#grid01") {
+						        kendo.saveAs({
+									dataURI: new kendo.ooxml.Workbook(workbook).toDataURL(),
+									fileName: "대여사업자 현황.xlsx"
+						        });
+							} else {
+						        kendo.saveAs({
+									dataURI: new kendo.ooxml.Workbook(workbook).toDataURL(),
+									fileName: "지자체별 가입 사용자 현황.xlsx"
+						        });
+							}
 						});
 					}
 				}
 			});
 			
-			function exportChildData(conn, rowIndex) {
+			function exportChildData(conn, rowIndex, gridId, detailData) {
 				var dataSource = new kendo.data.DataSource({
-					data : excelDetailData
+					data : detailData
 				});
 				dataSource.read();
 				
@@ -236,19 +281,33 @@
 			    detailExportPromises.push(deferred);
 			    dataSource.filter({ field: "conn", operator: "eq", value: conn});
 			    
-			    var exporter = new kendo.ExcelExporter({
-					columns: [
-			        	{title: "시군구", field: "sggNm"},
-						{title: " ", field: "sttsNormal"},
-						{title: " ", field: "accession"},
-						{title: " ", field: "accessionPer"},
-						{title: " ", field: "dedan"},
-						{title: " ", field: "van"},
-						{title: " ", field: "special"},
-						{title: " ", field: "conn", hidden: "true"}
-			        ],
-					dataSource: dataSource
-			    });
+			    if(gridId == "#grid01") {
+				    var exporter = new kendo.ExcelExporter({
+						columns: [
+				        	{title: "시군구", field: "sggNm"},
+							{title: " ", field: "sttsNormal"},
+							{title: " ", field: "accession"},
+							{title: " ", field: "accessionPer"},
+							{title: " ", field: "dedan"},
+							{title: " ", field: "van"},
+							{title: " ", field: "special"},
+							{title: " ", field: "conn", hidden: "true"}
+				        ],
+						dataSource: dataSource
+				    });
+				} else {
+				    var exporter = new kendo.ExcelExporter({
+						columns: [
+				        	{title: "시군구", field: "sggNm"},
+							{title: " ", field: "userCnt"},
+							{title: " ", field: "loginCnt"},
+							{title: " ", field: "mnUseCnt"},
+							{title: " ", field: "loginAvg"},
+							{title: " ", field: "conn", hidden: "true"}
+				        ],
+						dataSource: dataSource
+				    });
+				}
 			
 			    exporter.workbook().then(function(book, data) {
 					deferred.resolve({
@@ -260,9 +319,9 @@
 			
 	        function detailInit(e) {
 				var array = [];
-				for(var i=0; i<areaDetailData.length; i++) {
-					if(e.data.conn == areaDetailData[i].conn) {
-						array.push(areaDetailData[i]);
+				for(var i=0; i<detailData.length; i++) {
+					if(e.data.conn == detailData[i].conn) {
+						array.push(detailData[i]);
 					}
 				}
 				
@@ -270,9 +329,9 @@
 		        	dataSource: array,
 		            scrollable: false,
 		            selectable: "row",
-		            sortable: true,
+		            sortable: false,  // 문자열 FM으로 데이터 가져와서 솔팅 의미없음
 		            pageable: true,
-		            columns: gridAreaDetailColumns,
+		            columns: detailColumn,
 		            noRecords: { template : "데이터가 없습니다." },
 		            excelExport: function(e) {
 						e.preventDefault();
@@ -283,7 +342,7 @@
 		
 		/**
 		 * @name         : agencyAccessionChart
-		 * @description  : 대여사업자 가입현황
+		 * @description  : 대여사업자 등록 현황
 		 * @date         : 2023.07.25
 		 * @author       : 김경룡
 		 */
@@ -308,6 +367,8 @@
 		excelDown: function(event) {
 			if(event.target.closest("#areaGrid") != null) {
 				$("#areaGrid").find(".k-grid-excel").click();
+			} else if(event.target.closest("#gvAccession") != null) {
+				$("#gvAccession").find(".k-grid-excel").click();
 			}
 		},
 		

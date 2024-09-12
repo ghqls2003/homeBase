@@ -15,6 +15,7 @@ public class TotSttsServiceImpl extends CmmnAbstractServiceImpl implements TotSt
 
 	@Autowired
 	private TotSttsDao totSttsDao;
+	
     /**
      * 대여사업자 현황 그리드
      * @return
@@ -30,12 +31,36 @@ public class TotSttsServiceImpl extends CmmnAbstractServiceImpl implements TotSt
     }
     
     /**
-     * 대여사업자 가입 현황
+     * 지자체별 가입 사용자 현황 그리드
+     * @return
+     * @throws RimsException
+     */
+    @Override
+    public List<Map<String, Object>> gvAccUserGrid(Map<String, Object> paramsMap) throws RimsException {
+    	return totSttsDao.gvAccUserGrid(paramsMap);
+    }
+    @Override
+    public List<Map<String, Object>> gvAccUserDetailGrid(Map<String, Object> paramsMap) throws RimsException {
+    	return totSttsDao.gvAccUserDetailGrid(paramsMap);
+    }
+    
+    /**
+     * 대여사업자 등록 현황
      * @return
      * @throws RimsException
      */
     @Override
     public List<Map<String, Object>> agencyAccessionChart(Map<String, Object> paramsMap) throws RimsException {
     	return totSttsDao.agencyAccessionChart(paramsMap);
+    }
+    
+    /**
+     * 권한 가져오기
+     * @return
+     * @throws RimsException
+     */
+    @Override
+    public List<Map<String, Object>> authrt(Map<String, Object> paramsMap) throws RimsException {
+    	return totSttsDao.authrt(paramsMap);
     }
 }

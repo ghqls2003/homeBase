@@ -11,18 +11,23 @@
 <script src="${contextPath}/ext-lib/kendoui.for.jquery.2021.3.1207.commercial/js/jszip.min.js"></script>
 
 <style>
-#grid01 > tbody > tr.k-detail-row > td.k-detail-cell > div > div.k-grid-norecords {
+#grid01 > tbody > tr.k-detail-row > td.k-detail-cell > div > div.k-grid-norecords, 
+#gvAccGrid > tbody > tr.k-detail-row > td.k-detail-cell > div > div.k-grid-norecords {
 	justify-content: center;
 	font-size: 16px;
 }
-#areaGrid > div.k-grid.k-widget.k-grid-display-block > div.k-toolbar.k-grid-toolbar {
+#areaGrid > div.k-grid.k-widget.k-grid-display-block > div.k-toolbar.k-grid-toolbar,
+#gvAccession > div.k-grid.k-widget.k-grid-display-block > div.k-toolbar.k-grid-toolbar  {
 	display: none;
 }
-#grid01 > thead {
+#grid01 > thead, 
+#gvAccGrid > thead {
 	font-weight: bold;
 }
-#zone1 {
-	width: 70%;
+@media (max-width: 950px) {
+	#zone1 {
+		width: 100% !important;
+	}
 }
 #areaGrid, #areaChart {
 	height : 570px;;
@@ -36,7 +41,7 @@
 	var upBzmnSn        = "${upBzmnSn}";
 </script>
 
-<div class="subPage sub05_01">
+<div class="subPage sub03 sub05_01">
 	<div id="container">
 		<!-- 콘텐츠 시작 -->
 	    <div class="wrap">
@@ -55,30 +60,65 @@
 			</div>
 			<br />
 	        <div class="cont-flex">
-	        	<div id="zone1" class="left-bx cmn-bx">
+	        	<div id="zone1" class="left-bx cmn-bx" style="width: 80%">
 	            	<div id="areaGrid"  class="contBox flex-box">
 	                	<div class="nameBox" style="display: flex; justify-content: space-between;">
 	                    	<h4 class="name">대여사업자 현황</h4>
-	                    	<button class="download-btn" onClick="javaScript:$statistics.event.excelDown(event);">
-			                	<img src="${contextPath}/images/sub/ico_down.png" alt="다운로드아이콘">다운로드
-							</button>
+	                    	<div style="display: flex;  align-items: center;">
+	                    		기준일자 ： <span id="nowTime"></span>&nbsp;
+		                    	<button class="download-btn" onClick="javaScript:$statistics.event.excelDown(event);">
+				                	<img src="${contextPath}/images/sub/ico_down.png" alt="다운로드아이콘">다운로드
+								</button>
+	                    	</div>
 						</div>
+						<!-- 확장 하이라키 제거 때문에 table 사용 -->
 			            <table id="grid01">
-			            	<caption>대여사업자현황 조회</caption>
+			            	<caption>대여사업자현황</caption>
 						</table>
 					</div>
 				</div>
 	            <div class="right-bx cmn-bx">
 					<div id="areaChart" class="contBox flex-box">
 	                	<div class="nameBox">
-	                    	<h4 class="name">대여사업자 가입 현황</h4>
+	                    	<h4 class="name">대여사업자 등록 현황</h4>
 						</div>
-	                    <div class="cont chart-flex chart-flex02" style="height: 100%; ">
+	                    <div class="cont chart-flex chart-flex02" style="height: 100%; overflow: auto;">
 	                    	<div id="multi-chart" class="multi-chart" style="width:100%; height:100%; margin:0px;"></div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<br />
+			<br />
+			<div id="gvAccession" class="contBox tmCond">
+	           	<div class="nameBox" style="display: flex; justify-content: space-between;">
+	               	<h4 class="name">지자체별 가입 사용자 현황</h4>
+	               	<div style="display: flex; align-items: center;">
+		                <button class="download-btn excelDownBtn" type="button" onClick="javaScript:$statistics.event.excelDown(event);">
+	                        <img src="/images/sub/ico_down.png" alt="다운로드아이콘">다운로드
+	                    </button>
+	               	</div>
+				</div>
+				<div class="search_top">
+					<div class="selec_wr" style="height: 50px; padding: 11px 10px 11px 24px;">
+						<div class="mo_flex">
+			            	<ul class="selec_box">
+			                	<li class="li_slec" style="display: flex; align-items: center">
+			                    	<label for="auth" style="width: 140px;">사용자 권한 : </label>
+			                        <input type="text" id="auth"  aria-label="권한" placeholder="권한" />
+								</li>
+							</ul>
+						</div>
+						<button id="searchTimeBtn" class="yellow_btn searchBtn" type="button" style="height: 30px;">
+							조회 <img src="${contextPath}/images/sub/ico_search02.png" alt="조회아이콘" />
+						</button>
+					</div>
+				</div>
+	            <table id="gvAccGrid">
+	            	<caption>지자체별 가입 사용자 현황</caption>
+	            </table>
+			</div>
 		</div>
 	</div>
 </div>
+			
