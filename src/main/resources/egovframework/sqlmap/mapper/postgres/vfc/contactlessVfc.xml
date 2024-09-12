@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vfc.contactlessVfc">
+
+	<select id="selectRentInfo" resultType="resultMap">
+		select rent.rent_no
+			, rent.lcns_idntf_cd
+			, rent.vhcl_reg_no
+			, TO_CHAR(rent.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt
+		    , TO_CHAR(rent.rent_end_dt, 'YYYY-MM-DD HH24:MI') rent_end_dt
+			, rent.rent_stts_cd
+			, rent.vrfc_hstry_sn
+			, rent.rgtr_sn 
+			, rent.reg_dt
+			, rent.mdfcn_dt
+			, rent.dln
+		from dqvs.dvs_dqv_mt_rent rent
+		where 1=1
+		and rent.rent_stts_cd = '2'
+		and rent.del_yn  = 'N'
+		and rent.rent_no = #{rentNo}
+	</select>
+
+</mapper>
