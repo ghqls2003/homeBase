@@ -56,18 +56,19 @@
 				dataSource: rsltData,
 			});
 			
-			//후속처리여부
-			var prcsCn = [
-				{ text: "경고" },
-				{ text: "벌금" },
-				{ text: "휴업" },
-			];
+//			//후속처리여부
+//			var prcsCn = [
+//				{ text: "경고" },
+//				{ text: "벌금" },
+//				{ text: "휴업" },
+//			];
+//			
+//			$("#detailPrcsCn").kendoDropDownList({
+//				dataTextField: "text",
+//				dataValueField: "text",
+//				dataSource: prcsCn,
+//			});
 			
-			$("#detailPrcsCn").kendoDropDownList({
-				dataTextField: "text",
-				dataValueField: "text",
-				dataSource: prcsCn,
-			});
 		},
 		
 		insertSearch: function(){
@@ -102,18 +103,6 @@
 				dataSource: rsltData,
 			});
 			
-			//후속처리여부
-			var prcsCn = [
-				{ text: "경고" },
-				{ text: "벌금" },
-				{ text: "휴업" },
-			];
-			
-			$("#regPrcsCn").kendoDropDownList({
-				dataTextField: "text",
-				dataValueField: "text",
-				dataSource: prcsCn,
-			});
 		},
 		
 		autoTextarea: function(){
@@ -264,35 +253,6 @@
 			
 			var param = {};
 			
-			// 기간 유형
-			var dateType = [
-			   	{ value: "type_regDt", text: "등록일"},
-				{ value: "type_chckYmd", text: "점검일"},
-			];
-			
-			$("#dateType").kendoDropDownList({
-				dataTextField: "text",
-				dataValueField: "value",
-				dataSource: dateType,
-				value: "value"
-    		});
-			
-			// 기간 검색
-			var oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1));
-			
-			$("#start-picker01").kendoDatePicker({
-				format: "yyyy-MM-dd",
-				value: new Date(oneMonthAgo),
-			});
-
-			$("#end-picker01").kendoDatePicker({
-				format: "yyyy-MM-dd",
-				value: new Date(),
-			});
-			
-			$("#start-picker01").attr("readonly", true);
-			$("#end-picker01").attr("readonly", true);
-	        
 			// 권한
 			ajax(false, contextPath + '/sys/inspectionHist/selectAuth', 'body', '처리중입니다.', param, function(data) {
 				$("#searchBzmnSeCd").kendoDropDownList({
@@ -334,6 +294,18 @@
 				dataValueField: "cd",
 				dataSource: rsltData,
 			});
+			
+			$("#selectCond").kendoDropDownList({
+				optionLabel: "조건선택",
+				dataTextField: "text",
+				dataValueField: "value",
+				dataSource: [
+					{value: "1", text: "회사명"},
+					{value: "2", text: "사업자등록번호"},
+					{value: "3", text: "법인등록번호"}
+				],
+				value: "value"
+			});
 		},
 		
 		inspectionHistInfo: function() {
@@ -354,13 +326,12 @@
 							var sd = $("#searchCtpvNm").val();
 							var sgg = $("#searchSggNm").val();
 							
-							options.startDt = $("#start-picker01").val();
-							options.endDt = $("#end-picker01").val();
-							options.dateType = $("#dateType").val();
 							options.cmptncZoneCd = sd+sgg;
 							options.bzmnSeCd     = $('#searchBzmnSeCd').val();
 							options.bsnSttsCd    = $('#searchBsnSttsCd').val();
-							options.chckRslt         = $('#searchRslt').val();
+							options.chckRslt     = $('#searchRslt').val();
+							options.selectCond   = $('#selectCond').val();
+							options.searchWrd    = $('#searchWrd').val().trim();
 							
 							return JSON.stringify(options);
 						}
@@ -377,8 +348,7 @@
 				},
 				columns: [
 					{ field: "rn", title: "순번", width: "30px", template: "#: rn #", sortable: false },
-					{ field: "regDt", title: "등록일", width: "30px", template: "#= regDt.split(' ')[0] != null ? regDt.split(' ')[0] : '-' #", sortable: true },
-					{ field: "chckYmd", title: "점검일", width: "30px", template: "#= chckYmd != null ? chckYmd : '-' #", sortable: true },
+					{ field: "coNm", title: "회사명", width: "50px", template: "#= coNm != null ? coNm : '-' #", sortable: true },
 					{ field: "jurisdiction", title: "관할지역", width: "50px", template: "#= jurisdiction != null && jurisdiction.trim() !== '' ? jurisdiction : '-' #", sortable: true },
 					{ field: "exmnr", title: "지도원", width: "30px", template:function(dataItem) {
 						var exmnrArr = [];
@@ -400,10 +370,10 @@
 							return exmnrArr[0] != null ?  exmnrArr[0] +" 외 " + exmnrCnt + "명" : '-'
 						}
 					}, sortable: true },
-					{ field: "coNm", title: "회사명", width: "30px", template: "#= coNm != null ? coNm : '-' #", sortable: true },
 					{ field: "bzmnSeNm", title: "권한", width: "30px", template: "#= bzmnSeNm != null ? bzmnSeNm : '-' #", sortable: true },
 					{ field: "brno", title: "사업자등록번호", width: "40px", template: "#= brno != null ? brno : '-' #", sortable: true },
 					{ field: "crno", title: "법인등록번호", width: "40px", template: "#= crno != null ? crno : '-' #", sortable: true },
+					{ field: "chckYmd", title: "점검일", width: "30px", template: "#= chckYmd != null ? chckYmd : '-' #", sortable: true },
 					{ field: "chckRslt", title: "결과", width: "30px", template: "#= chckRslt != null ? chckRslt : '-' #", sortable: true },
 					{ title: "결과서", width: "30px", exportable: false, template: "<button class='gray_btn' style='width: 70px;height: 30px;' onclick='javascript:$inspectionHist.event.issued(`#:bzmnSn#`);'>발급</button>" },
 				],
@@ -473,7 +443,23 @@
 	
 	$inspectionHist.event = {
 		setUIEvent: function() {
-
+			$("#regChckRslt").on("change", function() {
+				params = [];
+				params.chckRslt = "#regChckRslt";
+				params.prcsCn = "regPrcsCn";
+				params.divNm = ".regPrcsCnDiv";
+				
+				$inspectionHist.event.chckRsltClick(params);
+			});
+			
+			$("#detailChckRslt").on("change", function() {
+				params = [];
+				params.chckRslt = "#detailChckRslt";
+				params.prcsCn = "detailPrcsCn";
+				params.divNm = ".detailPrcsCnDiv";
+				
+				$inspectionHist.event.chckRsltClick(params);
+			});
 			// 등록 팝업 X, 닫기 버튼
 			$(".insertClose").on("click", function() {
 				location.reload();
@@ -489,33 +475,30 @@
 			    $(".scrollBar02").scrollTop(0);
 			    $("body").css("overflow", "auto");
 				filesArr = []; 
+				$('#detailPrcsCn').closest('span.k-dropdownlist').remove();
+				$('#detailPrcsCn').remove();
 			});
 			
 			$("#searchBtn").on("click", function() {
-				var start = new Date($("#start-picker01").val());
-				var end = new Date($("#end-picker01").val());
-				if(end > new Date(new Date(start).setMonth(start.getMonth() + 1))){
-					alert("한 달 이상으로 선택할 수 없습니다.");
-					$('#start-picker01').data("kendoDatePicker").value(new Date(new Date(end).setMonth(end.getMonth() - 1)));
-					return;
-				}
-				if(new Date($('#start-picker01').val()) > new Date($('#end-picker01').val())){
-					alert("시작일은 종료일보다 늦을 수 없습니다.");
-					$('#end-picker01').data("kendoDatePicker").value(new Date($('#start-picker01').val()));
-					return;
+				var selectCond = $("#selectCond").val();
+				var searchWrd = $('#searchWrd').val().trim();
+				
+				if(selectCond == '' && searchWrd != '') {
+					alert("조건을 선택해주세요.");
+					$("#selectCond").focus();
+				} else {
+					var sd = $("#searchCtpvNm").val();
+					var sgg = $("#searchSggNm").val();
+					excelDownArc.cmptncZoneCd = sd+sgg;
+					excelDownArc.bzmnSeCd     = $('#searchBzmnSeCd').val();
+					excelDownArc.bsnSttsCd    = $('#searchBsnSttsCd').val();
+					excelDownArc.chckRslt     = $('#searchRslt').val();
+					excelDownArc.selectCond   = selectCond;
+					excelDownArc.searchWrd    = searchWrd;
+					
+					$("#inspectionHistGrid").data("kendoGrid").dataSource.page(1);
 				}
 				
-				var sd = $("#searchCtpvNm").val();
-				var sgg = $("#searchSggNm").val();
-				excelDownArc.cmptncZoneCd = sd+sgg;
-				excelDownArc.startDt = $("#start-picker01").val();
-				excelDownArc.endDt = $("#end-picker01").val();
-				excelDownArc.dateType = $("#dateType").val();
-				excelDownArc.bzmnSeCd     = $('#searchBzmnSeCd').val();
-				excelDownArc.bsnSttsCd    = $('#searchBsnSttsCd').val();
-				excelDownArc.rslt         = $('#searchRslt').val();
-				
-				$("#inspectionHistGrid").data("kendoGrid").dataSource.page(1);
             });
 			
 			// 등록팝업 버튼
@@ -639,6 +622,40 @@
 			});
 		},
 		
+		chckRsltClick: function(params) {
+				
+				if($(params.chckRslt).val()=="불합격"){
+					$('#'+params.prcsCn).removeClass('input');
+					$('#'+params.prcsCn).removeClass('readOnlyGrayBtn');
+					$('#'+params.prcsCn).removeAttr('readonly');
+					//후속처리여부
+					var prcsCn = [
+						{ text: "경고" },
+						{ text: "벌금" },
+						{ text: "휴업" },
+					];
+					
+					$('#'+params.prcsCn).kendoDropDownList({
+						dataTextField: "text",
+						dataValueField: "text",
+						dataSource: prcsCn,
+					});
+				}else if($(params.chckRslt).val()=="합격"){
+					$('#'+params.prcsCn).closest('span.k-dropdownlist').remove();
+					var inputElement = $('<input>', {
+					    type: 'text',
+					    id: params.prcsCn,
+					    name: params.prcsCn,
+					    maxlength: '80',
+					    class: 'input readOnlyGrayBtn',
+					    'aria-label': '후속처리내용',
+					    readonly: true
+					});
+					
+					$(params.divNm).append(inputElement);
+				}
+		},
+		
 		fileValidation: function(obj) {
 		    var fileTypes = ['application/pdf', 'image/gif', 'image/jpeg', 'image/png', 'image/jpg'];
 		    if (obj.size > (2 * 1024 * 1024)) {
@@ -704,7 +721,43 @@
 			$('#detailChckCn').val(data.chckCn);
 			$('#detailChckPlc').val(data.chckPlc);
 			$('#detailLocgov').val(data.locgov);
-			$('#detailPrcsCn').data("kendoDropDownList").value(data.prcsCn);
+			if(data.prcsCn!=null&&data.prcsCn!=""){ //불합격
+				var inputElement = $('<input>', {
+				    type: 'text',
+				    id: 'detailPrcsCn',
+				    name: 'detailPrcsCn',
+				    maxlength: '80',
+				    'aria-label': '후속처리내용',
+				});
+				$('.detailPrcsCnDiv').append(inputElement);
+				
+				//후속처리여부
+				var prcsCn = [
+					{ text: "경고" },
+					{ text: "벌금" },
+					{ text: "휴업" },
+				];
+				
+				$("#detailPrcsCn").kendoDropDownList({
+					dataTextField: "text",
+					dataValueField: "text",
+					dataSource: prcsCn,
+				});
+
+				$('#detailPrcsCn').data("kendoDropDownList").value(data.prcsCn);
+			}else{
+				var inputElement = $('<input>', {
+				    type: 'text',
+				    id: 'detailPrcsCn',
+				    name: 'detailPrcsCn',
+				    maxlength: '80',
+				    class: 'input readOnlyGrayBtn',
+				    'aria-label': '후속처리내용',
+				    readonly: true
+				});
+				$('.detailPrcsCnDiv').append(inputElement);
+			}
+			
 			
 			for (var i = 1; i < 5; i++) {
 			    var fileSnNum = 'fileAtchSn' + i;
@@ -822,12 +875,11 @@
 					var sd = $("#searchCtpvNm").val();
 					var sgg = $("#searchSggNm").val();
 					excelDownArc.cmptncZoneCd = sd+sgg;
-					excelDownArc.startDt = $("#start-picker01").val();
-					excelDownArc.endDt = $("#end-picker01").val();
-					excelDownArc.dateType = $("#dateType").val();
 					excelDownArc.bzmnSeCd     = $('#searchBzmnSeCd').val();
 					excelDownArc.bsnSttsCd    = $('#searchBsnSttsCd').val();
-					excelDownArc.rslt         = $('#searchRslt').val();
+					excelDownArc.chckRslt     = $('#searchRslt').val();
+					excelDownArc.selectCond   = $("#selectCond").val();
+					excelDownArc.searchWrd    = $('#searchWrd').val().trim();
 				}
 				excelDown("/sys/inspectionHist/excelDown", excelDownArc, "inspectionHist", totalRowCount);
 			}
@@ -988,8 +1040,6 @@
 				alert("서명여부는 필수입니다");
 			}else if(params.telno == null || params.telno == "") {
 				alert("확인자 연락처는 필수입니다");
-			}else if(params.prcsCn == null || params.prcsCn == "") {
-				alert("후속처리내용은 필수입니다");
 			}else if(params.transferFn == "insertFile"){
 				if(confirm("등록 하시겠습니까?")) {
 					$inspectionHist.event[params.transferFn](params);

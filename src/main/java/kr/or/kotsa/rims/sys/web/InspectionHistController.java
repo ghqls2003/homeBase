@@ -109,8 +109,8 @@ public class InspectionHistController extends CmmnAbstractServiceImpl{
                                       HttpServletRequest request, HttpServletResponse response) throws RimsException {
 
 		String fileName = "inspectionHist" + (new java.text.SimpleDateFormat("yyyyMMddHHmmss")).format(new java.util.Date());
-        String colName[] = {"순번", "등록일", "점검일", "관할지역", "지도원", "회사명", "권한", "사업자등록번호", "법인등록번호", "점검결과"};
-        String valName[] = {"rn", "regDt","chckYmd","jurisdiction", "exmnr", "coNm", "bzmnSeNm", "brno", "crno", "chckRslt"};
+        String colName[] = {"순번", "회사명", "관할지역", "지도원", "권한", "사업자등록번호", "법인등록번호", "점검결과", "점검일"};
+        String valName[] = {"rn", "coNm", "jurisdiction", "exmnr", "bzmnSeNm", "brno", "crno", "chckRslt", "chckYmd"};
 
 
         List<Map<String, Object>> colValue = inspectionHistDao.selectInspectionHistInfo(paramsMap);

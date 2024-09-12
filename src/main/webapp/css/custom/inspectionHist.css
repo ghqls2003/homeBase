@@ -62,6 +62,10 @@ button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff
     padding: 11px 24px;
 }
 
+#searchWrd {
+	width: 270px;
+}
+
 @media (max-width: 950px) {
 	.b-flex {
 	    flex-direction: column;

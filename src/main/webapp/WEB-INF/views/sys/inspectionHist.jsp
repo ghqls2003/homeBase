@@ -39,27 +39,6 @@
 				<input type="hidden" class="_csrf" name="${_csrf.parameterName}" value="${_csrf.token}" />
                 <div class="selec_wr">
                     <div class="mo_flex">
-                    	<ul class="selec_box">
-	                        <li class="li_slec">
-	                            <label for="send_slec_01" hidden>기간유형</label>
-	                            <input type="text" id="dateType" class="dateType" aria-label="기간유형" placeholder="기간유형">
-	                        </li>
-	                    </ul>
-	                    <div class="year_picker">
-                            <ul class="yearBox">
-                                <li class="mo_li">
-                                    <label for="start-picker01">시작기간</label>
-                                    <input id="start-picker01" title="datepicker"
-                                    	aria-label="시작기간조회">
-                                </li>
-                                <li class="bar">-</li>
-                                <li class="mo_li">
-                                    <label for="end-picker01">종료기간</label>
-                                    <input id="end-picker01" title="datepicker"
-                                        aria-label="종료기간조회">
-                                </li>
-                            </ul>
-                        </div>
                         <ul class="selec_box">
                            <li class="li_slec">
                                <label for="searchCtpvNm" hidden> 시도(전체)</label>
@@ -81,6 +60,18 @@
                                <label for="searchRslt" hidden> 지도점검결과(전체)</label>
                                <input id="searchRslt">
                            </li>
+                        </ul>
+                        <ul class="selec_box">
+                            <li class="li_slec">
+	                            <label for="selectCond" hidden>조건선택</label>
+	                            <input type="text" id="selectCond" class="selectCond" aria-label="조건선택"  placeholder="조건선택" />
+                            </li>
+                        </ul>
+                        <ul class="selec_box">
+                            <li class="li_slec">
+	                            <label for="searchWrd" hidden>조회조건</label>
+	                            <input type="text" id="searchWrd" class="searchWrd input" aria-label="조건 선택 후,검색어를 입력하세요."  placeholder="조건 선택 후, 검색어를 입력하세요." maxLength="80" oninput="charOnly(this)" />
+                            </li>
                         </ul>
                     </div>
                     <button class="yellow_btn" id="searchBtn">
@@ -108,51 +99,11 @@
 			    <button type="button" class="blue_btn insertPopupBtn">등록</button>
 			</div>
 			
-			<!-- 등록 팝업 -->
-<!-- 			<div class="popup file_register_popup popup_type02 popup" style="z-index: 999"> -->
-<!-- 		        <div id="fileInsertPopup" class="box"> -->
-<!-- 		            <div class="popup_top"> -->
-<!-- 		                <h4>지도점검이력 등록</h4> -->
-<!-- 		                <div class="close insertClose"> -->
-<!-- 		                    <span></span> -->
-<!-- 		                    <span></span> -->
-<!-- 		                </div> -->
-<!-- 		            </div> -->
-
-<!-- 		    		<div class="content"> -->
-<!-- 		    			<h3>지도점검결과 등록</h3> -->
-<!-- 		    			<table class="tb rental_tb01"> -->
-<!-- 			    			<tr> -->
-<!-- 				    			<td> -->
-<!-- 					    			<div class="tb_flex"> -->
-<!-- 										<input id="fileNm" type="text" placeholder="지도점검결과 파일을 등록해주세요" class="input inp filetype" disabled="disabled" readonly /> -->
-<!-- 										<input -->
-<!-- 											type="file" id="fileUpload" name="files" -->
-<!-- 											onchange="fileAddCheck(this)" class="upload-hidden" -->
-<!-- 											style="display: none;" accept=".jpg, .jpeg, .png, .pdf" /> -->
-<!-- 										<button id="fileBtn" class="yellow_btn"> -->
-<%-- 											<img src="${contextPath}/images/sub/ico_search02.png" alt="검색아이콘"> --%>
-<!-- 										</button> -->
-<!-- 									</div> -->
-<!-- 								</td> -->
-<!-- 							</tr> -->
-<!-- 						</table> -->
-<!-- 						<div class="btn_flex"> -->
-<!-- 							<button class="blue_btn insertBtn" value="Insert">등록</button> -->
-<!-- 							<button style="margin-right: 10px" class='blue_btn directPopupBtn'>직접입력</button> -->
-<!-- 							<button class="gray_btn cancelBtn insertClose" value="Cancel">닫기</button> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-			
-			
-			
-			<!-- 지도점검이력 직접입력 팝업 -->
+			<!-- 지도점검이력 등록 팝업 -->
 			<div class="popup register_popup popup_type02 popup" style="z-index: 999">
 		        <div id="insertPopup" class="box">
 		            <div class="popup_top">
-		                <h4>지도점검이력 직접입력</h4>
+		                <h4>지도점검이력 등록</h4>
 		                <div class="close insertClose">
 		                    <span></span>
 		                    <span></span>
@@ -475,12 +426,12 @@
 								    <div class="cont cont-flex">
 								        <table class="tb rental_tb01">
 								       	 	<tr>
-								                <th scope="col"><span class="asterisk">*</span>후속처리내용</th>
+								                <th scope="col">후속처리내용</th>
 								                <td>
-								                    <div class="tb_flex">
+								                    <div class="tb_flex regPrcsCnDiv">
 								                        <label for="regPrcsCn">후속처리내용</label>
-								                        <input type="text" id="regPrcsCn" name="regPrcsCn" maxLength="80" aria-label="후속처리내용"
-								                               oninput="charOnly(this)" />
+								                        <input type="text" id="regPrcsCn" name="regPrcsCn" maxLength="80" class="input readOnlyGrayBtn" aria-label="후속처리내용"
+								                               readOnly />
 								                    </div>
 								                </td>
 								            </tr>
@@ -828,12 +779,10 @@
 								    <div class="cont cont-flex">
 								        <table class="tb rental_tb01">
 								            <tr>
-								                <th scope="col"><span class="asterisk">*</span>후속처리내용</th>
+								                <th scope="col">후속처리내용</th>
 								                <td>
-								                    <div class="tb_flex">
+								                    <div class="tb_flex detailPrcsCnDiv">
 								                        <label for="detailPrcsCn">후속처리내용</label>
-								                        <input type="text" id="detailPrcsCn" name="detailPrcsCn" maxLength="80" aria-label="후속처리내용"
-								                               oninput="charOnly(this)" />
 								                    </div>
 								                </td>
 								            </tr>
