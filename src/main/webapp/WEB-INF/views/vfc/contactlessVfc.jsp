@@ -6,7 +6,6 @@
 <link rel="stylesheet" type="text/css" href="${contextPath}/css/custom/drive.css" />
 
 <script src="${contextPath}/js/vfc/contactlessVfc.js"></script>
-<script src="${contextPath}/js/vfc/drive.js"></script>
 <script>
 var userType = '${userType}'
 var userTypeBool = '${userTypeBool}' === 'true';
@@ -55,6 +54,15 @@ var authrtCd = '${authrtCd}'
 	                            <div class="tb_flex">
 	                                <label for="rentInfoNo">대여정보일련번호</label>
 	                                <input id="rentInfoNo" class="input" aria-label="대여정보일련번호"  style="width: 100%;" maxlength="50" >
+	                                <input id="vin" placeholder="차대번호" style="display:none">
+	                                <input id="carmdl" placeholder="차종" style="display:none">
+	                                <input id="modelYear" placeholder="연식" style="display:none">
+	                                <input id="vhclNm" placeholder="차량명" style="display:none">
+	                                <input id="bzmnSn" placeholder="사업자일련번호" style="display:none">
+	                                <input id="engineType" placeholder="엔진형식" style="display:none">
+	                                <input id="useYn" placeholder="사용여부" style="display:none">
+	                                <input id="signguCd" placeholder="시군구코드" style="display:none">
+	                                <input id="regDt" placeholder="등록일" style="display:none">
 	                                <button class="yellow_btn rentInfoNo_btn">
 	                                    검색<img src="${contextPath}/images/sub/ico_search02.png" alt="검색아이콘" class="basic_ico">
 	                                </button>
@@ -86,8 +94,7 @@ var authrtCd = '${authrtCd}'
 	                        </th>
 	                        <td>
 	                            <label for="clVfcStartDate">대여시작일</label>
-	                            <input id="clVfcStartDate" type="text"
-	                                aria-label="대여시작일" readonly>
+	                            <input id="clVfcStartDate" type="text" aria-label="대여시작일" readonly>
 	                        </td>
 	                    </tr>
 	                    <tr>
@@ -96,8 +103,7 @@ var authrtCd = '${authrtCd}'
 	                        </th>
 	                        <td>
 	                            <label for="clVfcEndDate">대여종료일</label>
-	                            <input id="clVfcEndDate" type="text"
-	                                aria-label="대여종료일" readonly>
+	                            <input id="clVfcEndDate" type="text" aria-label="대여종료일" readonly>
 	                        </td>
 	                    </tr>
 	                </table>
