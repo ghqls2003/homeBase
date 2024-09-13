@@ -1,0 +1,623 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vfc.rentIdp">
+	<sql id="rentIdpList">
+	(
+	select  
+		row_number() over ( order by rent_no desc) as rn,
+		rent_no,
+		co_nm,
+		vhcl_reg_no,
+		TO_CHAR(t1.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt,
+		TO_CHAR(rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt,
+		TO_CHAR(rent_end_dt, 'YYYY-MM-DD HH24:MI') rent_end_dt,
+		rent_stts_cd,
+		rent_stts_nm,
+		rent_no,
+<!-- 		dln, -->
+		t1.mdfcn_dt,
+		vrfc_hstry_sn
+	from (
+		select 			
+			rent_no,
+			vhcl_reg_no,
+			vin,
+			bzmn_sn,
+			rent_bgng_dt,
+			rent_end_dt,
+			atch_file_sn,
+			sgg_cd,
+			rent_stts_cd,
+			CASE rent_stts_cd WHEN '1' THEN '미확정' WHEN '2' THEN '대여확정' WHEN '9' THEN '대여취소' ELSE rent_stts_cd END rent_stts_nm,
+			oneway_yn,
+			del_yn,
+			rmrk,
+			rgtr_sn,
+			reg_dt,
+			reg_ip,
+			mdfr_sn,
+			mdfcn_dt,
+			mdfcn_ip,
+			vrfc_hstry_sn
+<!-- 			dln -->
+		from dvs_dqv_mt_rent_idp 
+	) t1 left outer join dvs_rac_mt_agency t2 on t1.bzmn_sn = t2.bzmn_sn
+	where 1=1
+				and t1.del_yn = 'N'
+			<if test="coNm != '' and coNm != null">
+	           	and co_nm like '%' || #{coNm} ||'%'
+			</if>
+			<if test="vhclRegNo != '' and vhclRegNo != null">
+	           	and vhcl_reg_no like '%' || #{vhclRegNo} ||'%'
+			</if>
+			<if test="rentSttsCd != '' and rentSttsCd != null">
+	           	and rent_stts_cd = #{rentSttsCd}
+			</if>
+			<if test ='rentDt != null and rentDt != ""'>
+<!-- 		        AND t1.reg_dt::TIMESTAMP <![CDATA[>=]]>  #{rentDt}::TIMESTAMP -->
+				and TO_CHAR(t1.reg_dt,'YYYYMMDD') BETWEEN #{rentDt} AND #{rentDt}
+		    </if>
+	) as t0	
+	</sql>
+	
+	<sql id="carQuery">
+	(
+		select * from(
+			select
+				row_number() over() as rn ,
+				car.vhcl_reg_no,
+				car.vin,
+				car.carmdl,
+				car.mdlyr,
+				car.vhcl_nm,
+				car.bzmn_sn,
+				car.crno,
+				car.ownr_nm,
+				(select brno from dqvs.dvs_rac_mt_agency drma where bzmn_sn = car.bzmn_sn),
+				car.engine_fom,
+				case car.use_yn  when 'Y' then '사용' when 'N' then '미사용' else '미상' END AS use_yn ,
+				to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
+				from dqvs.dvs_rac_mt_car car
+				where 1=1
+				<if test="searchWrd != '' and searchWrd != null">
+					and car.vhcl_reg_no like '%' || #{searchWrd} || '%'
+				</if>
+				<if test="bzmnSn != '' and bzmnSn != null">
+					and car.crno = (select crno from dqvs.dvs_rac_mt_agency where bzmn_sn = #{bzmnSn} )
+				</if>
+		) T
+		WHERE 1 = 1
+		ORDER BY T.rn ASC
+		limit 100
+	) as t0
+	</sql>
+	
+	<select id="selectRentIdpList" resultType="resultMap">
+	<!-- 	 국제면허 대여정보 리스트 -->	
+	select * from 
+			<include refid="rentIdpList" />
+	<if test="take != '' and take != null">
+		LIMIT #{take} OFFSET #{skip}
+	</if>	
+	</select>
+	
+		
+    <select id="selectRentIdpListCnt" resultType="int">
+    <!-- 	 국제면허 대여정보 리스트 Cnt-->
+		select count(*)
+		from 
+			<include refid="rentIdpList" />
+    </select>
+    
+    <select id="detailRentInfo" resultType="resultMap">
+    /*대여이력 상세*/
+    	SELECT rent.rent_no
+			, rent.vhcl_reg_no
+			, '국제면허' lcns_idntf_nm 
+			, rent.atch_file_sn
+			, COALESCE(dcmi.atch_file_nm, '-') atch_file_nm
+			, TO_CHAR(rent.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt
+			, TO_CHAR(rent.rent_end_dt, 'YYYY-MM-DD HH24:MI') rent_end_dt
+			, rent.rent_stts_cd
+			, rent.del_yn
+			, CASE rent.rent_stts_cd WHEN '1' THEN '미확정' WHEN '2' THEN '대여확정' WHEN '9' THEN '대여취소' 
+				ELSE rent.rent_stts_cd END rent_stts_nm
+		FROM
+			(select * from dvs_dqv_mt_rent_idp) rent
+		LEFT JOIN
+			dqvs.dvs_rac_mt_car car
+		ON rent.vin = car.vin
+		LEFT JOIN
+			dqvs.dvs_cmm_mt_intrlcnsfile dcmi
+		ON rent.atch_file_sn = dcmi.file_sn
+		WHERE rent.rent_no = #{rentNo}
+    </select>
+    
+    
+    <update id="updateRentInfo">
+    /*대여이력 상세 수정*/
+	UPDATE dvs_dqv_mt_rent_idp
+		<choose>
+			<when test="rentSttsCd.equals('cancel')">
+				SET rent_stts_cd = '9',
+	        	rent_end_dt = #{rentEndDt}::timestamp,
+	        	rent_bgng_dt= #{rentBgngDt}::timestamp,
+	        	mdfcn_ip= #{IP},
+	        	mdfr_sn= #{userSn}::numeric,
+	        	mdfcn_dt= now()::timestamp
+			</when>
+			<when test="rentSttsCd.equals('confirmed')">
+				SET rent_stts_cd = '2',
+	        	mdfcn_ip= #{IP},
+	        	mdfr_sn= #{userSn}::numeric,
+	        	mdfcn_dt= now()::timestamp
+			</when>
+			<otherwise>
+				SET
+				<if test="vin != '' and vin != null">
+					vin = #{vin},
+				</if>
+				<if test="rgtrSn != '' and rgtrSn != null">
+					rgtr_sn = #{rgtrSn}::numeric,
+				</if>
+				<if test="vhclRegNo != '' and vhclRegNo != null">
+					vhcl_reg_no = #{vhclRegNo},
+				</if>
+				<if test="bzmnSn != '' and bzmnSn != null">
+					bzmn_sn = #{bzmnSn},
+				</if>
+	        	rent_end_dt = #{rentEndDt}::timestamp,
+	        	rent_bgng_dt= #{rentBgngDt}::timestamp,
+	        	mdfcn_ip= #{IP},
+	        	mdfr_sn= #{userSn}::numeric,
+	        	mdfcn_dt= now()::timestamp
+			</otherwise>
+		</choose>
+			WHERE rent_no = #{rentNo}
+    </update>
+    
+	<select id="CarList" resultType="resultMap">
+	    select * from 
+			<include refid="carQuery" />
+		<if test="take != '' and take != null">
+			LIMIT #{take} OFFSET #{skip}
+		</if>
+	</select>
+	
+		<select id="CarListCnt" resultType="int">
+	SELECT COUNT(*) FROM (
+		SELECT * FROM (
+			SELECT
+				row_number() over() as rn ,
+			car.vhcl_reg_no,
+			car.vin,
+			car.carmdl,
+			car.mdlyr,
+			car.vhcl_nm,
+			car.bzmn_sn,
+			car.ownr_nm,
+			(select brno from dqvs.dvs_rac_mt_agency drma where bzmn_sn = car.bzmn_sn),
+			car.engine_fom,
+			case car.use_yn  when 'Y' then '사용' when 'N' then '미사용' else '미상' END AS use_yn ,
+			to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
+			from dqvs.dvs_rac_mt_car car
+			where 1=1
+			<if test="searchWrd != '' and searchWrd != null">
+				and car.vhcl_reg_no like '%' || #{searchWrd} || '%'
+			</if>
+			<if test="bzmnSn != '' and bzmnSn != null">
+				and car.crno = (select crno from dqvs.dvs_rac_mt_agency where bzmn_sn = #{bzmnSn} )
+			</if>
+		) AS T
+		WHERE 1=1
+		ORDER BY T.rn ASC
+		limit 100
+	) AS C
+	</select>
+	
+		<select id="HisDetailRentInfo" resultType="resultMap">
+		SELECT rent.rent_hstry_no,
+			rent.rent_no,
+			rent.vhcl_reg_no,
+			CASE rent.lcns_idntf_cd
+				when '1' then '국내 면허'
+				when '2' then '국제 면허'
+				else '국내면허'
+				end as lcns_idntf_nm,
+			rent.lcns_idntf_cd,
+			rent.atch_file_sn,
+			coalesce(dcmi.atch_file_nm, '-') atch_file_nm,
+			to_char(rent.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt,
+			to_char(rent.rent_end_dt, 'YYYY-MM-DD HH24:MI') rent_end_dt,
+			rent.rent_stts_cd,
+			rent.del_yn,
+			rent.rgtr_sn,
+			(select user_nm	from dqvs.dvs_cmm_mt_sso where user_sn = rent.rgtr_sn) as user_nm,
+			to_char(rent.reg_dt,	'YYYY-MM-DD') as reg_dt,
+			CASE rent.rent_stts_cd
+				WHEN '1' THEN '미확정'
+				WHEN '2' THEN '대여확정'
+				WHEN '9' THEN '대여취소'
+				ELSE rent.rent_stts_cd
+				END AS rent_stts_nm
+		FROM dqvs.dvs_dqv_hs_rent rent
+				 left join dqvs.dvs_rac_mt_car car
+						   on rent.vin = car.vin
+				 left join dqvs.dvs_cmm_mt_intrlcnsfile dcmi
+						   on rent.atch_file_sn = dcmi.file_sn
+		WHERE rent.rent_no = #{rentNo}
+		ORDER BY rent.rent_hstry_no DESC
+	</select>
+	
+		<select id="HisDetailRentInfoCnt" resultType="int">
+		select count(*)
+		from(
+			select
+				rent.rent_hstry_no,
+				rent.rent_no,
+				rent.vhcl_reg_no,
+				CASE rent.lcns_idntf_cd
+					when '1' then '국내 면허'
+					when '2' then '국제 면허'
+					else '국내면허'
+					end as lcns_idntf_nm,
+				rent.lcns_idntf_cd,
+				rent.atch_file_sn,
+				coalesce(dcmi.atch_file_nm, '-') atch_file_nm,
+				to_char(rent.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt,
+				to_char(rent.rent_end_dt, 'YYYY-MM-DD HH24:MI') rent_end_dt,
+				rent.rent_stts_cd,
+				rent.del_yn,
+				CASE rent.rent_stts_cd
+					WHEN '1' THEN '미확정'
+					WHEN '2' THEN '대여확정'
+					WHEN '9' THEN '대여취소'
+					ELSE rent.rent_stts_cd
+					END AS rent_stts_nm
+			from dqvs.dvs_dqv_hs_rent rent
+					 left join dqvs.dvs_rac_mt_car car
+							   on rent.vin = car.vin
+					 left join dqvs.dvs_cmm_mt_intrlcnsfile dcmi
+							   on rent.atch_file_sn = dcmi.file_sn
+			where rent.rent_no = #{rentNo}
+			)T
+	</select>
+	
+		<!--대여정보이력 테이블에 이전 데이터가 있는 경우-->
+	<insert id="insertRentHisInfo1">
+		with max_his_number as(
+			select
+				MAX(rent_hstry_no) AS max_num
+			from dqvs.dvs_dqv_hs_rent
+			where rent_no = #{rentNo}
+			group by rent_no
+		)
+		INSERT INTO dqvs.dvs_dqv_hs_rent
+		values
+		(
+		#{rentNo}
+		,CAST((SELECT max_num FROM max_his_number) AS numeric) + 1
+		,#{vin}
+		,#{vhclRegNo}
+		,#{carmdl}
+		,#{modelYear}
+		,#{vhclNm}
+		,#{bzmnSn}
+		,#{engineType}
+		,#{useYn}
+		,#{signguCd}
+		,dqvs.pca_encrypt(#{dln}, '150')
+		,#{vrfcHstrySn}
+		,#{rmrk}
+		,#{rentBgngDt}
+		,#{rentEndDt}
+		,#{rentPrcsDt}
+		,#{rentSttsCd}
+		,#{userSn}::numeric
+		,now()
+		,#{ip}
+		,null
+		,null
+		,null
+		,#{atchFileSn}
+		,'2'
+		,#{delYn}
+		,#{vhclIdntyCd}
+		)
+	</insert>
+	
+		<!--대여정보이력 테이블에 이전 데이터가 없는 경우-->
+	<insert id="insertRentHisInfo2">
+		INSERT INTO dqvs.dvs_dqv_hs_rent
+		values
+		(
+			#{rentNo}
+			,'1'
+			,#{vin}
+			,#{vhclRegNo}
+			,#{carmdl}
+			,#{modelYear}
+			,#{vhclNm}
+			,#{bzmnSn}
+			,#{engineType}
+			,#{useYn}
+			,#{signguCd}
+			,dqvs.pca_encrypt(#{dln}, '150')
+			,#{vrfcHstrySn}
+			,#{rmrk}
+			,#{rentBgngDt}
+			,#{rentEndDt}
+			,#{rentPrcsDt}
+			,#{rentSttsCd}
+			,#{userSn}::integer
+			,now()
+			,#{ip}
+			,null
+			,null
+			,null
+			,#{atchFileSn}
+			,'2'
+			,#{delYn}
+			,#{vhclIdntyCd}
+		)
+	</insert>
+	
+		<!--대여정보 테이블에서 대여번호로 조회-->
+	<select id="RentMtInfo" resultType="resultMap">
+		select *
+		from dvs_dqv_mt_rent_idp
+		where rent_no = #{rentNo}
+	</select>
+	
+		<!--대여정보이력 테이블에서 대여번호로 조회-->
+	<select id="RentHsInfo" resultType="resultMap">
+		select rent_no
+			 , rent_hstry_no
+			 , vin
+			 , vhcl_reg_no
+			 , carmdl
+			 , mdlyr
+			 , vhcl_nm
+			 , bzmn_sn
+			 , engine_fom
+			 , use_yn
+			 , sgg_cd
+			 , dqvs.pca_decrypt(dln, '150') dln
+			 , vrfc_hstry_sn
+			 , rmrk
+			 , rent_bgng_dt
+			 , rent_end_dt
+			 , rent_prcs_dt
+			 , rent_stts_cd
+			 , rgtr_sn
+			 , reg_dt
+			 , reg_ip
+			 , mdfr_sn
+			 , mdfcn_dt
+			 , mdfcn_ip
+			 , atch_file_sn
+			 , lcns_idntf_cd
+			 , del_yn
+			 , vhcl_idnty_cd
+		from dqvs.dvs_dqv_hs_rent
+		where rent_no = #{rentNo}
+	</select>
+	
+	<update id="updateDeleteYn">
+			UPDATE dvs_dqv_mt_rent_idp
+			SET del_yn = 'Y',
+				mdfcn_ip= #{IP},
+				mdfr_sn= #{userSn}::numeric,
+				mdfcn_dt= now()::timestamp
+			WHERE rent_no = #{rentNo}
+	</update>
+	
+	<insert id="insertRentRegHs">
+			INSERT INTO dqvs.dvs_dqv_hs_rent
+				(rent_no,
+				rent_hstry_no,
+				vin,
+				vhcl_reg_no,
+				<if test="carmdl != '' and carmdl != null">
+				carmdl,
+				</if>
+				<if test="modelYear != '' and modelYear != null">
+				mdlyr,
+				</if>
+				<if test="vhclNm != '' and vhclNm != null">
+				vhcl_nm,
+				</if>
+				<if test="bzmnSn != '' and bzmnSn != null">
+				bzmn_sn,
+				</if>
+				<if test="engineType != '' and engineType != null">
+				engine_fom,
+				</if>
+				use_yn,
+				<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
+				sgg_cd,
+				</if>
+				rent_bgng_dt,
+				rent_end_dt,
+				rent_prcs_dt,
+				rent_stts_cd,
+				rgtr_sn,
+				reg_dt,
+				<choose>
+					<when test="atchFileSn != '' and atchFileSn != null">
+						lcns_idntf_cd,
+						atch_file_sn,
+					</when>
+					<otherwise>
+						lcns_idntf_cd,
+					</otherwise>
+				</choose>
+				reg_ip
+				)
+			VALUES
+				((((('R'::text || to_char(now(), 'YY'::text)) || '-'::text) || lpad(nextval(('seq_dvs_dqv_mt_rent_idp'::text)::regclass)::text, 9, '0'::text))),
+				nextval('dqvs.seq_dvs_dqv_hs_rent'::regclass),
+				#{vin},
+				#{vhclRegNo},
+				<if test="carmdl != '' and carmdl != null">
+				#{carmdl},
+				</if>
+				<if test="modelYear != '' and modelYear != null">
+				#{modelYear},
+				</if>
+				<if test="vhclNm != '' and vhclNm != null">
+				#{vhclNm},
+				</if>
+				<if test="bzmnSn != '' and bzmnSn != null">
+				#{bzmnSn},
+				</if>
+				<if test="engineType != '' and engineType != null">
+				#{engineType},
+				</if>
+				'Y',
+				<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
+				#{cmptncZoneCd},
+				</if>
+				#{rentBgngDt}::timestamp,
+				#{rentEndDt}::timestamp,
+				now(),
+				'2',
+				#{userSn}::numeric,
+				now()::timestamp,
+				<choose>
+					<when test="atchFileSn != '' and atchFileSn != null">
+						'2',
+						#{atchFileSn},
+					</when>
+					<otherwise>
+						'2',
+					</otherwise>
+				</choose>
+				#{IP}
+				)
+	</insert>
+	
+	<insert id="insertRentReg">
+			INSERT INTO dqvs.dvs_dqv_mt_rent_idp
+				(rent_no,
+				vin,
+				vhcl_reg_no,
+				<if test="bzmnSn != '' and bzmnSn != null">
+				bzmn_sn,
+				</if>
+				<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
+				sgg_cd,
+				</if>
+				rent_bgng_dt,
+				rent_end_dt,
+				rent_stts_cd,
+				rgtr_sn,
+				reg_dt,
+				<choose>
+					<when test="atchFileSn != '' and atchFileSn != null">
+<!-- 						lcns_idntf_cd, -->
+						atch_file_sn,
+					</when>
+					<otherwise>
+<!-- 						lcns_idntf_cd, -->
+					</otherwise>
+				</choose>
+				reg_ip,
+				del_yn
+				)
+			VALUES
+				((((('R'::text || to_char(now(), 'YY'::text)) || '-'::text) || lpad(nextval(('seq_dvs_dqv_mt_rent_idp'::text )::regclass)::text, 9, '0'::text))),
+				#{vin},
+				#{vhclRegNo},
+
+				<if test="bzmnSn != '' and bzmnSn != null">
+				#{bzmnSn},
+				</if>
+				<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
+				#{cmptncZoneCd},
+				</if>
+				#{rentBgngDt}::timestamp,
+				#{rentEndDt}::timestamp,
+				'2',
+				#{userSn}::numeric,
+				now()::timestamp,
+				<choose>
+					<when test="atchFileSn != '' and atchFileSn != null">
+<!-- 						#{lcnsIdntfCd}, -->
+						#{atchFileSn},
+					</when>
+					<otherwise>
+<!-- 						#{lcnsIdntfCd}, -->
+					</otherwise>
+				</choose>
+				#{IP},
+				'N'
+				)
+	</insert>
+	
+		<insert id="insertConfData">
+		INSERT INTO dqvs.dvs_dqv_hs_conf
+			(rent_no,
+			cnfrmn_hstry_no,
+			vhcl_reg_no,
+			vin,
+			bzmn_sn,
+			rent_bgng_dt,
+			rent_end_dt,
+			atch_file_sn,
+			sgg_cd,
+			rgtr_sn,
+			reg_dt,
+			reg_ip,
+			mdfr_sn,
+			mdfcn_dt,
+			mdfcn_ip,
+			vrfc_hstry_sn,
+			lcns_idntf_cd,
+			mdlyr,
+			vhcl_nm,
+			carmdl,
+			engine_fom,
+			use_yn,
+			dln,
+			rent_prcs_dt)
+			select
+				rent_no,
+				(select (COALESCE(count(cnfrmn_hstry_no), 0) + 1)::varchar as cnfrmn_hstry_no from dqvs.dvs_dqv_hs_conf where rent_no=#{rentNo}) cnfrmn_hstry_no ,
+				vhcl_reg_no,
+				vin,
+				bzmn_sn,
+				rent_bgng_dt,
+				rent_end_dt,
+				atch_file_sn,
+				sgg_cd,
+				rgtr_sn,
+				reg_dt,
+				reg_ip,
+				#{userSn}::numeric,
+				now()::timestamp,
+				#{clientIP},
+				vrfc_hstry_sn,
+				2,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null
+			from dqvs.dvs_dqv_mt_rent_idp
+			WHERE rent_no = #{rentNo}
+		order by rent_no
+	</insert>
+	
+	<select id="BzmnSeCd" parameterType="map" resultType="string">
+        SELECT bzmn_se_cd
+        FROM dqvs.dvs_rac_mt_agency
+        WHERE bzmn_sn = #{bzmnSn}
+    </select>
+	
+		
+    
+
+</mapper>
