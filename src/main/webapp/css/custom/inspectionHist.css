@@ -7,38 +7,12 @@
 .inspection01{padding-bottom:0 !important;}
 .inspection02{padding-top:0 !important;}
 
-.a-flex {
-	  display: flex;
-	  flex-direction: row;
-	  align-items: stretch;
-	  width:100%;
-	   
-}
-.aaa{width: 7%; box-sizing: border-box; display: flex;}
-.aaaa{width:90%;}
-.b-flex{display: flex;
-	  flex-direction: row;
-	  align-items: stretch;
-	  width:100%;
-	  align-items: flex-start;}
-	  
 .chckCn{
 	padding: 10px;
     resize: both;
     overflow: auto;
     max-height: 200px;}	  
     
-@media (max-width: 950px) {
-.b-flex {
-    flex-direction: column;
-}
-}
-
-.bbb{margin-right: 48px;}
-
-/* .aaa th{text-align: center !important;} */
-
-/* .inspector { border-collapse: separate;border-spacing:10px; } */
 .inspector th{width: auto !important; text-align: center !important;}
 .inspector td{padding: 5px !important;text-align: center;}
 .inspector input {text-align: center;padding-left: 0px;}
@@ -47,5 +21,81 @@
 button.red_btn{width: 152px;height: 54px;background-color: #ff3838;border-radius: 8px;font-size: 1.8rem;line-height: 26px;color: #fff;}
 button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff3838;}
 
-/*  */
+.readOnlyGrayBtn {
+    background-color: #f5f5f5;
+}
+
 #insertPopup #agencyNm{height: 36px;}
+.detail_popup #detailCoNm{height: 36px;}
+
+#fileUploadBtn, #detailFileUploadBtn {
+	margin-left:0 !important;
+}
+
+.fileDiv .file-list {
+    height: 160px;
+    overflow: auto;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #DBE0EC;
+    border-radius: 8px;
+    margin-top : 10px;
+}
+.fileDiv .file-list .filebox {
+	margin: 5px 0;
+}
+.fileDiv .file-list .filebox p {
+    font-size: 14px;
+    display: inline-block;
+}
+.fileDiv .file-list .filebox .delete img{
+    margin-left: 5px;
+    width : 20px;
+}
+.sub04 .selec_wr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #F5F8FE;
+    border: 1px solid #E8EDF8;
+    border-radius: 8px;
+    padding: 11px 24px;
+}
+
+#searchWrd {
+	width: 270px;
+}
+
+@media (max-width: 950px) {
+	.b-flex {
+	    flex-direction: column;
+	}
+}
+
+@media (max-width: 1500px) {
+    .sub03 .selec_wr .mo_flex {
+   		 flex-direction: row;
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    button.red_btn {
+        width: 134px;
+        height: 42px;
+    }
+}
+
+@media (max-width: 420px) {
+    button.red_btn {
+        width: 123px;
+        height: 42px;
+    }
+}
+
+@media (max-width: 1200px) {
+    button.red_btn {
+        font-size: 1.6rem;
+    }
+}

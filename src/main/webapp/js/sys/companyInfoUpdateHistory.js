@@ -42,13 +42,20 @@
 						} else {
 							param.ctpvCd = this.value();
 							$company.comm.syncAjax(false, true, contextPath + '/sys/company/selectSggNm', 'body', '처리중입니다.', param, function(data) {
-								$('#searchSggNm').kendoDropDownList({
-									optionLabel: "시군구(전체)",
-									dataTextField: "sgg_nm",
-									dataValueField: "stdg_cd",
-									dataSource: data,
-									value: "sgg_nm",
-								});
+								if(data.length==0){
+									$('#searchSggNm').kendoDropDownList({
+										optionLabel: "시군구"
+								    });
+								}else{
+									$('#searchSggNm').kendoDropDownList({
+										optionLabel: "시군구(전체)",
+										dataTextField: "sgg_nm",
+										dataValueField: "stdg_cd",
+										dataSource: data,
+										value: "sgg_nm",
+									});
+								}
+								
 							});
 						}
 					}

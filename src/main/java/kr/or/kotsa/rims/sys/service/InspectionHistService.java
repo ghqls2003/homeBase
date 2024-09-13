@@ -3,6 +3,10 @@ package kr.or.kotsa.rims.sys.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
+
 public interface InspectionHistService {
 
 	public List<Map<String, Object>> agencyList(Map<String, Object> paramsMap);
@@ -25,6 +29,7 @@ public interface InspectionHistService {
 
 	public int updateDeleteYn(Map<String, Object> paramsMap);
 
+	public Map<String, Object> insertFilesUpload(List<MultipartFile> multipartFile, Map<String, Object> paramsMap) throws RimsException;
 
 }
  

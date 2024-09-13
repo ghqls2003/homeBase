@@ -82,9 +82,9 @@ img.ani_img03{position: absolute;bottom: 50px;left: 50px;z-index: -1;animation: 
     color:#fff;
     margin-top: 35px;
 }
-.main .txt_box button.m_btn:hover{background: linear-gradient(180deg, #2845D8 0%, #14236C 100%);}
+.main .txt_box button.m_btn{background: linear-gradient(180deg, #2845D8 0%, #14236C 100%);}
 .main .txt_box button.m_btn .arrow_box{width: 25px;margin-left: 7px;}
-.main .txt_box button.m_btn:hover img.ico_arrow{animation: motion .6s linear 0s infinite alternate;}
+.main .txt_box button.m_btn img.ico_arrow{animation: motion .6s linear 0s infinite alternate;}
 
 .main .notice_wrap{width: 50%;height: 190px; margin-right: 47px;padding: 26px 21px;}
 .main .notice_wrap ul.tit_top{display: flex;align-items: center;justify-content: flex-start;margin-bottom: 16px;}

@@ -204,7 +204,8 @@
 			// 시군구
 			if (param.regCmptncCd == "3611000000") { // 세종특별자차시
 				$("#searchSggNm").kendoDropDownList({
-					optionLabel: "시군구(전체)"
+					optionLabel: "시군구(전체)",
+					value: ""
 				});
 			} else if(param.regCmptncCd.substring(2, param.regCmptncCd.length) == "00000000") { // 광역지자체
 				param.ctpvCd = param.regCmptncCd.substring(0, 2);
@@ -3377,13 +3378,19 @@
 						} else {
 							param.ctpvCd = this.value();
 							$cmpnymanage.comm.syncAjax(true, true, contextPath + '/sys/companyManage/sggNm', 'body', '처리중입니다.', param, function(data) {
-								$(sggId).kendoDropDownList({
-									optionLabel: label.sgg,
-									dataTextField: "sgg_nm",
-									dataValueField: "stdg_cd",
-									dataSource: data,
-									value: "sgg_nm"
-								});
+								if(data.length==0) {
+									$(sggId).kendoDropDownList({
+										optionLabel: "시군구"
+								    });
+								}else{
+									$(sggId).kendoDropDownList({
+										optionLabel: label.sgg,
+										dataTextField: "sgg_nm",
+										dataValueField: "stdg_cd",
+										dataSource: data,
+										value: "sgg_nm"
+									});
+								}
 							});
 						}
 					}

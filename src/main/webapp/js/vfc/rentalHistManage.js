@@ -183,7 +183,6 @@
 				}
 			});
 			
-			
 
 //			$(".regChk").on('change', function(){
 //				var regVal = $("input[name='regChk']:checked").val();
@@ -231,8 +230,8 @@
 							},
 						},
 						parameterMap: function(options){
-//							options.startDt			= searchParamsArc.startDt;
-//							options.endDt			= searchParamsArc.endDt;
+							options.startDt			= searchParamsArc.startDt;
+							options.endDt			= searchParamsArc.endDt;
 							options.rentDt			= searchParamsArc.rentDt;
 							options.lcnsIdntfCd	= searchParamsArc.lcnsIdntfCd;
 							options.rentSttsCd		= searchParamsArc.rentSttsCd;

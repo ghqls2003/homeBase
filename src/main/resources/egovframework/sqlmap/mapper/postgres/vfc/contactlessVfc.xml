@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vfc.contactlessVfc">
+
+	<select id="selectRentInfo" resultType="resultMap">
+		select rent.rent_no
+			, rent.lcns_idntf_cd
+			, rent.vhcl_reg_no
+			, TO_CHAR(rent.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt
+		    , TO_CHAR(rent.rent_end_dt, 'YYYY-MM-DD HH24:MI') rent_end_dt
+			, rent.rent_stts_cd
+			, rent.dln
+			, rent.vhcl_reg_no
+			, car.vin
+			, car.carmdl
+			, car.mdlyr
+			, car.vhcl_nm
+			, car.bzmn_sn
+			, car.engine_fom
+			, car.use_yn
+			, car.sgg_cd
+			, car.ownr_nm
+			, to_char(car.reg_dt, 'yyyy-mm-dd') as reg_dt
+		from dqvs.dvs_dqv_mt_rent rent
+		left join dqvs.dvs_rac_mt_car car
+		on rent.vhcl_reg_no = car.vhcl_reg_no 
+		where 1=1
+		and rent.rent_stts_cd = '2'
+		and rent.del_yn  = 'N'
+		and rent.rent_no = #{rentNo}
+	</select>
+
+</mapper>

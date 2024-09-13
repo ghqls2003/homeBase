@@ -55,13 +55,20 @@
 						} else {
 						    param.ctpvCd = this.value();
 							ajax(true, contextPath+'/sys/usermanage/selectSggNm.do', 'body', '처리중입니다.', param, function (data) {
-								$('#search_sgg_nm').kendoDropDownList({
-						            optionLabel: "시군구(전체)",
-						            dataTextField: "sgg_nm",
-						            dataValueField: "sgg_cd",
-						            dataSource: data,
-									value : "sgg_cd"
-						        });
+								if(data.length==0){
+									$('#search_sgg_nm').kendoDropDownList({
+										optionLabel: "시군구"
+								    });
+								}else{
+									$('#search_sgg_nm').kendoDropDownList({
+							            optionLabel: "시군구(전체)",
+							            dataTextField: "sgg_nm",
+							            dataValueField: "sgg_cd",
+							            dataSource: data,
+										value : "sgg_cd"
+							        });
+								}
+								
 							});
 						}
 					}

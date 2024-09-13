@@ -11,6 +11,9 @@
 			dqvs.dvs_rac_mt_agency
 		where 1=1
 		and bsn_stts_cd = '0'
+		<if test="userCmptncZoneCd != '' and userCmptncZoneCd != null">
+			and reg_cmptnc_cd like #{userCmptncZoneCd} || '%'
+		</if>
     </select>
     
     <!-- 회사 정보 검색 -->
@@ -21,6 +24,7 @@
 			, rprsv_nm
 			, brno
 			, bsn_stts_mdfcn_dt
+			, reg_cmptnc_cd
 			, dqvs.pca_decrypt(telno,
 			'150') as agency_telno
 			, CONCAT( (
@@ -38,6 +42,9 @@
 					dqvs.dvs_cmm_mt_area
 			where
 					stdg_cd = reg_cmptnc_cd)) jurisdiction
+			, CONCAT(
+		    (SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd), ' ',
+		    (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = sgg_cd)) locgov		
 			, (
 			select
 				cd.cd_nm
@@ -55,32 +62,32 @@
 	
 	<!-- 검색/등록팝업 옵션 - 시도(전체) -->
 	<select id="CtpvNm" resultType="map">
-	/* 시도(전체) */
+	    /* 시도(전체) */
         SELECT DISTINCT LPAD(stdg_cd, 2) ctpv_cd
         	, ctpv_nm
 		FROM
 			dqvs.dvs_cmm_mt_area
 		WHERE mtnabn_yn = 'Y'
-		<if test="regCmptncCd != null and regCmptncCd != ''">
-			AND stdg_cd = #{regCmptncCd}
+		<if test="userCmptncZoneCd != null and userCmptncZoneCd != ''">
+			AND stdg_cd = #{userCmptncZoneCd}
 		</if>
 		ORDER BY ctpv_cd
     </select>
 
     <!-- 검색/등록팝업 옵션 - 시군구(전체) -->
 	<select id="SggNm" resultType="map">
-        SELECT DISTINCT stdg_cd
-        	, sgg_nm
-		FROM 
-			dqvs.dvs_cmm_mt_area
-		WHERE mtnabn_yn = 'Y' AND sgg_nm != ''
+        select distinct
+			SUBSTRING(stdg_cd, 3, 3) AS sgg_cd, sgg_nm
+		from dqvs.dvs_cmm_mt_area
+		where mtnabn_yn = 'Y'
+			and sgg_nm != ''
 		<if test="ctpvCd != null and ctpvCd != ''">
-			AND stdg_cd LIKE CONCAT(#{ctpvCd}, '%')
+			and stdg_cd LIKE CONCAT(#{ctpvCd}, '%')
 		</if>
-		<if test="regCmptncCd != null and regCmptncCd != ''">
-			AND stdg_cd = #{regCmptncCd}
+		<if test="userCmptncZoneCd != null and userCmptncZoneCd != ''">
+			and stdg_cd = #{userCmptncZoneCd}
 		</if>
-		ORDER BY stdg_cd
+		order by sgg_cd
     </select>
     
     <!-- 검색옵션 - 영업상태(전체) -->
@@ -111,26 +118,40 @@
 	
 	<sql id="InspectionHistInfoSql">
 		(
-		SELECT ROW_NUMBER() OVER(ORDER BY T1.co_nm DESC) rn
+		SELECT ROW_NUMBER() OVER(ORDER BY T1.reg_dt DESC) rn
 		, T1.*
 		from(
 			select
 				inspctn.bzmn_sn
-				, inspctn.reg_cmptnc_cd
 				, inspctn.exmnr
 				, inspctn.exmnr2
 				, inspctn.exmnr3
 				, inspctn.jbgd
+				, inspctn.jbgd2
+				, inspctn.jbgd3
 				, inspctn.ogdp
+				, inspctn.ogdp2
+				, inspctn.ogdp3
 				, dqvs.pca_decrypt(inspctn.telno, '150') as telno
 				, inspctn.chck_artcl
 				, inspctn.etc_artcl
 				, inspctn.chck_cn
 				, inspctn.chck_plc
+				, TO_CHAR(inspctn.chck_ymd, 'YYYY-MM-DD') as chck_ymd
+				, TO_CHAR(inspctn.reg_dt, 'YYYY-MM-DD HH24:MI:SS') as reg_dt
 				, inspctn.sign_yn
-				, inspctn.rslt
-				, inspctn.prcs_yn
-				, inspctn.fileatchsn
+				, inspctn.chck_rslt
+				, inspctn.chck_idfr
+				, inspctn.idfr_jbgd
+				, inspctn.idfr_ogdp
+				, inspctn.prcs_cn
+				, inspctn.del_yn
+				, inspctn.file_atch_sn1
+				, inspctn.file_atch_sn2
+				, inspctn.file_atch_sn3
+				, inspctn.file_atch_sn4
+				, agency.reg_cmptnc_cd
+				, agency.sgg_cd
 				, agency.brno
 				, agency.crno
 				, agency.rprsv_nm
@@ -170,26 +191,72 @@
 						dqvs.dvs_cmm_mt_area
 					where
 						stdg_cd = agency.reg_cmptnc_cd)) jurisdiction
-				, file.file_sn
-				, file.atch_file_nm
+				, CONCAT(
+			    (SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = agency.sgg_cd), ' ',
+			    (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = agency.sgg_cd)) locgov	
+				,(
+				select
+					atch_file_nm
+				from
+					dqvs.dvs_cmm_mt_file
+				where
+					file_sn = inspctn.file_atch_sn1) as file_atch_nm1,
+				(
+				select
+					atch_file_nm
+				from
+					dqvs.dvs_cmm_mt_file
+				where
+					file_sn = inspctn.file_atch_sn2) as file_atch_nm2,
+				(
+				select
+					atch_file_nm
+				from
+					dqvs.dvs_cmm_mt_file
+				where
+					file_sn = inspctn.file_atch_sn3) as file_atch_nm3,
+				(
+				select
+					atch_file_nm
+				from
+					dqvs.dvs_cmm_mt_file
+				where
+					file_sn = inspctn.file_atch_sn4) as file_atch_nm4
 			from dqvs.dvs_spv_hs_inspctn inspctn
 			left join dqvs.dvs_rac_mt_agency agency on agency.bzmn_sn = inspctn.bzmn_sn
-			left join dqvs.dvs_cmm_mt_file file on file_sn = inspctn.fileatchsn
 			) as T1
 			WHERE 1 = 1
-			and T1.prcs_yn != 'Y'
-			<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
-				and T1.reg_cmptnc_cd like #{cmptncZoneCd} || '%'
-			</if>
+			and (T1.del_yn != 'Y' or T1.del_yn is null)
+			<choose>
+			    <when test='searchChk == "jurisdiction" and cmptncZoneCd != "" and cmptncZoneCd != null and authrtCd != "S01"' >
+			        AND T1.reg_cmptnc_cd like #{cmptncZoneCd} || '%'
+			    </when>
+			    <when test='searchChk == "location" and cmptncZoneCd != "" and cmptncZoneCd != null'>
+			        AND T1.sgg_cd like #{cmptncZoneCd} || '%'
+			    </when>
+			</choose>
 			<if test='bzmnSeCd != "" and bzmnSeCd != null'>
 				AND T1.bzmn_se_cd = #{bzmnSeCd}
 			</if>
 			<if test='bsnSttsCd != "" and bsnSttsCd != null'>
 				AND T1.bsn_stts_cd = #{bsnSttsCd}
 			</if> 
-			<if test="rslt != null and rslt != ''">
-				AND T1.rslt = #{rslt}
+			<if test="chckRslt != null and chckRslt != ''">
+				AND T1.chck_rslt = #{chckRslt}
 			</if>
+			<if test='searchWrd != "" and searchWrd != null'>
+				<choose>
+					<when test='selectCond.equals("1")'>
+						AND T1.co_nm LIKE '%'|| #{searchWrd} ||'%'
+					</when>
+					<when test='selectCond.equals("2")'>
+						AND T1.brno LIKE '%'|| #{searchWrd} ||'%'
+					</when> 
+					<when test='selectCond.equals("3")'>
+						AND T1.crno LIKE '%'|| #{searchWrd} ||'%'
+					</when>
+				</choose>
+			</if> 
 			ORDER BY rn asc
 		)as T2
 	</sql>
@@ -215,63 +282,116 @@
 	</select>
 	
 	<insert id="insertInspectionHist">
-			INSERT INTO dqvs.dvs_spv_hs_inspctn
+			insert into dqvs.dvs_spv_hs_inspctn
 				(bzmn_sn
 				, reg_cmptnc_cd
 				, exmnr
+				, exmnr2
+				, exmnr3
 				, jbgd
+				, jbgd2
+				, jbgd3
 				, ogdp
+				, ogdp2
+				, ogdp3
 				, telno
 				, chck_artcl
 				, etc_artcl
+				, chck_ymd
 				, chck_cn
 				, chck_plc
 				, sign_yn
-				, rslt
-				, fileatchsn
+				, chck_rslt
+				, chck_idfr
+				, idfr_jbgd
+				, idfr_ogdp
+				, file_atch_sn1
+				, file_atch_sn2
+				, file_atch_sn3
+				, file_atch_sn4
+				, prcs_cn
+				, reg_ip
+				, reg_dt
 				)
-			SELECT 
-				bzmn_sn
-				, reg_cmptnc_cd
+			values(
+				#{bzmnSn}
+				, #{regCmptncCd}
 				, #{exmnr}
+				, #{exmnr2}
+				, #{exmnr3}
 				, #{jbgd}
+				, #{jbgd2}
+				, #{jbgd3}
 				, #{ogdp}
+				, #{ogdp2}
+				, #{ogdp3}
 				, dqvs.pca_encrypt(#{telno}, '150')
 				, #{chckArtcl}
 				, #{etcArtcl}
+				, #{chckYmd}::date
 				, #{chckCn}
 				, #{chckPlc}
 				, #{signYn}
-				, #{rslt}
-				, #{fileatchsn}
-			FROM dqvs.dvs_rac_mt_agency
-			where bzmn_sn = #{bzmnSn}
+				, #{chckRslt}
+				, #{chckIdfr}
+				, #{idfrJbgd}
+				, #{idfrOgdp}
+				, #{fileAtchSn1}::NUMERIC
+				, #{fileAtchSn2}::NUMERIC
+				, #{fileAtchSn3}::NUMERIC
+				, #{fileAtchSn4}::NUMERIC
+				, #{prcsCn}
+				, #{regIp}
+				, now()::timestamp
+				)
 	</insert>
 	
 	<update id="updateInspectionHist">
 		update
 			dqvs.dvs_spv_hs_inspctn
 		set
+			bzmn_sn = #{newBzmnSn},
 			reg_cmptnc_cd = #{regCmptncCd},
 			exmnr = #{exmnr},
+			exmnr2 = #{exmnr2},
+			exmnr3 = #{exmnr3},
 			jbgd = #{jbgd},
+			jbgd2 = #{jbgd2},
+			jbgd3 = #{jbgd3},
 			ogdp = #{ogdp},
+			ogdp2 = #{ogdp2},
+			ogdp3 = #{ogdp3},
 			telno = dqvs.pca_encrypt(#{telno}, '150'),
 			chck_artcl = #{chckArtcl},
 			etc_artcl = #{etcArtcl},
+			chck_ymd = #{chckYmd}::date,
 			chck_cn = #{chckCn},
 			chck_plc = #{chckPlc},
 			sign_yn = #{signYn},
-			rslt = #{rslt},
-			fileatchsn = #{fileatchsn}::NUMERIC
+			chck_rslt = #{chckRslt},
+			chck_idfr = #{chckIdfr},
+			idfr_jbgd = #{idfrJbgd},
+			idfr_ogdp = #{idfrOgdp},
+			file_atch_sn1 = #{fileAtchSn1}::NUMERIC,
+			file_atch_sn2 = #{fileAtchSn2}::NUMERIC,
+			file_atch_sn3 = #{fileAtchSn3}::NUMERIC,
+			file_atch_sn4 = #{fileAtchSn4}::NUMERIC,
+			prcs_cn = #{prcsCn},
+			mdfcn_ip = #{mdfcnIp},
+			mdfcn_dt= now()::timestamp
 		where
 			bzmn_sn = #{bzmnSn}
+			AND DATE_TRUNC('second', reg_dt) = #{regDt}::timestamp
 	</update>
 	
 	<update id="updateDeleteYn">
 		UPDATE dqvs.dvs_spv_hs_inspctn
-		SET prcs_yn = 'Y'
+		SET 
+			del_yn = 'Y',
+			mdfcn_ip = #{mdfcnIp},
+			mdfcn_dt= now()::timestamp
 		WHERE bzmn_sn = #{bzmnSn}
+		AND DATE_TRUNC('second', reg_dt) = #{regDt}::timestamp
 	</update>
 
 </mapper>

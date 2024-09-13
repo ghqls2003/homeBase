@@ -38,7 +38,7 @@ public class SmsSendController extends CmmnAbstractServiceImpl{
 	public ModelAndView viewSmsSend(@RequestParam Map<String, Object> paramsMap, ModelAndView mav,
 			HttpServletRequest request, HttpServletResponse response, HttpSession session) throws RimsException {
 		
- 		String [] validAuth = {"Z01", "K01", "D01", "G01"};
+ 		String [] validAuth = {"Z02", "K01", "D01"};
 		if(Arrays.asList(validAuth).contains(getAuthrtCd())) {
 		} else {
 			mav.setViewName("redirect:/");
@@ -132,7 +132,7 @@ public class SmsSendController extends CmmnAbstractServiceImpl{
 	@PostMapping("/smsSend/excelDown")
     public GenericExcelView excelDown(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
                                       HttpServletRequest request, HttpServletResponse response) throws RimsException {
-
+		paramsMap.put("userSn", getUserSn());
 		String fileName = "smsSend" + (new java.text.SimpleDateFormat("yyyyMMddHHmmss")).format(new java.util.Date());
         String colName[] = {"순번", "내용", "발송등록일", "발송일", "수신자명", "연락처"};
         String valName[] = {"rn", "cn", "sndng_dt", "sndng_rsvt_dt", "rcvr", "rcvr_telno"};

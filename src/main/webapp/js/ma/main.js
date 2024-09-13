@@ -66,7 +66,7 @@
 			ajax(true, contextPath + '/ma/main/topNotice', 'body', '조회 중입니다', null, function(data) {
 				$main.ui.creatTopNotice(data);
 			});
-			if(pcType == "PC"){
+			if(pcType == "PC"||!guest){
 				$('#myButton').remove();
 			};
 
@@ -427,11 +427,7 @@
 //			    window.location.href = `${contextPath}/sft/notice`;
 //			});
 			$('#myButton').on('click', function(){
-				if(guest){
-					alert('로그인 후 사용 가능한 메뉴 입니다.')					
-				} else {
-					window.location.href = `${contextPath}/vfc/drive`;
-				}
+				window.location.href = `${contextPath}/vfc/contactlessVfc`;
 			});
 			document.getElementById("Shortcuts01").addEventListener("click", function() {
 				if(guest){

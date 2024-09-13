@@ -334,7 +334,7 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 				Map<String,Object> errorResponse = objectMapper.readValue(e.getResponseBodyAsString(),Map.class);
 				int errorCode  = (int) errorResponse.get("code"); // code:-5 msg:API 서버 오류가 발생하였습니다.
 				if(errorCode == -5){
-					result.put("message","영업상태 : 국세청 API 서버 오류가 발생하여 업데이트 할 수 없습니다.(기준일시 : "+updateDt+", "+recentBizSttsDt+")");
+					result.put("message","영업상태 : 국세청 API 서버 오류가 발생하여 업데이트 할 수 없습니다.(기준일시 : "+updateDt+")");
 					return result;
 				}
 
@@ -389,9 +389,9 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 			} else if ("폐업자".equals(bStt) && "03".equals(bsnSttsCd)) {
 				bStt = "폐업";
 				bsnSttsCd = "3";
-			} else if ("".equals(bStt) && "".equals(bsnSttsCd) && taxType.equals("국세청에 등록되지 않은 사업자등록번호입니다.")) {
+			} else if ("".equals(bStt) && "".equals(bsnSttsCd) && taxType.equals("국세청에 등록되지 않은 사업자등록번호입니다.")) { // 사업자번호 오류 코드  response :bsnSttsCd 값이 null임
 				bStt = "사업자번호오류";
-				bsnSttsCd = "70"; // 사업자번호 오류 코드  response :bsnSttsCd 값이 null임
+				bsnSttsCd = "70";
 			} else {
 				bsnSttsCd = "9"; // 기타
 			}
