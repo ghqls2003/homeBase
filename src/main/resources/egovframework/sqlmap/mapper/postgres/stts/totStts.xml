@@ -307,4 +307,29 @@
 			<include refid="carShareGridSql" />
 	</select>
 	
+	<!-- 지역 드롭다운 -->
+	<select id="areaDrop" parameterType="paraMap" resultType="resultMap">
+	/* 지역 드롭다운 */
+		SELECT DISTINCT LPAD(stdg_cd, 2) ctpv_cd
+        	, ctpv_nm
+		FROM
+			dqvs.dvs_cmm_mt_area
+		WHERE mtnabn_yn = 'Y'
+		<if test="regCmptncCd != null and regCmptncCd != ''">
+			AND stdg_cd = #{regCmptncCd}
+		</if>
+		ORDER BY ctpv_cd
+	</select>
+	
+	<!-- 카쉐어링 업체 등록 -->
+	<insert id="insertCarShare">
+	/* 카쉐어링 업체 등록 */
+		INSERT INTO dqvs.dvs_st_mt_carshare (
+			sn, se, co_nm, reg_noh, mbr_cnt, bsnoffice, rsrvtnoffice, rmrk, del_yn, reg_dt, reg_ip, mdfcn_dt, mdfcn_ip, bsnoffice_cnt, rsrvtnoffice_cnt
+		)
+		VALUES (
+			nextval('seq_dvs_st_mt_carshare'), #{area}, #{cmpNm}, #{regCar}, #{userCnt}, #{bsnOffc}, #{rsrvtnOffc}, #{rmrk}, NULL, NOW(), #{regIP}, NULL, NULL, #{bsnOffcCnt}, #{rsrvtnOffcCnt}
+		)
+	</insert>
+	
 </mapper>

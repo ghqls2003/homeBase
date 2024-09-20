@@ -68,4 +68,24 @@ public class TotSttsDao extends CmmnAbstractMapper {
 	public int carShareGridCnt(Map<String, Object> paramsMap)throws RimsException {
 		return selectOne("stts.totStts.carShareGridCnt", paramsMap);
 	}
+	
+	/**
+	 * 지역 드롭다운
+	 * @param paramsMap
+	 * @return List<Map<String, Object>>
+	 * @throws RimsException
+	 */
+	public List<Map<String, Object>> areaDrop(Map<String, Object> paramsMap)throws RimsException {
+		return selectList("stts.totStts.areaDrop", paramsMap);
+	}
+	
+	/**
+	 * 카쉐어링 업체 등록
+	 * @param paramsMap
+	 * @return 
+	 * @throws RimsException
+	 */
+	public int insertCarShare(Map<String, Object> paramsMap)throws RimsException {
+		return insert("stts.totStts.insertCarShare", paramsMap);
+	}
 }

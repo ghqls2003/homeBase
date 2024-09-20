@@ -1,5 +1,6 @@
 package kr.or.kotsa.rims.stts.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,11 +71,36 @@ public class TotSttsServiceImpl extends CmmnAbstractServiceImpl implements TotSt
      * @throws RimsException
      */
     @Override
-    public List<Map<String, Object>> carShareGrid(Map<String, Object> paramsMap) throws RimsException {
-    	return totSttsDao.carShareGrid(paramsMap);
+    public Map<String, Object> carShareGrid(Map<String, Object> paramsMap) throws RimsException {
+    	Map<String, Object> result = new HashMap<>();
+    	
+    	List<Map<String, Object>> data = totSttsDao.carShareGrid(paramsMap);
+    	int total = totSttsDao.carShareGridCnt(paramsMap);
+    	
+    	result.put("data", data);
+    	result.put("total", total);
+    	
+    	return result;
     }
+    
+    /**
+     * 지역 드롭다운
+     * @return
+     * @throws RimsException
+     */
     @Override
-    public int carShareGridCnt(Map<String, Object> paramsMap) throws RimsException {
-    	return totSttsDao.carShareGridCnt(paramsMap);
+    public List<Map<String, Object>> areaDrop(Map<String, Object> paramsMap) throws RimsException {
+    	return totSttsDao.areaDrop(paramsMap);
+    }
+    
+    /**
+     * 카쉐어링 업체 등록
+     * @return
+     * @throws RimsException
+     */
+    @Override
+    public int insertCarShare(Map<String, Object> paramsMap) throws RimsException {
+    	paramsMap.put("regIp", getClientIP());
+    	return totSttsDao.insertCarShare(paramsMap);
     }
 }
