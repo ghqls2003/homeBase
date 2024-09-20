@@ -1,7 +1,7 @@
 /**
  * 대여사업자 통계
  *
- * date : 2023/08/17
+ * date : 2024/09/17
  * author : 김경룡
  *
  */
@@ -32,7 +32,7 @@
 		{template: "#: sedan#", title: "승용차", width: "100px", field: "sedan"},
 		{template: "#: van#", title: "승합차", width: "100px", field: "van"},
 		{template: "#: special#", title: "특수차", width: "100px", field: "special"},
-		{template: "#: conn#", title: "valued", width: "15%", field: "conn", hidden: "true"},
+		{template: "#: conn#", title: "valued", width: "15%", field: "conn", hidden: "true"}
 	];
 	var gridAreaDetailColumns = [
 		{template: "#: sggNm#", title: "<span style='font-weight: bold;'>시군구</span>", width: "150px", field: "sggNm"},
@@ -53,7 +53,7 @@
 		{template: "#: loginCnt#", title: "접속건수", width: "110px", field: "loginCnt"},
 		{template: "#: mnUseCnt#", title: "메뉴사용건수", width: "110px", field: "mnUseCnt"},
 		{template: "#: loginAvg#", title: "평균접속건수", width: "110px", field: "loginAvg"},
-		{template: "#: conn#", title: "valued", width: "15%", field: "conn", hidden: "true"},
+		{template: "#: conn#", title: "valued", width: "15%", field: "conn", hidden: "true"}
 	];
 	var gvAccDetailColumns = [
 		{template: "#: sggNm#", title: "<span style='font-weight: bold;'>시군구</span>", width: "100px", field: "sggNm"},
@@ -64,88 +64,102 @@
 		{template: "#: conn#", title: "&nbsp;", width: "15%", field: "conn", hidden: "true"}
 	];
 	
+	// 카쉐어링 업체 현황
+	var carShareColumns = [
+		{template: "#: rn#", title: "순번", width: "50px", field: "rn"},
+		{template: "#if(se == '합계') {#<span style='font-weight: bold;'>#: se#</span>#"
+				+ "} else {##: se##}#", title: "구분", width: "100px", field: "se"},
+		{template: "#: regNoh#", title: "차량등록대수", width: "110px", field: "regNoh"},
+		{template: "#: mbrCnt#", title: "회원수", width: "110px", field: "mbrCnt"},
+		{template: "#: bsnoffice#", title: "영업소", width: "110px", field: "bsnoffice"},
+		{template: "#: rsrvtnoffice#", title: "예약소", width: "110px", field: "rsrvtnoffice"},
+		{template: "#: rmrk#", title: "비고", width: "15%", field: "rmrk"}
+	];
+
+	// 최초 로딩
+	var loadCk = 0;
+	
+	// 접근 권한
+	var authParams = {};
+	
+	/* 지자체별 가입 사용자 현황 동적 데이터*/
+	var gvData = null, gvDetailData = null; 
+	
     $(document).ready(function() {
+		kendo.ui.progress($("body"), true);
+		
 		$("#nowTime").text(setDate);
         $statistics.ui.pageLoad();
+        
+        // 최초 로딩 제거
+        var setLoad = setInterval(function() {
+			if(loadCk >= 3) {
+				kendo.ui.progress($("body"), false);
+				clearInterval(setLoad);
+			}
+		})
     });
     
     $statistics.ui = {
         pageLoad : function() {
 			
-			var GAuthParams = {};
+			// G 권한 파라미터 처리 해야함~~~~~!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			if(authrtCd == 'G01') {
-				GAuthParams = {
+				authParams = {
 					"ctpvCd" : "not",
 					"sggCd"  : "not"
 				}
 			} else {
-				GAuthParams = {};
+				authParams = {};
 			}
 			
-			ajax(true, contextPath + '/stts/totStts/authrt', 'body', '조회중입니다', GAuthParams, function(data) {
+			// 대여사업자 현황 그리드
+			ajax(true, contextPath + '/stts/totStts/agencyAreaGrid', 'body', '조회중입니다', authParams, function(data) {
+				var grid1 = "#grid01";
+				$statistics.kendo.createExpandGrid(grid1, gridAreaColumns, gridAreaDetailColumns, data.agencyAreaGrid, data.agencyAreaDetailGrid);
+			});
+
+			// 대여사업자 등록 현황
+			ajax(false, contextPath + '/stts/totStts/agencyAccessionChart', 'body', '조회중입니다', authParams, function(data) {
+				var randomColors = 
+					[
+						"#FF6F61", "#FFB347", "#FFD700", "#90EE90", "#87CEFA", "#FF69B4", "#BA55D3", "#32CD32", "#FFB6C1",
+						"#FFA07A", "#98FB98", "#FFD700", "#40E0D0", "#9370DB", "#FFDAB9", "#7B68EE", "#FF1493", "#66CDAA"
+					];
+				    
+				data.agencyAccessionChart.forEach(function(item, index) {
+				    item.color = randomColors[index % randomColors.length];  // 색상 할당
+				});
+				
+				$statistics.kendo.createChartMulti(data.agencyAccessionChart);
+			});
+			
+			//  지자체별 가입 사용자 현황 권한 드롭다운
+			ajax(true, contextPath + '/stts/totStts/authrt', 'body', '조회중입니다', authParams, function(data) {
 				$("#auth").kendoDropDownList({
 					optionLabel: "(전체)",
 					dataTextField: "authrtNm",
 					dataValueField: "authrtCd",
-					dataSource: data,
+					dataSource: data
 				});
 			});
 			
-			// 대여사업자 현황 그리드
-			ajax(true, contextPath + '/stts/totStts/agencyAreaGrid', 'body', '조회중입니다', GAuthParams, function(data) {
-				var grid1 = "#grid01";
-				$statistics.ui.createAreaGrid(grid1, gridAreaColumns, gridAreaDetailColumns, data.agencyAreaGrid, data.agencyAreaDetailGrid);
-			});
-
-			// 대여사업자 등록 현황
-			$statistics.ui.agencyAccessionChart(GAuthParams);
-			
 			// 지자체별 가입 사용자 현황
-			ajax(true, contextPath + '/stts/totStts/gvAccUserGrid', 'body', '조회중입니다', GAuthParams, function(data) {
+			ajax(true, contextPath + '/stts/totStts/gvAccUserGrid', 'body', '조회중입니다', authParams, function(data) {
 				var grid2 = "#gvAccGrid";
-				$statistics.ui.createAreaGrid(grid2, gvAccColumns, gvAccDetailColumns, data.gvAccUserGrid, data.gvAccUserDetailGrid);
-			});
-        },
-        
-		/* 대여사업자 등록 현황 */
-		createChartMulti: function(data) {
-			var series = data.map(function(item) {
-			    return {
-			        type: "column",
-			        data: [item.sttsNormal],
-			        stack: false,
-			        name: item.sdNm,
-			        color: item.color,
-			        overlay: { gradient: "none" },
-			        border: { width: 0 },
-			        axis: "stick"
-			    };
+				gvData = data.gvAccUserGrid;
+				gvDetailData = data.gvAccUserDetailGrid;
+				$statistics.kendo.createExpandGrid(grid2, gvAccColumns, gvAccDetailColumns, gvData, gvDetailData);
 			});
 			
-			$("#multi-chart").kendoChart({
-				title: {text: ""},
-                legend: {
-					position: "bottom",
-					labels: {
-			            template: "#= series.name #", font: "20px sans-serif"
-			        }
-				},
-                series: series,
-				valueAxes: [
-					{title: {text: "", font: "13px, Pretendard"}, name: "stick"}
-				],
-                tooltip: {
-                	visible: true,
-                    template: "#= series.name #: #= value +'건' #"
-				},
-				chartArea: {
-					height: 480
-				}
-			});
-		},
-		
-		/* 그리드 및 detailInit 공통 */
-		createAreaGrid: function(gridId, gridColumn, detailColumn, gridData, detailData) {
+			// 카쉐어링 업체 현황
+			$statistics.kendo.createNrmGrid();
+        }        
+	}
+	
+    $statistics.kendo = {	
+		/* 확장 그리드 및 detailInit 공통 */
+		createExpandGrid: function(gridId, gridColumn, detailColumn, gridData, detailData) {
 			var detailExportPromises = [];
 			
 			$(gridId).kendoGrid({
@@ -163,8 +177,16 @@
 					detailExportPromises = [];
 //					this.expandRow(this.tbody.find("tr.k-master-row").eq(1));  // 두번째 로우 확장
 //					this.expandRow(this.tbody.find("tr.k-master-row").first());  // 첫번째 로우 확장
-					$(gridId+" > tbody > tr:first-child > td.k-hierarchy-cell").css("visibility", "hidden");  // 확장 기능 제거
-					$(gridId+" > tbody > tr:last-child > td.k-hierarchy-cell").css("visibility", "hidden");  // 확장 기능 제거
+
+					if($(gridId).data("kendoGrid").dataSource.total() == 2) {
+						$(gridId+" > tbody > tr:first-child > td.k-hierarchy-cell").css("visibility", "hidden");  // 확장 기능 제거
+					} else {
+						$(gridId+" > tbody > tr:first-child > td.k-hierarchy-cell").css("visibility", "hidden");  // 확장 기능 제거
+						$(gridId+" > tbody > tr:last-child > td.k-hierarchy-cell").css("visibility", "hidden");  // 확장 기능 제거
+					}
+					
+					loadCk++;
+					kendo.ui.progress($(gridId), false);
 				},
 //                pageable: { pageSize: 5, buttonCount: 5 },
 //                noRecords: { template : "데이터가 없습니다." },
@@ -340,28 +362,94 @@
 	        }
 		},
 		
-		/**
-		 * @name         : agencyAccessionChart
-		 * @description  : 대여사업자 등록 현황
-		 * @date         : 2023.07.25
-		 * @author       : 김경룡
-		 */
-		agencyAccessionChart: function(params) {
-			ajax(false, contextPath + '/stts/totStts/agencyAccessionChart', 'body', '조회중입니다', params, function(data) {
-				var randomColors = 
-					[
-						"#FF6F61", "#FFB347", "#FFD700", "#90EE90", "#87CEFA", "#FF69B4", "#BA55D3", "#32CD32", "#FFB6C1",
-						"#FFA07A", "#98FB98", "#FFD700", "#40E0D0", "#9370DB", "#FFDAB9", "#7B68EE", "#FF1493", "#66CDAA"
-					];
-				    
-				data.agencyAccessionChart.forEach(function(item, index) {
-				    item.color = randomColors[index % randomColors.length];  // 색상 할당
-				});
-				
-				$statistics.ui.createChartMulti(data.agencyAccessionChart);
+		/* 일반 그리드 */
+		createNrmGrid: function() {
+			$("#carShareGrid").kendoGrid({
+                dataSource: {
+					data: null,
+					transport: {
+						read:{
+							dataType: "json",
+							contentType: "application/json; charset=utf-8",
+							url: contextPath+'/stts/totStts/carShareGrid',
+							type: "POST",
+							beforeSend: function(xhr) {
+								xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+							}
+						}
+					},
+					schema: {
+						data: "data",
+						total: "total"
+					}
+				},
+                columns: carShareColumns,
+                navigatable: true,
+                selectable: "row",
+                editable: false,
+				resizable: true,
+				scrollable: true,
+				height: "550px",
+                sortable: false,  // 문자열 FM으로 데이터 가져와서 솔팅 의미없음
+                dataBound: function() {
+					loadCk++;
+					kendo.ui.progress($(gridId), false);
+				},
+                noRecords: { template : "데이터가 없습니다." },
+                toolbar: [{name: "excel", text:"다운로드"}],
+                excel: { allPages: true },
+				excelExport : function(e){
+					if($(gridId).data("kendoGrid").dataSource.total() == 0) {
+						e.preventDefault();
+						alert("데이터가 없어 다운로드를 할 수 없습니다.");
+					} else {
+						e.workbook.fileName = "카쉐어링 업체 현황.xlsx";
+						e.workbook.sheets[0].title = "업체 현황";
+					}
+				}
 			});
-		}
-	}
+		},
+		
+		/* 대여사업자 등록 현황 차트 */
+		createChartMulti: function(data) {
+			var series = data.map(function(item) {
+			    return {
+			        type: "column",
+			        data: [item.sttsNormal],
+			        stack: false,
+			        name: item.sdNm,
+			        color: item.color,
+			        overlay: { gradient: "none" },
+			        border: { width: 0 },
+			        axis: "stick"
+			    };
+			});
+			
+			$("#multi-chart").kendoChart({
+				title: {text: ""},
+                legend: {
+					position: "bottom",
+					labels: {
+			            template: "#= series.name #", font: "20px sans-serif"
+			        }
+				},
+                series: series,
+				valueAxes: [
+					{title: {text: "", font: "13px, Pretendard"}, name: "stick"}
+				],
+                tooltip: {
+                	visible: true,
+                    template: "#= series.name #: #= value +'건' #"
+				},
+				chartArea: {
+					height: 480
+				},
+				render: function() {
+					loadCk++;
+				}
+			});
+		}		
+    }
     
 	$statistics.event = {
 		excelDown: function(event) {
@@ -369,7 +457,19 @@
 				$("#areaGrid").find(".k-grid-excel").click();
 			} else if(event.target.closest("#gvAccession") != null) {
 				$("#gvAccession").find(".k-grid-excel").click();
+			} else if(event.target.closest("#carShare") != null) {
+				$("#carShare").find(".k-grid-excel").click();
 			}
+		},
+		
+		gvAccSearch: function() {
+			kendo.ui.progress($("#gvAccGrid"), true);
+			authParams.authrt = $("#auth").val();
+			ajax(true, contextPath + '/stts/totStts/gvAccUserGrid', 'body', '조회중입니다', authParams, function(data) {
+				gvData = data.gvAccUserGrid;
+				gvDetailData = data.gvAccUserDetailGrid;
+				$("#gvAccGrid").data("kendoGrid").setDataSource(gvData);
+			});
 		},
 		
 		/**

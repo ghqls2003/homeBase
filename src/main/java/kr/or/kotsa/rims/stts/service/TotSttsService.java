@@ -35,4 +35,12 @@ public interface TotSttsService {
 	 * @throws RimsException
 	 */
 	public List<Map<String, Object>> authrt(Map<String, Object> paramsMap) throws RimsException;
+	
+	/**
+	 * 카쉐어링 업체 현황
+	 * @return
+	 * @throws RimsException
+	 */
+	public List<Map<String, Object>> carShareGrid(Map<String, Object> paramsMap) throws RimsException;
+	public int carShareGridCnt(Map<String, Object> paramsMap) throws RimsException;
 }

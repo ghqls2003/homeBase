@@ -149,12 +149,12 @@
 					GROUP BY t1.user_sn
 					) AS a2
 				ON a1.user_sn = a2.user_sn
-				<if test="authrt != null and authrt != ''">
-					WHERE a1.authrt_cd = #{authrt}
-				</if>
 				LEFT OUTER JOIN
 					dqvs.dvs_cmm_mt_sd sd
 				ON a1.cmptnc = sd.ctpv_cd
+				<if test="authrt != null and authrt != ''">
+					WHERE a1.authrt_cd = #{authrt}
+				</if>
 				) AS A
 			GROUP BY ROLLUP((A.cmptnc, A.ctpv_nm))
 			) AS B
@@ -232,12 +232,12 @@
 					GROUP BY t1.user_sn
 					) AS a2
 				ON a1.user_sn = a2.user_sn
-				<if test="authrt != null and authrt != ''">
-					WHERE a1.authrt_cd = #{authrt}
-				</if>
 				LEFT OUTER JOIN
 					dqvs.dvs_cmm_mt_sgg sgg
 				ON a1.cmptnc = sgg.sgg_cd
+				<if test="authrt != null and authrt != ''">
+					WHERE a1.authrt_cd = #{authrt}
+				</if>
 				) AS A
 			GROUP BY A.sgg_nm, A.cmptnc
 			ORDER BY A.cmptnc
@@ -280,4 +280,31 @@
 		WHERE authrt_cd IN ('G01', 'G02', 'S01', 'S02', 'S03', 'S04')
 		ORDER BY authrt_cd 
 	</select>
+	
+	<!-- 카쉐어링 업체 현황 SQL -->
+	<sql id="carShareGridSql">
+		(
+		SELECT ROW_NUMBER() OVER(ORDER BY cs.sn) rn
+			, cs.*
+		FROM
+			dqvs.dvs_st_mt_carshare cs
+		) AS T
+	</sql>
+	
+	<!-- 카쉐어링 업체 현황 -->
+	<select id="carShareGrid" parameterType="paraMap" resultType="resultMap">
+	/* 카쉐어링 업체 현황 */
+		SELECT T.*
+		FROM
+			<include refid="carShareGridSql" />
+	</select>
+	
+	<!-- 카쉐어링 업체 현황 -->
+	<select id="carShareGridCnt" parameterType="paraMap" resultType="int">
+	/* 카쉐어링 업체 현황 */
+		SELECT COUNT(T.*)
+		FROM
+			<include refid="carShareGridSql" />
+	</select>
+	
 </mapper>

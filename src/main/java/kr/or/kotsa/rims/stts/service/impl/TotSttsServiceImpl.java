@@ -63,4 +63,18 @@ public class TotSttsServiceImpl extends CmmnAbstractServiceImpl implements TotSt
     public List<Map<String, Object>> authrt(Map<String, Object> paramsMap) throws RimsException {
     	return totSttsDao.authrt(paramsMap);
     }
+    
+    /**
+     * 카쉐어링 업체 현황
+     * @return
+     * @throws RimsException
+     */
+    @Override
+    public List<Map<String, Object>> carShareGrid(Map<String, Object> paramsMap) throws RimsException {
+    	return totSttsDao.carShareGrid(paramsMap);
+    }
+    @Override
+    public int carShareGridCnt(Map<String, Object> paramsMap) throws RimsException {
+    	return totSttsDao.carShareGridCnt(paramsMap);
+    }
 }

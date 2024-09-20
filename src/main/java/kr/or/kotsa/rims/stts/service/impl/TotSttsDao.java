@@ -55,4 +55,17 @@ public class TotSttsDao extends CmmnAbstractMapper {
 	public List<Map<String, Object>> authrt(Map<String, Object> paramsMap)throws RimsException {
 		return selectList("stts.totStts.authrt", paramsMap);
 	}
+	
+	/**
+	 * 카쉐어링 업체 현황
+	 * @param paramsMap
+	 * @return List<Map<String, Object>>
+	 * @throws RimsException
+	 */
+	public List<Map<String, Object>> carShareGrid(Map<String, Object> paramsMap)throws RimsException {
+		return selectList("stts.totStts.carShareGrid", paramsMap);
+	}
+	public int carShareGridCnt(Map<String, Object> paramsMap)throws RimsException {
+		return selectOne("stts.totStts.carShareGridCnt", paramsMap);
+	}
 }

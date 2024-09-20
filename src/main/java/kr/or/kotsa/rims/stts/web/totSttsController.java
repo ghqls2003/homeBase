@@ -1,7 +1,5 @@
 package kr.or.kotsa.rims.stts.web;
 
-import static kr.or.kotsa.rims.cmmn.sys.util.GeojsonRenderer.renderGeojson;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +8,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import kr.or.kotsa.rims.cmmn.biz.service.CmmnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import kr.or.kotsa.rims.cmmn.biz.service.CmmnService;
 import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
 import kr.or.kotsa.rims.cmmn.sys.service.CmmnAbstractServiceImpl;
 import kr.or.kotsa.rims.stts.service.TotSttsService;
@@ -73,7 +71,7 @@ public class totSttsController extends CmmnAbstractServiceImpl {
 	 */
 	@RequestMapping("totStts/agencyAreaGrid")
 	@ResponseBody
-	public Object selectAgencyAreaGrid(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+	public Object agencyAreaGrid(@RequestBody Map<String, Object> paramsMap) throws RimsException {
 		Map<String, Object> result = new HashMap<>();
 		List<Map<String, Object>> agencyAreaGrid = totSttsService.agencyAreaGrid(paramsMap);
 		result.put("agencyAreaGrid", agencyAreaGrid);
@@ -133,5 +131,28 @@ public class totSttsController extends CmmnAbstractServiceImpl {
 	public Object authrt(@RequestBody Map<String, Object> paramsMap) throws RimsException {
 		List<Map<String, Object>> authrt = totSttsService.authrt(paramsMap);
 		return authrt;
+	}
+	
+	/**
+	 * 카쉐어링 업체 현황
+	 *
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping("totStts/carShareGrid")
+	@ResponseBody
+	public Map<String, Object> carShareGrid(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		Map<String, Object> result = new HashMap<>();
+		
+		List<Map<String, Object>> data = totSttsService.carShareGrid(paramsMap);
+		int total = totSttsService.carShareGridCnt(paramsMap);
+		
+		System.out.println("있나"+data);
+		
+		result.put("data", data);
+		result.put("total", total);
+		
+		return result;
 	}
 }

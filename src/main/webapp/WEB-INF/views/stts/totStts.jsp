@@ -12,16 +12,19 @@
 
 <style>
 #grid01 > tbody > tr.k-detail-row > td.k-detail-cell > div > div.k-grid-norecords, 
-#gvAccGrid > tbody > tr.k-detail-row > td.k-detail-cell > div > div.k-grid-norecords {
+#gvAccGrid > tbody > tr.k-detail-row > td.k-detail-cell > div > div.k-grid-norecords,
+#carShareGrid > tbody > tr.k-detail-row > td.k-detail-cell > div > div.k-grid-norecords {
 	justify-content: center;
 	font-size: 16px;
 }
 #areaGrid > div.k-grid.k-widget.k-grid-display-block > div.k-toolbar.k-grid-toolbar,
-#gvAccession > div.k-grid.k-widget.k-grid-display-block > div.k-toolbar.k-grid-toolbar  {
+#gvAccession > div.k-grid.k-widget.k-grid-display-block > div.k-toolbar.k-grid-toolbar,
+#carShare > div.k-grid.k-widget.k-grid-display-block > div.k-toolbar.k-grid-toolbar  {
 	display: none;
 }
 #grid01 > thead, 
-#gvAccGrid > thead {
+#gvAccGrid > thead,
+#carShareGrid > thead {
 	font-weight: bold;
 }
 @media (max-width: 950px) {
@@ -31,6 +34,9 @@
 }
 #areaGrid, #areaChart {
 	height : 570px;;
+}
+.k-picker-solid {
+	height: 30px;
 }
 </style>
 
@@ -109,13 +115,28 @@
 								</li>
 							</ul>
 						</div>
-						<button id="searchTimeBtn" class="yellow_btn searchBtn" type="button" style="height: 30px;">
+						<button class="yellow_btn searchBtn" type="button" style="height: 30px;" onClick="javaScript:$statistics.event.gvAccSearch();">
 							조회 <img src="${contextPath}/images/sub/ico_search02.png" alt="조회아이콘" />
 						</button>
 					</div>
 				</div>
 	            <table id="gvAccGrid">
 	            	<caption>지자체별 가입 사용자 현황</caption>
+	            </table>
+			</div>
+			<br />
+			<br />
+			<div id="carShare" class="contBox tmCond">
+	           	<div class="nameBox" style="display: flex; justify-content: space-between;">
+	               	<h4 class="name">카쉐어링 업체 현황</h4>
+	               	<div style="display: flex; align-items: center;">
+		                <button class="download-btn excelDownBtn" type="button" onClick="javaScript:$statistics.event.excelDown(event);">
+	                        <img src="/images/sub/ico_down.png" alt="다운로드아이콘">다운로드
+	                    </button>
+	               	</div>
+				</div>
+	            <table id="carShareGrid">
+	            	<caption>카쉐어링 업체 현황</caption>
 	            </table>
 			</div>
 		</div>
