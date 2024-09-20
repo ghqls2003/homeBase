@@ -556,6 +556,17 @@
 	</insert>
 	
 		<insert id="insertConfData">
+		WITH car_info AS (
+		    SELECT 
+		        vin,
+		        mdlyr,
+		        vhcl_nm,
+		        carmdl,
+		        engine_fom,
+		        use_yn
+		    FROM dvs_rac_mt_car
+		    WHERE vin = (SELECT vin FROM dqvs.dvs_dqv_mt_rent_idp WHERE rent_no = #{rentNo})
+		)
 		INSERT INTO dqvs.dvs_dqv_hs_conf
 			(rent_no,
 			cnfrmn_hstry_no,
@@ -585,7 +596,7 @@
 				rent_no,
 				(select (COALESCE(count(cnfrmn_hstry_no), 0) + 1)::varchar as cnfrmn_hstry_no from dqvs.dvs_dqv_hs_conf where rent_no=#{rentNo}) cnfrmn_hstry_no ,
 				vhcl_reg_no,
-				vin,
+				rent.vin,
 				bzmn_sn,
 				rent_bgng_dt,
 				rent_end_dt,
@@ -599,14 +610,15 @@
 				#{clientIP},
 				vrfc_hstry_sn,
 				2,
-				null,
-				null,
-				null,
-				null,
-				null,
+			  	car_info.mdlyr,
+			    car_info.vhcl_nm,
+			    car_info.carmdl,
+			    car_info.engine_fom,
+			    car_info.use_yn,
 				null,
 				null
-			from dqvs.dvs_dqv_mt_rent_idp
+			from dqvs.dvs_dqv_mt_rent_idp rent
+			JOIN car_info ON car_info.vin = rent.vin
 			WHERE rent_no = #{rentNo}
 		order by rent_no
 	</insert>

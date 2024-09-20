@@ -155,7 +155,7 @@ public class RentIdpController extends CmmnAbstractServiceImpl{
 	public ModelAndView rentIdpReport(@RequestParam Map<String, Object> paramsMap, ModelAndView mav,
 			HttpServletRequest request, HttpServletResponse response) throws RimsException {
 
-		mav.setViewName("vfc/rentalReport");
+		mav.setViewName("vfc/rentalIdpReport");
 		mav.addObject("error", request.getAttribute("error"));
 		return mav;
 	}
