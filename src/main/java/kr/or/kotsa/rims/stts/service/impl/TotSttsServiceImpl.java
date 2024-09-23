@@ -103,4 +103,37 @@ public class TotSttsServiceImpl extends CmmnAbstractServiceImpl implements TotSt
     	paramsMap.put("regIp", getClientIP());
     	return totSttsDao.insertCarShare(paramsMap);
     }
+    
+    /**
+     * 카쉐어링 업체 상세 팝업
+     * @return
+     * @throws RimsException
+     */
+    @Override
+    public Map<String, Object> detailCarshare(Map<String, Object> paramsMap) throws RimsException {
+    	return totSttsDao.detailCarshare(paramsMap);
+    }
+    
+    /**
+     * 카쉐어링 업체 수정
+     * @return
+     * @throws RimsException
+     */
+    @Override
+    public int updateCarShare(Map<String, Object> paramsMap) throws RimsException {
+    	paramsMap.put("mdfcnIp", getClientIP());
+    	return totSttsDao.updateCarShare(paramsMap);
+    }
+    
+    /**
+     * 카쉐어링 업체 삭제
+     * @return
+     * @throws RimsException
+     */
+    @Override
+    public int deleteCarShare(Map<String, Object> paramsMap) throws RimsException {
+    	paramsMap.put("mdfcnIp", getClientIP());
+    	paramsMap.put("delRmrk", "삭제");
+    	return totSttsDao.deleteCarShare(paramsMap);
+    }
 }

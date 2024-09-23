@@ -171,4 +171,43 @@ public class totSttsController extends CmmnAbstractServiceImpl {
 	public int insertCarShare(@RequestBody Map<String, Object> paramsMap) throws RimsException {
 		return totSttsService.insertCarShare(paramsMap);
 	}
+	
+	/**
+	 * 카쉐어링 업체 상세 팝업
+	 *
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping(value = "totStts/detailCarshare")
+	@ResponseBody
+	public Map<String, Object> detailCarshare(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		return totSttsService.detailCarshare(paramsMap);
+	}
+	
+	/**
+	 * 카쉐어링 업체 수정
+	 *
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping(value = "totStts/updateCarShare")
+	@ResponseBody
+	public int updateCarShare(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		return totSttsService.updateCarShare(paramsMap);
+	}
+	
+	/**
+	 * 카쉐어링 업체 삭제
+	 *
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping(value = "totStts/deleteCarShare")
+	@ResponseBody
+	public int deleteCarShare(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		return totSttsService.deleteCarShare(paramsMap);
+	}
 }

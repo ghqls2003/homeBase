@@ -285,9 +285,20 @@
 	<sql id="carShareGridSql">
 		(
 		SELECT ROW_NUMBER() OVER(ORDER BY cs.sn) rn
-			, cs.*
+			, cs.sn
+			, cs.se
+			, cs.co_nm 
+			, COALESCE(cs.reg_noh, 0) reg_noh
+			, COALESCE(cs.mbr_cnt, 0) mbr_cnt 
+			, cs.bsnoffice
+			, COALESCE(cs.bsnoffice_cnt, 0) bsnoffice_cnt
+			, cs.rsrvtnoffice 
+			, COALESCE(cs.rsrvtnoffice_cnt, 0) rsrvtnoffice_cnt
+			, cs.rmrk 
+			, cs.del_yn
 		FROM
-			dqvs.dvs_st_mt_carshare cs
+			dvs_st_mt_carshare cs
+		WHERE del_yn ISNULL
 		) AS T
 	</sql>
 	
@@ -328,8 +339,45 @@
 			sn, se, co_nm, reg_noh, mbr_cnt, bsnoffice, rsrvtnoffice, rmrk, del_yn, reg_dt, reg_ip, mdfcn_dt, mdfcn_ip, bsnoffice_cnt, rsrvtnoffice_cnt
 		)
 		VALUES (
-			nextval('seq_dvs_st_mt_carshare'), #{area}, #{cmpNm}, #{regCar}, #{userCnt}, #{bsnOffc}, #{rsrvtnOffc}, #{rmrk}, NULL, NOW(), #{regIP}, NULL, NULL, #{bsnOffcCnt}, #{rsrvtnOffcCnt}
+			nextval('seq_dvs_st_mt_carshare'), #{area}, #{cmpNm}, #{regCar}::NUMERIC, #{userCnt}::NUMERIC, #{bsnOffc}, #{rsrvtnOffc}, #{rmrk}, NULL, NOW(), #{regIP}, NULL, NULL, #{bsnOffcCnt}::NUMERIC, #{rsrvtnOffcCnt}::NUMERIC
 		)
 	</insert>
+	
+	<!-- 카쉐어링 업체 상세 팝업 -->
+	<select id="detailCarshare" parameterType="paraMap" resultType="resultMap">
+	/* 카쉐어링 업체 상세 팝업 */
+		SELECT cs.sn
+			, cs.se
+			, cs.co_nm 
+			, COALESCE(cs.reg_noh, 0) reg_noh
+			, COALESCE(cs.mbr_cnt, 0) mbr_cnt 
+			, cs.bsnoffice
+			, COALESCE(cs.bsnoffice_cnt, 0) bsnoffice_cnt
+			, cs.rsrvtnoffice 
+			, COALESCE(cs.rsrvtnoffice_cnt, 0) rsrvtnoffice_cnt
+			, cs.rmrk 
+		FROM
+			dqvs.dvs_st_mt_carshare cs
+		WHERE cs.sn = #{detailSn}
+	</select>
+	
+	<!-- 카쉐어링 업체 수정 -->
+	<update  id="updateCarShare">
+	/* 카쉐어링 업체 수정 */
+		UPDATE dvs_st_mt_carshare
+		SET se = #{area}, reg_noh = #{regCar}::NUMERIC, mbr_cnt = #{userCnt}::NUMERIC
+			, bsnoffice = #{bsnOffc}, rsrvtnoffice = #{rsrvtnOffc}, rmrk = #{rmrk}
+			, mdfcn_dt = NOW(), mdfcn_ip = #{mdfcnIp}, bsnoffice_cnt = #{bsnOffcCnt}::NUMERIC
+			, rsrvtnoffice_cnt = #{rsrvtnOffcCnt}::NUMERIC, co_nm = #{cmpNm}
+		WHERE sn = #{detailSn}::NUMERIC
+	</update>
+	
+	<!-- 카쉐어링 업체 삭제 -->
+	<update  id="deleteCarShare">
+	/* 카쉐어링 업체 삭제 */
+		UPDATE dvs_st_mt_carshare
+		SET rmrk = #{delRmrk}, mdfcn_dt = NOW(), mdfcn_ip = #{mdfcnIp}, del_yn = 'Y'
+		WHERE sn = #{detailSn}::NUMERIC
+	</update>
 	
 </mapper>

@@ -56,4 +56,25 @@ public interface TotSttsService {
 	 * @throws RimsException
 	 */
 	public int insertCarShare(Map<String, Object> paramsMap) throws RimsException;
+	
+	/**
+	 * 카쉐어링 업체 상세 팝업
+	 * @return
+	 * @throws RimsException
+	 */
+	public Map<String, Object> detailCarshare(Map<String, Object> paramsMap) throws RimsException;
+	
+	/**
+	 * 카쉐어링 업체 수정
+	 * @return
+	 * @throws RimsException
+	 */
+	public int updateCarShare(Map<String, Object> paramsMap) throws RimsException;
+	
+	/**
+	 * 카쉐어링 업체 삭제
+	 * @return
+	 * @throws RimsException
+	 */
+	public int deleteCarShare(Map<String, Object> paramsMap) throws RimsException;
 }

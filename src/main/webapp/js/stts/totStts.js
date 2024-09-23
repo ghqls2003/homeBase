@@ -86,6 +86,8 @@
 	/* 지자체별 가입 사용자 현황 동적 데이터*/
 	var gvData = null, gvDetailData = null; 
 	
+	var detailParams = null;
+	
     $(document).ready(function() {
 		kendo.ui.progress($("body"), true);
 		
@@ -378,7 +380,7 @@
 	        }
 		},
 		
-		/* 일반 그리드 */
+		/* 일반 그리드(카쉐어링 업체 현황) */
 		createNrmGrid: function(gridId) {
 			$(gridId).kendoGrid({
                 dataSource: {
@@ -422,6 +424,36 @@
 				},
                 noRecords: { template : "데이터가 없습니다." },
                 toolbar: [{name: "excel", text:"다운로드"}],
+                change: function(e) {
+					detailParams = null;
+					
+					var row = e.sender.select();
+					var dataItem = null;
+					
+					row.each(function() {
+						var grid = $(gridId).data("kendoGrid");
+						dataItem = grid.dataItem(this);
+					});
+					
+					detailParams = {"detailSn": dataItem.sn};
+					
+					var param = {"detailSn": dataItem.sn};
+					
+					ajax(true, contextPath + '/stts/totStts/detailCarshare', 'body', '처리중입니다.', param, function(data) {
+						$("#areaDropDetail").val(data.se);
+						$("#cmpNmDetail").val(data.coNm);
+						$("#regCarDetail").val(data.regNoh);
+						$("#userCntDetail").val(data.mbrCnt);
+						$("#bsnOffcCntDetail").val(data.bsnofficeCnt);
+						$("#rsrvtnOffcCntDetail").val(data.rsrvtnofficeCnt);
+						$("#bsnOffcDetail").val(data.bsnoffice);
+						$("#rsrvtnOffcDetail").val(data.rsrvtnoffice);
+						$("#rmrkDetail").val(data.rmrk);
+					});
+					
+					$(".update_popup").addClass("view");
+					$("body").css("overflow", "hidden");
+				},
                 excel: { allPages: true },
 				excelExport : function(e){
 					if($(gridId).data("kendoGrid").dataSource.total() == 0) {
@@ -485,9 +517,20 @@
 				$("body").css("overflow", "hidden");
 			});
 			
-			// X, 닫기 버튼 클릭
+			/* 닫기, X 버튼 클릭 */
+			// 등록 팝업
 			$(".insertClose").on("click", function() {
+				$("#areaDrop, #cmpNm, #bsnOffc, #rsrvtnOffc, #insertRmrk").val("");
+				$("#regCar, #userCnt, #bsnOffcCnt, #rsrvtnOffcCnt").val(0);
+				
 				$(".insert_popup").removeClass("view");
+				$("body").css("overflow", "auto");
+			});
+			// 상세 팝업
+			$(".detailClose").on("click", function() {
+				$("#carShareGrid").data("kendoGrid").clearSelection();
+				
+				$(".update_popup").removeClass("view");
 				$("body").css("overflow", "auto");
 			});
 		},
@@ -516,20 +559,18 @@
 			var params = {
 				"area"					: $("#areaDrop").val(),
 				"cmpNm"			: $("#cmpNm").val(),
-				"regCar"				: $("#regCar").val() == '' ? 0 : $("#regCar").val(),
-				"userCnt"			: $("#userCnt").val() == '' ? 0 : $("#userCnt").val(),
-				"bsnOffcCnt"		: $("#bsnOffcCnt").val() == '' ? 0 : $("#bsnOffcCnt").val(),
-				"rsrvtnOffcCnt"	: $("#rsrvtnOffcCnt").val() == '' ? 0 : $("#rsrvtnOffcCnt").val(),
+				"regCar"				: $("#regCar").val(),
+				"userCnt"			: $("#userCnt").val(),
+				"bsnOffcCnt"		: $("#bsnOffcCnt").val(),
+				"rsrvtnOffcCnt"	: $("#rsrvtnOffcCnt").val(),
 				"bsnOffc"			: $("#bsnOffc").val(),
 				"rsrvtnOffc"		: $("#rsrvtnOffc").val(),
 				"rmrk"					: $("#insertRmrk").val()
 			}
 			
-			var allEmpty = Object.values(params).every(function(value) {
-			    return value === null || value.trim() === "";
-			});
+			var emCk = $statistics.event.dataEmptyCk(params);
 			
-			if (allEmpty) {
+			if (emCk) {
 			    alert("정보를 입력 해주시기 바랍니다.");
 			} else {
 				ajax(true, contextPath + '/stts/totStts/insertCarShare', 'body', '조회중입니다', params, function(data) {
@@ -545,56 +586,58 @@
 			}
 		},
 		
-		/**
-		 * @name         : ajaxSync
-		 * @description  : ajax 동기통신 (csrf 토큰 포함)
-		 * @date         : 2023.08.30
-		 * @author       : 김경룡(modify)
-		 */
-		ajaxSync: function(isLodingBool, url, isLodingElement, beforeSendText, ajaxParam, fn_success, fn_complete) {
-			isLodingElement = "body";
-		    var loader = isLoading($(isLodingElement)[0], {
-		        type: "overlay",
-		        class : "fa fa-refresh fa-spin",
-		        text: beforeSendText
-		    });
+		dataEmptyCk: function(params) {
+			var allEmpty = Object.values(params).every(function(value) {
+			    return value === null || (typeof value === 'string' && value.trim() === "") || (typeof value === 'number' && value === 0);
+			});
+			
+			return allEmpty;
+		},
 		
-		    if(beforeSendText != null){
-		        if(beforeSendText.split('<br>').length > 1) {
-		            beforeSendText = beforeSendText.split('<br>')[0]+"<br>"+beforeSendText.split('<br>')[1];
-		        }
-		    }
+		updateCarShare: function() {
+			detailParams.area = $("#areaDropDetail").val();
+			detailParams.cmpNm = $("#cmpNmDetail").val();
+			detailParams.regCar = $("#regCarDetail").val();
+			detailParams.userCnt = $("#userCntDetail").val();
+			detailParams.bsnOffcCnt = $("#bsnOffcCntDetail").val();
+			detailParams.rsrvtnOffcCnt = $("#rsrvtnOffcCntDetail").val();
+			detailParams.bsnOffc = $("#bsnOffcDetail").val();
+			detailParams.rsrvtnOffc = $("#rsrvtnOffcDetail").val();
+			detailParams.rmrk = $("#rmrkDetail").val();
+			
+			var emCk = $statistics.event.dataEmptyCk(detailParams);
+			
+			if (emCk) {
+			    alert("정보를 입력 해주시기 바랍니다.");
+			} else {
+				if(confirm("정보를 수정하시겠습니까?")) {
+					ajax(true, contextPath + '/stts/totStts/updateCarShare', 'body', '조회중입니다', detailParams, function(data) {
+						if(data == 1) {
+							alert("수정이 완료되었습니다.");
+							$(".update_popup").removeClass("view");
+							$("body").css("overflow", "auto");
+							$("#carShareGrid").data("kendoGrid").dataSource.read();
+						} else {
+							alert("수정 중 에러가 발생했습니다.");
+						}
+					});
+				}
+			}
+		}, 
 		
-		    var header = $("meta[name='_csrf_header']").attr("content");
-		    var token  = $("meta[name='_csrf']").attr("content");
-		
-		    $.ajax({
-		        url : url,
-		        type : 'POST',
-				async: false,
-		        contentType : "application/json",
-		        data : JSON.stringify(ajaxParam),
-		        dataType : "json",
-		        beforeSend : function(xhr) {
-		        	xhr.setRequestHeader(header, token);
-		            if (isLodingBool) {
-		                loader.loading();
-		                $(".is-loading-text-wrapper").html(beforeSendText);
-		            }
-		        },
-		        success : function(data) {
-		            if(fn_success != null || fn_complete != undefined){
-		                fn_success(data);
-		            }
-		        },
-				error: function (request, status, error) {},
-		        complete : function(xhr, status) {
-		            if (isLodingBool) {loader.remove();}
-		            $(".is-loading-element-overlay").remove();
-		            if(fn_complete != null || fn_complete != undefined){fn_complete(xhr);}
-		        }
-		    });
+		deleteCarShare: function() {
+			if(confirm("삭제 하시겠습니까?")) {
+				ajax(true, contextPath + '/stts/totStts/deleteCarShare', 'body', '조회중입니다', detailParams, function(data) {
+					if(data ==1) {
+						alert("삭제가 완료되었습니다.");
+						$(".update_popup").removeClass("view");
+						$("body").css("overflow", "auto");
+						$("#carShareGrid").data("kendoGrid").dataSource.read();
+					} else {
+						alert("삭제 중 에러가 발생했습니다.");
+					}
+				});
+			}
 		}
 	};
-
 }(window, document, jQuery));

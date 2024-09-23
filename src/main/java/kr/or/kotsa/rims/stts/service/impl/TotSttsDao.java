@@ -88,4 +88,34 @@ public class TotSttsDao extends CmmnAbstractMapper {
 	public int insertCarShare(Map<String, Object> paramsMap)throws RimsException {
 		return insert("stts.totStts.insertCarShare", paramsMap);
 	}
+	
+	/**
+	 * 카쉐어링 업체 상세 팝업
+	 * @param paramsMap
+	 * @return 
+	 * @throws RimsException
+	 */
+	public Map<String, Object> detailCarshare(Map<String, Object> paramsMap)throws RimsException {
+		return selectOne("stts.totStts.detailCarshare", paramsMap);
+	}
+	
+	/**
+	 * 카쉐어링 업체 수정
+	 * @param paramsMap
+	 * @return 
+	 * @throws RimsException
+	 */
+	public int updateCarShare(Map<String, Object> paramsMap)throws RimsException {
+		return update("stts.totStts.updateCarShare", paramsMap);
+	}
+	
+	/**
+	 * 카쉐어링 업체 삭제
+	 * @param paramsMap
+	 * @return 
+	 * @throws RimsException
+	 */
+	public int deleteCarShare(Map<String, Object> paramsMap)throws RimsException {
+		return update("stts.totStts.deleteCarShare", paramsMap);
+	}
 }
