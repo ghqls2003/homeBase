@@ -117,148 +117,166 @@
 	
 	
 	<sql id="InspectionHistInfoSql">
-		(
-		SELECT ROW_NUMBER() OVER(ORDER BY T1.reg_dt DESC) rn
-		, T1.*
-		from(
-			select
-				inspctn.bzmn_sn
-				, inspctn.exmnr
-				, inspctn.exmnr2
-				, inspctn.exmnr3
-				, inspctn.jbgd
-				, inspctn.jbgd2
-				, inspctn.jbgd3
-				, inspctn.ogdp
-				, inspctn.ogdp2
-				, inspctn.ogdp3
-				, dqvs.pca_decrypt(inspctn.telno, '150') as telno
-				, inspctn.chck_artcl
-				, inspctn.etc_artcl
-				, inspctn.chck_cn
-				, inspctn.chck_plc
-				, TO_CHAR(inspctn.chck_ymd, 'YYYY-MM-DD') as chck_ymd
-				, TO_CHAR(inspctn.reg_dt, 'YYYY-MM-DD HH24:MI:SS') as reg_dt
-				, inspctn.sign_yn
-				, inspctn.chck_rslt
-				, inspctn.chck_idfr
-				, inspctn.idfr_jbgd
-				, inspctn.idfr_ogdp
-				, inspctn.prcs_cn
-				, inspctn.del_yn
-				, inspctn.file_atch_sn1
-				, inspctn.file_atch_sn2
-				, inspctn.file_atch_sn3
-				, inspctn.file_atch_sn4
-				, agency.reg_cmptnc_cd
-				, agency.sgg_cd
-				, agency.brno
-				, agency.crno
-				, agency.rprsv_nm
-				, agency.bsn_stts_cd
-				, agency.bzmn_se_cd
-				, (select
-					cd_nm
-				from
-					dqvs.dvs_cmm_mt_code
-				where
-					cd_group = 'bzmn_se_cd'
-					and cd = bzmn_se_cd) as bzmn_se_nm
-				, agency.co_nm
-				, agency.road_nm_addr
-				, (
-				select
-					cd.cd_nm
-				from
-					dqvs.dvs_cmm_mt_code cd
-				where
-					cd.cd_group = 'bsn_stts_cd'
-					and cd.cd = agency.bsn_stts_cd) bsn_stts_nm
-				, agency.bsn_stts_mdfcn_dt
-				, dqvs.pca_decrypt(agency.telno, '150') as agency_telno
-				, CONCAT( (
+	(		
+		WITH inspctnData AS(
+			SELECT ROW_NUMBER() OVER(ORDER BY T1.reg_dt DESC) rn
+				, T1.*
+				from(
 					select
-						ctpv_nm
-					from
-						dqvs.dvs_cmm_mt_area
-					where
-						stdg_cd = agency.reg_cmptnc_cd),
-					' ',
-					(
-					select
-						sgg_nm
-					from
-						dqvs.dvs_cmm_mt_area
-					where
-						stdg_cd = agency.reg_cmptnc_cd)) jurisdiction
-				, CONCAT(
-			    (SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = agency.sgg_cd), ' ',
-			    (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = agency.sgg_cd)) locgov	
-				,(
-				select
-					atch_file_nm
-				from
-					dqvs.dvs_cmm_mt_file
-				where
-					file_sn = inspctn.file_atch_sn1) as file_atch_nm1,
-				(
-				select
-					atch_file_nm
-				from
-					dqvs.dvs_cmm_mt_file
-				where
-					file_sn = inspctn.file_atch_sn2) as file_atch_nm2,
-				(
-				select
-					atch_file_nm
-				from
-					dqvs.dvs_cmm_mt_file
-				where
-					file_sn = inspctn.file_atch_sn3) as file_atch_nm3,
-				(
-				select
-					atch_file_nm
-				from
-					dqvs.dvs_cmm_mt_file
-				where
-					file_sn = inspctn.file_atch_sn4) as file_atch_nm4
-			from dqvs.dvs_spv_hs_inspctn inspctn
-			left join dqvs.dvs_rac_mt_agency agency on agency.bzmn_sn = inspctn.bzmn_sn
-			) as T1
-			WHERE 1 = 1
-			and (T1.del_yn != 'Y' or T1.del_yn is null)
-			<choose>
-			    <when test='searchChk == "jurisdiction" and cmptncZoneCd != "" and cmptncZoneCd != null and authrtCd != "S01"' >
-			        AND T1.reg_cmptnc_cd like #{cmptncZoneCd} || '%'
-			    </when>
-			    <when test='searchChk == "location" and cmptncZoneCd != "" and cmptncZoneCd != null'>
-			        AND T1.sgg_cd like #{cmptncZoneCd} || '%'
-			    </when>
-			</choose>
-			<if test='bzmnSeCd != "" and bzmnSeCd != null'>
-				AND T1.bzmn_se_cd = #{bzmnSeCd}
-			</if>
-			<if test='bsnSttsCd != "" and bsnSttsCd != null'>
-				AND T1.bsn_stts_cd = #{bsnSttsCd}
-			</if> 
-			<if test="chckRslt != null and chckRslt != ''">
-				AND T1.chck_rslt = #{chckRslt}
-			</if>
-			<if test='searchWrd != "" and searchWrd != null'>
+						inspctn.bzmn_sn
+						, inspctn.exmnr
+						, inspctn.exmnr2
+						, inspctn.exmnr3
+						, inspctn.jbgd
+						, inspctn.jbgd2
+						, inspctn.jbgd3
+						, inspctn.ogdp
+						, inspctn.ogdp2
+						, inspctn.ogdp3
+						, dqvs.pca_decrypt(inspctn.telno, '150') as telno
+						, inspctn.chck_artcl
+						, inspctn.etc_artcl
+						, inspctn.chck_cn
+						, inspctn.chck_plc
+						, TO_CHAR(inspctn.chck_ymd, 'YYYY-MM-DD') as chck_ymd
+						, TO_CHAR(inspctn.reg_dt, 'YYYY-MM-DD HH24:MI:SS') as reg_dt
+						, inspctn.sign_yn
+						, inspctn.chck_rslt
+						, inspctn.chck_idfr
+						, inspctn.idfr_jbgd
+						, inspctn.idfr_ogdp
+						, inspctn.prcs_cn
+						, inspctn.del_yn
+						, inspctn.file_atch_sn1
+						, inspctn.file_atch_sn2
+						, inspctn.file_atch_sn3
+						, inspctn.file_atch_sn4
+						, agency.reg_cmptnc_cd
+						, agency.sgg_cd
+						, agency.brno
+						, agency.crno
+						, agency.rprsv_nm
+						, agency.bsn_stts_cd
+						, agency.bzmn_se_cd
+						, (select
+							cd_nm
+						from
+							dqvs.dvs_cmm_mt_code
+						where
+							cd_group = 'bzmn_se_cd'
+							and cd = bzmn_se_cd) as bzmn_se_nm
+						, agency.co_nm
+						, agency.road_nm_addr
+						, (
+						select
+							cd.cd_nm
+						from
+							dqvs.dvs_cmm_mt_code cd
+						where
+							cd.cd_group = 'bsn_stts_cd'
+							and cd.cd = agency.bsn_stts_cd) bsn_stts_nm
+						, agency.bsn_stts_mdfcn_dt
+						, dqvs.pca_decrypt(agency.telno, '150') as agency_telno
+						, CONCAT( (
+							select
+								ctpv_nm
+							from
+								dqvs.dvs_cmm_mt_area
+							where
+								stdg_cd = agency.reg_cmptnc_cd),
+							' ',
+							(
+							select
+								sgg_nm
+							from
+								dqvs.dvs_cmm_mt_area
+							where
+								stdg_cd = agency.reg_cmptnc_cd)) jurisdiction
+						, CONCAT(
+					    (SELECT ctpv_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = agency.sgg_cd), ' ',
+					    (SELECT sgg_nm FROM dqvs.dvs_cmm_mt_area WHERE stdg_cd = agency.sgg_cd)) locgov	
+						,(
+						select
+							atch_file_nm
+						from
+							dqvs.dvs_cmm_mt_file
+						where
+							file_sn = inspctn.file_atch_sn1) as file_atch_nm1,
+						(
+						select
+							atch_file_nm
+						from
+							dqvs.dvs_cmm_mt_file
+						where
+							file_sn = inspctn.file_atch_sn2) as file_atch_nm2,
+						(
+						select
+							atch_file_nm
+						from
+							dqvs.dvs_cmm_mt_file
+						where
+							file_sn = inspctn.file_atch_sn3) as file_atch_nm3,
+						(
+						select
+							atch_file_nm
+						from
+							dqvs.dvs_cmm_mt_file
+						where
+							file_sn = inspctn.file_atch_sn4) as file_atch_nm4
+					from dqvs.dvs_spv_hs_inspctn inspctn
+					left join dqvs.dvs_rac_mt_agency agency on agency.bzmn_sn = inspctn.bzmn_sn
+				) as T1
+				WHERE 1 = 1
+				and (T1.del_yn != 'Y' or T1.del_yn is null)
 				<choose>
-					<when test='selectCond.equals("1")'>
-						AND T1.co_nm LIKE '%'|| #{searchWrd} ||'%'
-					</when>
-					<when test='selectCond.equals("2")'>
-						AND T1.brno LIKE '%'|| #{searchWrd} ||'%'
-					</when> 
-					<when test='selectCond.equals("3")'>
-						AND T1.crno LIKE '%'|| #{searchWrd} ||'%'
-					</when>
+				    <when test='searchChk == "jurisdiction" and cmptncZoneCd != "" and cmptncZoneCd != null and authrtCd != "S01"' >
+				        AND T1.reg_cmptnc_cd like #{cmptncZoneCd} || '%'
+				    </when>
+				    <when test='searchChk == "location" and cmptncZoneCd != "" and cmptncZoneCd != null'>
+				        AND T1.sgg_cd like #{cmptncZoneCd} || '%'
+				    </when>
 				</choose>
-			</if> 
-			ORDER BY rn asc
-		)as T2
+				<if test='bzmnSeCd != "" and bzmnSeCd != null'>
+					AND T1.bzmn_se_cd = #{bzmnSeCd}
+				</if>
+				<if test='bsnSttsCd != "" and bsnSttsCd != null'>
+					AND T1.bsn_stts_cd = #{bsnSttsCd}
+				</if> 
+				<if test="chckRslt != null and chckRslt != ''">
+					AND T1.chck_rslt = #{chckRslt}
+				</if>
+				<if test='searchWrd != "" and searchWrd != null'>
+					<choose>
+						<when test='selectCond.equals("1")'>
+							AND T1.co_nm LIKE '%'|| #{searchWrd} ||'%'
+						</when>
+						<when test='selectCond.equals("2")'>
+							AND T1.brno LIKE '%'|| #{searchWrd} ||'%'
+						</when> 
+						<when test='selectCond.equals("3")'>
+							AND T1.crno LIKE '%'|| #{searchWrd} ||'%'
+						</when>
+					</choose>
+				</if>
+				ORDER BY rn asc
+		),
+		exmnrCount as (
+		 	select *,(CASE WHEN exmnr != '' THEN 1 ELSE 0 END +
+		         CASE WHEN exmnr2 != '' THEN 1 ELSE 0 END +
+		         CASE WHEN exmnr3 != '' THEN 1 ELSE 0 END) AS exmnr_null_count
+		    FROM inspctnData
+		)
+		select *,
+		    CASE
+		        WHEN exmnr_null_count = 1 THEN COALESCE(exmnr, exmnr2, exmnr3)
+		        WHEN exmnr_null_count = 2 THEN
+		            CASE
+		                WHEN exmnr IS NOT NULL THEN CONCAT(exmnr, ' 외 1명')
+		                ELSE CONCAT(exmnr2, ' 외 1명')
+		            END
+		        when exmnr_null_count = 3 THEN CONCAT(exmnr, ' 외 2명')
+		    END AS exmnrs from exmnrCount
+	)as T2
 	</sql>
 
 	<!-- 지도점검이력 그리드 -->

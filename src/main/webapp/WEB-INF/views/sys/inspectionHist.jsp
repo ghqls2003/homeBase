@@ -56,15 +56,21 @@
                                <label for="searchSggNm" hidden> 시군구(전체)</label>
                                <input id="searchSggNm">
                            </li>
-                           <li class="li_slec">
+                        </ul>
+                        <ul class="selec_box">
+                        	<li class="li_slec">
                                <label for="searchBzmnSeCd" hidden> 권한(전체)</label>
                                <input id="searchBzmnSeCd">
                            </li>
-                           <li class="li_slec">
+                        </ul>
+                        <ul class="selec_box">
+                        	<li class="li_slec">
                                <label for="searchBsnSttsCd" hidden> 영업상태(전체)</label>
                                <input id="searchBsnSttsCd">
                            </li>
-                           <li class="li_slec">
+                        </ul>
+                        <ul class="selec_box">
+                        	<li class="li_slec">
                                <label for="searchRslt" hidden> 지도점검결과(전체)</label>
                                <input id="searchRslt">
                            </li>
