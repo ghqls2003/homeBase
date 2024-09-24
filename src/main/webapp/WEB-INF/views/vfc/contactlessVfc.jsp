@@ -18,6 +18,51 @@ var authrtCd = '${authrtCd}'
         font-size: 1.6rem !important;
     }
 }
+
+.similarity_box{
+	display: flex;
+	justify-content: center;
+}
+
+.similarity_info_btn{
+	margin-left: 10px;
+}
+
+ .similarity_pop{
+    display: none;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 100%;
+	max-width: 100%;
+	height: 100%;
+	max-height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	overflow-y: auto;
+	border: 2px solid grey;
+	border-radius: 5px;
+	z-index: 9999;
+}
+
+.similarity_pop .box{
+	position: absolute;
+	top: 50%; 
+	left: 50%; 
+	transform: translate(-50%, -50%); 
+	background-color: white;
+	width: 80%;
+	border-radius: 20px;
+}
+
+.similarity_pop .popup_top{ background-color: #F5F8FE;border: 1px solid #E8EDF8;width: 100%;height: 46px;border-radius: 8px 8px 0 0;}
+.similarity_pop .popup_top h4{color: #00127B;font-size: 1.6rem; font-weight: 500;line-height: 44px;padding-left: 25px;}
+.similarity_pop .close { position: absolute; top: 0px; right: 24px; width: 20px; height: 20px;cursor: pointer; border-radius: 50px; }
+.similarity_pop .close span { position: absolute; top: 22px; left: 50%; transform: translate(-50%,-50%) rotate(-45deg); width: 18px; height: 2px; background-color: #364BC6; }
+.similarity_pop .close span:nth-child(2) { transform: translate(-50%,-50%) rotate(45deg); }
+.similarity_pop .content{height: 100%; background-color: #fff; padding: 24px 48px;border-left: 1px solid #E8EDF8;border-right: 1px solid #E8EDF8;border-bottom: 1px solid #E8EDF8;border-radius: 0 0 8px 8px;}
+.similarity_pop .content img{width: 100%;}
+
 </style>
 
 
@@ -197,6 +242,7 @@ var authrtCd = '${authrtCd}'
 
                     <p class="tb_top">※ 외국인 : 성명란에 공백 없이 영어 대문자로 입력해주시기 바랍니다.</p>
                     <p class="tb_top" style="color:#FF7F50;">※ 면허증 촬영 시, 본인의 면허증 정보가 정확히 일치하는지 확인해 주시기 바랍니다.</p>
+                    <p class="tb_top" style="color:#505cff;">※ 유사도 검증을 하지 않아도 운전자격 확인이 가능합니다.</p>
                     <div class="license_wr">
 	                    <div class="license_bg">
 	                    	<button class="info-btn info-btn01">
@@ -330,6 +376,27 @@ var authrtCd = '${authrtCd}'
 	                             </div>
 	                         </div>
 						</div>
+					</div>
+					<div class="similarity_box">
+						 <button class="yellow_btn similarity-btn" onclick =$contactlessVfc.event.similarityVerf();>유사도 검증</button>
+                         <button class="similarity_info_btn">
+                             <img src="${contextPath}/images/sub/ico_tooltip.png" alt="운전면허번호규칙 설명">
+                         </button>
+                         <!-- 유사도 검증 안내 팝업 -->
+                         <div class="similarity_pop">
+                             <div class="box">
+                                 <div class="popup_top">
+                                     <h4>비대면 검증 안내</h4>
+                                     <div class="close">
+                                         <span></span>
+                                         <span></span>
+                                     </div>
+                                 </div>
+                                 <div class="content">
+                                 	 <img src="${contextPath}/images/sub/lc_info01.jpg" alt="운전면허 번호 규칙">
+                                 </div>
+                             </div>
+                         </div>
 					</div>
                 </div>
 	        </div>

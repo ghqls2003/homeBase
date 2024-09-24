@@ -55,7 +55,7 @@ button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff
 
 .sub03 .selec_wr {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
     background-color: #F5F8FE;
     border: 1px solid #E8EDF8;
@@ -89,6 +89,7 @@ button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff
    		flex-direction: row;
         align-items: flex-start;
         flex-wrap: wrap;
+        gap: 12px;
     }
 }
 

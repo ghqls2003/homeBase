@@ -52,7 +52,9 @@
                                <label for="searchCtpvNm" hidden> 시도(전체)</label>
                                <input id="searchCtpvNm">
                            </li>
-                           <li class="li_slec">
+                        </ul>
+                        <ul class="selec_box">
+                        	<li class="li_slec">
                                <label for="searchSggNm" hidden> 시군구(전체)</label>
                                <input id="searchSggNm">
                            </li>

@@ -712,7 +712,6 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 				var param = {};
 				param.rentNo = $('#rentInfoNo').val();
 				ajax(true, contextPath+'/vfc/contactlessVfc/selectRentInfo', 'body', '처리중입니다.', param, function (data) {
-					console.log(data);
 					if(data.length<=0){
 						alert("잘못된 대여정보일련번호입니다. 다시 입력해주세요.")
 					}else{
@@ -1061,7 +1060,14 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			$('.result_popup_in_popup .close').click(function(){
 				$('.result_popup_in_popup .cancel_btn').click();
 			});
-
+			
+			$(".similarity_info_btn").on("click",function(){
+				$(".similarity_pop").css("display", "flex");
+			 });
+	
+			$(".similarity_box .close").on("click",function(){
+			    $(".similarity_pop").css("display", "none");
+			 });
 
 		},
 
@@ -1476,7 +1482,11 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			$("#num04").attr('disabled', false);
 			$('input[type=radio]').attr("disabled", false);
 			vrfcMthd = 1;
-		}
+		},
+		
+		similarityVerf : function() {
+			alert("hi")
+		},
 	};
 
 }(window, document, jQuery));
