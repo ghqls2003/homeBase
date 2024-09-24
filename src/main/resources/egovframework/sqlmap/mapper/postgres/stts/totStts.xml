@@ -89,47 +89,62 @@
 			, B.login_avg
 		FROM
 			(
-			SELECT A.cmptnc conn
+			SELECT A.ctpv_cd conn
 				, COALESCE(A.ctpv_nm, '시도 합계') ctpv_nm 
-				, SUM(user_cnt) user_cnt
+				, SUM(A.user_cnt) user_cnt
 				, SUM(A.login_cnt) login_cnt
 				, SUM(A.mn_use_cnt) mn_use_cnt
 				, ROUND(SUM(A.login_cnt)/SUM(A.user_cnt), 2) login_avg
 			FROM
 				(
-				SELECT a1.user_sn
-					, a1.authrt_cd
-					, a1.cmptnc
-					, COALESCE(sd.ctpv_nm, '-') ctpv_nm
+				SELECT CASE a1.ctpv_cd WHEN '-' THEN NULL ELSE a1.ctpv_cd END ctpv_cd
+					, a1.ctpv_nm
+					, a1.user_sn
 					, a1.login_cnt
 					, a2.mn_use_cnt
 					, 1 user_cnt
 				FROM
 					(
-					SELECT t1.user_sn
-						, t1.authrt_cd
-						, t1.cmptnc
-						, SUM(CASE WHEN login.cntn_dt NOTNULL THEN 1 ELSE 0 END) login_cnt
+					SELECT ct.ctpv_cd
+						, ct.ctpv_nm
+						, a.*
 					FROM
 						(
-						SELECT main.user_sn
-							, main.authrt_cd
-							, LEFT(CASE WHEN main.cmptnc_zone_cd = '' THEN NULL 
-												WHEN main.cmptnc_zone_cd LIKE '42%' THEN '51' 
-												WHEN main.cmptnc_zone_cd LIKE '45%' THEN '52' 
-												ELSE main.cmptnc_zone_cd END, 2) cmptnc
+						SELECT sd.ctpv_cd, sd.ctpv_nm
 						FROM
-							dqvs.dvs_cmm_mt_user main
-						WHERE main.acnt_stts_cd NOT IN ('6', '5')
-						   	AND main.aprv_stts_cd = '2'
-						   	AND main.authrt_cd IN ('G01', 'G02', 'S01', 'S02', 'S03', 'S04')
-						) AS t1
+							dqvs.dvs_cmm_mt_sd sd
+						WHERE sd.ctpv_cd != '45'
+						UNION
+						SELECT '-', '-'
+						) AS ct
 					LEFT OUTER JOIN
-						(SELECT * FROM dqvs.dvs_cmm_hs_login WHERE cntn_type_cd = 'I') login
-					ON t1.user_sn = login.user_sn
-					GROUP BY t1.user_sn
-						, t1.authrt_cd
-						, t1.cmptnc
+						(
+						SELECT t1.user_sn
+							, t1.authrt_cd
+							, t1.cmptnc
+							, SUM(CASE WHEN login.cntn_dt NOTNULL THEN 1 ELSE 0 END) login_cnt
+						FROM
+							(
+							SELECT main.user_sn
+								, main.authrt_cd
+								, LEFT(CASE WHEN main.cmptnc_zone_cd = '' OR main.cmptnc_zone_cd ISNULL THEN '-'
+											WHEN main.cmptnc_zone_cd LIKE '42%' THEN '51' 
+											WHEN main.cmptnc_zone_cd LIKE '45%' THEN '52' 
+											ELSE main.cmptnc_zone_cd END, 2) cmptnc
+							FROM
+								dqvs.dvs_cmm_mt_user main
+							WHERE main.acnt_stts_cd NOT IN ('6', '5')
+							   	AND main.aprv_stts_cd = '2'
+							   	AND main.authrt_cd IN ('G01', 'G02', 'S01', 'S02', 'S03', 'S04')
+							) AS t1
+						LEFT OUTER JOIN
+							(SELECT * FROM dqvs.dvs_cmm_hs_login WHERE cntn_type_cd = 'I') login
+						ON t1.user_sn = login.user_sn
+						GROUP BY t1.user_sn
+							, t1.authrt_cd
+							, t1.cmptnc
+						) AS a
+					ON ct.ctpv_cd = a.cmptnc
 					) AS a1
 				LEFT OUTER JOIN
 					(
@@ -149,14 +164,11 @@
 					GROUP BY t1.user_sn
 					) AS a2
 				ON a1.user_sn = a2.user_sn
-				LEFT OUTER JOIN
-					dqvs.dvs_cmm_mt_sd sd
-				ON a1.cmptnc = sd.ctpv_cd
 				<if test="authrt != null and authrt != ''">
 					WHERE a1.authrt_cd = #{authrt}
 				</if>
 				) AS A
-			GROUP BY ROLLUP((A.cmptnc, A.ctpv_nm))
+			GROUP BY ROLLUP((A.ctpv_cd, A.ctpv_nm))
 			) AS B
 		ORDER BY CASE WHEN B.ctpv_nm = '시도 합계' THEN 0 ELSE 1 END, B.conn ASC
 	</select>
@@ -172,47 +184,61 @@
 			, B.login_avg
 		FROM
 			(
-			SELECT LEFT(A.cmptnc, 2) conn
+			SELECT LEFT(A.sgg_cd, 2) conn
 				, A.sgg_nm
-				, SUM(user_cnt) user_cnt
+				, SUM(A.user_cnt) user_cnt
 				, SUM(A.login_cnt) login_cnt
 				, SUM(A.mn_use_cnt) mn_use_cnt
-				, ROUND(SUM(A.login_cnt)/SUM(A.user_cnt), 2) login_avg
+				, ROUND(CASE WHEN SUM(A.login_cnt) = 0 OR SUM(A.user_cnt) = 0 THEN 0 ELSE SUM(A.login_cnt)/SUM(A.user_cnt)END, 2) login_avg
 			FROM
 				(
-				SELECT a1.user_sn
-					, a1.authrt_cd
-					, a1.cmptnc
-					, COALESCE(sgg.sgg_nm, '-') sgg_nm
-					, a1.login_cnt
-					, a2.mn_use_cnt
-					, 1 user_cnt
+				SELECT  CASE a1.sgg_cd WHEN '-' THEN NULL ELSE a1.sgg_cd END sgg_cd
+					, a1.sgg_nm
+					, a1.user_sn
+					, COALESCE(a1.login_cnt, 0) login_cnt
+					, COALESCE(a2.mn_use_cnt, 0) mn_use_cnt
+					, CASE WHEN a1.user_sn ISNULL THEN 0 ELSE 1 END user_cnt
 				FROM
 					(
-					SELECT t1.user_sn
-						, t1.authrt_cd
-						, t1.cmptnc
-						, SUM(CASE WHEN login.cntn_dt NOTNULL THEN 1 ELSE 0 END) login_cnt
+					SELECT sgg.sgg_cd
+						, sgg.sgg_nm
+						, a.*
 					FROM
 						(
-						SELECT main.user_sn
-							, main.authrt_cd
-							, LEFT(CASE WHEN main.cmptnc_zone_cd = '' THEN NULL 
-												WHEN main.cmptnc_zone_cd LIKE '42%' THEN CONCAT('51', SUBSTRING(main.cmptnc_zone_cd, 3))
-												WHEN main.cmptnc_zone_cd LIKE '45%' THEN CONCAT('52', SUBSTRING(main.cmptnc_zone_cd, 3))
-												ELSE main.cmptnc_zone_cd END, 5) cmptnc
+						SELECT sgg.sgg_cd, sgg.sgg_nm
 						FROM
-							dqvs.dvs_cmm_mt_user main
-						WHERE main.acnt_stts_cd NOT IN ('6', '5')
-						   	AND main.aprv_stts_cd = '2'
-						   	AND main.authrt_cd IN ('G01', 'G02', 'S01', 'S02', 'S03', 'S04')
-						) AS t1
-					LEFT OUTER JOIN
-						(SELECT * FROM dqvs.dvs_cmm_hs_login WHERE cntn_type_cd = 'I') login
-					ON t1.user_sn = login.user_sn
-					GROUP BY t1.user_sn
-						, t1.authrt_cd
-						, t1.cmptnc
+							dqvs.dvs_cmm_mt_sgg sgg
+						UNION
+						SELECT '-', '-'
+						) AS sgg
+					LEFT OUTER JOIN				
+						(
+						SELECT t1.user_sn
+							, t1.authrt_cd
+							, t1.cmptnc
+							, SUM(CASE WHEN login.cntn_dt NOTNULL THEN 1 ELSE 0 END) login_cnt
+						FROM
+							(
+							SELECT main.user_sn
+								, main.authrt_cd
+								, LEFT(CASE WHEN main.cmptnc_zone_cd = '' OR main.cmptnc_zone_cd ISNULL THEN '-'
+													WHEN main.cmptnc_zone_cd LIKE '42%' THEN CONCAT('51', SUBSTRING(main.cmptnc_zone_cd, 3))
+													WHEN main.cmptnc_zone_cd LIKE '45%' THEN CONCAT('52', SUBSTRING(main.cmptnc_zone_cd, 3))
+													ELSE main.cmptnc_zone_cd END, 5) cmptnc
+							FROM
+								dqvs.dvs_cmm_mt_user main
+							WHERE main.acnt_stts_cd NOT IN ('6', '5')
+							   	AND main.aprv_stts_cd = '2'
+							   	AND main.authrt_cd IN ('G01', 'G02', 'S01', 'S02', 'S03', 'S04')
+							) AS t1
+						LEFT OUTER JOIN
+							(SELECT * FROM dqvs.dvs_cmm_hs_login WHERE cntn_type_cd = 'I') login
+						ON t1.user_sn = login.user_sn
+						GROUP BY t1.user_sn
+							, t1.authrt_cd
+							, t1.cmptnc
+						) AS a
+					ON sgg.sgg_cd = a.cmptnc
 					) AS a1
 				LEFT OUTER JOIN
 					(
@@ -232,15 +258,12 @@
 					GROUP BY t1.user_sn
 					) AS a2
 				ON a1.user_sn = a2.user_sn
-				LEFT OUTER JOIN
-					dqvs.dvs_cmm_mt_sgg sgg
-				ON a1.cmptnc = sgg.sgg_cd
 				<if test="authrt != null and authrt != ''">
 					WHERE a1.authrt_cd = #{authrt}
 				</if>
 				) AS A
-			GROUP BY A.sgg_nm, A.cmptnc
-			ORDER BY A.cmptnc
+			GROUP BY A.sgg_nm, A.sgg_cd
+			ORDER BY A.sgg_cd
 			) AS B
 	</select>	
 	
