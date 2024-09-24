@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vfc.drvRsvMag">
+
+	<!-- bzmn_se_cd 값을 조회하는 쿼리 -->
+	<select id="DlnFind" parameterType="map" resultType="string">
+		SELECT 
+			dln
+		FROM dqvs.dvs_dqv_mt_rent
+		WHERE rent_no = #{rentNo}
+	</select>
+	<!-- -->
+	<select id="RsvNoList" resultType="resultMap">
+		select * from(
+			select
+			row_number() over() as rn ,
+			car.rent_no,
+			car.vhcl_reg_no,
+			car.vin,
+			car.carmdl,
+			car.dln,
+			ddhv.lcns_flnm,
+			dqvs.fn_get_cdnm('verify_cd', ddhv.lcns_asort_cd) as alcnsAsortCd,
+			car.mdlyr,
+			car.vhcl_nm,
+			car.vrfc_hstry_sn,
+			to_char(car.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') as rent_bgng_dt ,
+			to_char(car.rent_end_dt, 'YYYY-MM-DD HH24:MI') as rent_end_dt,
+			to_char(car.rent_prcs_dt, 'YYYY-MM-DD HH24:MI') as rent_prcs_dt,
+			car.bzmn_sn,
+			(select brno from dqvs.dvs_rac_mt_agency drma where bzmn_sn = car.bzmn_sn),
+			car.engine_fom,
+			to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
+			from dqvs.dvs_dqv_mt_rent car
+			left outer join dqvs.dvs_dqv_hs_verf ddhv
+			on ddhv.vrfc_hstry_sn = car.vrfc_hstry_sn
+		where 1=1
+ 		AND (car.rent_end_dt::timestamp - car.rent_bgng_dt::timestamp) > interval '7 days'
+		<if test="searchWrd != '' and searchWrd != null">
+			and car.rent_no like '%' || #{searchWrd} || '%'
+		</if>
+		<if test="bzmnSn != '' and bzmnSn != null">
+			 and car.bzmn_sn = #{bzmnSn}
+		</if>
+		) T
+		WHERE 1 = 1
+		<if test="take != '' and take != null">
+			AND T.rn <![CDATA[<=]]>
+			(CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		</if>
+		<if test="skip != '' and skip != null">
+			AND T.rn <![CDATA[>]]>
+			CAST(#{skip} AS INTEGER)
+		</if>
+		ORDER BY T.rn ASC
+
+	</select>
+	<select id="RsvNoListCnt" resultType="int">
+		select count(*) from(
+		select
+			car.rent_no,
+			car.vhcl_reg_no,
+			car.vin,
+			car.carmdl,
+			car.mdlyr,
+			car.vhcl_nm,
+			car.bzmn_sn,
+			(select brno from dqvs.dvs_rac_mt_agency drma where bzmn_sn = car.bzmn_sn),
+			car.engine_fom,
+			case car.use_yn when 'Y' then '사용' when 'N' then '미사용' else '미상' END AS
+			use_yn ,
+			to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
+		from dqvs.dvs_dqv_mt_rent car
+		left join dqvs.dvs_dqv_hs_verf ddhv
+			on car.vrfc_hstry_sn = ddhv.vrfc_hstry_sn
+		where 1=1
+<!--      		 and car.rent_bgng_dt > now()+ interval '7 days'
+ -->     		
+			  AND (car.rent_end_dt::timestamp - car.rent_bgng_dt::timestamp) > interval '7 days'
+			 <if test="searchWrd != '' and searchWrd != null">
+				and car.vhcl_reg_no like '%' || #{searchWrd} || '%'
+			</if>
+			<if test="bzmnSn != '' and bzmnSn != null">
+				 and car.bzmn_sn = #{bzmnSn}
+			</if>
+		) AS T
+	
+	</select>
+
+		<select id="RentalHistList" resultType="resultMap">
+			select
+			*
+			from
+				(
+				select
+					row_number() over(
+					order by T.reg_dt desc) rn ,
+					*
+					from
+						(
+						select
+							ddvr.reg_dt,
+							CASE
+							WHEN ddvr.dln ~ '^[0-9]+$' THEN
+							CONCAT(ddvr.dln, REPEAT('*', 12))
+							ELSE
+							CONCAT(SUBSTRING(dqvs.pca_decrypt(ddvr.dln, '150'), -5, LENGTH(dqvs.pca_decrypt(ddvr.dln, '150'))),
+							REPEAT('*',6))
+							END AS dln2,
+							ddvr.mdfcn_dt,
+							ddvr.rent_no ,
+							ddvr.dln,
+							dqvs.fn_get_cdnm('verify_cd', ddvr.lcns_asort_cd) as lcns_asort_cd ,
+							(select sso_user_nm from v_intg_user_info vui where vui.user_sn =
+							ddvr.mdfr_sn)as mdfr_nm,
+							(select sso_user_nm from v_intg_user_info vui where vui.user_sn =
+							ddvr.rgtr_sn)as reg_nm,
+							agency.co_nm ,
+							rent.bzmn_sn,
+							ddvr.lcns_flnm,
+							ddvr.lcns_asort_cd
+						from dqvs.dvs_dqv_mt_rent rent
+						left outer join dqvs.dvs_rac_mt_agency agency on
+						rent.bzmn_sn = agency.bzmn_sn
+						inner join dqvs.dvs_dqv_vrfc_rsvt ddvr on
+						ddvr.rent_no = rent.rent_no
+						where 
+							ddvr.reg_dt <![CDATA[>=]]> #{startDt}::TIMESTAMP
+							and ddvr.reg_dt <![CDATA[<=]]> #{endDt}::DATE + '23:59:59'::INTERVAL
+						<if test = "searchWrd != null and searchWrd != ''">
+							and ddvr.rent_no like '%' || UPPER(#{searchWrd}) || '%'
+						</if>
+						<if test = "bzmnSn != null and bzmnSn != ''">
+							and ddvr.bzmn_sn = #{bzmnSn}
+						</if>
+						) as T
+					) as A
+						WHERE 1 = 1
+						<if test="take != '' and take != null">
+							AND rn <![CDATA[<=]]>
+							(CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+						</if>
+						<if test="skip != '' and skip != null">
+							AND rn <![CDATA[>]]>
+							CAST(#{skip} AS INTEGER)
+						</if>
+						ORDER BY rn ASC
+		</select>
+
+		<select id="RentalHistListCnt" resultType="int">
+			select
+			count(*)
+			from
+			(
+						select
+							ddvr.reg_dt,
+							CASE
+							WHEN ddvr.dln ~ '^[0-9]+$' THEN
+							CONCAT(ddvr.dln, REPEAT('*', 12))
+							ELSE
+							CONCAT(SUBSTRING(dqvs.pca_decrypt(ddvr.dln, '150'), -5, LENGTH(dqvs.pca_decrypt(ddvr.dln, '150'))),
+							REPEAT('*',6))
+							END AS dln2,
+							ddvr.mdfcn_dt,
+							ddvr.rent_no ,
+							ddvr.dln,
+							dqvs.fn_get_cdnm('verify_cd', ddvr.lcns_asort_cd) as lcns_asort_cd ,
+							(select sso_user_nm from v_intg_user_info vui where vui.user_sn =
+							ddvr.mdfr_sn)as mdfr_nm,
+							(select sso_user_nm from v_intg_user_info vui where vui.user_sn =
+							ddvr.rgtr_sn)as reg_nm,
+							agency.co_nm ,
+							rent.bzmn_sn,
+							ddvr.lcns_flnm,
+							ddvr.lcns_asort_cd
+						from dqvs.dvs_dqv_mt_rent rent
+						left outer join dqvs.dvs_rac_mt_agency agency on
+						rent.bzmn_sn = agency.bzmn_sn
+						inner join dqvs.dvs_dqv_vrfc_rsvt ddvr on
+						ddvr.rent_no = rent.rent_no
+						where 
+							ddvr.reg_dt <![CDATA[>=]]> #{startDt}::TIMESTAMP
+							and ddvr.reg_dt <![CDATA[<=]]> #{endDt}::DATE + '23:59:59'::INTERVAL
+						<if test = "searchWrd != null and searchWrd != ''">
+							and ddvr.rent_no like '%' || UPPER(#{searchWrd}) || '%'
+						</if>
+						<if test = "bzmnSn != null and bzmnSn != ''">
+							and ddvr.bzmn_sn = #{bzmnSn}
+						</if>
+			) as T
+		</select>
+
+		<select id="SearchRentNo" resultType="resultMap">
+			select
+			ROW_NUMBER() OVER (ORDER BY reg_dt DESC) AS row_num,
+			reg_dt,
+			rent_no,
+			carmdl,
+			rent_bgng_dt,
+			rent_end_dt
+			from dqvs.dvs_dqv_mt_rent
+			<if test="searchRentNo != '' and searchRentNo != null">
+				and LOWER(dcms.rent_no) like '%' || LOWER(#{searchRentNo}) || '%'
+			</if>
+		</select>
+		<select id="SearchRentNoCnt" resultType="int">
+			select
+			count(*)
+			from dqvs.dvs_dqv_mt_rent
+			<if test="searchRentNo != '' and searchRentNo != null">
+				and LOWER(dcms.rent_no) like '%' || LOWER(#{searchRentNo}) || '%'
+			</if>
+		</select>
+
+		<insert id="insertRsv">
+			INSERT INTO dvs_dqv_vrfc_rsvt (
+				rent_no,
+				vhcl_reg_no,
+				dln,
+				lcns_asort_cd,
+				lcns_flnm,
+				vrfc_period,
+				rsvt_bgng_ymd,
+				rsvt_end_ymd,
+				last_vrfc_rslt, 
+				last_vrfc_ymd, 
+				next_vrfc_ymd, 
+				rgtr_sn,
+				reg_dt,
+				reg_ip
+			) VALUES (
+				#{rentNo},
+				#{vhclRegNo},
+				#{dln},
+				#{lcnsAsortCd},
+				#{lcnsFlnm},
+				#{periodRsv},
+				#{startDt}::timestamp,
+				#{endtDt}::timestamp,
+				'최초등록', 
+				now(),
+				now(),
+				#{rgtrSn}::numeric,
+				NOW(),
+				#{rgtrIp}
+			);
+		</insert>
+
+		<update id="updateRsv">
+			UPDATE dqvs.dvs_dqv_vrfc_rsvt
+			SET
+				vrfc_period = #{periodRsv},
+				rsvt_bgng_ymd = #{srtDt}::timestamp,
+				mdfcn_ip= #{IP},
+				mdfr_sn= #{userSn}::numeric,
+				mdfcn_dt= now()::timestamp
+			WHERE 
+			<if test="rentNo != '' and rentNo != null">
+				rent_no=#{rentNo}
+			</if>
+		</update>
+
+		<delete id="deleteRsv">
+			DELETE FROM dqvs.dvs_dqv_vrfc_rsvt
+			WHERE
+			<if test="rentNo != '' and rentNo != null">
+				rent_no=#{rentNo}
+			</if>
+		</delete>
+		<select id="PeriodCd" resultType="resultMap">
+		select 
+			 cd_nm
+			,cd
+		from dqvs.dvs_cmm_mt_code
+		where cd_group = 'vrfc_period'
+	</select>
+	<select id="selectdetailRsv" resultType="resultMap">
+			select 
+			    rent_no,
+			    vhcl_reg_no,
+			   	case 
+			        WHEN dln ~ '^[0-9]+$' THEN CONCAT(SUBSTRING(dln, 1, 6), REPEAT('*', 6))
+			        ELSE CONCAT(SUBSTRING(dqvs.pca_decrypt(dln, '150'), 1, 6), REPEAT('*', 6)) 
+			    END as dln,
+			    lcns_flnm,
+			    vrfc_period,
+			    dqvs.fn_get_cdnm('vrfc_period', vrfc_period) as vrfc_period,
+			    rsvt_bgng_ymd,
+			    rsvt_end_ymd,
+			    case 
+			        WHEN last_vrfc_rslt = '처리완료' THEN '처리완료'
+			        ELSE dqvs.fn_get_cdnm('vrfc_rslt', last_vrfc_rslt)
+    			END as last_vrfc_rslt,
+   			    <!-- dqvs.fn_get_cdnm('vrfc_rslt', last_vrfc_rslt) as last_vrfc_rslt, -->
+			    last_vrfc_ymd,
+			    next_vrfc_ymd,
+			    rgtr_sn,
+			    reg_dt,
+			    reg_ip,
+			    mdfr_sn,
+			    mdfcn_dt,
+			    mdfcn_ip
+			from dqvs.dvs_dqv_vrfc_rsvt
+			where rent_no = #{rentNo}
+	</select>
+	<select id="CheckRentNo" resultType="resultMap">
+			select 
+			    rent_no
+			from dqvs.dvs_dqv_vrfc_rsvt
+			where rent_no = #{rentNo}
+	</select>
+</mapper>
