@@ -89,47 +89,62 @@
 			, B.login_avg
 		FROM
 			(
-			SELECT A.cmptnc conn
+			SELECT A.ctpv_cd conn
 				, COALESCE(A.ctpv_nm, '시도 합계') ctpv_nm 
-				, SUM(user_cnt) user_cnt
+				, SUM(A.user_cnt) user_cnt
 				, SUM(A.login_cnt) login_cnt
 				, SUM(A.mn_use_cnt) mn_use_cnt
 				, ROUND(SUM(A.login_cnt)/SUM(A.user_cnt), 2) login_avg
 			FROM
 				(
-				SELECT a1.user_sn
-					, a1.authrt_cd
-					, a1.cmptnc
-					, COALESCE(sd.ctpv_nm, '-') ctpv_nm
+				SELECT CASE a1.ctpv_cd WHEN '-' THEN NULL ELSE a1.ctpv_cd END ctpv_cd
+					, a1.ctpv_nm
+					, a1.user_sn
 					, a1.login_cnt
 					, a2.mn_use_cnt
 					, 1 user_cnt
 				FROM
 					(
-					SELECT t1.user_sn
-						, t1.authrt_cd
-						, t1.cmptnc
-						, SUM(CASE WHEN login.cntn_dt NOTNULL THEN 1 ELSE 0 END) login_cnt
+					SELECT ct.ctpv_cd
+						, ct.ctpv_nm
+						, a.*
 					FROM
 						(
-						SELECT main.user_sn
-							, main.authrt_cd
-							, LEFT(CASE WHEN main.cmptnc_zone_cd = '' THEN NULL 
-												WHEN main.cmptnc_zone_cd LIKE '42%' THEN '51' 
-												WHEN main.cmptnc_zone_cd LIKE '45%' THEN '52' 
-												ELSE main.cmptnc_zone_cd END, 2) cmptnc
+						SELECT sd.ctpv_cd, sd.ctpv_nm
 						FROM
-							dqvs.dvs_cmm_mt_user main
-						WHERE main.acnt_stts_cd NOT IN ('6', '5')
-						   	AND main.aprv_stts_cd = '2'
-						   	AND main.authrt_cd IN ('G01', 'G02', 'S01', 'S02', 'S03', 'S04')
-						) AS t1
+							dqvs.dvs_cmm_mt_sd sd
+						WHERE sd.ctpv_cd != '45'
+						UNION
+						SELECT '-', '-'
+						) AS ct
 					LEFT OUTER JOIN
-						(SELECT * FROM dqvs.dvs_cmm_hs_login WHERE cntn_type_cd = 'I') login
-					ON t1.user_sn = login.user_sn
-					GROUP BY t1.user_sn
-						, t1.authrt_cd
-						, t1.cmptnc
+						(
+						SELECT t1.user_sn
+							, t1.authrt_cd
+							, t1.cmptnc
+							, SUM(CASE WHEN login.cntn_dt NOTNULL THEN 1 ELSE 0 END) login_cnt
+						FROM
+							(
+							SELECT main.user_sn
+								, main.authrt_cd
+								, LEFT(CASE WHEN main.cmptnc_zone_cd = '' OR main.cmptnc_zone_cd ISNULL THEN '-'
+											WHEN main.cmptnc_zone_cd LIKE '42%' THEN '51' 
+											WHEN main.cmptnc_zone_cd LIKE '45%' THEN '52' 
+											ELSE main.cmptnc_zone_cd END, 2) cmptnc
+							FROM
+								dqvs.dvs_cmm_mt_user main
+							WHERE main.acnt_stts_cd NOT IN ('6', '5')
+							   	AND main.aprv_stts_cd = '2'
+							   	AND main.authrt_cd IN ('G01', 'G02', 'S01', 'S02', 'S03', 'S04')
+							) AS t1
+						LEFT OUTER JOIN
+							(SELECT * FROM dqvs.dvs_cmm_hs_login WHERE cntn_type_cd = 'I') login
+						ON t1.user_sn = login.user_sn
+						GROUP BY t1.user_sn
+							, t1.authrt_cd
+							, t1.cmptnc
+						) AS a
+					ON ct.ctpv_cd = a.cmptnc
 					) AS a1
 				LEFT OUTER JOIN
 					(
@@ -149,14 +164,11 @@
 					GROUP BY t1.user_sn
 					) AS a2
 				ON a1.user_sn = a2.user_sn
-				LEFT OUTER JOIN
-					dqvs.dvs_cmm_mt_sd sd
-				ON a1.cmptnc = sd.ctpv_cd
 				<if test="authrt != null and authrt != ''">
 					WHERE a1.authrt_cd = #{authrt}
 				</if>
 				) AS A
-			GROUP BY ROLLUP((A.cmptnc, A.ctpv_nm))
+			GROUP BY ROLLUP((A.ctpv_cd, A.ctpv_nm))
 			) AS B
 		ORDER BY CASE WHEN B.ctpv_nm = '시도 합계' THEN 0 ELSE 1 END, B.conn ASC
 	</select>
@@ -172,47 +184,61 @@
 			, B.login_avg
 		FROM
 			(
-			SELECT LEFT(A.cmptnc, 2) conn
+			SELECT LEFT(A.sgg_cd, 2) conn
 				, A.sgg_nm
-				, SUM(user_cnt) user_cnt
+				, SUM(A.user_cnt) user_cnt
 				, SUM(A.login_cnt) login_cnt
 				, SUM(A.mn_use_cnt) mn_use_cnt
-				, ROUND(SUM(A.login_cnt)/SUM(A.user_cnt), 2) login_avg
+				, ROUND(CASE WHEN SUM(A.login_cnt) = 0 OR SUM(A.user_cnt) = 0 THEN 0 ELSE SUM(A.login_cnt)/SUM(A.user_cnt)END, 2) login_avg
 			FROM
 				(
-				SELECT a1.user_sn
-					, a1.authrt_cd
-					, a1.cmptnc
-					, COALESCE(sgg.sgg_nm, '-') sgg_nm
-					, a1.login_cnt
-					, a2.mn_use_cnt
-					, 1 user_cnt
+				SELECT  CASE a1.sgg_cd WHEN '-' THEN NULL ELSE a1.sgg_cd END sgg_cd
+					, a1.sgg_nm
+					, a1.user_sn
+					, COALESCE(a1.login_cnt, 0) login_cnt
+					, COALESCE(a2.mn_use_cnt, 0) mn_use_cnt
+					, CASE WHEN a1.user_sn ISNULL THEN 0 ELSE 1 END user_cnt
 				FROM
 					(
-					SELECT t1.user_sn
-						, t1.authrt_cd
-						, t1.cmptnc
-						, SUM(CASE WHEN login.cntn_dt NOTNULL THEN 1 ELSE 0 END) login_cnt
+					SELECT sgg.sgg_cd
+						, sgg.sgg_nm
+						, a.*
 					FROM
 						(
-						SELECT main.user_sn
-							, main.authrt_cd
-							, LEFT(CASE WHEN main.cmptnc_zone_cd = '' THEN NULL 
-												WHEN main.cmptnc_zone_cd LIKE '42%' THEN CONCAT('51', SUBSTRING(main.cmptnc_zone_cd, 3))
-												WHEN main.cmptnc_zone_cd LIKE '45%' THEN CONCAT('52', SUBSTRING(main.cmptnc_zone_cd, 3))
-												ELSE main.cmptnc_zone_cd END, 5) cmptnc
+						SELECT sgg.sgg_cd, sgg.sgg_nm
 						FROM
-							dqvs.dvs_cmm_mt_user main
-						WHERE main.acnt_stts_cd NOT IN ('6', '5')
-						   	AND main.aprv_stts_cd = '2'
-						   	AND main.authrt_cd IN ('G01', 'G02', 'S01', 'S02', 'S03', 'S04')
-						) AS t1
-					LEFT OUTER JOIN
-						(SELECT * FROM dqvs.dvs_cmm_hs_login WHERE cntn_type_cd = 'I') login
-					ON t1.user_sn = login.user_sn
-					GROUP BY t1.user_sn
-						, t1.authrt_cd
-						, t1.cmptnc
+							dqvs.dvs_cmm_mt_sgg sgg
+						UNION
+						SELECT '-', '-'
+						) AS sgg
+					LEFT OUTER JOIN				
+						(
+						SELECT t1.user_sn
+							, t1.authrt_cd
+							, t1.cmptnc
+							, SUM(CASE WHEN login.cntn_dt NOTNULL THEN 1 ELSE 0 END) login_cnt
+						FROM
+							(
+							SELECT main.user_sn
+								, main.authrt_cd
+								, LEFT(CASE WHEN main.cmptnc_zone_cd = '' OR main.cmptnc_zone_cd ISNULL THEN '-'
+													WHEN main.cmptnc_zone_cd LIKE '42%' THEN CONCAT('51', SUBSTRING(main.cmptnc_zone_cd, 3))
+													WHEN main.cmptnc_zone_cd LIKE '45%' THEN CONCAT('52', SUBSTRING(main.cmptnc_zone_cd, 3))
+													ELSE main.cmptnc_zone_cd END, 5) cmptnc
+							FROM
+								dqvs.dvs_cmm_mt_user main
+							WHERE main.acnt_stts_cd NOT IN ('6', '5')
+							   	AND main.aprv_stts_cd = '2'
+							   	AND main.authrt_cd IN ('G01', 'G02', 'S01', 'S02', 'S03', 'S04')
+							) AS t1
+						LEFT OUTER JOIN
+							(SELECT * FROM dqvs.dvs_cmm_hs_login WHERE cntn_type_cd = 'I') login
+						ON t1.user_sn = login.user_sn
+						GROUP BY t1.user_sn
+							, t1.authrt_cd
+							, t1.cmptnc
+						) AS a
+					ON sgg.sgg_cd = a.cmptnc
 					) AS a1
 				LEFT OUTER JOIN
 					(
@@ -232,15 +258,12 @@
 					GROUP BY t1.user_sn
 					) AS a2
 				ON a1.user_sn = a2.user_sn
-				LEFT OUTER JOIN
-					dqvs.dvs_cmm_mt_sgg sgg
-				ON a1.cmptnc = sgg.sgg_cd
 				<if test="authrt != null and authrt != ''">
 					WHERE a1.authrt_cd = #{authrt}
 				</if>
 				) AS A
-			GROUP BY A.sgg_nm, A.cmptnc
-			ORDER BY A.cmptnc
+			GROUP BY A.sgg_nm, A.sgg_cd
+			ORDER BY A.sgg_cd
 			) AS B
 	</select>	
 	
@@ -285,9 +308,20 @@
 	<sql id="carShareGridSql">
 		(
 		SELECT ROW_NUMBER() OVER(ORDER BY cs.sn) rn
-			, cs.*
+			, cs.sn
+			, cs.se
+			, cs.co_nm 
+			, COALESCE(cs.reg_noh, 0) reg_noh
+			, COALESCE(cs.mbr_cnt, 0) mbr_cnt 
+			, cs.bsnoffice
+			, COALESCE(cs.bsnoffice_cnt, 0) bsnoffice_cnt
+			, cs.rsrvtnoffice 
+			, COALESCE(cs.rsrvtnoffice_cnt, 0) rsrvtnoffice_cnt
+			, cs.rmrk 
+			, cs.del_yn
 		FROM
-			dqvs.dvs_st_mt_carshare cs
+			dvs_st_mt_carshare cs
+		WHERE del_yn ISNULL
 		) AS T
 	</sql>
 	
@@ -306,5 +340,67 @@
 		FROM
 			<include refid="carShareGridSql" />
 	</select>
+	
+	<!-- 지역 드롭다운 -->
+	<select id="areaDrop" parameterType="paraMap" resultType="resultMap">
+	/* 지역 드롭다운 */
+		SELECT DISTINCT LPAD(stdg_cd, 2) ctpv_cd
+        	, ctpv_nm
+		FROM
+			dqvs.dvs_cmm_mt_area
+		WHERE mtnabn_yn = 'Y'
+		<if test="regCmptncCd != null and regCmptncCd != ''">
+			AND stdg_cd = #{regCmptncCd}
+		</if>
+		ORDER BY ctpv_cd
+	</select>
+	
+	<!-- 카쉐어링 업체 등록 -->
+	<insert id="insertCarShare">
+	/* 카쉐어링 업체 등록 */
+		INSERT INTO dqvs.dvs_st_mt_carshare (
+			sn, se, co_nm, reg_noh, mbr_cnt, bsnoffice, rsrvtnoffice, rmrk, del_yn, reg_dt, reg_ip, mdfcn_dt, mdfcn_ip, bsnoffice_cnt, rsrvtnoffice_cnt
+		)
+		VALUES (
+			nextval('seq_dvs_st_mt_carshare'), #{area}, #{cmpNm}, #{regCar}::NUMERIC, #{userCnt}::NUMERIC, #{bsnOffc}, #{rsrvtnOffc}, #{rmrk}, NULL, NOW(), #{regIP}, NULL, NULL, #{bsnOffcCnt}::NUMERIC, #{rsrvtnOffcCnt}::NUMERIC
+		)
+	</insert>
+	
+	<!-- 카쉐어링 업체 상세 팝업 -->
+	<select id="detailCarshare" parameterType="paraMap" resultType="resultMap">
+	/* 카쉐어링 업체 상세 팝업 */
+		SELECT cs.sn
+			, cs.se
+			, cs.co_nm 
+			, COALESCE(cs.reg_noh, 0) reg_noh
+			, COALESCE(cs.mbr_cnt, 0) mbr_cnt 
+			, cs.bsnoffice
+			, COALESCE(cs.bsnoffice_cnt, 0) bsnoffice_cnt
+			, cs.rsrvtnoffice 
+			, COALESCE(cs.rsrvtnoffice_cnt, 0) rsrvtnoffice_cnt
+			, cs.rmrk 
+		FROM
+			dqvs.dvs_st_mt_carshare cs
+		WHERE cs.sn = #{detailSn}
+	</select>
+	
+	<!-- 카쉐어링 업체 수정 -->
+	<update  id="updateCarShare">
+	/* 카쉐어링 업체 수정 */
+		UPDATE dvs_st_mt_carshare
+		SET se = #{area}, reg_noh = #{regCar}::NUMERIC, mbr_cnt = #{userCnt}::NUMERIC
+			, bsnoffice = #{bsnOffc}, rsrvtnoffice = #{rsrvtnOffc}, rmrk = #{rmrk}
+			, mdfcn_dt = NOW(), mdfcn_ip = #{mdfcnIp}, bsnoffice_cnt = #{bsnOffcCnt}::NUMERIC
+			, rsrvtnoffice_cnt = #{rsrvtnOffcCnt}::NUMERIC, co_nm = #{cmpNm}
+		WHERE sn = #{detailSn}::NUMERIC
+	</update>
+	
+	<!-- 카쉐어링 업체 삭제 -->
+	<update  id="deleteCarShare">
+	/* 카쉐어링 업체 삭제 */
+		UPDATE dvs_st_mt_carshare
+		SET rmrk = #{delRmrk}, mdfcn_dt = NOW(), mdfcn_ip = #{mdfcnIp}, del_yn = 'Y'
+		WHERE sn = #{detailSn}::NUMERIC
+	</update>
 	
 </mapper>

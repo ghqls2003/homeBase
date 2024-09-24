@@ -41,6 +41,40 @@ public interface TotSttsService {
 	 * @return
 	 * @throws RimsException
 	 */
-	public List<Map<String, Object>> carShareGrid(Map<String, Object> paramsMap) throws RimsException;
-	public int carShareGridCnt(Map<String, Object> paramsMap) throws RimsException;
+	public Map<String, Object> carShareGrid(Map<String, Object> paramsMap) throws RimsException;
+	
+	/**
+	 * 지역 드롭다운
+	 * @return
+	 * @throws RimsException
+	 */
+	public List<Map<String, Object>> areaDrop(Map<String, Object> paramsMap) throws RimsException;
+	
+	/**
+	 * 카쉐어링 업체 등록
+	 * @return
+	 * @throws RimsException
+	 */
+	public int insertCarShare(Map<String, Object> paramsMap) throws RimsException;
+	
+	/**
+	 * 카쉐어링 업체 상세 팝업
+	 * @return
+	 * @throws RimsException
+	 */
+	public Map<String, Object> detailCarshare(Map<String, Object> paramsMap) throws RimsException;
+	
+	/**
+	 * 카쉐어링 업체 수정
+	 * @return
+	 * @throws RimsException
+	 */
+	public int updateCarShare(Map<String, Object> paramsMap) throws RimsException;
+	
+	/**
+	 * 카쉐어링 업체 삭제
+	 * @return
+	 * @throws RimsException
+	 */
+	public int deleteCarShare(Map<String, Object> paramsMap) throws RimsException;
 }

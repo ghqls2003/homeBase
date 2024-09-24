@@ -351,26 +351,7 @@
 					{ field: "rn", title: "순번", width: "30px", template: "#: rn #", sortable: false },
 					{ field: "coNm", title: "회사명", width: "50px", template: "#= coNm != null ? coNm : '-' #", sortable: true },
 					{ field: "jurisdiction", title: "관할지역", width: "50px", template: "#= jurisdiction != null && jurisdiction.trim() !== '' ? jurisdiction : '-' #", sortable: true },
-					{ field: "exmnr", title: "지도원", width: "30px", template:function(dataItem) {
-						var exmnrArr = [];
-						
-						if(dataItem.exmnr!=null && dataItem.exmnr!=''){
-							exmnrArr.push(dataItem.exmnr);
-						}
-						if(dataItem.exmnr2!=null && dataItem.exmnr2!=''){
-							exmnrArr.push(dataItem.exmnr2);
-						}
-						if(dataItem.exmnr3!=null && dataItem.exmnr3!=''){
-							exmnrArr.push(dataItem.exmnr3);
-						}
-						var exmnrCnt = exmnrArr.length - 1
-						
-						if(exmnrArr.length <= 1){
-							return exmnrArr[0] != null ? exmnrArr[0] : '-'
-						}else{
-							return exmnrArr[0] != null ?  exmnrArr[0] +" 외 " + exmnrCnt + "명" : '-'
-						}
-					}, sortable: true },
+					{ field: "exmnr", title: "지도원", width: "30px", template: "#= exmnrs != null ? exmnrs : '-' #", sortable: true },
 					{ field: "bzmnSeNm", title: "권한", width: "30px", template: "#= bzmnSeNm != null ? bzmnSeNm : '-' #", sortable: true },
 					{ field: "brno", title: "사업자등록번호", width: "40px", template: "#= brno != null ? brno : '-' #", sortable: true },
 					{ field: "crno", title: "법인등록번호", width: "40px", template: "#= crno != null ? crno : '-' #", sortable: true },

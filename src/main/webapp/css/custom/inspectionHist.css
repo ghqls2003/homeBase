@@ -52,9 +52,10 @@ button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff
     margin-left: 5px;
     width : 20px;
 }
-.sub04 .selec_wr {
+
+.sub03 .selec_wr {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
     background-color: #F5F8FE;
     border: 1px solid #E8EDF8;
@@ -66,17 +67,29 @@ button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff
 	width: 270px;
 }
 
+.mSelect_box{
+    padding: 10px;
+}
+
+@media (max-width: 720px) {
+    #searchWrd {
+        width: 100%;
+    }
+}
+
 @media (max-width: 950px) {
 	.b-flex {
 	    flex-direction: column;
 	}
 }
 
+
 @media (max-width: 1500px) {
     .sub03 .selec_wr .mo_flex {
-   		 flex-direction: row;
+   		flex-direction: row;
         align-items: flex-start;
         flex-wrap: wrap;
+        gap: 12px;
     }
 }
 

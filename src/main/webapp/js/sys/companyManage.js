@@ -435,7 +435,7 @@
 					pageSize: 10,
 					serverPaging: true,
 					serverSorting: false,
-					autoBind: false,
+					autoBind: false
 				},
 				columns: [
 					{ field: "rn", title: "순번", width: "50px", template: "#: rn #", sortable: false },

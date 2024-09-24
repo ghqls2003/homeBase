@@ -143,16 +143,71 @@ public class totSttsController extends CmmnAbstractServiceImpl {
 	@RequestMapping("totStts/carShareGrid")
 	@ResponseBody
 	public Map<String, Object> carShareGrid(@RequestBody Map<String, Object> paramsMap) throws RimsException {
-		Map<String, Object> result = new HashMap<>();
-		
-		List<Map<String, Object>> data = totSttsService.carShareGrid(paramsMap);
-		int total = totSttsService.carShareGridCnt(paramsMap);
-		
-		System.out.println("있나"+data);
-		
-		result.put("data", data);
-		result.put("total", total);
-		
-		return result;
+		return totSttsService.carShareGrid(paramsMap);
+	}
+	
+	/**
+	 * 지역 드롭다운
+	 *
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping("totStts/areaDrop")
+	@ResponseBody
+	public List<Map<String, Object>> areaDrop(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		return totSttsService.areaDrop(paramsMap);
+	}
+	
+	/**
+	 * 카쉐어링 업체 등록
+	 *
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping(value = "totStts/insertCarShare")
+	@ResponseBody
+	public int insertCarShare(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		return totSttsService.insertCarShare(paramsMap);
+	}
+	
+	/**
+	 * 카쉐어링 업체 상세 팝업
+	 *
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping(value = "totStts/detailCarshare")
+	@ResponseBody
+	public Map<String, Object> detailCarshare(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		return totSttsService.detailCarshare(paramsMap);
+	}
+	
+	/**
+	 * 카쉐어링 업체 수정
+	 *
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping(value = "totStts/updateCarShare")
+	@ResponseBody
+	public int updateCarShare(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		return totSttsService.updateCarShare(paramsMap);
+	}
+	
+	/**
+	 * 카쉐어링 업체 삭제
+	 *
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping(value = "totStts/deleteCarShare")
+	@ResponseBody
+	public int deleteCarShare(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		return totSttsService.deleteCarShare(paramsMap);
 	}
 }
