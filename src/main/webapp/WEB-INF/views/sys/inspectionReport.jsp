@@ -19,11 +19,13 @@ OOFDocument oof = OOFDocument.newOOF();
 OOFFile file = oof.addFile("crf.root", "%root%/crf/inspection.crf");
 
 String bzmnSn = request.getParameter("bzmnSn");
+String regDt = request.getParameter("regDt");
 
 Map<String, Object> userMap = (Map<String, Object>)session.getAttribute("userData");
 
 //리포트에 파라메터 전달
 oof.addField ("BZMN_SN", bzmnSn);
+oof.addField ("REG_DT", regDt);
 if(session.getAttribute("SSO_NAME")!=null) {
 	oof.addField ("USER_NM", (String)session.getAttribute("SSO_NAME"));
 }

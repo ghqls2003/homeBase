@@ -357,7 +357,7 @@
 					{ field: "crno", title: "법인등록번호", width: "40px", template: "#= crno != null ? crno : '-' #", sortable: true },
 					{ field: "chckYmd", title: "점검일", width: "30px", template: "#= chckYmd != null ? chckYmd : '-' #", sortable: true },
 					{ field: "chckRslt", title: "결과", width: "30px", template: "#= chckRslt != null ? chckRslt : '-' #", sortable: true },
-					{ title: "결과서", width: "30px", exportable: false, template: "<button class='gray_btn' style='width: 70px;height: 30px;' onclick='javascript:$inspectionHist.event.issued(`#:bzmnSn#`);'>발급</button>" },
+					{ title: "결과서", width: "30px", exportable: false, template: "<button class='gray_btn' style='width: 70px;height: 30px;' onclick='javascript:$inspectionHist.event.issued(`#:bzmnSn#&#:regDt#`);'>발급</button>" },
 				],
 				navigatable: true,
 				scrollable: true,
@@ -837,10 +837,15 @@
 			
 		},
 		
-		issued: function(bzmnSn){
+		issued: function(data){
 			var params = {}
-			params.bzmnSn = bzmnSn;
-			if (bzmnSn == null || bzmnSn == '')
+			
+			var parts = data.split("&");  // '&'을 기준으로 문자열을 나눕니다.
+			
+			params.bzmnSn = parts[0];
+			params.regDt = parts[1];
+			
+			if (params.bzmnSn == null || params.bzmnSn == '')
 				alert('결과서를 발급할 수 없습니다.');
 			else {
 				popupReport(contextPath + '/sys/inspectionReport', params);
