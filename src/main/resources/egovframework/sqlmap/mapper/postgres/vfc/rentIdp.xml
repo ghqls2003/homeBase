@@ -53,9 +53,8 @@
 			<if test="rentSttsCd != '' and rentSttsCd != null">
 	           	and rent_stts_cd = #{rentSttsCd}
 			</if>
-			<if test ='rentDt != null and rentDt != ""'>
-<!-- 		        AND t1.reg_dt::TIMESTAMP <![CDATA[>=]]>  #{rentDt}::TIMESTAMP -->
-				and TO_CHAR(t1.reg_dt,'YYYYMMDD') BETWEEN #{rentDt} AND #{rentDt}
+			<if test ='rentDt != null and rentDt != ""'>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+				AND (#{rentDt}::TIMESTAMP BETWEEN rent_bgng_dt AND rent_end_dt)
 		    </if>
 	) as t0	
 	</sql>

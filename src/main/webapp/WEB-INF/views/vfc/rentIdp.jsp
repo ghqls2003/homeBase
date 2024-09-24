@@ -41,6 +41,13 @@ button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff
 #globalLicense .content .scrollBar02 { height: 100%; padding-right: 12px; }
 #globalLicense .content .btn_flex { margin-top : 0px; }
 .btn_flex { margin-top: 65px; }
+
+.k-datetimepicker{background-color: #fff !important;border-radius: 8px;border: 1px solid #DBE0EC !important;}
+.k-datetimepicker .k-input-button{color: #F09F3C;}
+.k-datetimepicker .k-input-button:nth-child(2){background: none !important;}
+.k-datetimepicker .k-input-button:nth-child(4){background: url('/images/sub/ico_calender.png') no-repeat 0 50%;}
+
+.sub03 .contBox { margin: 2px 0px 15px 0px;}
 </style>
 
 <div class="subPage sub03">
@@ -76,11 +83,10 @@ button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff
                             </ul>
 						</div>
                         <ul class="selec_box" >
-
-                            <li class="li_slec">
-                                <label for="searchRentSttsCd" style="display: none">대여상태(선택)</label>
-                                <input type="text" id="searchRentSttsCd" aria-label="대여상태(선택)">
-                            </li>
+<!--                             <li class="li_slec"> -->
+<!--                                 <label for="searchRentSttsCd" style="display: none">대여상태(선택)</label> -->
+<!--                                 <input type="text" id="searchRentSttsCd" aria-label="대여상태(선택)"> -->
+<!--                             </li> -->
                             <li class="li_slec">
 	                            <label for="searchWrd" style="display: none">차량번호</label>
 	                            <input type="text" id="searchWrd" class="searchWrd input" aria-label="차량번호를 입력하세요"
