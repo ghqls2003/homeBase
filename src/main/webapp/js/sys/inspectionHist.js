@@ -159,7 +159,7 @@
 			};
 			ajax(true, contextPath+'/sys/inspectionHist/agencyInfo', 'body', '처리중입니다.', parameterMap, function (data) {
 				var bsnSttsMdfcnDt = !data[0].bsnSttsMdfcnDt ? '' :  dateFormatting(data[0].bsnSttsMdfcnDt);
-				var agencyTelno = !data[0].agencyTelno ? '' :  toTelNum(data[0].agencyTelno);
+				var agencyTelno = !data[0].agencyTelno ? '' :  $inspectionHist.ui.telNumFormat(data[0].agencyTelno);
 				var brno = !data[0].brno ? '' :  toBizrnoNumFormat(data[0].brno);
 				if(element=="#agencyNm"){
 					if($(element).val() != ""){
@@ -307,6 +307,52 @@
 				value: "value"
 			});
 		},
+		telNumFormat: function(strP) {
+		    if(strP == null ||  strP == '') {
+		        return '';
+		    }else if(strP == '*') {
+		        return '*';
+		    }else {
+		        var str = strP.replace(/[^0-9]/g, '');
+		        var tmp = '';
+		        if( str.length < 4){
+		            return str;
+		        }else if(str.length < 7){
+		            tmp += str.substr(0, 3);
+		            tmp += '-';
+		            tmp += str.substr(3);
+		            return tmp;
+		        }else if(str.substr(0, 2) == '02'){
+		            if (str.length == 9) {
+						var re = /(\d{2})(\d{3})(\d{4})/;
+		                return str.replace(re, "$1-$2-$3");
+		            } else {
+						var re = /(\d{2})(\d{4})(\d{4})/;
+		                return str.replace(re, "$1-$2-$3");
+		            }
+				}else if(str.length < 9){
+		            tmp += str.substr(0, 4);
+		            tmp += '-';
+		            tmp += str.substr(4, 8);
+		            return tmp;
+		        }else if(str.length < 11){
+		            tmp += str.substr(0, 3);
+		            tmp += '-';
+		            tmp += str.substr(3, 3);
+		            tmp += '-';
+		            tmp += str.substr(6);
+		            return tmp;
+		        }else{
+		            tmp += str.substr(0, 3);
+		            tmp += '-';
+		            tmp += str.substr(3, 4);
+		            tmp += '-';
+		            tmp += str.substr(7);
+		            return tmp;
+		        }
+		        return str;
+		    }
+		},
 		
 		inspectionHistInfo: function() {
 			$("#inspectionHistGrid").kendoGrid({
@@ -378,25 +424,25 @@
 			})
 		},
 		
-		exmnrNum : function(e) {
-			var num = 0;
-			var exmnrArr = [];
-			var data = {};
-			if(e.exmnr!=null && e.exmnr!=''){
-				exmnrArr.push(e.exmnr);
-				num++;
-			}else if(e.exmnr2!=null && e.exmnr2!=''){
-				exmnrArr.push(e.exmnr2);
-				num++;
-			}else if(e.exmnr3!=null && e.exmnr3!=''){
-				exmnrArr.push(e.exmn3);
-				num++;
-			}
-			
-			data[exmnrArr] = exmnrArr;
-			data[exmnrNum] = num;
-			return data;
-		},
+//		exmnrNum : function(e) {
+//			var num = 0;
+//			var exmnrArr = [];
+//			var data = {};
+//			if(e.exmnr!=null && e.exmnr!=''){
+//				exmnrArr.push(e.exmnr);
+//				num++;
+//			}else if(e.exmnr2!=null && e.exmnr2!=''){
+//				exmnrArr.push(e.exmnr2);
+//				num++;
+//			}else if(e.exmnr3!=null && e.exmnr3!=''){
+//				exmnrArr.push(e.exmn3);
+//				num++;
+//			}
+//			
+//			data[exmnrArr] = exmnrArr;
+//			data[exmnrNum] = num;
+//			return data;
+//		},
 		
 		// row 상세팝업
 		rowClickEvent : function(e) {
@@ -662,8 +708,8 @@
 		
 		detailInfoPopup: function(data) {
 			var brno = toBizrnoNumFormat(data.brno);
-			var agencyTelno = toTelNum(data.agencyTelno);
-			var telno = toTelNum(data.telno);
+			var agencyTelno = $inspectionHist.ui.telNumFormat(data.agencyTelno);
+			var telno = $inspectionHist.ui.telNumFormat(data.telno);
 			var bsnSttsMdfcnDt = dateFormatting(data.bsnSttsMdfcnDt);
 			
 			var day = new Date();
@@ -999,10 +1045,14 @@
 		},
 		
 		paramsValidation: function(params) {
-			if((params.exmnr == null || params.exmnr == "" || params.jbgd == null || params.jbgd == "" || params.ogdp == null || params.ogdp == "")
-				&&(params.exmnr2 == null || params.exmnr2 == "" || params.jbgd2 == null || params.jbgd2 == "" || params.ogdp2 == null || params.ogdp2 == "")
-				&&(params.exmnr3 == null || params.exmnr3 == "" || params.jbgd3 == null || params.jbgd3 == "" || params.ogdp3 == null || params.ogdp3 == "")){
-				alert("지도원 정보를 확인해주세요.");
+			if(params.exmnr == "" && params.jbgd == "" && params.ogdp == "" && params.exmnr2 == "" && params.jbgd2 == "" && params.ogdp2 == "" && params.exmnr3 == "" && params.jbgd3 == "" && params.ogdp3 == "") {
+				alert("지도원 정보는 필수입니다..");
+			}else if((params.exmnr != "" ||params.jbgd != "" || params.ogdp != "")&&(params.exmnr == "" || params.jbgd == "" || params.ogdp == "")) {
+				alert("첫번째 지도원 정보를 확인해주세요.");
+			}else if((params.exmnr2 != "" ||params.jbgd2 != "" || params.ogdp2 != "")&&(params.exmnr2 == "" || params.jbgd2 == "" || params.ogdp2 == "")) {
+				alert("두번째 지도원 정보를 확인해주세요.");
+			}else if((params.exmnr3 != "" ||params.jbgd3 != "" || params.ogdp3 != "")&&(params.exmnr3 == "" || params.jbgd3 == "" || params.ogdp3 == "")) {
+				alert("세번째 지도원 정보를 확인해주세요.");
 			}else if(params.coNm == null || params.coNm == "") {
 				alert("회사명은 필수입니다");
 			}else if(params.chckArtcl == null || params.chckArtcl == "") {
