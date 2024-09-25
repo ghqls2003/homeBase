@@ -13,8 +13,10 @@
 	<select id="RsvNoList" resultType="resultMap">
 		select * from(
 			select
-			row_number() over() as rn ,
+			row_number() over(order by car.rent_bgng_dt desc) rn ,
 			car.rent_no,
+			drma.co_nm,
+			drma.brno,
 			car.vhcl_reg_no,
 			car.vin,
 			car.carmdl,
@@ -28,14 +30,16 @@
 			to_char(car.rent_end_dt, 'YYYY-MM-DD HH24:MI') as rent_end_dt,
 			to_char(car.rent_prcs_dt, 'YYYY-MM-DD HH24:MI') as rent_prcs_dt,
 			car.bzmn_sn,
-			(select brno from dqvs.dvs_rac_mt_agency drma where bzmn_sn = car.bzmn_sn),
 			car.engine_fom,
 			to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
 			from dqvs.dvs_dqv_mt_rent car
 			left outer join dqvs.dvs_dqv_hs_verf ddhv
 			on ddhv.vrfc_hstry_sn = car.vrfc_hstry_sn
+			LEFT JOIN dqvs.dvs_rac_mt_agency drma 
+			ON drma.bzmn_sn = car.bzmn_sn
 		where 1=1
- 		AND (car.rent_end_dt::timestamp - car.rent_bgng_dt::timestamp) > interval '7 days'
+ 		AND (car.rent_end_dt::timestamp - car.rent_bgng_dt::timestamp) <![CDATA[>]]> interval '7 days'
+ 		 AND car.rent_bgng_dt <![CDATA[>]]> current_timestamp 
 		<if test="searchWrd != '' and searchWrd != null">
 			and car.rent_no like '%' || #{searchWrd} || '%'
 		</if>
@@ -52,38 +56,45 @@
 			AND T.rn <![CDATA[>]]>
 			CAST(#{skip} AS INTEGER)
 		</if>
-		ORDER BY T.rn ASC
 
 	</select>
 	<select id="RsvNoListCnt" resultType="int">
 		select count(*) from(
-		select
+			select
+			row_number() over() as rn ,
 			car.rent_no,
+			drma.co_nm,
+			drma.brno,
 			car.vhcl_reg_no,
 			car.vin,
 			car.carmdl,
+			car.dln,
+			ddhv.lcns_flnm,
+			dqvs.fn_get_cdnm('verify_cd', ddhv.lcns_asort_cd) as alcnsAsortCd,
 			car.mdlyr,
 			car.vhcl_nm,
+			car.vrfc_hstry_sn,
+			to_char(car.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') as rent_bgng_dt ,
+			to_char(car.rent_end_dt, 'YYYY-MM-DD HH24:MI') as rent_end_dt,
+			to_char(car.rent_prcs_dt, 'YYYY-MM-DD HH24:MI') as rent_prcs_dt,
 			car.bzmn_sn,
-			(select brno from dqvs.dvs_rac_mt_agency drma where bzmn_sn = car.bzmn_sn),
 			car.engine_fom,
-			case car.use_yn when 'Y' then '사용' when 'N' then '미사용' else '미상' END AS
-			use_yn ,
 			to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
-		from dqvs.dvs_dqv_mt_rent car
-		left join dqvs.dvs_dqv_hs_verf ddhv
-			on car.vrfc_hstry_sn = ddhv.vrfc_hstry_sn
+			from dqvs.dvs_dqv_mt_rent car
+			left outer join dqvs.dvs_dqv_hs_verf ddhv
+			on ddhv.vrfc_hstry_sn = car.vrfc_hstry_sn
+			LEFT JOIN dqvs.dvs_rac_mt_agency drma 
+			ON drma.bzmn_sn = car.bzmn_sn
 		where 1=1
-<!--      		 and car.rent_bgng_dt > now()+ interval '7 days'
- -->     		
-			  AND (car.rent_end_dt::timestamp - car.rent_bgng_dt::timestamp) > interval '7 days'
-			 <if test="searchWrd != '' and searchWrd != null">
-				and car.vhcl_reg_no like '%' || #{searchWrd} || '%'
-			</if>
-			<if test="bzmnSn != '' and bzmnSn != null">
-				 and car.bzmn_sn = #{bzmnSn}
-			</if>
-		) AS T
+ 		AND (car.rent_end_dt::timestamp - car.rent_bgng_dt::timestamp) <![CDATA[>]]> interval '7 days'
+ 		 AND car.rent_bgng_dt <![CDATA[>]]> current_timestamp 
+ 		<if test="searchWrd != '' and searchWrd != null">
+			and car.rent_no like '%' || #{searchWrd} || '%'
+		</if>
+		<if test="bzmnSn != '' and bzmnSn != null">
+			 and car.bzmn_sn = #{bzmnSn}
+		</if>
+		) T
 	
 	</select>
 
@@ -93,8 +104,7 @@
 			from
 				(
 				select
-					row_number() over(
-					order by T.reg_dt desc) rn ,
+					row_number() over(order by T.reg_dt desc) rn ,
 					*
 					from
 						(
@@ -131,7 +141,7 @@
 							and ddvr.rent_no like '%' || UPPER(#{searchWrd}) || '%'
 						</if>
 						<if test = "bzmnSn != null and bzmnSn != ''">
-							and ddvr.bzmn_sn = #{bzmnSn}
+							and rent.bzmn_sn = #{bzmnSn}
 						</if>
 						) as T
 					) as A
@@ -144,7 +154,6 @@
 							AND rn <![CDATA[>]]>
 							CAST(#{skip} AS INTEGER)
 						</if>
-						ORDER BY rn ASC
 		</select>
 
 		<select id="RentalHistListCnt" resultType="int">
@@ -185,7 +194,7 @@
 							and ddvr.rent_no like '%' || UPPER(#{searchWrd}) || '%'
 						</if>
 						<if test = "bzmnSn != null and bzmnSn != ''">
-							and ddvr.bzmn_sn = #{bzmnSn}
+							and rent.bzmn_sn = #{bzmnSn}
 						</if>
 			) as T
 		</select>

@@ -8,7 +8,7 @@
 
 <script src="${contextPath}/js/vfc/drvRsvMag.js"></script>
 <link rel="stylesheet" type="text/css"
-	href="${contextPath}/css/custom/drvRsvMag.css" />
+	href="${contextPath}/css/custom/rentalHistManage.css" />
 
 <script>
 	var authrtCd = "${authrtCd}";
@@ -16,13 +16,169 @@
 </script>
 
 <style>
+.scrollBar02 {
+	overflow-y: auto;
+}
+
 #start-timePicker04+.k-input-button {
 	background-image: none !important;
 }
 
+.popup .k-picker-solid {
+	width: 100% !important;
+	border-radius: 10px;
+}
+
+/* @media ( max-width : 640px) { */
+/* .sub03 ul.yearBox  { */
+/*     display: ruby; */
+/* } */
+/* 	.popup .k-picker-solid { */
+/* 		width: 100% !important; */
+/* 		border-radius: 10px; */
+/* 	} */
+/* 	.popup.detail_popup .box { */
+/* 		width: 100%; */
+/* 		height: auto; */
+/* 	} */
+/* 	.popup.detail_popup .info_wr { */
+/* 		height: auto; */
+/* 		padding: 20px; */
+/* 	} */
+/* 	.popup.detail_popup .tb_flex { */
+/* 		flex-direction: column; */
+/* 		align-items: flex-start; */
+/* 	} */
+/* } */
+@media ( max-width : 376px) {
+.sub03 ul.yearBox  {
+    display: ruby;
+}
+	.popup .k-picker-solid {
+		width: 100% !important;
+		border-radius: 10px;
+	}
+	.popup.detail_popup .box {
+		width: 100%;
+		height: auto;
+	}
+	.popup.detail_popup .info_wr {
+		height: auto;
+		padding: 20px;
+	}
+	.popup.detail_popup .tb_flex {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}
+
+@media ( max-width : 360px) {
+.sub03 ul.yearBox  {
+    display: ruby;
+}
+	.popup .k-picker-solid {
+		width: 100% !important;
+		border-radius: 10px;
+	}
+	.popup.detail_popup .box {
+		width: 100%;
+		height: auto;
+	}
+	.popup.detail_popup .info_wr {
+		height: auto;
+		padding: 20px;
+	}
+	.popup.detail_popup .tb_flex {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}
+
+@media ( max-width : 390px) {
+.sub03 ul.yearBox  {
+    display: ruby;
+}
+	.popup .k-picker-solid {
+		width: 100% !important;
+		border-radius: 10px;
+	}
+	.popup.detail_popup .box {
+		width: 100%;
+		height: auto;
+	}
+	.popup.detail_popup .info_wr {
+		height: auto;
+	}
+	.popup.detail_popup .tb_flex {
+		flex-direction: column;
+	}
+	.popup.detail_popup .btn_flex {
+		flex-direction: column;
+		align-items: center;
+	}
+}
+
+@media ( max-width : 650px) {
+.sub03 ul.yearBox  {
+    display: ruby;
+}
+	.popup .k-picker-solid {
+		width: 100% !important;
+		border-radius: 10px;
+	}
+	.popup.detail_popup .box {
+		width: 90%;
+		height: auto;
+	}
+	.popup.detail_popup .info_wr {
+		height: auto;
+	}
+	.popup.detail_popup .tb_flex {
+		flex-direction: column;
+	}
+}
+
+@media ( max-width : 420px) {
+.sub03 ul.yearBox  {
+    display: ruby;
+}
+	.popup .k-picker-solid {
+		width: 100% !important;
+		border-radius: 10px;
+	}
+	button.red_btn {
+		width: 100%;
+		height: auto;
+	}
+	.sm_popup .sm_box {
+		width: 90%;
+		height: auto;
+	}
+	.sm_popup .content {
+		height: auto;
+	}
+}
+
+@media ( max-width : 480px) {
+.sub03 ul.yearBox  {
+    display: ruby;
+}
+	.popup .k-picker-solid {
+		width: 100% !important;
+		border-radius: 10px;
+	}
+	button.red_btn {
+		width: 100%;
+		height: auto;
+	}
+	.popup.detail_popup .box {
+		width: 100%;
+	}
+}
+
 .info_text {
 	font-weight: bold;
-	padding-left: 20px;
+	padding-left: 25px;
 	padding-top: 20px;
 }
 
@@ -171,10 +327,10 @@ table.tb .tb_flex23 {
 	{
 	justify-content: center;
 }
-.k-icon.k-i-clock.k-button-icon {
-    display: none !important; /* 요소를 숨깁니다 */
-}
 
+.k-icon.k-i-clock.k-button-icon {
+	display: none !important; /* 요소를 숨깁니다 */
+}
 </style>
 
 <div class="subPage sub03">
@@ -206,22 +362,20 @@ table.tb .tb_flex23 {
 				value="${_csrf.token}" />
 			<div class="selec_wr" style="margin-bottom: 20px;">
 				<div class="mo_flex">
-					<div class="year_picker" id="yearPicker">
-						<ul class="yearBox" id="time1">
-							<li class="mo_li" style="width: 150px;"><label
-								for="start-picker01"></label> <input id="start-picker01"
-								title="datepicker" aria-label="시작기간조회"></li>
-							<li class="bar">-</li>
-							<li class="mo_li" style="width: 150px;"><label
-								for="end-picker01"></label> <input id="end-picker01"
-								title="datepicker" aria-label="종료기간조회"></li>
-						</ul>
-					</div>
-					<ul class="selec_box" id="selectBox1">
-						<li class="li_slec"><label for="searchWrd"
-							style="display: none">차량번호</label> <input type="text"
-							id="searchWrd" class="searchWrd input" aria-label="차량번호를 입력하세요"
-							placeholder="차량번호를 입력하세요" maxLength="16" oninput="charOnly(this)">
+					<ul class="yearBox" id="time1">
+						<li class="mo_li" style="width: 150px;"><label
+							for="start-picker01"></label> <input id="start-picker01"
+							title="datepicker" aria-label="시작기간조회"></li>
+						<li class="bar">-</li>
+						<li class="mo_li" style="width: 150px;"><label
+							for="end-picker01"></label> <input id="end-picker01"
+							title="datepicker" aria-label="종료기간조회"></li>
+<!-- 					</ul> -->
+<!-- 					<ul class="selec_box" id="selectBox1"> -->
+						<li class="mo_li"><label for="searchWrd"
+							style="display: none"></label> <input type="text" id="searchWrd"
+							class="searchWrd input" aria-label="대여번호를 입력하세요"
+							placeholder="대여번호를 입력하세요" maxLength="16" oninput="charOnly(this)">
 						</li>
 					</ul>
 				</div>
@@ -263,272 +417,75 @@ table.tb .tb_flex23 {
 
 
 <!-- 예약목록 -->
-<div id="rsvDetail" class="popup detail_popup popup_type02">
-	<div class="box" id="box12">
-		<div class="popup_top">
-			<h4>반복조회 예약목록</h4>
-			<div class="close rsvshowClose">
-				<span></span> <span></span>
-			</div>
-		</div>
-		<div class="content">
-			<div class="scrollBar02" style="height: 400px;">
-				<div class="search_top">
-					<div class="selec_wr" style="display: flex;">
-						<div class="mo_flex" style="display: flex;">
-							<ul class="yearBox" style="display: flex;">
-								<li class="mo_li"><label for="start-picker05">시작기간</label>
-									<input id="start-picker05" title="datepicker"
-									aria-label="시작기간조회"></li>
-								<li class="bar">-</li>
-								<li class="mo_li"><label for="end-picker05">종료기간</label> <input
-									id="end-picker05" title="datepicker" aria-label="종료기간조회">
-								</li>
-							</ul>
-							<ul class="selec_box" style="display: flex;">
-								<li class="li_slec"><label for="searchBsnSttsRsv"></label>
-									<input id="searchBsnSttsRsv"
-									style="border-radius: 8px; background-color: #fff;"></li>
-								<li class="li_slec"><label for="search_box"></label> <input
-									type="text" id="searchRsvCar" class="searchWrd input"
-									placeholder="차량번호를 입력하세요."></li>
-								<li class="li_slec"><label for="search_box"></label> <input
-									type="text" id="searchRsvRentNo" class="searchWrd input"
-									placeholder="대여번호를 입력하세요."></li>
-							</ul>
-						</div>
-						<button class="yellow_btn" id="searchBtnRsv">
-							조회<img src="${contextPath}/images/sub/ico_search02.png"
-								alt="조회아이콘">
-						</button>
-					</div>
-				</div>
-				<div class="contBox lastBox lastBox02">
-					<div class="nameBox nameBox-flex">
-						<div style="display: flex; align-items: center;">
-							<h4 class="name">반복조회 예약목록</h4>
-							<span id="totCnt" style="font-weight: bold;"></span>
-						</div>
-						<button class="download-btn rsvExcelDownBtn">
-							<img src="${contextPath}/images/sub/ico_down.png" alt="다운로드아이콘">
-							엑셀
-						</button>
-					</div>
-					<table id="rsvHistGrid">
-						<caption>대여이력 현황</caption>
-					</table>
-				</div>
-			</div>
-			<div class='btn_flex'>
-				<button class='gray_btn cancel_btn rsvshowClose' type="submit"
-					style="margin-right: 10px" value="Cancel">닫기</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- <div id="insertRsvInfo" class="popup detail_popup popup_type02"> -->
-<!-- 	<div class="box" style="height: 750px;"> -->
+<!-- <div id="rsvDetail" class="popup detail_popup popup_type02"> -->
+<!-- 	<div class="box" id="box12"> -->
 <!-- 		<div class="popup_top"> -->
-<!-- 			<h4>예약 상세</h4> -->
-<!-- 			<div class="close detailPopupClose"> -->
+<!-- 			<h4>반복조회 예약목록</h4> -->
+<!-- 			<div class="close rsvshowClose"> -->
 <!-- 				<span></span> <span></span> -->
 <!-- 			</div> -->
 <!-- 		</div> -->
 <!-- 		<div class="content"> -->
+<!-- <!-- 			<div class="scrollBar02" style="height: 400px;"> -->
+-->
 <!-- 			<div class="scrollBar02"> -->
-<!-- 				<div class="info_wr"> -->
-<!-- 					<div id="detailContent" class="contBox"> -->
-<!-- 						<div class="nameBox nameBox-flex"> -->
-<!-- 							<h4 class="name">대여번호 등록</h4> -->
+<!-- 				<div class="search_top"> -->
+<!-- 					<div class="selec_wr" style="display: flex;"> -->
+<!-- 						<div class="mo_flex" style="display: flex;"> -->
+<!-- 							<ul class="yearBox" style="display: flex;"> -->
+<!-- 								<li class="mo_li"><label for="start-picker05">시작기간</label> -->
+<!-- 									<input id="start-picker05" title="datepicker" -->
+<!-- 									aria-label="시작기간조회"></li> -->
+<!-- 								<li class="bar">-</li> -->
+<!-- 								<li class="mo_li"><label for="end-picker05">종료기간</label> <input -->
+<!-- 									id="end-picker05" title="datepicker" aria-label="종료기간조회"> -->
+<!-- 								</li> -->
+<!-- 							</ul> -->
+<!-- 							<ul class="selec_box" style="display: flex;"> -->
+<!-- 								<li class="li_slec"><label for="searchBsnSttsRsv"></label> -->
+<!-- 									<input id="searchBsnSttsRsv" -->
+<!-- 									style="border-radius: 8px; background-color: #fff;"></li> -->
+<!-- 								<li class="li_slec"><label for="search_box"></label> <input -->
+<!-- 									type="text" id="searchRsvCar" class="searchWrd input" -->
+<!-- 									placeholder="차량번호를 입력하세요."></li> -->
+<!-- 								<li class="li_slec"><label for="search_box"></label> <input -->
+<!-- 									type="text" id="searchRsvRentNo" class="searchWrd input" -->
+<!-- 									placeholder="대여번호를 입력하세요."></li> -->
+<!-- 							</ul> -->
 <!-- 						</div> -->
-<!-- 						<div class="cont cont-flex"> -->
-<!-- 							<div class="tb_flex" style="display: flex;"> -->
-<!-- 								<label for="detailVhclRegNo"></label> <input type="text" -->
-<!-- 									id="detailRentNo" name="detailRentNo" class="input" -->
-<!-- 									placeholder="예약번호를 등록해주세요" readonly /> -->
-<!-- 								<button id="rsvNoBtn" class="yellow_btn rsvNoBtn"> -->
-<%-- 									<img src="${contextPath}/images/sub/ico_search02.png" --%>
-<!-- 										alt="검색아이콘"> -->
-<!-- 								</button> -->
-<!-- 							</div> -->
-<!-- 						</div> -->
-<!-- 						<div class="nameBox nameBox-flex"> -->
-<!-- 							<h4 class="name">예약 정보</h4> -->
-<!-- 						</div> -->
-<!-- 						<div class="cont cont-flex"> -->
-<!-- 							<table class="tb rental_tb01"> -->
-<!-- 								<tr> -->
-<!-- 									<th scope="col">렌트 번호</th> -->
-<!-- 									<td> -->
-<!-- 										<div class="tb_flex"> -->
-<!-- 											<label for="start-picker03">렌트 번호</label> <input -->
-<!-- 												id="rsvRentNo" class="input no_line" readonly> -->
-<!-- 										</div> -->
-<!-- 									</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<th scope="col">대여시작일</th> -->
-<!-- 									<td> -->
-<!-- 										<div class="tb_flex"> -->
-<!-- 											<label for="start-picker03">시작기간</label> <input -->
-<!-- 												id="start-picker03" class="date" title="datepicker" -->
-<!-- 												aria-label="시작기간검색" readonly> -->
-<!-- 										</div> -->
-<!-- 									</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<th scope="col">대여종료일</th> -->
-<!-- 									<td> -->
-<!-- 										<div class="tb_flex"> -->
-<!-- 											<label for="end-picker03">종료기간</label> <input -->
-<!-- 												id="end-picker03" class="date" title="datepicker" -->
-<!-- 												aria-label="종료기간검색" readonly> -->
-<!-- 										</div> -->
-<!-- 									</td> -->
-<!-- 								</tr> -->
-<!-- 							</table> -->
-<!-- 							<table class="tb rental_tb01"> -->
-<!-- 								<tr> -->
-<!-- 									<th scope="col">대여 상태</th> -->
-<!-- 									<td> -->
-<!-- 										<div class="tb_flex"> -->
-<!-- 											<label for="detailRentSttsNm">대여 상태</label> <input -->
-<!-- 												type="text" id="detailRentSttsNm" name="detailRentSttsNm" -->
-<!-- 												class="input no_line" maxlength="11" readonly /> -->
-<!-- 										</div> -->
-<!-- 									</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<th scope="col">면허번호</th> -->
-<!-- 									<td> -->
-<!-- 										<div class="tb_flex"> -->
-<!-- 											<label for="detailLcnsIdntfNm">면허번호</label> <input -->
-<!-- 												type="text" id="detailLcnsIdntfNm" name="detailLcnsIdntfNm" -->
-<!-- 												class="input no_line" readonly /> -->
-<!-- 										</div> -->
-<!-- 									</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<th scope="col">면허증 소유자</th> -->
-<!-- 									<td> -->
-<!-- 										<div class="tb_flex"> -->
-<!-- 											<label for="detailLcnsIdntfNm">면허증 소유자</label> <input -->
-<!-- 												type="text" id="detailLcnsIdntfNm" name="detailLcnsIdntfNm" -->
-<!-- 												class="input no_line" readonly /> -->
-<!-- 										</div> -->
-<!-- 									</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<th scope="col">면허종류</th> -->
-<!-- 									<td> -->
-<!-- 										<div class="tb_flex"> -->
-<!-- 											<label for="detailLcnsIdntfNm">면허종류</label> <input -->
-<!-- 												type="text" id="detailLcnsIdntfNm" name="detailLcnsIdntfNm" -->
-<!-- 												class="input no_line" readonly /> -->
-<!-- 										</div> -->
-<!-- 									</td> -->
-<!-- 								</tr> -->
-<!-- 							</table> -->
-<!-- 						</div> -->
-<!-- 						<div class="nameBox nameBox-flex"> -->
-<!-- 							<h4 class="name">예약 일자 설정</h4> -->
-<!-- 						</div> -->
-<!-- 						<div class="cont cont-flex"> -->
-<!-- 							<table class="tb rental_tb01"> -->
-<!-- 								<tr> -->
-<!-- 									<th scope="col">예약 시작일</th> -->
-<!-- 									<td> -->
-<!-- 										<div class="tb_flex"> -->
-<!-- 											<label for="verfDln">예약 시작일</label> <input type="text" -->
-<!-- 												id="verfDln" name="verfDln" class="input no_line" readonly /> -->
-<!-- 										</div> -->
-<!-- 									</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<th scope="col">자격확인요청일시</th> -->
-<!-- 									<td> -->
-<!-- 										<div class="tb_flex"> -->
-<!-- 											<label for="verfDmnd">자격확인요청일시</label> <input type="text" -->
-<!-- 												id="verfDmnd" name="verfDmnd" class="input no_line" readonly /> -->
-<!-- 										</div> -->
-<!-- 									</td> -->
-<!-- 								</tr> -->
-<!-- 							</table> -->
-<!-- 							<table class="tb rental_tb01"> -->
-<!-- 								<tr> -->
-<!-- 									<th scope="col">자격확인방법</th> -->
-<!-- 									<td> -->
-<!-- 										<div class="tb_flex"> -->
-<!-- 											<label for="verfMthd">자격확인방법</label> <input type="text" -->
-<!-- 												id="verfMthd" name="verfMthd" class="input no_line" readonly /> -->
-<!-- 										</div> -->
-<!-- 									</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<th scope="col">자격확인결과</th> -->
-<!-- 									<td> -->
-<!-- 										<div class="tb_flex"> -->
-<!-- 											<label for="verfRslt">자격확인결과</label> <input type="text" -->
-<!-- 												id="verfRslt" name="verfRslt" class="input no_line" readonly /> -->
-<!-- 										</div> -->
-<!-- 									</td> -->
-<!-- 								</tr> -->
-<!-- 							</table> -->
-<!-- 						</div> -->
+<!-- 						<button class="yellow_btn" id="searchBtnRsv"> -->
+<%-- 							조회<img src="${contextPath}/images/sub/ico_search02.png" --%>
+<!-- 								alt="조회아이콘"> -->
+<!-- 						</button> -->
 <!-- 					</div> -->
-<!-- 					<div id="rentalHistDetailGrid"></div> -->
+<!-- 				</div> -->
+<!-- 				<div class="contBox lastBox lastBox02"> -->
+<!-- 					<div class="nameBox nameBox-flex"> -->
+<!-- 						<div style="display: flex; align-items: center;"> -->
+<!-- 							<h4 class="name">반복조회 예약목록</h4> -->
+<!-- 							<span id="totCnt" style="font-weight: bold;"></span> -->
+<!-- 						</div> -->
+<!-- 						<button class="download-btn rsvExcelDownBtn"> -->
+<%-- 							<img src="${contextPath}/images/sub/ico_down.png" alt="다운로드아이콘"> --%>
+<!-- 							엑셀 -->
+<!-- 						</button> -->
+<!-- 					</div> -->
+<!-- 					<table id="rsvHistGrid"> -->
+<%-- 						<caption>대여이력 현황</caption> --%>
+<!-- 					</table> -->
 <!-- 				</div> -->
 <!-- 			</div> -->
-
-<!-- 			<div class="btn_flex" id="btn_bottom" style="margin-top: 10px"> -->
-<!-- 				<button id="rentUpdateBtn" class='blue_btn'>등록</button> -->
-<!-- 				<button class='gray_btn cancel_btn detailPopupClose' type="submit" -->
+<!-- 			<div class='btn_flex'> -->
+<!-- 				<button class='gray_btn cancel_btn rsvshowClose' type="submit" -->
 <!-- 					style="margin-right: 10px" value="Cancel">닫기</button> -->
 <!-- 			</div> -->
 <!-- 		</div> -->
 <!-- 	</div> -->
 <!-- </div> -->
 
-<!-- <div id="RentRsvNoPopup" class="sm_popup car_register02"> -->
-<!-- 	<div id="carPopupBox" class="sm_box"> -->
-<!-- 		<div class="popup_top"> -->
-<!-- 			<h4>차량 찾기</h4> -->
-<!-- 			<div class="sm_close sm_close_btn carClose"> -->
-<!-- 				<span></span> <span></span> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-<!-- 		<div class="content"> -->
-<!-- 			<div class="search_wr"> -->
-<!-- 				<div class="search_flex" style="display: flex; align-items: center;"> -->
-<!-- 					<span style="font-size: 1.4rem;">대여번호</span> <label -->
-<!-- 						for="carSearchWrd" style="display: none">검색조건</label> <input -->
-<!-- 						id="carSearchWrd" class="input com_input" aria-label="검색조건 입력" -->
-<!-- 						placeholder="대여번호 번호를 입력하세요"> -->
-<!-- 					<button class="yellow_btn" id="carPopupSearchBtn"> -->
-<%-- 						검색 <img src="${contextPath}/images/sub/ico_search02.png" alt="검색"> --%>
-<!-- 					</button> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-
-<!-- 			<div id="carTa" class="result"> -->
-<!-- 				<table id="rentNoGrid"> -->
-<%-- 					<caption>렌트카</caption> --%>
-<!-- 				</table> -->
-<!-- 			</div> -->
-<!-- 			<div class="btn_flex"> -->
-<!-- 				<button id="carVhclRegNoVal" -->
-<!-- 					class="blue_btn cancel_btn resizeBox carClose">확인</button> -->
-<!-- 				<button class="gray_btn cancel_btn resizeBox carClose">취소</button> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-<!-- 	</div> -->
-<!-- </div> -->
-
-
-
 <div id="insertRsvInfo" class="popup detail_popup popup_type02">
-	<div class="box" style="width: 50%;">
+	<div class="box">
+		<!-- style="width: 50%;" -->
 		<div class="popup_top">
 			<h4>예약설정 등록</h4>
 			<div class="close regPopupClose">
@@ -537,10 +494,12 @@ table.tb .tb_flex23 {
 		</div>
 		<div class="info_text">
 			<p>* 반복조회는 대여 종료 시기까지 반복됩니다.</p>
+			<p>* 시작일자와 종료일자가 최소 7일 이상이여야 예약 설정이 가능합니다.</p>
 			<p>* 반복조회의 주기는 최소 7일 이상으로 설정이 가능합니다.</p>
 			<p>* 예약 시작일시 설정은 예약을 하시는 날짜의 다음 날부터 가능합니다.</p>
 		</div>
 		<div class="content">
+			<!--  -->
 			<div class="scrollBar02">
 				<div class="info_wr">
 					<div class="contBox">
@@ -554,17 +513,21 @@ table.tb .tb_flex23 {
 									</th>
 									<td>
 										<div class="tb_flex">
-											<label for="regVhclRegNo">차량번호</label> <input type="text"
-												id="regVhclRegNo" name="regVhclRegNo" class="input"
-												placeholder="차량번호를 등록해주세요" readonly /> <input
-												id="regBzmnSn" placeholder="사업자등록번호" style="display: none">
-											<input id="regCrno" placeholder="법인등록번호"
-												style="display: none">
-											<button id="carBtn" class="yellow_btn carBtn">
-												<img src="${contextPath}/images/sub/ico_search02.png"
-													alt="검색아이콘">
-											</button>
+											<ul class="selec_box mSelect_box">
+												<li class="li_slec" style="display: flex;"><label
+													for="regVhclRegNo">차량번호</label> <input type="text"
+													id="regVhclRegNo" name="regVhclRegNo" class="input"
+													placeholder="차량번호를 등록해주세요" readonly /> <input
+													id="regBzmnSn" placeholder="사업자등록번호" style="display: none">
+													<input id="regCrno" placeholder="법인등록번호"
+													style="display: none">
+													<button id="carBtn" class="yellow_btn carBtn">
+														<img src="${contextPath}/images/sub/ico_search02.png"
+															alt="검색아이콘">
+													</button></li>
+											</ul>
 										</div>
+
 									</td>
 								</tr>
 								<tr>
@@ -580,8 +543,7 @@ table.tb .tb_flex23 {
 									<th scope="col">예약 주기</th>
 									<td>
 										<div class="tb_flex">
-											<label for="periodRsv"></label> <input
-												id="periodRsv" style="left: ;">
+											<label for="periodRsv"></label> <input id="periodRsv">
 										</div>
 									</td>
 								</tr>
@@ -608,7 +570,8 @@ table.tb .tb_flex23 {
 									<td>
 										<div class="tb_flex">
 											<label for="ReglcnsAsortCd">최종검증결과</label> <input type="text"
-												id="ReglcnsAsortCd" name="ReglcnsAsortCd" class="input" readonly />
+												id="ReglcnsAsortCd" name="ReglcnsAsortCd" class="input"
+												readonly />
 										</div>
 									</td>
 								</tr>
@@ -625,8 +588,8 @@ table.tb .tb_flex23 {
 									<th scope="col">차종</th>
 									<td>
 										<div class="tb_flex">
-											<label for="carmdl">차종</label> <input type="text"
-												id="carmdl" name="carmdl" class="input" readonly />
+											<label for="carmdl">차종</label> <input type="text" id="carmdl"
+												name="carmdl" class="input" readonly />
 										</div>
 									</td>
 								</tr>
@@ -696,7 +659,7 @@ table.tb .tb_flex23 {
 </div>
 
 <div id="carPopup" class="sm_popup car_register02">
-	<div id="carPopupBox" class="sm_box" style="width: 50%;">
+	<div id="carPopupBox" class="sm_box">
 		<div class="popup_top">
 			<h4>대여번호 찾기</h4>
 			<div class="sm_close sm_close_btn carClose">
@@ -722,8 +685,7 @@ table.tb .tb_flex23 {
 				</table>
 			</div>
 			<div class="btn_flex" style="margin-top: 80px;">
-				<button id="carVhclRegNoVal"
-					class="blue_btn resizeBox carClose">확인</button>
+				<button id="carVhclRegNoVal" class="blue_btn resizeBox carClose">확인</button>
 				<button class="gray_btn resizeBox carClose">취소</button>
 			</div>
 		</div>
@@ -733,7 +695,7 @@ table.tb .tb_flex23 {
 
 
 <div id="detailRsv" class="popup detail_popup popup_type02">
-	<div class="box" style="width: 50%;">
+	<div class="box">
 		<div class="popup_top">
 			<h4>예약설정 상세</h4>
 			<div class="close detailPopupClose">
@@ -749,7 +711,7 @@ table.tb .tb_flex23 {
 						</div>
 						<div class="cont cont-flex">
 							<table class="tb rental_tb01">
-<!-- 								<tr>
+								<!-- 								<tr>
 									<th scope="col">차량번호</th>
 									<td>
 										<div class="tb_flex">
@@ -790,7 +752,8 @@ table.tb .tb_flex23 {
 									<td>
 										<div class="tb_flex">
 											<label for="RsvedlcnsFlnm">면허성명</label> <input type="text"
-												id="RsvedlcnsFlnm" name="RsvedlcnsFlnm" class="input" readonly />
+												id="RsvedlcnsFlnm" name="RsvedlcnsFlnm" class="input"
+												readonly />
 										</div>
 									</td>
 								</tr>
@@ -799,7 +762,8 @@ table.tb .tb_flex23 {
 									<td>
 										<div class="tb_flex">
 											<label for="rsvedModelYear">연식</label> <input type="text"
-												id="rsvedModelYear" name="rsvedModelYear" class="input" readonly />
+												id="rsvedModelYear" name="rsvedModelYear" class="input"
+												readonly />
 										</div>
 									</td>
 								</tr>
@@ -830,8 +794,8 @@ table.tb .tb_flex23 {
 									<th scope="col">예약 주기</th>
 									<td>
 										<div class="tb_flex">
-											<label for="rsvedPeriod"></label> <input
-												id="rsvedPeriod" style="left: ;">
+											<label for="rsvedPeriod"></label> <input id="rsvedPeriod"
+												style="left:;">
 										</div>
 									</td>
 								</tr>
@@ -849,7 +813,8 @@ table.tb .tb_flex23 {
 									<td>
 										<div class="tb_flex">
 											<label for="RsvedlastCfDt">최종 검증일자</label> <input type="text"
-												id="RsvedlastCfDt" name="RsvedlastCfDt" class="input" readonly />
+												id="RsvedlastCfDt" name="RsvedlastCfDt" class="input"
+												readonly />
 										</div>
 									</td>
 								</tr>
@@ -869,7 +834,8 @@ table.tb .tb_flex23 {
 			</div>
 			<div class='btn_flex'>
 				<button id='updateRsv' class='blue_btn'>수정</button>
-				<button id='deleteRsv' class='blue_btn' style="background-color: #FF3838;">삭제</button>
+				<button id='deleteRsv' class='blue_btn'
+					style="background-color: #FF3838;">삭제</button>
 				<button class='gray_btn cancel_btn detailPopupClose' type="submit"
 					style="margin-right: 10px" value="Cancel">닫기</button>
 			</div>

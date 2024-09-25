@@ -28,6 +28,7 @@
 
 	$drvRsvMag.ui = {
 		pageLoad: function() {
+
 			var nowYear = new Date().getFullYear();
 			var nowMonth = new Date().getMonth();
 			var nowDate = new Date().getDate();
@@ -51,13 +52,15 @@
 					dataTextField: "cdNm",
 					dataValueField: "cd",
 					dataSource: data.result,
-
+					autoWidth: false, 
+					width: "250px"   
 				});
 			});
 
 			if (rsvStrData) {
 			    $("#start-picker02").kendoDateTimePicker({
 			        format: "yyyy-MM-dd HH:mm",
+					parseFormats: ["yyyy-MM-dd HH:mm"],
 			        value: rsvStrData, 
 			        min: rsvStrData,   
 			        change: function() {
@@ -69,9 +72,13 @@
 			    });
 			} else { 
 			    $("#start-picker02").kendoDateTimePicker({
-			        format: "yyyy-MM-dd HH:mm"
+			        format: "yyyy-MM-dd HH:mm",
+					parseFormats: ["yyyy-MM-dd HH:mm"],
+
+					
 			    });
 			}
+			
 //			$('button.k-input-button.k-button.k-button-md.k-button-solid.k-button-solid-base.k-icon-button:has(.k-icon.k-i-clock)').hide();
 			var threeMonthsAgo = new Date();
 			$("#start-picker01").kendoDatePicker({
@@ -143,11 +150,11 @@
 				},
 				columns: [
 					{ field: "rn", title: "순번", width: "65px", template: "#=rn #" },
+					{ field: "coNm", title: "회사명", width: "150px", template: "#= coNm != null ? coNm : '-' #" },
 					{ field: "rentNo", title: "대여번호", width: "180px", template: "#= rentNo != null ? rentNo : '-' #" },
 					{ field: "dln2", title: "면허번호", width: "180px", template: "#= dln2 != null ? dln2 : '-' #" },
 					{ field: "lcnsFlnm", title: "면허 소유자", width: "180px", template: "#= lcnsFlnm != null ? lcnsFlnm : '-' #" },
 					{ field: "lcnsAsortCd", title: "면허종별", width: "80px", template: "#= lcnsAsortCd != null ? lcnsAsortCd : '-' #" },
-					{ field: "coNm", title: "회사명", width: "150px", template: "#= coNm != null ? coNm : '-' #" },
 					{ field: "regNm", title: "예약자", width: "80px", template: "#= regNm != null ? regNm : '-' #" },
 					{
 						field: "regDt",
@@ -179,6 +186,7 @@
 			});
 		},
 		detailInfoPopup: function(e) {
+			ClickSearchRsv += 1;
 			var rows = e.sender.select();
 			var data;
 			var rowData;
@@ -222,26 +230,51 @@
 				$('#RsvedNtCfDt').val(formatDate(data[0].nextVrfcYmd));
 				var startDate = formatDate(data[0].rsvtBgngYmd);
 				detailstartDate = startDate;
-				$("#start-picker03").kendoDateTimePicker({
+				$drvRsvMag.ui.detailCondition();
+			});
+		},
+		detailCondition:function(){
+			if (ClickSearchRsv === 1) {
+				$("#start-picker03").kendoDatePicker({
+					value: detailstartDate,
 					format: "yyyy-MM-dd HH:mm",
-					value: startDate,
-					min: startDate,
+					parseFormats: ["yyyy-MM-dd HH:mm"],
+					min: detailstartDate,
 					change: function() {
-						var selectedDate = this.value();
-						if (selectedDate < startDate) {
-							this.value(startDate);
-						}
+					    var selectedDate = this.value();
+					    if (selectedDate < detailstartDate) {
+					        this.value(detailstartDate);
+					    }
 					}
 				});
-				ajax(false, contextPath + '/vfc/drvRsvMag/selectPeriodCd', 'body', '처리중입니다.', {}, function(data) {
-					$("#rsvedPeriod").kendoDropDownList({
-						optionLabel: '예약 주기(설정)',
-						autoWidth: true,
-						dataTextField: "cdNm",
-						dataValueField: "cd",
-						dataSource: data.result,
+			} else {
+			    if ($("#start-picker03").data("kendoDateTimePicker")) {
+			        $("#start-picker03").data("kendoDateTimePicker").destroy(); // 기존 인스턴스 파괴
+			    }
+			    
+				$("#start-picker03").kendoDatePicker({
+					value: detailstartDate,
+					format: "yyyy-MM-dd HH:mm",
+					parseFormats: ["yyyy-MM-dd HH:mm"],
+					min: detailstartDate,
+					change: function() {
+					    var selectedDate = this.value();
+					    if (selectedDate < detailstartDate) {
+					        this.value(detailstartDate);
+					    }
+					}
+				});
+			}
 
-					});
+
+			ajax(false, contextPath + '/vfc/drvRsvMag/selectPeriodCd', 'body', '처리중입니다.', {}, function(data) {
+				$("#rsvedPeriod").kendoDropDownList({
+					optionLabel: '예약 주기(설정)',
+					autoWidth: true,
+					dataTextField: "cdNm",
+					dataValueField: "cd",
+					dataSource: data.result,
+
 				});
 			});
 		},
@@ -397,9 +430,9 @@
 			//			$(".detailPopupClose").on("click", function() {
 			//				$drvRsvMag.event.detailDeleteBtn();
 			//			});
-			//		$(".detailPopupClose").on("click", function() {
-			//			$drvRsvMag.event.detailDeleteBtn();
-			//		});
+					$(".detailPopupClose").on("click", function() {
+						$drvRsvMag.event.detailDeleteBtn();
+					});
 			$("#rsvNoBtn").on("click", function() {
 				$drvRsvMag.event.RsvGridPopup();
 			});
@@ -430,6 +463,9 @@
 			});
 			$(".excelDownBtn").on("click", function() {
 				$drvRsvMag.ui.excelDown();
+			});
+			$(".regPopupClose").on("click", function() {
+				$drvRsvMag.event.rsvNoClose();
 			});
 			// 예약 업데이트
 			$("#updateRsv").on("click", function() {
@@ -504,7 +540,15 @@
 
 
 		},
+		detailDeleteBtn:function(){
+			
 
+			$("#detailRsv").removeClass("view");
+			var grid = $('#rsvGrid').data('kendoGrid');
+
+			grid.dataSource.read();
+
+		},
 		registerRsv: function() {
 			$("#insertRsvInfo").addClass("view");
 		},
