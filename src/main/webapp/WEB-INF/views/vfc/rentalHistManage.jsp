@@ -68,10 +68,6 @@
                         </div>
                         <ul class="selec_box" >
                             <li class="li_slec">
-                                <label for="searchLcnsCd" style="display: none">국내,국제 면허(전체)</label>
-                                <input type="text" id="searchLcnsCd" class="searchLcnsCd" aria-label="전체,국내 면허,국제 면허">
-                            </li>
-                            <li class="li_slec">
                                 <label for="searchRentSttsCd" style="display: none">대여상태(선택)</label>
                                 <input type="text" id="searchRentSttsCd" aria-label="대여상태(선택)">
                             </li>
@@ -148,8 +144,6 @@
 														<div id="checkBox01">
 															<input id="regChk01" class="regChk" type="radio" name="regChk" value="domLic" checked />
 															<label for="regChk01" style="display:inline-block;width:100px;">국내 면허</label>
-							 			                    <input id="regChk02"  class="regChk" type="radio" name="regChk" value="intLic"/>
-							 			                    <label for="regChk02" style="display:inline-block;">국제 면허</label>
 						 			                    </div>
 													</li>
 						                         </ul>
