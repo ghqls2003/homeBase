@@ -50,12 +50,10 @@
 			<if test="vhclRegNo != '' and vhclRegNo != null">
 	           	and vhcl_reg_no like '%' || #{vhclRegNo} ||'%'
 			</if>
-			<if test="rentSttsCd != '' and rentSttsCd != null">
-	           	and rent_stts_cd = #{rentSttsCd}
-			</if>
-			<if test ='rentDt != null and rentDt != ""'>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
-				AND (#{rentDt}::TIMESTAMP BETWEEN rent_bgng_dt AND rent_end_dt)
+			<if test ='rentDt != null and rentDt != ""'>
+		 		and rent_bgng_dt::DATE <![CDATA[<=]]> #{rentDt}::DATE AND rent_end_dt::DATE <![CDATA[>=]]> #{rentDt}::DATE
 		    </if>
+
 	) as t0	
 	</sql>
 	

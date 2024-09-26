@@ -149,8 +149,8 @@
 						parameterMap: function(options) {
 							options.startDt	= searchParamsArc.startDt;
 							options.endDt	= searchParamsArc.endDt;
-							options.rentDt = searchParamsArc.rentBgngDt;
-							options.rentDt = searchParamsArc.rentEndDt;
+//							options.rentDt = searchParamsArc.rentBgngDt;
+//							options.rentDt = searchParamsArc.rentEndDt;
 							options.rentDt = searchParamsArc.rentDt;
 							options.lcnsIdntfCd = searchParamsArc.lcnsIdntfCd;
 							//options.rentSttsCd = searchParamsArc.rentSttsCd;
