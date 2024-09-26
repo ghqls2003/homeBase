@@ -250,6 +250,7 @@ var authrtCd = '${authrtCd}'
 
                     <p class="tb_top">※ 외국인 : 성명란에 공백 없이 영어 대문자로 입력해주시기 바랍니다.</p>
                     <p class="tb_top" style="color:#FF7F50;">※ 면허증 촬영 시, 본인의 면허증 정보가 정확히 일치하는지 확인해 주시기 바랍니다.</p>
+                    <p class="tb_top" style="color:#509cff;">※ 유사도 검증을 위해 수기입력이 제한됩니다.</p>
                     <div class="license_wr">
 	                    <div class="license_bg">
 	                    	<button class="info-btn info-btn01">
@@ -297,7 +298,7 @@ var authrtCd = '${authrtCd}'
 	                                    </li>
 	                                    <li>
 	                                        <label for="name"></label>
-	                                        <input type="text" id="name" class="license_input lc_input03" placeholder="성명을 기입하세요" maxlength="40">
+	                                        <input type="text" id="name" class="license_input lc_input03" placeholder="성명" maxlength="40">
 	                                    </li>
 	                                </ul>
 	                                <div class="type_box">
@@ -473,7 +474,7 @@ var authrtCd = '${authrtCd}'
     </div>
 </div>
 
- <!-- 유사도 검증 안내 팝업 -->
+<!-- 유사도 검증 안내 팝업 -->
 <div class="similarity_pop">
     <div class="box">
         <div class="popup_top">
@@ -485,7 +486,7 @@ var authrtCd = '${authrtCd}'
         </div>
         <div class="content">
         	 <img src="${contextPath}/images/sub/sv_info.png" alt="유사도 검증 안내">
-        	 <p>운전자격 확인 버튼을 클릭하면, 운전면허증 사진과의 유사도 검증을 위해 얼굴 인식 촬영이 시작됩니다</p>
+        	 <p>운전자격 확인 버튼 클릭 시, 운전면허증 사진과의 유사도 검증을 위해 얼굴 인식 촬영이 시작됩니다.</p>
         </div>
     </div>
 </div>

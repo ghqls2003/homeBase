@@ -100,6 +100,11 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 
 	$contactlessVfc.ui = {
 		pageLoad : function() {
+			$(".license_bg input").attr('readonly', true);
+			$('.license_bg input[type="radio"]').attr('disabled', true);
+			$('.license_bg input').css('background-color', '#f5f5f5');
+			
+			
 			$contactlessVfc.ui.kendoGrid();
 			$contactlessVfc.ui.detailDefectGrid();
 
@@ -652,6 +657,10 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			$contactlessVfc.ui.getOcrData(data);
         },
 		getOcrData:function(data){
+			$('.license_bg input').removeAttr('readonly');
+			$('.license_bg input[type="radio"]').removeAttr('disabled');
+			$('.license_bg input').css('background-color', '');
+			
 			$('#name').val(data.idName);
 			$("#num01").data("kendoDropDownList").value(data.idLicenseNumber.substr(0,2));
 			$('#num02').val(data.idLicenseNumber.substr(2,2));
@@ -1069,7 +1078,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			$(".similarity_pop .close").on("click",function(){
 			    $(".similarity_pop").css("display", "none");
 			 });
-
+		
 		},
 
         // 2024.07.31 jeonghyewon code add
@@ -1488,6 +1497,14 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 //		similarityVerf : function() {
 //			alert("hi")
 //		},
+
+		similarityChkFn: function() {
+			if ($('.similarityChk').prop('checked')) {
+			    console.log(true);
+			} else {
+			    console.log(false);
+			}
+		}
 	};
 
 }(window, document, jQuery));

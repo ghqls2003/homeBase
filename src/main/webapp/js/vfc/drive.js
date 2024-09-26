@@ -7,6 +7,7 @@ var choiceVhclRegNo = '';
 var tempHtml = ''; // 팝업 그리드 동적 html
 var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
 var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
+var similarityChk = ''; // 유사도 검증 체크박스 전역변수
 (function (W, D, $) {
     // bjlee, IE 10 부터 지원하는 strict mode 선언. 안전하지 않은 액션들에 대해 예외를 발생시킴
     'use strict';
@@ -16,6 +17,8 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 	$(document).ready(function() {
 		$drive.ui.pageLoad();		//최초 페이지 로드 시
 		$drive.event.setUIEvent();
+		similarityChk = false;
+		
 	});
 
 	var pcColumns = [
@@ -100,6 +103,12 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 
 	$drive.ui = {
 		pageLoad : function() {
+			
+			if(userType=="PC"){
+				$(".similarityChkBox").css("display", "none");
+				$("#similarity_tb_top").css("display", "none");
+			}
+			
 			$drive.ui.kendoGrid();
 			$drive.ui.detailDefectGrid();
 
@@ -629,6 +638,13 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			$drive.ui.getOcrData(data);
         },
 		getOcrData:function(data){
+			if(!similarityChk){
+				$('.license_bg input').removeAttr('readonly');
+				$('.license_bg input[type="radio"]').removeAttr('disabled');
+				$('.license_bg input').css('background-color', '');
+			}
+			
+			
 			$('#name').val(data.idName);
 			$("#num01").data("kendoDropDownList").value(data.idLicenseNumber.substr(0,2));
 			$('#num02').val(data.idLicenseNumber.substr(2,2));
@@ -678,7 +694,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 //			$("#num04").attr('disabled', true);
 //			$('input[type=radio]').attr("disabled", true);
 			vrfcMthd = 2;
-			$drive.event.lessThan1Year(data.idIssueDate);
+//			$drive.event.lessThan1Year(data.idIssueDate);
 		}
 	};
 
@@ -1024,6 +1040,14 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			$('.result_popup_in_popup .close').click(function(){
 				$('.result_popup_in_popup .cancel_btn').click();
 			});
+			
+			$('#similarityChk').on('change', function() {
+			    $drive.event.similarityChkFn(); // 호출할 함수
+			});
+			
+			$(".similarity_pop .close").on("click",function(){
+			    $(".similarity_pop").css("display", "none");
+			 });
 
 
 		},
@@ -1442,6 +1466,49 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			$("#num04").attr('disabled', false);
 			$('input[type=radio]').attr("disabled", false);
 			vrfcMthd = 1;
+		},
+		
+		similarityChkFn: function() {
+			if ($('#similarityChk').prop('checked')) {
+				similarityChk = true
+				// 유사도 검증 안내 팝업
+				$(".similarity_pop").css("display", "flex");
+				
+				// 값 초기화
+				$("#num01").data("kendoDropDownList").select(0);
+				$('#user_tel').val('');
+				$('#license_num').val('');
+				$('#name').val('');
+				$('#num02').val('');
+				$('#num03').val('');
+				$('#num04').val('');
+				$("input[type=radio][name=category01]").prop('checked', false);
+	//			$("#name").attr('disabled', false);
+				$("#num01").data("kendoDropDownList").readonly(false);
+				$("#num02").attr('disabled', false);
+				$("#num03").attr('disabled', false);
+				$("#num04").attr('disabled', false);
+				$('input[type=radio]').attr("disabled", false);
+				vrfcMthd = 1;
+				
+				// 리드온리 처리
+				$(".license_bg input").attr('readonly', true);
+				$("#num01").data("kendoDropDownList").readonly();
+				$("#num01").closest("span").css("background-color", "#f5f5f5"); 
+				$('.license_bg input[type="radio"]').attr('disabled', true);
+				$('.license_bg input').css('background-color', '#f5f5f5');
+
+
+			} else {
+				similarityChk = false
+				
+				// 리드온리 해제
+				$('.license_bg input').removeAttr('readonly');
+				$('.license_bg input[type="radio"]').removeAttr('disabled');
+				$('.license_bg input').css('background-color', '');
+				$("#num01").data("kendoDropDownList").readonly(false);
+				$("#num01").closest("span").css("background-color", "");
+			}
 		}
 	};
 

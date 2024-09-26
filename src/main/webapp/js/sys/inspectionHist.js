@@ -884,9 +884,9 @@
 		},
 		
 		issued: function(data){
-			var params = {}
+			var params = {};
 			
-			var parts = data.split("&");  // '&'을 기준으로 문자열을 나눕니다.
+			var parts = data.split("&");
 			
 			params.bzmnSn = parts[0];
 			params.regDt = parts[1];
