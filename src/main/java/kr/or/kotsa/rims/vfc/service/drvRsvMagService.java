@@ -9,6 +9,7 @@ public interface drvRsvMagService {
 	Object selectRsvList(Map<String, Object> paramsMap);
 	Object selectRsvNoList(Map<String, Object> paramsMap);
 	Object selectPeriodCd(Map<String, Object> paramsMap);
+	Object selectLncdDrop(Map<String, Object> paramsMap);
 
 	int insertRsv(Map<String, Object> paramsMap);
 	int updateRsv(Map<String, Object> paramsMap);

@@ -16,6 +16,14 @@
 </script>
 
 <style>
+.k-picker-solid {
+    height: 40px;
+    background-color: #FFFFFF;
+    border: 1px solid #DBE0EC;
+    border-radius: 8px 0px 0px 8px;
+    background-image: none;
+    top: -5px;
+}
 .scrollBar02 {
 	overflow-y: auto;
 }
@@ -372,6 +380,10 @@ table.tb .tb_flex23 {
 							title="datepicker" aria-label="종료기간조회"></li>
 <!-- 					</ul> -->
 <!-- 					<ul class="selec_box" id="selectBox1"> -->
+						<li class="mo-li">									
+											<label for="lncdDrop"></label> <input id="lncdDrop"></li>
+						<li class="mo-li">									
+											<label for="searchCd"></label> <input id="searchCd"></li>
 						<li class="mo_li"><label for="searchWrd"
 							style="display: none"></label> <input type="text" id="searchWrd"
 							class="searchWrd input" aria-label="대여번호를 입력하세요"
@@ -495,8 +507,8 @@ table.tb .tb_flex23 {
 		<div class="info_text">
 			<p>* 반복조회는 대여 종료 시기까지 반복됩니다.</p>
 			<p>* 시작일자와 종료일자가 최소 7일 이상이여야 예약 설정이 가능합니다.</p>
-			<p>* 반복조회의 주기는 최소 7일 이상으로 설정이 가능합니다.</p>
-			<p>* 예약 시작일시 설정은 예약을 하시는 날짜의 다음 날부터 가능합니다.</p>
+			<p>* 대여번호를 먼저 검색하시고 예약을 진행해주세요</p>
+			<p>* 대여번호는 검색 버튼을 클릭하시면 조회 됩니다.</p>
 		</div>
 		<div class="content">
 			<!--  -->
@@ -532,7 +544,7 @@ table.tb .tb_flex23 {
 								</tr>
 								<tr>
 									<th scope="col">대여번호</th>
-									<td>
+									<td style='width: 200px;'>
 										<div class="tb_flex">
 											<label for="regRentNo">대여번호</label> <input type="text"
 												id="regRentNo" name="regRentNo" class="input" readonly />
@@ -627,7 +639,7 @@ table.tb .tb_flex23 {
 								<tr>
 									<th scope="col">예약 시작일 <span class="asterisk">*</span>
 									</th>
-									<td>
+									<td style='width: 200px;'>
 										<div class="tb_flex">
 											<label for="start-picker02">예약 시작일시</label> <input
 												id="start-picker02" class="date" title="datepicker"
@@ -722,7 +734,7 @@ table.tb .tb_flex23 {
 								</tr> -->
 								<tr>
 									<th scope="col">대여번호</th>
-									<td>
+									<td style='width: 200px;'>
 										<div class="tb_flex">
 											<label for="rsvedRentNo">대여번호</label> <input type="text"
 												id="rsvedRentNo" name="rsvedRentNo" class="input" readonly />
@@ -773,7 +785,7 @@ table.tb .tb_flex23 {
 								<tr>
 									<th scope="col">예약 시작일 <span class="asterisk">*</span>
 									</th>
-									<td>
+									<td style='width: 200px;'>
 										<div class="tb_flex">
 											<label for="start-picker03">예약 시작일시</label> <input
 												id="start-picker03" class="date" title="datepicker"

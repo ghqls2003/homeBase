@@ -109,6 +109,10 @@ public class drvRsvMagServiceImpl extends CmmnAbstractServiceImpl implements drv
 		return rentalHistManageDao.selectPeriodCd(paramsMap);
 	}
 	@Override
+	public Object selectLncdDrop(Map<String, Object> paramsMap) {
+		return rentalHistManageDao.selectLncdDrop(paramsMap);
+	}
+	@Override
 	public List<Map<String, Object>> selectdetailRsv(Map<String, Object> paramsMap) {
 		return rentalHistManageDao.selectdetailRsv(paramsMap);
 	}

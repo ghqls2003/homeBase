@@ -169,6 +169,13 @@ public class drvRsvMagController extends CmmnAbstractServiceImpl {
         result.put("result" , DrvRsvMagService.selectPeriodCd(paramsMap));
         return result;
     }
+    @RequestMapping(value = "drvRsvMag/selectLncdDrop")
+    @ResponseBody
+    public Map<String, Object> selectLncdDrop(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+    	Map<String, Object> result = new HashMap<String, Object>();
+    	result.put("result" , DrvRsvMagService.selectLncdDrop(paramsMap));
+    	return result;
+    }
 	@RequestMapping("/drvRsvMag/selectdetailRsv")
 	@ResponseBody
 	public List<Map<String, Object>> selectIssuedData(@RequestBody Map<String, Object> paramsMap) throws RimsException {

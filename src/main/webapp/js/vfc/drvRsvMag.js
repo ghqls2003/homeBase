@@ -44,7 +44,28 @@
 			//				value: new Date(nowYear, nowMonth, nowDate)
 			//			});
 
-
+			var dropData = [
+				{ value: '', text: "전체(검색조건)" },
+				{ value: "E1", text: "대여번호" },
+				{ value: "E2", text: "면허 소유자" }
+			];
+			$("#searchCd").kendoDropDownList({
+				dataTextField: "text",
+				dataSource: dropData,
+				dataValueField: "value",
+				value: '' // 초기값을 ''로 설정합니다.
+			});
+			ajax(false, contextPath + '/vfc/drvRsvMag/selectLncdDrop', 'body', '처리중입니다.', {}, function(data) {
+				$("#lncdDrop").kendoDropDownList({
+					optionLabel: '먼허 종별(설정)',
+					autoWidth: true,
+					dataTextField: "cdNm",
+					dataValueField: "cd",
+					dataSource: data.result,
+					autoWidth: false,
+					width: "250px"
+				});
+			});
 			ajax(false, contextPath + '/vfc/drvRsvMag/selectPeriodCd', 'body', '처리중입니다.', {}, function(data) {
 				$("#periodRsv").kendoDropDownList({
 					optionLabel: '예약 주기(설정)',
@@ -52,61 +73,98 @@
 					dataTextField: "cdNm",
 					dataValueField: "cd",
 					dataSource: data.result,
-					autoWidth: false, 
-					width: "250px"   
+					autoWidth: false,
+					width: "250px"
 				});
 			});
 
 			if (rsvStrData) {
-			    $("#start-picker02").kendoDateTimePicker({
-			        format: "yyyy-MM-dd HH:mm",
+				$("#start-picker02").kendoDateTimePicker({
+					format: "yyyy-MM-dd HH:mm",
 					parseFormats: ["yyyy-MM-dd HH:mm"],
-			        value: rsvStrData, 
-			        min: rsvStrData,   
-			        change: function() {
-			            var selectedDate = this.value();
-			            if (selectedDate < rsvStrData) {
-			                this.value(rsvStrData);
-			            }
-			        }
-			    });
-			} else { 
-			    $("#start-picker02").kendoDateTimePicker({
-			        format: "yyyy-MM-dd HH:mm",
+					value: rsvStrData,
+					min: rsvStrData,
+					change: function() {
+						var selectedDate = this.value();
+						if (selectedDate < rsvStrData) {
+							this.value(rsvStrData);
+						}
+					}
+				});
+			} else {
+				$("#start-picker02").kendoDateTimePicker({
+					format: "yyyy-MM-dd HH:mm",
 					parseFormats: ["yyyy-MM-dd HH:mm"],
 
-					
-			    });
+
+				});
 			}
-			
-//			$('button.k-input-button.k-button.k-button-md.k-button-solid.k-button-solid-base.k-icon-button:has(.k-icon.k-i-clock)').hide();
+
+			//			$('button.k-input-button.k-button.k-button-md.k-button-solid.k-button-solid-base.k-icon-button:has(.k-icon.k-i-clock)').hide();
 			var threeMonthsAgo = new Date();
+			//			$("#start-picker01").kendoDatePicker({
+			//				value: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+			//				dateInput: true,
+			//				format: "yyyy-MM-dd",
+			//				parseFormats: ["yyyy-MM-dd"],
+			//				max: new Date(),
+			//				change: function() {
+			//					var startDate = this.value();
+			//					var endDatePicker = $("#end-picker01").data("kendoDatePicker");
+			//					if (startDate) {
+			//						endDatePicker.min(startDate);
+			//					}
+			//					if (new Date($('#start-picker01').val()) > new Date($('#end-picker01').val())) {
+			//						alert("시작일은 종료일보다 늦을 수 없습니다.");
+			//						$('#start-picker01').data("kendoDatePicker").value(new Date($('#end-picker01').val()));
+			//					}
+			//				}
+			//			});
+			//			$("#end-picker01").kendoDatePicker({
+			//				value: new Date(),
+			//				dateInput: true,
+			//				format: "yyyy-MM-dd",
+			//				parseFormats: ["yyyy-MM-dd"]
+			//			});
 			$("#start-picker01").kendoDatePicker({
-				value: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 30),
+				//				value: new Date(2024, 3, 1),
 				dateInput: true,
 				format: "yyyy-MM-dd",
 				parseFormats: ["yyyy-MM-dd"],
 				max: new Date(),
 				change: function() {
 					var startDate = this.value();
-					var endDatePicker = $("#end-picker01").data("kendoDatePicker");
+					var endDatePicker = $("#end-Picker01").data("kendoDatePicker");
+
 					if (startDate) {
-						endDatePicker.min(startDate); 
-					}
-					if (new Date($('#start-picker01').val()) > new Date($('#end-picker01').val())) {
-						alert("시작일은 종료일보다 늦을 수 없습니다.");
-						$('#start-picker01').data("kendoDatePicker").value(new Date($('#end-picker01').val()));
+						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() +30);
+						endDatePicker.min(startDate);
+						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
+						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
 					}
 				}
 			});
-
 			$("#end-picker01").kendoDatePicker({
 				value: new Date(),
 				dateInput: true,
 				format: "yyyy-MM-dd",
-				parseFormats: ["yyyy-MM-dd"]
-			});
+				parseFormats: ["yyyy-MM-dd"],
+				max: new Date(),
+				change: function() {
+					var endDate = this.value();
+					var startDatePicker = $("#start-Picker01").data("kendoDatePicker");
+					var startDate = startDatePicker.value();
 
+					if (startDate) {
+						var diffInDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+						if (diffInDays > 30) {
+							alert("30일 이내만 조회 가능합니다.");
+							this.value(new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 30));
+						}
+					}
+				}
+			});
 			$drvRsvMag.ui.kendoGrid();
 		},
 
@@ -128,6 +186,8 @@
 						parameterMap: function(options) {
 							options.startDt = $('#start-picker01').val();
 							options.endDt = $('#end-picker01').val();
+							options.searchCd = $('#searchCd').val();
+							options.lncdDrop = $('#lncdDrop').val();
 							options.searchWrd = $('#searchWrd').val();
 							return JSON.stringify(options);
 						}
@@ -150,12 +210,12 @@
 				},
 				columns: [
 					{ field: "rn", title: "순번", width: "65px", template: "#=rn #" },
-					{ field: "coNm", title: "회사명", width: "150px", template: "#= coNm != null ? coNm : '-' #" },
-					{ field: "rentNo", title: "대여번호", width: "180px", template: "#= rentNo != null ? rentNo : '-' #" },
+					{ field: "coNm", title: "회사명", width: "200px", template: "#= coNm != null ? coNm : '-' #" },
+					{ field: "rentNo", title: "대여번호", width: "200px", template: "#= rentNo != null ? rentNo : '-' #" },
 					{ field: "dln2", title: "면허번호", width: "180px", template: "#= dln2 != null ? dln2 : '-' #" },
 					{ field: "lcnsFlnm", title: "면허 소유자", width: "180px", template: "#= lcnsFlnm != null ? lcnsFlnm : '-' #" },
-					{ field: "lcnsAsortCd", title: "면허종별", width: "80px", template: "#= lcnsAsortCd != null ? lcnsAsortCd : '-' #" },
-					{ field: "regNm", title: "예약자", width: "80px", template: "#= regNm != null ? regNm : '-' #" },
+					{ field: "lcnsAsortCd", title: "면허종별", width: "150px", template: "#= lcnsAsortCd != null ? lcnsAsortCd : '-' #" },
+					{ field: "regNm", title: "예약자", width: "150px", template: "#= regNm != null ? regNm : '-' #" },
 					{
 						field: "regDt",
 						title: "예약 지정일",
@@ -228,12 +288,13 @@
 				$('#RsvedlcnsFlnm').val(data[0].lcnsFlnm);
 				$('#rsvedEndTime').val(formatDate(data[0].rsvtEndYmd));
 				$('#RsvedNtCfDt').val(formatDate(data[0].nextVrfcYmd));
+
 				var startDate = formatDate(data[0].rsvtBgngYmd);
 				detailstartDate = startDate;
 				$drvRsvMag.ui.detailCondition();
 			});
 		},
-		detailCondition:function(){
+		detailCondition: function() {
 			if (ClickSearchRsv === 1) {
 				$("#start-picker03").kendoDatePicker({
 					value: detailstartDate,
@@ -241,27 +302,27 @@
 					parseFormats: ["yyyy-MM-dd HH:mm"],
 					min: detailstartDate,
 					change: function() {
-					    var selectedDate = this.value();
-					    if (selectedDate < detailstartDate) {
-					        this.value(detailstartDate);
-					    }
+						var selectedDate = this.value();
+						if (selectedDate < detailstartDate) {
+							this.value(detailstartDate);
+						}
 					}
 				});
 			} else {
-			    if ($("#start-picker03").data("kendoDateTimePicker")) {
-			        $("#start-picker03").data("kendoDateTimePicker").destroy(); // 기존 인스턴스 파괴
-			    }
-			    
+				if ($("#start-picker03").data("kendoDateTimePicker")) {
+					$("#start-picker03").data("kendoDateTimePicker").destroy(); // 기존 인스턴스 파괴
+				}
+
 				$("#start-picker03").kendoDatePicker({
 					value: detailstartDate,
 					format: "yyyy-MM-dd HH:mm",
 					parseFormats: ["yyyy-MM-dd HH:mm"],
 					min: detailstartDate,
 					change: function() {
-					    var selectedDate = this.value();
-					    if (selectedDate < detailstartDate) {
-					        this.value(detailstartDate);
-					    }
+						var selectedDate = this.value();
+						if (selectedDate < detailstartDate) {
+							this.value(detailstartDate);
+						}
 					}
 				});
 			}
@@ -348,13 +409,13 @@
 				}
 			});
 		},
-		checkRentNo:function(){
+		checkRentNo: function() {
 			var params = {}
 			params.rentNo = $("#regRentNo").val();
 			ajax(true, contextPath + '/vfc/drvRsvMag/selectCheckRentNo', 'body', '확인인중입니다.', params, function(data) {
 				if (data == null || (Array.isArray(data) && data.length === 0) || (typeof data === 'string' && data.trim() === '')) {
 					$drvRsvMag.ui.insertRsv();
-				}else{
+				} else {
 					alert('이미 예약된 대여번호입니다.')
 				}
 			});
@@ -411,6 +472,8 @@
 			var options = {};
 			options.startDt = $('#start-picker01').val();
 			options.endDt = $('#end-picker01').val();
+			options.searchCd = $('#searchCd').val();
+			options.lncdDrop = $('#lncdDrop').val();
 			options.searchWrd = $('#searchWrd').val();
 
 			var filename = "rsvGrid";
@@ -430,9 +493,9 @@
 			//			$(".detailPopupClose").on("click", function() {
 			//				$drvRsvMag.event.detailDeleteBtn();
 			//			});
-					$(".detailPopupClose").on("click", function() {
-						$drvRsvMag.event.detailDeleteBtn();
-					});
+			$(".detailPopupClose").on("click", function() {
+				$drvRsvMag.event.detailDeleteBtn();
+			});
 			$("#rsvNoBtn").on("click", function() {
 				$drvRsvMag.event.RsvGridPopup();
 			});
@@ -441,7 +504,7 @@
 			});
 			$("#carVhclRegNoVal").on("click", function() {
 				if ($("#start-picker02").data("kendoDateTimePicker")) {
-				    $("#start-picker02").data("kendoDateTimePicker").destroy();
+					$("#start-picker02").data("kendoDateTimePicker").destroy();
 				}
 				$drvRsvMag.event.carNoval();
 
@@ -451,14 +514,31 @@
 				grid.dataSource.page(1);
 			});
 			$("#searchBtn").on("click", function() {
-				var grid = $('#rsvGrid').data('kendoGrid');
-				grid.dataSource.page(1);
+				var startPickerValue = $("#start-Picker01").val();
+				var endPickerValue = $("#end-Picker01").val();
+				var searchKey = $('#searchWrd').val();
+				var searchCd = $('#searchCd').val();
+				if (startPickerValue && endPickerValue) {
+					var startDate = new Date(startPickerValue);
+					var endDate = new Date(endPickerValue);
+
+					if (startDate > endDate) {
+						alert("종료시간이 시작시간보다 빠릅니다. 올바른 시간 범위를 선택해주세요.");
+						return;
+					}
+				} else if (searchCd != '' && searchKey == "") {
+					alert('검색어를 입력하세요')
+				} else {
+					var grid = $('#rsvGrid').data('kendoGrid');
+					grid.dataSource.page(1);
+				}
 			});
 			$("#rentRegInsertBtn").on("click", function() {
-				if(confirm('예약하시겠습니까?')){
+				if (confirm('예약하시겠습니까?')) {
 					$drvRsvMag.ui.checkRentNo();
-				}else{
+				} else {
 					alert('취소하였습니다.')
+					location.reload();
 				}
 			});
 			$(".excelDownBtn").on("click", function() {
@@ -485,10 +565,10 @@
 				}
 			});
 			$(".carClose").on("click", function() {
-			    $("#carPopup").hide(); // 또는 .fadeOut() 등으로 애니메이션 효과 추가 가능
-			    
-			    $("#carSearchWrd").val(''); // 검색어 초기화
-			    $("#carGrid").empty(); // 테이블 초기화
+				$("#carPopup").hide(); // 또는 .fadeOut() 등으로 애니메이션 효과 추가 가능
+
+				$("#carSearchWrd").val(''); // 검색어 초기화
+				$("#carGrid").empty(); // 테이블 초기화
 			});
 
 			$(".carClose2").on("click", function() {
@@ -508,40 +588,40 @@
 				}
 			});
 		},
-		carNoval: function()		{
-		    var carRegNoVal = $("#regRentNo").val();
-		    var carRegNoVal2 = $("#rsvEndTime").val();
-		    var carRegNoVal3 = $("#start-picker02").val();
-		    var lcnsAsortCd = $("#ReglcnsAsortCd").val();
-		    var lcnsFlnm = $("#lcnsFlnm").val();
+		carNoval: function() {
+			var carRegNoVal = $("#regRentNo").val();
+			var carRegNoVal2 = $("#rsvEndTime").val();
+			var carRegNoVal3 = $("#start-picker02").val();
+			var lcnsAsortCd = $("#ReglcnsAsortCd").val();
+			var lcnsFlnm = $("#lcnsFlnm").val();
 
-		    $("#regVhclRegNo").val(carRegNoVal);
-		    $("#rsvEndTime").val(carRegNoVal2);
-		    $("#ReglcnsAsortCd").val(lcnsAsortCd);
-		    $("#lcnsFlnm").val(lcnsFlnm);
+			$("#regVhclRegNo").val(carRegNoVal);
+			$("#rsvEndTime").val(carRegNoVal2);
+			$("#ReglcnsAsortCd").val(lcnsAsortCd);
+			$("#lcnsFlnm").val(lcnsFlnm);
 			$("#carTa").empty();
 			if ($("#carTa")[0].children.length == 0) {
-			    $("#carSearchWrd").val('');
-			    $("#carTa").append("<table id='carGrid'><caption>대여예약</caption></table>");
+				$("#carSearchWrd").val('');
+				$("#carTa").append("<table id='carGrid'><caption>대여예약</caption></table>");
 			}
-		    // 중복 초기화 방지
-		        rsvStrData = new Date(carRegNoVal3);
-//		        $("#start-picker02").kendoDateTimePicker({
-//		            format: "yyyy-MM-dd HH:mm",
-//		            value: rsvStrData, // Date 객체 사용
-//		            min: rsvStrData,   // Date 객체 사용
-//		            change: function() {
-//		                var selectedDate = this.value();
-//		                if (selectedDate < rsvStrData) {
-//		                    this.value(rsvStrData);
-//		                }
-//		            }
-//		        });
+			// 중복 초기화 방지
+			rsvStrData = new Date(carRegNoVal3);
+			//		        $("#start-picker02").kendoDateTimePicker({
+			//		            format: "yyyy-MM-dd HH:mm",
+			//		            value: rsvStrData, // Date 객체 사용
+			//		            min: rsvStrData,   // Date 객체 사용
+			//		            change: function() {
+			//		                var selectedDate = this.value();
+			//		                if (selectedDate < rsvStrData) {
+			//		                    this.value(rsvStrData);
+			//		                }
+			//		            }
+			//		        });
 
 
 		},
-		detailDeleteBtn:function(){
-			
+		detailDeleteBtn: function() {
+
 
 			$("#detailRsv").removeClass("view");
 			var grid = $('#rsvGrid').data('kendoGrid');

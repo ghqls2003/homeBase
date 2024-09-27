@@ -22,6 +22,7 @@
 			car.carmdl,
 			car.dln,
 			ddhv.lcns_flnm,
+			ddhv.lcns_asort_cd,
 			dqvs.fn_get_cdnm('verify_cd', ddhv.lcns_asort_cd) as alcnsAsortCd,
 			car.mdlyr,
 			car.vhcl_nm,
@@ -137,8 +138,14 @@
 						where 
 							ddvr.reg_dt <![CDATA[>=]]> #{startDt}::TIMESTAMP
 							and ddvr.reg_dt <![CDATA[<=]]> #{endDt}::DATE + '23:59:59'::INTERVAL
-						<if test = "searchWrd != null and searchWrd != ''">
-							and ddvr.rent_no like '%' || UPPER(#{searchWrd}) || '%'
+				 		<if test="searchCd == 'E1'">
+							and ddvr.rent_no like '%' || #{searchWrd} || '%'
+						</if>
+				 		<if test="searchCd == 'E2'">
+							and ddvr.lcns_flnm like '%' || #{searchWrd} || '%'
+						</if>
+				 		<if test="lncdDrop != '' and lncdDrop != null">
+							and rent.lcns_asort_cd = #{lncdDrop}
 						</if>
 						<if test = "bzmnSn != null and bzmnSn != ''">
 							and rent.bzmn_sn = #{bzmnSn}
@@ -190,8 +197,14 @@
 						where 
 							ddvr.reg_dt <![CDATA[>=]]> #{startDt}::TIMESTAMP
 							and ddvr.reg_dt <![CDATA[<=]]> #{endDt}::DATE + '23:59:59'::INTERVAL
-						<if test = "searchWrd != null and searchWrd != ''">
-							and ddvr.rent_no like '%' || UPPER(#{searchWrd}) || '%'
+				 		<if test="searchCd == 'E1'">
+							and ddvr.rent_no like '%' || #{searchWrd} || '%'
+						</if>
+				 		<if test="searchCd == 'E2'">
+							and ddvr.lcns_flnm like '%' || #{searchWrd} || '%'
+						</if>
+				 		<if test="lncdDrop != '' and lncdDrop != null">
+							and rent.lcns_asort_cd = #{lncdDrop}
 						</if>
 						<if test = "bzmnSn != null and bzmnSn != ''">
 							and rent.bzmn_sn = #{bzmnSn}
@@ -282,6 +295,13 @@
 			,cd
 		from dqvs.dvs_cmm_mt_code
 		where cd_group = 'vrfc_period'
+	</select>
+	<select id="LncdDrop" resultType="resultMap">
+		select 
+			 cd_nm
+			,cd
+		from dqvs.dvs_cmm_mt_code
+		where cd_group = 'verify_cd'
 	</select>
 	<select id="selectdetailRsv" resultType="resultMap">
 			select 

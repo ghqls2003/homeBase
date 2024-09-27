@@ -49,9 +49,11 @@ public class drvRsvMagDao extends CmmnAbstractMapper {
 	public int selectRsvNoListCnt(Map<String, Object> paramsMap) {
 		return selectOne("vfc.drvRsvMag.RsvNoListCnt", paramsMap);
 	}
-	//  사용자 계정일때 :권한 리스트 검색조건
 	public Object selectPeriodCd(Map<String, Object> paramsMap) {
 		return selectList("vfc.drvRsvMag.PeriodCd", paramsMap);
+	}
+	public Object selectLncdDrop(Map<String, Object> paramsMap) {
+		return selectList("vfc.drvRsvMag.LncdDrop", paramsMap);
 	}
 	public List<Map<String, Object>> selectdetailRsv(Map<String, Object> paramsMap) {
 		return selectList("vfc.drvRsvMag.selectdetailRsv", paramsMap);
