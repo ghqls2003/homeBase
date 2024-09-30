@@ -267,23 +267,24 @@
 			) AS B
 	</select>	
 	
-	<!-- 대여사업자 등록 현황 -->
+	<!-- 대여사업자 등록 현황 차트 -->
 	<select id="agencyAccessionChart" parameterType="paraMap" resultType="resultMap">
-	/* 대여사업자 가입 현황 */	
+	/* 대여사업자 등록 현황 차트 */	
 		SELECT t2.sd_nm
-			, COALESCE(t2.stts_normal, 0) stts_normal
+			, COALESCE(TO_CHAR(t2.stts_normal, 'FM999,999,999'), '-') stts_normal
+			, ROUND((t2.accession/t2.stts_normal::NUMERIC)*100, 2) accession_per
 		FROM 
 			(
 			SELECT t1.sd_nm
-				, SUM(t1.stts_normal_cnt) stts_normal
 				, t1.sd_cd
+				, SUM(t1.stts_normal_cnt) stts_normal
+				, SUM(t1.accession) accession
 			FROM
 				(
 				SELECT LEFT(mstr.sgg_cd, 2) sd_cd
-					, COALESCE((
-								SELECT CASE sd.ctpv_cd WHEN '46' THEN '전남' WHEN '47' THEN '경북' WHEN '48' THEN '경남' ELSE LEFT(sd.ctpv_nm, 2) END sd_nm 
-								FROM dqvs.dvs_cmm_mt_sd sd WHERE sd.ctpv_cd = LEFT(mstr.sgg_cd, 2)), '-') sd_nm
+					, COALESCE((SELECT CASE ctpv_cd WHEN '46' THEN '전남' WHEN '47' THEN '경북' WHEN '48' THEN '경남' ELSE LEFT(ctpv_nm, 2) END ctpv_cd FROM dqvs.dvs_cmm_mt_sd WHERE ctpv_cd = LEFT(mstr.sgg_cd, 2)), '-') sd_nm
 					, 1 stts_normal_cnt
+					, CASE WHEN (SELECT COUNT(*) FROM dqvs.dvs_cmm_mt_user usr WHERE usr.bzmn_sn = mstr.bzmn_sn) = 0 THEN 0 ELSE 1 END accession
 				FROM 
 					dqvs.dvs_rac_mt_agency mstr
 				WHERE mstr.bsn_stts_cd = '0'
@@ -402,5 +403,18 @@
 		SET rmrk = #{delRmrk}, mdfcn_dt = NOW(), mdfcn_ip = #{mdfcnIp}, del_yn = 'Y'
 		WHERE sn = #{detailSn}::NUMERIC
 	</update>
+	
+	<!-- 회사명 자동완성 -->
+	<select  id="selectCoNm" parameterType="paraMap" resultType="resultMap">
+	/* 회사명 자동완성 */
+		SELECT co_nm
+			, (SELECT sd.ctpv_nm FROM dqvs.dvs_cmm_mt_sd sd WHERE sd.ctpv_cd = LEFT(reg_cmptnc_cd, 2)) sd
+		FROM
+			dqvs.dvs_rac_mt_agency
+		WHERE bsn_stts_cd = '0'
+			AND bzmn_se_cd = '1'
+			AND offi_sn = '1'
+			AND up_brno ISNULL
+	</select>
 	
 </mapper>

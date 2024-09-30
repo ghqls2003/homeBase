@@ -77,4 +77,11 @@ public interface TotSttsService {
 	 * @throws RimsException
 	 */
 	public int deleteCarShare(Map<String, Object> paramsMap) throws RimsException;
+	
+	/**
+	 * 회사명 자동완성
+	 * @return
+	 * @throws RimsException
+	 */
+	public List<Map<String, Object>> selectCoNm(Map<String, Object> paramsMap) throws RimsException;
 }

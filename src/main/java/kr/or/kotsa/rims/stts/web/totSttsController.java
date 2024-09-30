@@ -210,4 +210,17 @@ public class totSttsController extends CmmnAbstractServiceImpl {
 	public int deleteCarShare(@RequestBody Map<String, Object> paramsMap) throws RimsException {
 		return totSttsService.deleteCarShare(paramsMap);
 	}
+	
+	/**
+	 * 회사명 자동완성
+	 *
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping(value = "totStts/selectCoNm")
+	@ResponseBody
+	public List<Map<String, Object>> selectCoNm(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		return totSttsService.selectCoNm(paramsMap);
+	}
 }

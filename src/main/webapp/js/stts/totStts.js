@@ -469,18 +469,43 @@
 		
 		/* 대여사업자 등록 현황 차트 */
 		createChartMulti: function(data) {
-			var series = data.map(function(item) {
-			    return {
-			        type: "column",
-			        data: [item.sttsNormal],
-			        stack: false,
-			        name: item.sdNm,
-			        color: item.color,
-			        overlay: { gradient: "none" },
-			        border: { width: 0 },
-			        axis: "stick"
-			    };
-			});
+			var categories = data.map(function(item) {
+			    return item.sdNm;
+			});			
+			var series = [{
+		        type: "column",
+		        data: data.map(function(item) { return item.sttsNormal; }),
+		        stack: false,
+		        name: "대여사업자 등록 현황",
+		        color: "#00127B",
+		        overlay: { gradient: "none" },
+		        axis: "stick",
+		        border: { width: 0 },
+		        tooltip: {
+                	visible: true,
+                    template: "#= series.name #: #= value +'개소' #"
+				}
+		    }];
+			var line_series = [{
+		        type: "line",
+		        data: data.map(function(item) { return item.accessionPer; }),
+		        stack: false,
+		        name: "가입비율",
+		        color: "#FF8C00 ",
+		        overlay: { gradient: "none" },
+		        axis: "line",
+		        border: { width: 0 },
+		        tooltip: {
+                	visible: true,
+                    template: "#= series.name #: #= value +'%' #"
+				}/*,
+			    labels: {
+			        visible: true,
+			        template: "#= value + '%' #",  // 값을 원하는 형식으로 표시
+			        font: "8px sans-serif",          // 글꼴 설정
+			        position: "above"                 // 값의 위치를 바 위로 설정
+			    }*/
+		    }];
 			
 			$("#multi-chart").kendoChart({
 				title: {text: ""},
@@ -490,14 +515,18 @@
 			            template: "#= series.name #", font: "20px sans-serif"
 			        }
 				},
-                series: series,
+                series: series.concat(line_series),
 				valueAxes: [
-					{title: {text: "", font: "13px, Pretendard"}, name: "stick"}
+					{title: {text: "대여사업자 등록현황"}, name: "stick"},
+					{title: {text: "가입비율(%)", rotation: "90"}, name: "line"}
 				],
-                tooltip: {
-                	visible: true,
-                    template: "#= series.name #: #= value +'건' #"
-				},
+				categoryAxis: {
+		            categories: categories,
+		            axisCrossingValues: [0, 20],
+		            labels: {
+			            rotation: 300
+			        }
+		        },
 				chartArea: {
 					height: 480
 				},
@@ -513,6 +542,7 @@
 		setClickEvent: function() {
 			// 등록 버튼
 			$(".insertBtn").on("click", function() {
+				$statistics.event.autoCompleteCoNm();
 				$(".insert_popup").addClass("view");
 				$("body").css("overflow", "hidden");
 			});
@@ -543,6 +573,25 @@
 			} else if(event.target.closest("#carShare") != null) {
 				$("#carShare").find(".k-grid-excel").click();
 			}
+		},
+		
+		autoCompleteCoNm: function() {
+			ajax(false, contextPath + '/stts/totStts/selectCoNm', 'body', '처리중입니다.', {}, function(data) {
+				$("#cmpNm").kendoAutoComplete({
+	              filter: "contains",
+					placeholder: '회사명을 입력하세요.',
+					clearButton: false,
+					dataTextField: "coNm",
+			        dataSource: data,
+					select: function(e) {
+	                    var dataItem = this.dataItem(e.item.index());
+	                    var coNm = dataItem ? dataItem.coNm : null;
+	                    var sd = dataItem ? dataItem.sd : null;
+						$("#cmpNm").val(coNm);
+						$("#areaDrop").val(sd);
+                	}
+				}).data("kendoAutoComplete");
+			});
 		},
 		
 		gvAccSearch: function() {

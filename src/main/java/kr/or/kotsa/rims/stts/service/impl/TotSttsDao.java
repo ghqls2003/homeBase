@@ -118,4 +118,14 @@ public class TotSttsDao extends CmmnAbstractMapper {
 	public int deleteCarShare(Map<String, Object> paramsMap)throws RimsException {
 		return update("stts.totStts.deleteCarShare", paramsMap);
 	}
+	
+	/**
+	 * 회사명 자동완성
+	 * @param paramsMap
+	 * @return 
+	 * @throws RimsException
+	 */
+	public List<Map<String, Object>> selectCoNm(Map<String, Object> paramsMap)throws RimsException {
+		return selectList("stts.totStts.selectCoNm", paramsMap);
+	}
 }

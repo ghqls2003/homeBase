@@ -59,6 +59,9 @@ button.red_btn:hover {
     color: #ff3838;
     border: 1px solid #ff3838;
 }
+#insertPopup > div.info_wr > div > div:nth-child(1) > table:nth-child(1) > tbody > tr:nth-child(1) > td > div > span {
+	padding: 0px;
+}
 </style>
 
 <script>
@@ -188,12 +191,12 @@ button.red_btn:hover {
 						<div class="contBox" style="margin-top: 0px;">
 						    <div class="cont cont-flex">
 						        <table class="tb rental_tb01">
-						            <tr>
-						                <th scope="col" style="width: 100px;">지역</th>
+						        	<tr>
+						                <th scope="col" style="width: 100px;">회사명</th>
 						                <td>
-						                    <div class="">
-						                        <label for="areaDrop">지역</label>
-						                        <input type="text" id="areaDrop" maxLength="80" class="input clear" oninput="charOnly(this)" />
+						                    <div class="tb_flex">
+						                        <label for="cmpNm">회사명</label>
+						                        <input type="text" id="cmpNm"  maxLength="80" class="input clear" oninput="charOnly(this)" />
 						                    </div>
 						                </td>
 						            </tr>
@@ -219,12 +222,12 @@ button.red_btn:hover {
 						            </tr>
 						        </table>
 						        <table class="tb rental_tb01">
-						            <tr>
-						                <th scope="col" style="width: 100px;">업체명</th>
+						        	<tr>
+						                <th scope="col" style="width: 100px;">지역</th>
 						                <td>
-						                    <div class="tb_flex">
-						                        <label for="cmpNm">업체명</label>
-						                        <input type="text" id="cmpNm"  maxLength="80" class="input clear" oninput="charOnly(this)" />
+						                    <div class="">
+						                        <label for="areaDrop">지역</label>
+						                        <input type="text" id="areaDrop" maxLength="80" class="input clear" readOnly />
 						                    </div>
 						                </td>
 						            </tr>

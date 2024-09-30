@@ -136,4 +136,14 @@ public class TotSttsServiceImpl extends CmmnAbstractServiceImpl implements TotSt
     	paramsMap.put("delRmrk", "삭제");
     	return totSttsDao.deleteCarShare(paramsMap);
     }
+    
+    /**
+     * 회사명 자동완성
+     * @return
+     * @throws RimsException
+     */
+    @Override
+    public List<Map<String, Object>> selectCoNm(Map<String, Object> paramsMap) throws RimsException {
+    	return totSttsDao.selectCoNm(paramsMap);
+    }
 }
