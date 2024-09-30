@@ -11,11 +11,11 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
     // bjlee, IE 10 부터 지원하는 strict mode 선언. 안전하지 않은 액션들에 대해 예외를 발생시킴
     'use strict';
 
-	W.$contactlessVfc = W.$contactlessVfc || {};
+	W.$drive = W.$drive || {};
 
 	$(document).ready(function() {
-		$contactlessVfc.ui.pageLoad();		//최초 페이지 로드 시
-		$contactlessVfc.event.setUIEvent();
+		$drive.ui.pageLoad();		//최초 페이지 로드 시
+		$drive.event.setUIEvent();
 	});
 
 	var pcColumns = [
@@ -69,7 +69,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
                { field: "sn",          title: "순번",         width: "65px",  template: "#=sn #" },
                { field: "dln",         title: "면허번호",     width: "180px", template: "#= dln != null ? dln : '-' #"},
 //               { field: "lcnsType",    title: "면허종별",     width: "80px",  template: "#= lcnsType != null ? lcnsType : '-' #"},
-               { field: "vrfcDmndDt",  title: "확인요청일시", width: "150px", template: "#= vrfcDmndDt != null ? $contactlessVfc.ui.dateFomat(vrfcDmndDt) : '-' #"},
+               { field: "vrfcDmndDt",  title: "확인요청일시", width: "150px", template: "#= vrfcDmndDt != null ? $drive.ui.dateFomat(vrfcDmndDt) : '-' #"},
                { field: "vrfcMthd",    title: "확인방법",     width: "130px", template: "#= vrfcMthd != null ? vrfcMthd : '-' #"},
                { field: "resNm",       title: "확인결과",     width: "150px", template: "#= verifyNm != null ? verifyNm : '-' #"},
 //               { field: "rqstrNm",     title: "요청자",       width: "150px", template: "#= rqstrNm != null ? rqstrNm : '-' #"},
@@ -98,15 +98,14 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 
 
 
-	$contactlessVfc.ui = {
+	$drive.ui = {
 		pageLoad : function() {
 			$(".license_bg input").attr('readonly', true);
 			$('.license_bg input[type="radio"]').attr('disabled', true);
 			$('.license_bg input').css('background-color', '#f5f5f5');
 			
-			
-			$contactlessVfc.ui.kendoGrid();
-			$contactlessVfc.ui.detailDefectGrid();
+			$drive.ui.kendoGrid();
+			$drive.ui.detailDefectGrid();
 
 			if(userTypeBool){
 				$(".photo_btn").remove();
@@ -260,12 +259,12 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 				noRecords: {
 					template: "데이터가 없습니다."
 				},
-				columns: $contactlessVfc.ui.columns(),
+				columns: $drive.ui.columns(),
 				scrollable: true,
 				editable: false,
 				resizable: true,
 				selectable: "row",
-                change: $contactlessVfc.ui.carRowClickEvent
+                change: $drive.ui.carRowClickEvent
 			});
 		},
 		
@@ -333,7 +332,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 //                                options.lcnsIdntfCd = ''; // 국내 , 국제 면허 (전체)
 
                                 //✂️todo : 운전자격이력일때
-                                var dateData = $contactlessVfc.event.vfcHistDateDt();
+                                var dateData = $drive.event.vfcHistDateDt();
                                 var startDtTm = dateData.startDtTm;
                                 var endDtTm = dateData.endDtTm;
 
@@ -373,7 +372,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 				editable: false,
 				resizable: true,
 				selectable: "row",
-                change: $contactlessVfc.ui.popupRowClickEvent
+                change: $drive.ui.popupRowClickEvent
             });
 
         },
@@ -654,7 +653,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			data.idLicenseNumber = data.idLicenseNumber.replace(/-/g, '');
 			const idLicenseTypeArray = data.idLicenseType.split(',');
 			data.idLicenseType = idLicenseTypeArray[0].trim();
-			$contactlessVfc.ui.getOcrData(data);
+			$drive.ui.getOcrData(data);
         },
 		getOcrData:function(data){
 			$('.license_bg input').removeAttr('readonly');
@@ -710,12 +709,12 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 //			$("#num04").attr('disabled', true);
 //			$('input[type=radio]').attr("disabled", true);
 			vrfcMthd = 2;
-			$contactlessVfc.event.lessThan1Year(data.idIssueDate);
+			$drive.event.lessThan1Year(data.idIssueDate);
 		}
 	};
 
 	//이벤트 정의
-	$contactlessVfc.event = {
+	$drive.event = {
 		setUIEvent : function() {
 			$('.rentInfoNo_btn').on('click', function(){
 				var param = {};
@@ -725,21 +724,21 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 						alert("잘못된 대여정보일련번호입니다. 다시 입력해주세요.")
 					}else{
 						$(".similarity_pop").css("display", "flex");
-						$contactlessVfc.ui.search(data);
+						$drive.ui.search(data);
 					}
 				});
 				
 			});
 			
 			$('.verify-btn').click(function(){
-				$contactlessVfc.event.verifyLicense();
+				$drive.event.verifyLicense();
 			});
 			$('.verify-btn-app').click(function(){  // 앱테스트중
 				if($('#car_num').val() == '') {
 					alert("차량번호를 입력해 주십시오.");
 				} else if($('#num01').val()!='' && $('#num02').val()!='' && $('#num03').val()!='' && $('#num04').val()!='' &&
 				$('#user_name02').val()!='' && $("input[type=radio][name=category01]:checked").val() !=undefined){
-					$contactlessVfc.ui.similarityApp();
+					$drive.ui.similarityApp();
 				} else {
 					alert("면허증 촬영 및 면허증 정보를 입력해 주십시오.");
 				}
@@ -749,7 +748,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 				$('.sub02_03').css('display', 'block');
 //				$('.sub02_04').css('display', 'none');
 				$('#result').empty();
-				$contactlessVfc.event.resetInput();
+				$drive.event.resetInput();
 			});
 
 			$('.blue_btn').click(function(){
@@ -757,7 +756,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			});
 
 			$('.reset-btn').click(function(){
-				$contactlessVfc.event.resetInput();
+				$drive.event.resetInput();
 			});
 
             // 대여유형 포함 코드 =======================================
@@ -776,7 +775,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 //				    alert('대여유형을 선택해주세요.');
 //				}
 //				else {
-//					$contactlessVfc.event.updateRentSttsCdInclRentalType(param);
+//					$drive.event.updateRentSttsCdInclRentalType(param);
 //				}
 //			});
 			//================================================end=======
@@ -786,7 +785,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 				if ($('#car_num').val() == ''){
 					alert('차량번호를 입력해주세요.');
 				} else {
-					$contactlessVfc.event.updateRentSttsCd();
+					$drive.event.updateRentSttsCd();
 				}
 			});
 			//================================================end=======
@@ -809,7 +808,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 				$(".qrCfm").attr('disabled', true);
 		    });
 			$(".photo_btn").on("click",function(){
-				$contactlessVfc.ui.showAndroidToast();
+				$drive.ui.showAndroidToast();
 		  	});
 
 
@@ -905,7 +904,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 
 									vrfcMthd = 2;
 
-									$contactlessVfc.event.lessThan1Year(data.id.issued_date, license_parts);
+									$drive.event.lessThan1Year(data.id.issued_date, license_parts);
 									kendo.ui.progress($(".upload_popup"), false);
 								} else {
 									alert("식별되지 않는 정보가 있습니다.\n이미지 상태를 확인해주시기 바랍니다");
@@ -959,7 +958,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 					$(".qrCfm").attr('disabled', false);
 					$(".qrCfm").removeClass('gray_btn');
 					$(".qrCfm").addClass('blue_btn');
-					$contactlessVfc.ui.fnQrInfoReq();
+					$drive.ui.fnQrInfoReq();
 				}
 				else{
 					$('input[type=checkbox][name=agreeInfo]').prop('checked', false);
@@ -975,7 +974,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 					$(".qrCfm").attr('disabled', false);
 					$(".qrCfm").removeClass('gray_btn');
 					$(".qrCfm").addClass('blue_btn');
-					$contactlessVfc.ui.fnQrInfoReq();
+					$drive.ui.fnQrInfoReq();
 				} else{
 					$('#all_chk').prop("checked", false);
 					$(".qrCfm").removeClass('blue_btn');
@@ -985,17 +984,17 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 		    });
 
 			$('.qrCfm').click(function(){
-				$contactlessVfc.ui.getVPData();
+				$drive.ui.getVPData();
 			});
 
 			$('.agree_view01').click(function(){
 				var title = "개인정보 이용 동의";
-				$contactlessVfc.ui.cretePolicyPopup(title);
+				$drive.ui.cretePolicyPopup(title);
 			});
 
 			$('.agree_view02').click(function(){
 				var title = "고유식별정보처리동의";
-				$contactlessVfc.ui.cretePolicyPopup(title);
+				$drive.ui.cretePolicyPopup(title);
 			});
 
 			$('.license_popup .cancel_btn').click(function(){
@@ -1048,7 +1047,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 				$('.result_popup').css('display', 'none');
 			    $(".result_popup").removeClass("view");
 				if($('#resetChk').prop("checked"))
-					$contactlessVfc.event.resetInput();
+					$drive.event.resetInput();
 				location.reload();
 			});
 
@@ -1124,14 +1123,14 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
                                             </table>
                                     </div>
                                     <div class="btn_flex" style = "padding-top: 30px;">
-                                        <button class="gray_btn cancel_popup_btn" onclick= $contactlessVfc.event.popupClose();>닫기</button>
+                                        <button class="gray_btn cancel_popup_btn" onclick= $drive.event.popupClose();>닫기</button>
                                     </div>
                         		</div>
                             </div>`;
             $('#popup_drvVfcHist_box').append(tempHtml);
                  // ✂️todo
-            //            $contactlessVfc.ui.popupGridLoad('#rentalHistManage_grid','/vfc/rentalHistManage/selectRentalHistList', rentalHistManageColumns);
-            $contactlessVfc.ui.popupGridLoad('#rentalHistManage_grid','/vfc/drvVfcHist/listView.do', rentalHistManageColumns);
+            //            $drive.ui.popupGridLoad('#rentalHistManage_grid','/vfc/rentalHistManage/selectRentalHistList', rentalHistManageColumns);
+            $drive.ui.popupGridLoad('#rentalHistManage_grid','/vfc/drvVfcHist/listView.do', rentalHistManageColumns);
 
         },
 
@@ -1168,13 +1167,13 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
                                             </table>
                                     </div>
                                     <div class="btn_flex" style = "padding-top: 30px;">
-                                        <button class="blue_btn mobiDefect-btn"  style = "width: 250px;" onclick= $contactlessVfc.event.detailMobiDefectUi();>차량 결함정보 상세내용 확인</button>
-                                        <button class="gray_btn cancel_popup_btn" onclick= $contactlessVfc.event.popupClose(); >닫기</button>
+                                        <button class="blue_btn mobiDefect-btn"  style = "width: 250px;" onclick= $drive.event.detailMobiDefectUi();>차량 결함정보 상세내용 확인</button>
+                                        <button class="gray_btn cancel_popup_btn" onclick= $drive.event.popupClose(); >닫기</button>
                                     </div>
                                 </div>
                             </div>`;
             $('#popup_mobiDefect_box').append(tempHtml);
-            $contactlessVfc.ui.popupGridLoad('#mobiDefect_grid','/sys/carManage/selectCarList',defectColumns);
+            $drive.ui.popupGridLoad('#mobiDefect_grid','/sys/carManage/selectCarList',defectColumns);
         },
 
         // 2024.07.31 jeonghyewon code add
@@ -1266,14 +1265,14 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 		alcheraCheckResult: function(json) {
 			var data = JSON.parse(json);
 			if(data.similarityConfidence != null && data.livenessConfidence != null) {
-				$contactlessVfc.event.verifyLicense();
+				$drive.event.verifyLicense();
 			} else {
 				alert('data 없음');
 			}
 		},
 		
 		verifyLicense : function() {
-                var dateData = $contactlessVfc.event.vfcHistDateDt();
+                var dateData = $drive.event.vfcHistDateDt();
                 var startDtTm = dateData.startDtTm;
                 var endDtTm = dateData.endDtTm;
 
@@ -1347,11 +1346,11 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 								if (result != null && result != "") {
 									rentno = result.rentno;
 									if(data.body.f_rtn_code == '00'){
-                                        $contactlessVfc.event.popupRntlHsList();
+                                        $drive.event.popupRntlHsList();
 										if(result.data != undefined && result.total != 0){
 											var html = `<p class="current_info" >
 						                        차량 결함 정보는
-						                        <span class = "popupSpan" id ="rslt_vehicleDefect" onclick =$contactlessVfc.event.popupVhclDfctListClick()>존재</span> 합니다.
+						                        <span class = "popupSpan" id ="rslt_vehicleDefect" onclick =$drive.event.popupVhclDfctListClick()>존재</span> 합니다.
 						                    </p>`;
 											$('#result').prepend(html);
 										} else{
@@ -1368,10 +1367,10 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
                                         //						                    </p><br>`;
                                         //											$('#result').prepend(html);
                                         //										} else {
-                                        //                                        $contactlessVfc.event.popupVhclDfctList();
+                                        //                                        $drive.event.popupVhclDfctList();
                                         //					                    	var html = `<br><p class="current_info">
                                         //						                        최근 7일 대여이력은
-                                        //						                        <span class = "popupSpan" id = "rslt_rentalHistory" onclick =$contactlessVfc.event.popupRntlHsListClick(); >`+ result.rentCnt + `건</span> 입니다.
+                                        //						                        <span class = "popupSpan" id = "rslt_rentalHistory" onclick =$drive.event.popupRntlHsListClick(); >`+ result.rentCnt + `건</span> 입니다.
                                         //						                    </p><br>`;
                                         //											$('#result').prepend(html);
                                         //										}
@@ -1384,10 +1383,10 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 						                    </p><br>`;
 											$('#result').prepend(html);
 										} else {
-                                        $contactlessVfc.event.popupVhclDfctList();
+                                        $drive.event.popupVhclDfctList();
 					                    	var html = `<br><p class="current_info">
 						                        최근 7일 운전자격확인 건수는
-						                        <span class = "popupSpan" id = "rslt_rentalHistory" onclick =$contactlessVfc.event.popupRntlHsListClick(); >`+ result.VfcHistCnt + `건</span> 입니다.
+						                        <span class = "popupSpan" id = "rslt_rentalHistory" onclick =$drive.event.popupRntlHsListClick(); >`+ result.VfcHistCnt + `건</span> 입니다.
 						                    </p><br>`;
 											$('#result').prepend(html);
 										}
@@ -1494,17 +1493,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			vrfcMthd = 1;
 		},
 		
-//		similarityVerf : function() {
-//			alert("hi")
-//		},
 
-		similarityChkFn: function() {
-			if ($('.similarityChk').prop('checked')) {
-			    console.log(true);
-			} else {
-			    console.log(false);
-			}
-		}
 	};
 
 }(window, document, jQuery));

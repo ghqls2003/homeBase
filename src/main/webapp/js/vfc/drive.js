@@ -7,7 +7,8 @@ var choiceVhclRegNo = '';
 var tempHtml = ''; // 팝업 그리드 동적 html
 var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
 var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
-var similarityChk = ''; // 유사도 검증 체크박스 전역변수
+var similarityChk = false; // 유사도 검증 체크박스 전역변수
+var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 (function (W, D, $) {
     // bjlee, IE 10 부터 지원하는 strict mode 선언. 안전하지 않은 액션들에 대해 예외를 발생시킴
     'use strict';
@@ -17,7 +18,6 @@ var similarityChk = ''; // 유사도 검증 체크박스 전역변수
 	$(document).ready(function() {
 		$drive.ui.pageLoad();		//최초 페이지 로드 시
 		$drive.event.setUIEvent();
-		similarityChk = false;
 		
 	});
 
@@ -635,16 +635,24 @@ var similarityChk = ''; // 유사도 검증 체크박스 전역변수
 			data.idLicenseNumber = data.idLicenseNumber.replace(/-/g, '');
 			const idLicenseTypeArray = data.idLicenseType.split(',');
 			data.idLicenseType = idLicenseTypeArray[0].trim();
+			similarityImage = true;
+//			if(data.id.org_image_path!=null && data.id.org_image_path!=''){
+//				similarityImage = true;
+//				//alert(similarityImage)
+//			}else{
+//				//alert(similarityImage)
+//			}
 			$drive.ui.getOcrData(data);
         },
 		getOcrData:function(data){
-			if(!similarityChk){
-				$('.license_bg input').removeAttr('readonly');
-				$('.license_bg input[type="radio"]').removeAttr('disabled');
-				$('.license_bg input').css('background-color', '');
-			}
-			
-			
+			//alert(data.id.org_image_path);
+			$('.license_bg input').removeAttr('readonly');
+			$('.license_bg input[type="radio"]').removeAttr('disabled');
+			$('.license_bg input').css('background-color', '');
+			$("#num01").data("kendoDropDownList").readonly(false);
+			$("#num01").closest("span").css("background-color", "");
+				
+				
 			$('#name').val(data.idName);
 			$("#num01").data("kendoDropDownList").value(data.idLicenseNumber.substr(0,2));
 			$('#num02').val(data.idLicenseNumber.substr(2,2));
@@ -707,9 +715,15 @@ var similarityChk = ''; // 유사도 검증 체크박스 전역변수
 			$('.verify-btn-app').click(function(){  // 앱테스트중
 				if($('#car_num').val() == '') {
 					alert("차량번호를 입력해 주십시오.");
-				} else if($('#num01').val()!='' && $('#num02').val()!='' && $('#num03').val()!='' && $('#num04').val()!='' &&
-				$('#user_name02').val()!='' && $("input[type=radio][name=category01]:checked").val() !=undefined){
+				} else if(($('#num01').val()!='' && $('#num02').val()!='' && $('#num03').val()!='' && $('#num04').val()!='' &&
+				$('#user_name02').val()!='' && $("input[type=radio][name=category01]:checked").val() !=undefined)&& similarityChk==true && similarityImage == false){
+					alert("유사도 검증은 면허증 촬영시에만 가능합니다.");
+				} else if(($('#num01').val()!='' && $('#num02').val()!='' && $('#num03').val()!='' && $('#num04').val()!='' &&
+				$('#user_name02').val()!='' && $("input[type=radio][name=category01]:checked").val() !=undefined)&&similarityChk==true && similarityImage == true){
 					$drive.ui.similarityApp();
+				}else if($('#num01').val()!='' && $('#num02').val()!='' && $('#num03').val()!='' && $('#num04').val()!='' &&
+				$('#user_name02').val()!='' && $("input[type=radio][name=category01]:checked").val() !=undefined){
+					$drive.event.verifyLicense();
 				} else {
 					alert("면허증 촬영 및 면허증 정보를 입력해 주십시오.");
 				}
@@ -772,12 +786,22 @@ var similarityChk = ''; // 유사도 검증 체크박스 전역변수
 			});
 
 			$('.license_btn').click(function() {
+//				if(similarityChk){
+//					$("#similarityChk").prop('checked', false);
+//					$(".similarityChkBox").css("display", "none");
+//					$("#similarity_tb_top").css("display", "none");
+//					$drive.event.similarityChkFn();
+//					alert("모바일 면허증 선택 시 유사도 검증이 불가합니다.")
+//				}
+//				
+//				console.log(similarityChk)
 				$('#all_chk').prop("checked", false);
 				$('input[type=checkbox][name=agreeInfo]').prop('checked', false);
 				$("#qrCodeArea").css('display', 'none');
 				$(".qrCfm").removeClass('blue_btn');
 				$(".qrCfm").attr('disabled', true);
 		    });
+
 			$(".photo_btn").on("click",function(){
 				$drive.ui.showAndroidToast();
 		  	});
@@ -1042,12 +1066,35 @@ var similarityChk = ''; // 유사도 검증 체크박스 전역변수
 			});
 			
 			$('#similarityChk').on('change', function() {
-			    $drive.event.similarityChkFn(); // 호출할 함수
+				if ($('#similarityChk').prop('checked')) {
+					similarityChk = true
+					console.log(similarityChk)
+					// 유사도 검증 안내 팝업
+					$(".similarity_pop").css("display", "flex");
+				} else {
+					similarityChk = false
+					console.log(similarityChk)
+				}
+				
+//				if(similarityImage){
+//					alert("됐다");
+//				}else{
+//					alert("안됨")
+//				}
+			    //$drive.event.similarityChkFn(); // 호출할 함수
 			});
 			
 			$(".similarity_pop .close").on("click",function(){
 			    $(".similarity_pop").css("display", "none");
-			 });
+			});
+		
+//			$("#qrCancle").on("click",function(){
+//				if(userType!="PC"){
+//					$(".similarityChkBox").css("display", "");
+//					$("#similarity_tb_top").css("display", "");
+//					$('#similarityChk').prop('checked', false)
+//				}
+//			});
 
 
 		},
@@ -1468,48 +1515,49 @@ var similarityChk = ''; // 유사도 검증 체크박스 전역변수
 			vrfcMthd = 1;
 		},
 		
-		similarityChkFn: function() {
-			if ($('#similarityChk').prop('checked')) {
-				similarityChk = true
-				// 유사도 검증 안내 팝업
-				$(".similarity_pop").css("display", "flex");
-				
-				// 값 초기화
-				$("#num01").data("kendoDropDownList").select(0);
-				$('#user_tel').val('');
-				$('#license_num').val('');
-				$('#name').val('');
-				$('#num02').val('');
-				$('#num03').val('');
-				$('#num04').val('');
-				$("input[type=radio][name=category01]").prop('checked', false);
-	//			$("#name").attr('disabled', false);
-				$("#num01").data("kendoDropDownList").readonly(false);
-				$("#num02").attr('disabled', false);
-				$("#num03").attr('disabled', false);
-				$("#num04").attr('disabled', false);
-				$('input[type=radio]').attr("disabled", false);
-				vrfcMthd = 1;
-				
-				// 리드온리 처리
-				$(".license_bg input").attr('readonly', true);
-				$("#num01").data("kendoDropDownList").readonly();
-				$("#num01").closest("span").css("background-color", "#f5f5f5"); 
-				$('.license_bg input[type="radio"]').attr('disabled', true);
-				$('.license_bg input').css('background-color', '#f5f5f5');
-
-
-			} else {
-				similarityChk = false
-				
-				// 리드온리 해제
-				$('.license_bg input').removeAttr('readonly');
-				$('.license_bg input[type="radio"]').removeAttr('disabled');
-				$('.license_bg input').css('background-color', '');
-				$("#num01").data("kendoDropDownList").readonly(false);
-				$("#num01").closest("span").css("background-color", "");
-			}
-		}
+//		similarityChkFn: function() {
+//			if ($('#similarityChk').prop('checked')) {
+//				similarityChk = true
+//				console.log(similarityChk)
+//				// 유사도 검증 안내 팝업
+//				$(".similarity_pop").css("display", "flex");
+//				
+//				// 값 초기화
+////				$("#num01").data("kendoDropDownList").select(0);
+////				$('#user_tel').val('');
+////				$('#license_num').val('');
+////				$('#name').val('');
+////				$('#num02').val('');
+////				$('#num03').val('');
+////				$('#num04').val('');
+////				$("input[type=radio][name=category01]").prop('checked', false);
+////	//			$("#name").attr('disabled', false);
+////				$("#num01").data("kendoDropDownList").readonly(false);
+////				$("#num02").attr('disabled', false);
+////				$("#num03").attr('disabled', false);
+////				$("#num04").attr('disabled', false);
+////				$('input[type=radio]').attr("disabled", false);
+////				vrfcMthd = 1;
+//				
+//				// 리드온리 처리
+//				$(".license_bg input").attr('readonly', true);
+//				$("#num01").data("kendoDropDownList").readonly();
+//				$("#num01").closest("span").css("background-color", "#f5f5f5"); 
+//				$('.license_bg input[type="radio"]').attr('disabled', true);
+//				$('.license_bg input').css('background-color', '#f5f5f5');
+//
+//
+//			} else {
+//				similarityChk = false
+//				console.log(similarityChk)
+//				// 리드온리 해제
+//				$('.license_bg input').removeAttr('readonly');
+//				$('.license_bg input[type="radio"]').removeAttr('disabled');
+//				$('.license_bg input').css('background-color', '');
+//				$("#num01").data("kendoDropDownList").readonly(false);
+//				$("#num01").closest("span").css("background-color", "");
+//			}
+//		}
 	};
 
 }(window, document, jQuery));

@@ -1408,7 +1408,7 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
 .sub04 .selec_wr ul.selec_box li.li_slec{margin-right: 11px;}
 .sub04 .selec_wr ul.selec_box li.chk_wr{margin-left: 15px;display: flex;align-items: center;}
 .sub04 .selec_wr ul.selec_box li.chk_wr label{margin-left: 6px;margin-right: 16px;}
-.sub04 .selec_wr ul.selec_box li .k-picker-solid{width: auto !important; border-radius: 8px;background-color: #fff;}
+.sub04 .selec_wr ul.selec_box li .k-picker-solid{border-radius: 8px;background-color: #fff;}
 
 .sub04 .selec_wr ul.selec_box li .selec_flex{display: flex; align-items: center; justify-content: flex-start;}
 
