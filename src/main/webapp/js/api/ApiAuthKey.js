@@ -6,6 +6,7 @@
 	var colSetTime = 0;  // 컬럼 생성 전에 그리드 생성 방지용
 	var normalUserStts = '';
 	var authAdmin = 0;
+	var devOper = null;
 	$(document).ready(function() {
 		$apiAuth.ui.pageLoad();		//최초 페이지 로드 시
 		$apiAuth.event.setUIEvent();
@@ -33,18 +34,18 @@
 					clearInterval(startIn);
 				}
 			}, 5);
-			//			var searchOtherCondition2 = [
-			//				{ value: "", text: "상태 선택" },
-			//				{ value: "1", text: "신청" },
-			//				{ value: "2", text: "활용" },
-			//				{ value: "3", text: "반려" },
-			//				{ value: "4", text: "중지" }
-			//			];
-			//			$("#sttsDrop").kendoDropDownList({
-			//				dataTextField: "text",
-			//				dataSource: searchOtherCondition2,
-			//				dataValueField: "value",
-			//			});
+			var searchOtherCondition2 = [
+				{ value: "", text: "상태 선택" },
+				{ value: "1", text: "신청" },
+				{ value: "2", text: "활용" },
+				{ value: "3", text: "반려" },
+				{ value: "4", text: "중지" }
+			];
+			$("#sttsDrop").kendoDropDownList({
+				dataTextField: "text",
+				dataSource: searchOtherCondition2,
+				dataValueField: "value",
+			});
 			var searchCondition = [
 				{ value: "", text: "검색조건 선택" },
 				{ value: "companyNm", text: "회사명" },
@@ -58,17 +59,18 @@
 				dataValueField: "value",
 			});
 
-			//			$("#sttsDrop2").kendoDropDownList({
-			//				dataTextField: "text",
-			//				dataSource: searchOtherCondition2,
-			//				dataValueField: "value",
-			//				change: function(e) {
-			//					var grid = $('#operator_grid').data('kendoGrid');
-			//					grid.dataSource.page(1);
-			//					grid.dataSource.read();
-			//					$apiAuth.ui.apiSttsview();
-			//				}
-			//			});
+			$("#sttsDrop2").kendoDropDownList({
+				dataTextField: "text",
+				dataSource: searchOtherCondition2,
+				dataValueField: "value",
+				change: function(e) {
+					var grid = $('#operator_grid').data('kendoGrid');
+					grid.dataSource.page(1);
+					grid.dataSource.read();
+					normalUserStts = this.value();
+					$apiAuth.ui.apiSttsview();
+				}
+			});
 
 			$(document).on('click', '.copy-key', function() {
 				var keyToCopy = $(this).data('key');
@@ -136,10 +138,10 @@
 				ajax(true, contextPath + '/api/apiAuthKey/listView', 'body', '조회중입니다', param, function(data) {
 					var apiData = data;
 
-					//					var hasOperSeCdZero = apiData.data.some(function(item) {
-					//						return item.operSeCd === '0';
-					//					});
-					//
+					var hasOperSeCdZero = apiData.data.some(function(item) {
+						return item.operSeCd === '0';
+					});
+
 					//
 					$(".apply").hide();
 					$(".reissuance").hide();
@@ -148,15 +150,43 @@
 					$(".NewApi").hide();
 					let found = false;
 
-					//										for (let i = 0; i < apiData.data.length; i++) {
-					//											if (apiData.data[i].sttsCd == '1' && apiData.data[i].operSeCd == '1') {
-					//												$(".Applying").show();
-					//												found = true;
-					//												break;
-					//											}
-					//										}
+					for (let i = 0; i < apiData.data.length; i++) {
+						if (apiData.data[i].sttsCd == '1' && apiData.data[i].operSeCd == '1') {
+							$(".Applying").show();
+							found = true;
+							break;
+						}
+					}
 
 					if (!found) {
+						if (apiData.data.length == 0) {
+							$(".apply").show();
+							$(".extend").hide();
+							$(".Applying").hide();
+							$(".reissuance").hide();
+						} else {
+							if (apiData.data[0].sttsCd == '1') {
+								$(".Applying").show();
+
+							}
+							if (apiData.data[0].sttsCd == '2') {
+								$(".apply").hide();
+								$(".reissuance").show();
+								$(".TestKey").show();
+								$(".extend").show();
+							}
+							if (apiData.data[0].sttsCd == '3') {
+								$(".ReApi").show();
+								$(".reissuance").hide();
+								$(".extend").hide();
+							}
+							if (apiData.data[0].sttsCd == '4') {
+								$(".ReApi").show();
+								$(".reissuance").hide();
+								$(".extend").hide();
+							}
+						}
+					}else{
 						if (apiData.data.length == 0) {
 							$(".apply").show();
 							$(".extend").hide();
@@ -183,33 +213,8 @@
 								$(".extend").hide();
 							}
 						}
+						
 					}
-
-					//					if (apiData.data.length == 0) {
-					//						$(".apply").show();
-					//						$(".extend").hide();
-					//						$(".Applying").hide();
-					//						$(".reissuance").hide();
-					//					} else {
-					//						if (apiData.data[0].sttsCd == '1') {
-					//							$(".Applying").show();
-					//						}
-					//						if (apiData.data[0].sttsCd == '2') {
-					//							$(".apply").hide();
-					//							$(".reissuance").show();
-					//							$(".extend").show();
-					//						}
-					//						if (apiData.data[0].sttsCd == '3') {
-					//							$(".ReApi").show();
-					//							$(".reissuance").hide();
-					//							$(".extend").hide();
-					//						}
-					//						if (apiData.data[0].sttsCd == '4') {
-					//							$(".ReApi").show();
-					//							$(".reissuance").hide();
-					//							$(".extend").hide();
-					//						}
-					//					}
 				});
 
 			}
@@ -255,18 +260,18 @@
 								return "<span class='cell-popup copy-key' data-key='" + dataItem.secretKey + "'>" + dataItem.secretKey + "</span>";
 							}
 						},
-						//						{
-						//							field: "operSeCd",
-						//							title: "구분",
-						//							width: 30,
-						//							template: function(dataItem) {
-						//								if (dataItem.operSeCd == '1') {
-						//									return '운영'
-						//								} else {
-						//									return '개발'
-						//								}
-						//							}
-						//						},
+						{
+							field: "operSeCd",
+							title: "구분",
+							width: 30,
+							template: function(dataItem) {
+								if (dataItem.operSeCd == '1') {
+									return '운영'
+								} else {
+									return '개발'
+								}
+							}
+						},
 						{ field: "statusDescription", title: "상태", width: 30 },
 						{
 							template: "#if(sttsCd == '1') {#"
@@ -306,18 +311,18 @@
 								return "<span class='cell-popup copy-key' data-key='" + dataItem.secretKey + "'>" + dataItem.secretKey + "</span>";
 							}
 						},
-						//						{
-						//							field: "operSeCd",
-						//							title: "구분",
-						//							width: 30,
-						//							template: function(dataItem) {
-						//								if (dataItem.operSeCd == '1') {
-						//									return '운영'
-						//								} else {
-						//									return '개발'
-						//								}
-						//							}
-						//						},
+						{
+							field: "operSeCd",
+							title: "구분",
+							width: 30,
+							template: function(dataItem) {
+								if (dataItem.operSeCd == '1') {
+									return '운영'
+								} else {
+									return '개발'
+								}
+							}
+						},
 						{ field: "statusDescription", title: "상태", attributes: { "class": "table-cell" }, width: 30 },
 					];
 
@@ -369,12 +374,12 @@
 								options.searchCondition = $("#searchCondition").val();
 								options.searchText = $("#search_box").val();
 								options.authrtCd = authrtCd
-								//								options.sttsCd = $("#sttsDrop").val()
+								options.DevOper = devOper
 								options.sttsCd = normalUserStts
 							} else {
-								//								options.userSn = UserSn
 								options.sttsCd = normalUserStts
-								//								options.authrtCd = authrtCd
+								options.DevOper = devOper
+
 							}
 							return JSON.stringify(options);
 						}
@@ -436,9 +441,9 @@
 			//			param.operSn = 1
 			ajax(true, contextPath + '/api/apiAuthKey/insertApiAuthKey', 'body', '확인중입니다.', param, function(data) {
 				alert("API가 신청되었습니다.");
-				$apiAuth.ui.ApplyStts();
-				//				$apiAuth.ui.testKey();
-				location.reload();
+				//				$apiAuth.ui.ApplyStts();
+				$apiAuth.ui.testKey();
+				//				location.reload();
 
 			});
 		},
@@ -450,14 +455,14 @@
 				location.reload();
 			});
 		},
-		//		testKey: function() {
-		//			var param = {}
-		//			//			param.operSeCd = '0'
-		//			ajax(true, contextPath + '/api/apiAuthKey/insertApiTestKey', 'body', '확인중입니다.', param, function(data) {
-		//				alert("API 개발용 키가 신청되었습니다.");
-		//				$apiAuth.ui.ApplyStts();
-		//			});
-		//		},
+		testKey: function() {
+			var param = {}
+			//			param.operSeCd = '0'
+			ajax(true, contextPath + '/api/apiAuthKey/insertApiTestKey', 'body', '확인중입니다.', param, function(data) {
+				alert("API 개발용 키가 신청되었습니다.");
+				$apiAuth.ui.ApplyStts();
+			});
+		},
 		apiSttsview: function() {
 			const options = {};
 			if (authrtCd == "K01" || authrtCd == "Z01" || authrtCd == 'D01') {
@@ -466,12 +471,14 @@
 				options.searchCondition = $("#searchCondition").val();
 				options.searchText = $("#search_box").val();
 				options.authrtCd = authrtCd
-				//				options.sttsCd = $("#sttsDrop").val()
-				options.sttsCd = normalUserStts
+				options.sttsCd = $("#sttsDrop").val()
+				options.devOper = devOper
 			} else {
 				//								options.userSn = UserSn
 				//				options.authrtCd = authrtCd
 				options.sttsCd = normalUserStts
+				options.devOper = devOper
+
 			}
 			ajax(true, contextPath + '/api/apiAuthKey/apiSttsview', 'body', '조회중입니다', options, function(data) {
 				// 초기값 설정
@@ -481,6 +488,42 @@
 				$('#ApiStop').html('0 건');
 				$('#ApiHold').html('0 건');
 				$('#ApiChange').html('0 건');
+
+				if (data.data.length > 0) {
+					for (var i = 0; i < data.data.length; i++) {
+						if (data.data[i].stts == "신청") {
+							$('#APiapplication').html(data.data[i].count + ' 건');//신청
+						}
+						if (data.data[i].stts == "활용") {
+							$('#ApiUse').html(data.data[i].count + ' 건');//활용
+						}
+						if (data.data[i].stts == "반려") {
+							$('#ApiReject').html(data.data[i].count + ' 건');//반려
+						}
+						if (data.data[i].stts == "중지") {
+							$('#ApiStop').html(data.data[i].count + ' 건');//중지
+						}
+					}
+				}
+			});
+		},
+		apiSttsview2: function() {
+			const options = {};
+			if (authrtCd == "K01" || authrtCd == "Z01" || authrtCd == 'D01') {
+				options.startPicker02 = $("#start-picker02").val();
+				options.endPicker02 = $("#end-picker02").val();
+				options.searchCondition = $("#searchCondition").val();
+				options.searchText = $("#search_box").val();
+				options.authrtCd = authrtCd
+				options.sttsCd = $("#sttsDrop").val()
+				options.sttsCd = normalUserStts
+			} else {
+				options.sttsCd = normalUserStts
+			}
+			ajax(true, contextPath + '/api/apiAuthKey/apiSttsview2', 'body', '조회중입니다', options, function(data) {
+				// 초기값 설정
+				$('#DevApiStop').html('0 건');
+				$('#DevApiUse').html('0 건');
 
 				if (data.data.length > 0) {
 					for (var i = 0; i < data.data.length; i++) {
@@ -606,7 +649,7 @@
 			//신청 (일반)
 			$('#applicationClick').click(function() {
 				if (authAdmin == 1) {
-
+					devOper = '1'
 					normalUserStts = '1';
 					var grid = $('#operator_grid').data('kendoGrid');
 					//				grid.dataSource.page(1);
@@ -617,6 +660,8 @@
 			//활용 (일반)
 			$('#useClick').click(function() {
 				if (authAdmin == 1) {
+					devOper = '1'
+
 					normalUserStts = '2';
 					var grid = $('#operator_grid').data('kendoGrid');
 					grid.dataSource.page(1);
@@ -626,6 +671,7 @@
 			//반려 (일반)
 			$('#rejectClick').click(function() {
 				if (authAdmin == 1) {
+					devOper = '1'
 
 					normalUserStts = '3';
 					var grid = $('#operator_grid').data('kendoGrid');
@@ -636,6 +682,27 @@
 			//중지 (일반)
 			$('#stopClick').click(function() {
 				if (authAdmin == 1) {
+					devOper = '1'
+
+					normalUserStts = '4';
+					var grid = $('#operator_grid').data('kendoGrid');
+					grid.dataSource.page(1);
+					$apiAuth.ui.apiSttsview();
+				}
+			});
+			$('#DevuseClick').click(function() {
+				if (authAdmin == 1) {
+					devOper = '0'
+
+					normalUserStts = '2';
+					var grid = $('#operator_grid').data('kendoGrid');
+					grid.dataSource.page(1);
+					$apiAuth.ui.apiSttsview();
+				}
+			});
+			$('#DevstopClick').click(function() {
+				if (authAdmin == 1) {
+					devOper = '0'
 
 					normalUserStts = '4';
 					var grid = $('#operator_grid').data('kendoGrid');
@@ -667,10 +734,10 @@
 			// 초기 사용자가 신청하기를 클릭한다.
 			$('.apply').click(function() {
 				var confirmation = confirm("API를 신청하시겠습니까?");
-				//				var confirmation = confirm("API를 신청시 테스트키도 같이 발급됩니다. 신청하시겠습니까?");
+				var confirmation = confirm("API를 신청시 테스트키도 같이 발급됩니다. 신청하시겠습니까?");
 				if (confirmation) {
 					$apiAuth.ui.issueAPi();
-					//					$apiAuth.ui.testKey();
+					//										$apiAuth.ui.testKey();
 				} else {
 					return alert('취소되었습니다.')
 				}
@@ -687,15 +754,15 @@
 				}
 			});
 			// 기존 사용자가 개발키 발급을 신청한다.
-			//			$('.TestKey').click(function() {
-			//				var confirmation = confirm("개발용 API를 신청하시겠습니까?");
-			//
-			//				if (confirmation) {
-			//					$apiAuth.ui.testKey();
-			//				} else {
-			//					return alert('취소되었습니다.')
-			//				}
-			//			});
+			$('.TestKey').click(function() {
+				var confirmation = confirm("개발용 API를 신청하시겠습니까?");
+
+				if (confirmation) {
+					$apiAuth.ui.testKey();
+				} else {
+					return alert('취소되었습니다.')
+				}
+			});
 
 		},
 

@@ -14,8 +14,9 @@ public interface ApiAuthKeyService {
      * @throws RimsException
      */
 	List<Map<String, Object>> selectlistView(Map<String, Object> paramsMap);
-//	List<Map<String, Object>> selectIssueApi(Map<String, Object> paramsMap);
 	int selectlistViewCnt(Map<String, Object> paramsMap);
+	List<Map<String, Object>> selectlistView2(Map<String, Object> paramsMap);
+	int selectlistViewCnt2(Map<String, Object> paramsMap);
 	int selectchecksttsCnt(Map<String, Object> paramsMap);
 	int selectcheckapiCnt(Map<String, Object> paramsMap);
 //	List<Map<String, Object>> selectcheckApiNum(Map<String, Object> paramsMap);
@@ -55,4 +56,6 @@ public interface ApiAuthKeyService {
 	int updateextendAPi(Map<String, Object> paramsMap);
 	List<Map<String, Object>> selectApiSttsView(Map<String, Object> paramsMap);
 	int selectApiSttsViewCnt(Map<String, Object> paramsMap);
+	List<Map<String, Object>> selectApiSttsView2(Map<String, Object> paramsMap);
+	int selectApiSttsViewCnt2(Map<String, Object> paramsMap);
 }
