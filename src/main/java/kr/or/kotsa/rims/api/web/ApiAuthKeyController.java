@@ -357,6 +357,7 @@ public class ApiAuthKeyController extends CmmnAbstractServiceImpl {
 	@ResponseBody
 	public Object selectlistApiSttsView(@RequestBody Map<String, Object> paramsMap) {
 		paramsMap.put("userSn", getUserSn());
+		paramsMap.put("authrtCd", getAuthrtCd());
 		int total = apiAuthKeyService.selectApiSttsViewCnt(paramsMap);
 		paramsMap.put("total", total);
 		List<Map<String, Object>> list = apiAuthKeyService.selectApiSttsView(paramsMap);
@@ -370,6 +371,8 @@ public class ApiAuthKeyController extends CmmnAbstractServiceImpl {
 	@ResponseBody
 	public Object selectlistApiSttsView2(@RequestBody Map<String, Object> paramsMap) {
 		paramsMap.put("userSn", getUserSn());
+		paramsMap.put("authrtCd", getAuthrtCd());
+
 		int total = apiAuthKeyService.selectApiSttsViewCnt2(paramsMap);
 		paramsMap.put("total", total);
 		List<Map<String, Object>> list = apiAuthKeyService.selectApiSttsView2(paramsMap);

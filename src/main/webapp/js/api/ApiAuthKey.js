@@ -11,6 +11,7 @@
 		$apiAuth.ui.pageLoad();		//최초 페이지 로드 시
 		$apiAuth.event.setUIEvent();
 		$apiAuth.ui.apiSttsview();
+		$apiAuth.ui.apiSttsview2();
 	});
 
 	$apiAuth.ui = {
@@ -69,6 +70,7 @@
 					grid.dataSource.read();
 					normalUserStts = this.value();
 					$apiAuth.ui.apiSttsview();
+					$apiAuth.ui.apiSttsview2();
 				}
 			});
 
@@ -373,7 +375,7 @@
 								options.endPicker02 = $("#end-picker02").val();
 								options.searchCondition = $("#searchCondition").val();
 								options.searchText = $("#search_box").val();
-								options.authrtCd = authrtCd
+//								options.authrtCd = authrtCd
 								options.DevOper = devOper
 								options.sttsCd = normalUserStts
 							} else {
@@ -470,7 +472,7 @@
 				options.endPicker02 = $("#end-picker02").val();
 				options.searchCondition = $("#searchCondition").val();
 				options.searchText = $("#search_box").val();
-				options.authrtCd = authrtCd
+//				options.authrtCd = authrtCd
 				options.sttsCd = $("#sttsDrop").val()
 				options.devOper = devOper
 			} else {
@@ -488,7 +490,9 @@
 				$('#ApiStop').html('0 건');
 				$('#ApiHold').html('0 건');
 				$('#ApiChange').html('0 건');
-
+//				$('#DevApiStop').html('0 건');
+//				$('#DevApiUse').html('0 건');
+				
 				if (data.data.length > 0) {
 					for (var i = 0; i < data.data.length; i++) {
 						if (data.data[i].stts == "신청") {
@@ -514,7 +518,7 @@
 				options.endPicker02 = $("#end-picker02").val();
 				options.searchCondition = $("#searchCondition").val();
 				options.searchText = $("#search_box").val();
-				options.authrtCd = authrtCd
+//				options.authrtCd = authrtCd
 				options.sttsCd = $("#sttsDrop").val()
 				options.sttsCd = normalUserStts
 			} else {
@@ -527,17 +531,11 @@
 
 				if (data.data.length > 0) {
 					for (var i = 0; i < data.data.length; i++) {
-						if (data.data[i].stts == "신청") {
-							$('#APiapplication').html(data.data[i].count + ' 건');//신청
-						}
 						if (data.data[i].stts == "활용") {
-							$('#ApiUse').html(data.data[i].count + ' 건');//활용
-						}
-						if (data.data[i].stts == "반려") {
-							$('#ApiReject').html(data.data[i].count + ' 건');//반려
+							$('#DevApiUse').html(data.data[i].count + ' 건');//활용
 						}
 						if (data.data[i].stts == "중지") {
-							$('#ApiStop').html(data.data[i].count + ' 건');//중지
+							$('#DevApiStop').html(data.data[i].count + ' 건');//중지
 						}
 					}
 				}
@@ -697,7 +695,7 @@
 					normalUserStts = '2';
 					var grid = $('#operator_grid').data('kendoGrid');
 					grid.dataSource.page(1);
-					$apiAuth.ui.apiSttsview();
+					$apiAuth.ui.apiSttsview2();
 				}
 			});
 			$('#DevstopClick').click(function() {
@@ -707,7 +705,7 @@
 					normalUserStts = '4';
 					var grid = $('#operator_grid').data('kendoGrid');
 					grid.dataSource.page(1);
-					$apiAuth.ui.apiSttsview();
+					$apiAuth.ui.apiSttsview2();
 				}
 			});
 			$('.reissuance').click(function() {
@@ -715,6 +713,10 @@
 			});
 
 			$('#BtnSearch').click(function() {
+				if($("#search_box").val()==''){
+					normalUserStts = ''
+					devOper = ''
+				}
 				var grid = $('#operator_grid').data('kendoGrid');
 				//				grid.dataSource.page(1);
 				grid.dataSource.page(1);

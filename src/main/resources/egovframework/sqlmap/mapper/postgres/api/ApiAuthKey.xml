@@ -117,9 +117,9 @@
 					<if test="searchCondition == 'userId' and searchText != ''">
 						and LOWER(dcms.user_id) like '%' || LOWER(#{searchText}) || '%'
 				    </if>
-				    				        <if test="DevOper != '' and DevOper != null">
-				            AND damk.oper_se_cd = #{DevOper}
-				        </if>
+<!-- 				    				        <if test="DevOper != '' and DevOper != null"> -->
+<!-- 				            AND damk.oper_se_cd = #{DevOper} -->
+<!-- 				        </if> -->
 				        <if test="authrtCd != 'Z01' and authrtCd != 'K01' and authrtCd != 'D01'">
 				        	AND damk.user_sn = #{userSn}::numeric
 				        </if>
@@ -239,9 +239,9 @@
 				        <if test="authrtCd == 'Z01' or authrtCd == 'K01' or authrtCd == 'D01'">
 					      	AND	damk.issu_dt BETWEEN TO_DATE(#{startPicker02}, 'yyyy-mm-dd') AND TO_DATE(#{endPicker02}, 'yyyy-mm-dd')+1
 					    </if>
-					    				        <if test="DevOper != '' and DevOper != null">
-				            AND damk.oper_se_cd = #{DevOper}
-				        </if>
+<!-- 					    <if test="DevOper != '' and DevOper != null"> -->
+<!-- 				            AND damk.oper_se_cd = #{DevOper} -->
+<!-- 				        </if> -->
 						<if test="searchCondition == 'userNm' and searchText != ''">
 							and LOWER(dcms.user_nm) like '%' || LOWER(#{searchText}) || '%'
 					    </if>
@@ -635,7 +635,7 @@
 				    LEFT JOIN
 				        dqvs.dvs_rac_mt_agency agency ON dcmu.bzmn_sn = agency.bzmn_sn
 				    WHERE 1=1
-						and damk.oper_se_cd = #{devOper}
+						and damk.oper_se_cd = '1'
 				        <if test="searchCondition == 'userNm' and searchText != ''">
 				            AND LOWER(dcms.user_nm) LIKE '%' || LOWER(#{searchText}) || '%'
 				        </if>
@@ -688,7 +688,7 @@
 		    LEFT JOIN
 		        dqvs.dvs_rac_mt_agency agency ON dcmu.bzmn_sn = agency.bzmn_sn
 		    WHERE 1=1
-					and damk.oper_se_cd = #{devOper}
+					and damk.oper_se_cd = '1'
 		        <if test="searchCondition == 'userNm' and searchText != ''">
 		            AND LOWER(dcms.user_nm) LIKE '%' || LOWER(#{searchText}) || '%'
 		        </if>
@@ -717,107 +717,107 @@
 		        ELSE '기타'
 		    END
 	</select>
-<!--         <select id="apiSttsViewCnt2" resultType="int"> -->
-<!-- 		select -->
-<!-- 				count(*) -->
-<!-- 			from -->
-<!-- 				(	 -->
-<!-- 				SELECT -->
-<!-- 				    CASE -->
-<!-- 				        WHEN T.stts_cd = '2' THEN '활용' -->
-<!-- 				        WHEN T.stts_cd = '4' THEN '중지' -->
-<!-- 				        ELSE '기타' -->
-<!-- 				    END AS stts, -->
-<!-- 				    COUNT(*) AS count -->
-<!-- 				FROM ( -->
-<!-- 				    SELECT -->
-<!-- 				        damk.stts_cd -->
-<!-- 				    FROM -->
-<!-- 				        dqvs.dvs_api_mt_key damk -->
-<!-- 				    JOIN -->
-<!-- 				        dqvs.dvs_cmm_mt_sso dcms ON dcms.user_sn = damk.user_sn -->
-<!-- 				    JOIN -->
-<!-- 				        dqvs.dvs_cmm_mt_user dcmu ON dcmu.user_sn = damk.user_sn -->
-<!-- 				    LEFT JOIN -->
-<!-- 				        dqvs.dvs_rac_mt_agency agency ON dcmu.bzmn_sn = agency.bzmn_sn -->
-<!-- 				    WHERE 1=1 -->
-<!-- 						and damk.oper_se_cd = '0' -->
-<!-- 				        <if test="searchCondition == 'userNm' and searchText != ''"> -->
-<!-- 				            AND LOWER(dcms.user_nm) LIKE '%' || LOWER(#{searchText}) || '%' -->
-<!-- 				        </if> -->
-<!-- 				        <if test="searchCondition == 'userId' and searchText != ''"> -->
-<!-- 				            AND LOWER(dcms.user_id) LIKE '%' || LOWER(#{searchText}) || '%' -->
-<!-- 				        </if> -->
-<!-- 				        <if test="authrtCd != 'Z01' and authrtCd != 'K01' and authrtCd != 'D01'"> -->
-<!-- 				            AND damk.user_sn = #{userSn}::numeric -->
-<!-- 				        </if> -->
-<!-- 				        <if test="authrtCd == 'Z01' or authrtCd == 'K01' or authrtCd == 'D01'"> -->
-<!-- 				            AND damk.issu_dt BETWEEN TO_DATE(#{startPicker02}, 'yyyy-mm-dd') AND TO_DATE(#{endPicker02}, 'yyyy-mm-dd') + 1 -->
-<!-- 				        </if> -->
-<!-- 				        <if test="sttsCd != null and sttsCd != ''"> -->
-<!-- 				            AND damk.stts_cd = #{sttsCd} -->
-<!-- 				        </if> -->
-<!-- 				        <if test="searchCondition == 'companyNm' and searchText != ''"> -->
-<!-- 				            AND agency.co_nm LIKE '%' || LOWER(#{searchText}) || '%' -->
-<!-- 				        </if> -->
+        <select id="apiSttsViewCnt2" resultType="int">
+		select
+				count(*)
+			from
+				(	
+				SELECT
+				    CASE
+				        WHEN T.stts_cd = '2' THEN '활용'
+				        WHEN T.stts_cd = '4' THEN '중지'
+				        ELSE '기타'
+				    END AS stts,
+				    COUNT(*) AS count
+				FROM (
+				    SELECT
+				        damk.stts_cd
+				    FROM
+				        dqvs.dvs_api_mt_key damk
+				    JOIN
+				        dqvs.dvs_cmm_mt_sso dcms ON dcms.user_sn = damk.user_sn
+				    JOIN
+				        dqvs.dvs_cmm_mt_user dcmu ON dcmu.user_sn = damk.user_sn
+				    LEFT JOIN
+				        dqvs.dvs_rac_mt_agency agency ON dcmu.bzmn_sn = agency.bzmn_sn
+				    WHERE 1=1
+						and damk.oper_se_cd = '0'
+				        <if test="searchCondition == 'userNm' and searchText != ''">
+				            AND LOWER(dcms.user_nm) LIKE '%' || LOWER(#{searchText}) || '%'
+				        </if>
+				        <if test="searchCondition == 'userId' and searchText != ''">
+				            AND LOWER(dcms.user_id) LIKE '%' || LOWER(#{searchText}) || '%'
+				        </if>
+				        <if test="authrtCd != 'Z01' and authrtCd != 'K01' and authrtCd != 'D01'">
+				            AND damk.user_sn = #{userSn}::numeric
+				        </if>
+				        <if test="authrtCd == 'Z01' or authrtCd == 'K01' or authrtCd == 'D01'">
+				            AND damk.issu_dt BETWEEN TO_DATE(#{startPicker02}, 'yyyy-mm-dd') AND TO_DATE(#{endPicker02}, 'yyyy-mm-dd') + 1
+				        </if>
+				        <if test="sttsCd != null and sttsCd != ''">
+				            AND damk.stts_cd = #{sttsCd}
+				        </if>
+				        <if test="searchCondition == 'companyNm' and searchText != ''">
+				            AND agency.co_nm LIKE '%' || LOWER(#{searchText}) || '%'
+				        </if>
 
-<!-- 				) AS T -->
-<!-- 				GROUP BY -->
-<!-- 				    CASE -->
-<!-- 				        WHEN T.stts_cd = '2' THEN '활용' -->
-<!-- 				        WHEN T.stts_cd = '4' THEN '중지' -->
-<!-- 				        ELSE '기타' -->
-<!-- 				    END -->
-<!-- 		    ) a -->
-<!--     </select>	 -->
-<!-- 	<select id= "apiSttsView2" parameterType="paraMap" resultType="resultMap"> -->
+				) AS T
+				GROUP BY
+				    CASE
+				        WHEN T.stts_cd = '2' THEN '활용'
+				        WHEN T.stts_cd = '4' THEN '중지'
+				        ELSE '기타'
+				    END
+		    ) a
+    </select>	
+	<select id= "apiSttsView2" parameterType="paraMap" resultType="resultMap">
 
-<!-- 		SELECT -->
-<!-- 		    CASE -->
-<!-- 		        WHEN T.stts_cd = '2' THEN '활용' -->
-<!-- 		        WHEN T.stts_cd = '4' THEN '중지' -->
-<!-- 		        ELSE '기타' -->
-<!-- 		    END AS stts, -->
-<!-- 		    COUNT(*) AS count -->
-<!-- 		FROM ( -->
-<!-- 		    SELECT -->
-<!-- 		        damk.stts_cd -->
-<!-- 		    FROM -->
-<!-- 		        dqvs.dvs_api_mt_key damk -->
-<!-- 		    JOIN -->
-<!-- 		        dqvs.dvs_cmm_mt_sso dcms ON dcms.user_sn = damk.user_sn -->
-<!-- 		    JOIN -->
-<!-- 		        dqvs.dvs_cmm_mt_user dcmu ON dcmu.user_sn = damk.user_sn -->
-<!-- 		    LEFT JOIN -->
-<!-- 		        dqvs.dvs_rac_mt_agency agency ON dcmu.bzmn_sn = agency.bzmn_sn -->
-<!-- 		    WHERE 1=1 -->
-<!-- 					and damk.oper_se_cd = '0' -->
-<!-- 		        <if test="searchCondition == 'userNm' and searchText != ''"> -->
-<!-- 		            AND LOWER(dcms.user_nm) LIKE '%' || LOWER(#{searchText}) || '%' -->
-<!-- 		        </if> -->
-<!-- 		        <if test="searchCondition == 'userId' and searchText != ''"> -->
-<!-- 		            AND LOWER(dcms.user_id) LIKE '%' || LOWER(#{searchText}) || '%' -->
-<!-- 		        </if> -->
-<!-- 		        <if test="authrtCd != 'Z01' and authrtCd != 'K01' and authrtCd != 'D01'"> -->
-<!-- 		            AND damk.user_sn = #{userSn}::numeric -->
-<!-- 		        </if> -->
-<!-- 		        <if test="authrtCd == 'Z01' or authrtCd == 'K01' or authrtCd == 'D01'"> -->
-<!-- 		            AND damk.issu_dt BETWEEN TO_DATE(#{startPicker02}, 'yyyy-mm-dd') AND TO_DATE(#{endPicker02}, 'yyyy-mm-dd') + 1 -->
-<!-- 		        </if> -->
-<!-- 		        <if test="sttsCd != null and sttsCd != ''"> -->
-<!-- 		            AND damk.stts_cd = #{sttsCd} -->
-<!-- 		        </if> -->
-<!-- 		        <if test="searchCondition == 'companyNm' and searchText != ''"> -->
-<!-- 		            AND agency.co_nm LIKE '%' || LOWER(#{searchText}) || '%' -->
-<!-- 		        </if> -->
-<!-- 		) AS T -->
-<!-- 		GROUP BY -->
-<!-- 		    CASE -->
-<!-- 		        WHEN T.stts_cd = '2' THEN '활용' -->
-<!-- 		        WHEN T.stts_cd = '4' THEN '중지' -->
-<!-- 		        ELSE '기타' -->
-<!-- 		    END -->
-<!-- 	</select> -->
+		SELECT
+		    CASE
+		        WHEN T.stts_cd = '2' THEN '활용'
+		        WHEN T.stts_cd = '4' THEN '중지'
+		        ELSE '기타'
+		    END AS stts,
+		    COUNT(*) AS count
+		FROM (
+		    SELECT
+		        damk.stts_cd
+		    FROM
+		        dqvs.dvs_api_mt_key damk
+		    JOIN
+		        dqvs.dvs_cmm_mt_sso dcms ON dcms.user_sn = damk.user_sn
+		    JOIN
+		        dqvs.dvs_cmm_mt_user dcmu ON dcmu.user_sn = damk.user_sn
+		    LEFT JOIN
+		        dqvs.dvs_rac_mt_agency agency ON dcmu.bzmn_sn = agency.bzmn_sn
+		    WHERE 1=1
+					and damk.oper_se_cd = '0'
+		        <if test="searchCondition == 'userNm' and searchText != ''">
+		            AND LOWER(dcms.user_nm) LIKE '%' || LOWER(#{searchText}) || '%'
+		        </if>
+		        <if test="searchCondition == 'userId' and searchText != ''">
+		            AND LOWER(dcms.user_id) LIKE '%' || LOWER(#{searchText}) || '%'
+		        </if>
+		        <if test="authrtCd != 'Z01' and authrtCd != 'K01' and authrtCd != 'D01'">
+		            AND damk.user_sn = #{userSn}::numeric
+		        </if>
+		        <if test="authrtCd == 'Z01' or authrtCd == 'K01' or authrtCd == 'D01'">
+		            AND damk.issu_dt BETWEEN TO_DATE(#{startPicker02}, 'yyyy-mm-dd') AND TO_DATE(#{endPicker02}, 'yyyy-mm-dd') + 1
+		        </if>
+		        <if test="sttsCd != null and sttsCd != ''">
+		            AND damk.stts_cd = #{sttsCd}
+		        </if>
+		        <if test="searchCondition == 'companyNm' and searchText != ''">
+		            AND agency.co_nm LIKE '%' || LOWER(#{searchText}) || '%'
+		        </if>
+		) AS T
+		GROUP BY
+		    CASE
+		        WHEN T.stts_cd = '2' THEN '활용'
+		        WHEN T.stts_cd = '4' THEN '중지'
+		        ELSE '기타'
+		    END
+	</select>
     	<select id="findDevData" parameterType="paraMap" resultType="resultMap">
 		select
 			count(*)
