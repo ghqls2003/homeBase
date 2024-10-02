@@ -61,6 +61,7 @@
 					authrt_cd,
 					cmu.bzmn_sn,
 					agency.brno,
+					concat(ctpv_nm, ' ', sgg_nm) sdsgg_nm,
 					cmptnc_zone_cd,
 					ctpv_nm,
 					sgg_nm,
