@@ -126,6 +126,19 @@
 				$('.sort-btn').css('pointer-events', 'auto');
 
 			$menu.event.changeInputReadable();
+			
+			ajax(true, contextPath+'/sys/menu/mnAccAuth', 'body', '처리중입니다.', {"menuCd": menuCd}, function (data) {
+				var authData = "";
+				for(var i=0; i<data.length; i++) {
+					if(data.length-1 == i) {
+						authData += data[i].authNm;
+					} else {
+						authData += data[i].authNm+", ";
+					}
+				}
+				
+				$("#mnAccAuth").val(authData);
+			});
 		},
 
 		insertView : function(menuCd, upMenuCd, upMenuNm){

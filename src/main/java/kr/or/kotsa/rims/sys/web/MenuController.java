@@ -131,5 +131,16 @@ public class MenuController {
 
 		return menuService.selectMenuOrdr(paramsMap);
 	}
+	
+	/**
+	 * 메뉴 접근 권한
+	 * @author 김경룡
+	 * @date 2024-10-02
+	 */
+	@RequestMapping("menu/mnAccAuth")
+	@ResponseBody
+	public List<Map<String, Object>> mnAccAuth(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		return menuService.mnAccAuth(paramsMap);
+	}
 
 }

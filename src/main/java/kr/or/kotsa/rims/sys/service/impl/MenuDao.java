@@ -49,5 +49,10 @@ public class MenuDao extends CmmnAbstractMapper {
 	public int selectMenuOrdr(Map<String, Object> paramsMap) throws RimsException {
         return selectOne("sys.menu.selectMenuOrdr", paramsMap);
     }
+	
+	//메뉴 접근 권한
+	public List<Map<String, Object>> mnAccAuth(Map<String, Object> paramsMap) throws RimsException {
+		return selectList("sys.menu.mnAccAuth", paramsMap);
+	}
 
 }

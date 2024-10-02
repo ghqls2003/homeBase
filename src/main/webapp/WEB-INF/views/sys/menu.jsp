@@ -159,6 +159,13 @@
                                                     <input id="prvcIdntfYn">
                                                 </td>
                                             </tr>
+                                            <tr>
+                                                <th scope="row">메뉴접근권한</th>
+                                                <td>
+                                                	<label for="mnAccAuth"></label>
+                                                    <input type="text" id="mnAccAuth" class="adm_input read_input" readonly>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>

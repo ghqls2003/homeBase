@@ -66,5 +66,10 @@ public class MenuServiceImpl extends CmmnAbstractServiceImpl implements MenuServ
 	public int selectMenuOrdr(Map<String, Object> paramsMap) throws RimsException {
 		return menuDao.selectMenuOrdr(paramsMap);
 	}
+	
+	//메뉴 접근 권한
+	public List<Map<String, Object>> mnAccAuth(Map<String, Object> paramsMap) throws RimsException {
+		return menuDao.mnAccAuth(paramsMap);
+	}
 
 }
