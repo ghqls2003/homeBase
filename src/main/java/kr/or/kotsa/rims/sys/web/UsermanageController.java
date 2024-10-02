@@ -270,9 +270,9 @@ public class UsermanageController extends CmmnAbstractServiceImpl {
     public GenericExcelView excelDown(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
                                       HttpServletRequest request, HttpServletResponse response) throws RimsException {
         String fileName = "사용자 관리";
-        String colName[] = {"순번", "권한코드", "권한명", "아이디", "성명", "회사명", "계정상태",
+        String colName[] = {"순번", "권한코드", "권한명", "아이디", "성명", "관할지역", "회사명", "계정상태",
         		"API 사용여부", "이메일", "휴대폰", "보조연락처", "가입승인일"};
-        String valName[] = {"rn", "authrt_cd", "authrt_nm", "user_id", "user_nm", "co_nm", "stts_cd",
+        String valName[] = {"rn", "authrt_cd", "authrt_nm", "user_id", "user_nm", "sdsgg_nm", "co_nm", "stts_cd",
         		"api", "eml_addr", "user_tel", "assi_telno", "reg_dt"};
 
         List<Map<String, Object>> colValue;
