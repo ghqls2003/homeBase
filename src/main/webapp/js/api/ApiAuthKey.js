@@ -169,6 +169,10 @@
 						} else {
 							if (apiData.data[0].sttsCd == '1') {
 								$(".Applying").show();
+								$(".extend").hide();
+								$(".Applying").hide();
+								$(".reissuance").hide();
+								$(".TestKey").hide();
 
 							}
 							if (apiData.data[0].sttsCd == '2') {
@@ -188,34 +192,6 @@
 								$(".extend").hide();
 							}
 						}
-					}else{
-						if (apiData.data.length == 0) {
-							$(".apply").show();
-							$(".extend").hide();
-							$(".Applying").hide();
-							$(".reissuance").hide();
-						} else {
-							if (apiData.data[0].sttsCd == '1') {
-								$(".Applying").show();
-
-							}
-							if (apiData.data[0].sttsCd == '2') {
-								$(".apply").hide();
-								$(".reissuance").show();
-								$(".extend").show();
-							}
-							if (apiData.data[0].sttsCd == '3') {
-								$(".ReApi").show();
-								$(".reissuance").hide();
-								$(".extend").hide();
-							}
-							if (apiData.data[0].sttsCd == '4') {
-								$(".ReApi").show();
-								$(".reissuance").hide();
-								$(".extend").hide();
-							}
-						}
-						
 					}
 				});
 
