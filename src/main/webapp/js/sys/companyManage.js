@@ -646,6 +646,7 @@
 					excelDownArc.searchAprvStts = "2";
 					excelDownArc.searchBsnStts = "0";
 					excelDownArc.searchChk = "jurisdiction";
+					excelDownArc.delYn = $("#delYn").val();
 				}
 
 				excelDown("/sys/companyManage/excelDown", excelDownArc, fileNm, totalRowCount);
