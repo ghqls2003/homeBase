@@ -241,7 +241,19 @@ button.gray_btn:hover {
 }
 
 .api_page .use_wr .use_bx {
-	width: calc(100%/ 3);
+	width: calc(100%/ 2);
+}
+#DevuseClick{
+    background-color: #939393;
+    border: #939393;
+}
+#DevuseClick{
+    background-color: #939393;
+    border: #939393;
+}
+#DevstopClick{
+    background-color: #D2D2D2;
+    border: #D2D2D2;
 }
 
 /* .api_page .use_wr ul.bx_01 { */
@@ -288,7 +300,7 @@ button.gray_btn:hover {
 }
 
 .api_page .use_wr ul.bx {
-    width: 100% !important;
+	width: 100% !important;
 	padding: 29px 33px;
 	height: calc(100%/ 2);
 	display: flex;
@@ -467,11 +479,11 @@ button.gray_btn:hover {
 							id="start-picker02"></li>
 						<li class="li_slec"><label for="end-date"></label> <input
 							id="end-picker02"></li>
-<!-- 						<li class="li_slec"> -->
-<!-- 							<div class="dropdown"> -->
-<!-- 								<label for="sttsDrop"></label> <input id="sttsDrop"> -->
-<!-- 							</div> -->
-<!-- 						</li> -->
+						<!-- 						<li class="li_slec"> -->
+						<!-- 							<div class="dropdown"> -->
+						<!-- 								<label for="sttsDrop"></label> <input id="sttsDrop"> -->
+						<!-- 							</div> -->
+						<!-- 						</li> -->
 						<li class="li_slec">
 							<div class="dropdown">
 								<label for="searchCondition"></label> <input
@@ -490,21 +502,22 @@ button.gray_btn:hover {
 					</button>
 				</div>
 			</div>
-<!-- 			<div class="selec_wr" id="userSearch" style="margin-bottom: 20px;"> -->
-<!-- 				<div class="mo_flex"> -->
-<!-- 					<ul class="selec_box"> -->
-<!-- 						<li class="li_slec"> -->
-<!-- 							<div class="dropdown"> -->
-<!-- 								<label for="sttsDrop"></label> <input id="sttsDrop2"> -->
-<!-- 							</div> -->
-<!-- 						</li> -->
-<!-- 					</ul> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
+			<div class="selec_wr" id="userSearch" style="margin-bottom: 20px;">
+				<div class="mo_flex">
+					<ul class="selec_box">
+						<li class="li_slec">
+							<div class="dropdown">
+								<label for="sttsDrop"></label> <input id="sttsDrop2">
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
 			<div class="use_wr">
 				<div class="use_bx">
-					<ul class="bx bx_05_01" id ="applicationClick">
-						<li><span class="name">신청</span> <!-- 							<div id= "APiapplication" class="num_cont"></div> -->
+					<ul class="bx bx_05_01" id="applicationClick">
+						<li><span class="name">신청</span>
+						 <!-- 							<div id= "APiapplication" class="num_cont"></div> -->
 							<span id="APiapplication" class="num_cont"></span></li>
 						<li>
 							<p class="p_cont">신청중인 단계</p>
@@ -512,25 +525,16 @@ button.gray_btn:hover {
 					</ul>
 				</div>
 				<div class="use_bx">
-					<ul class="bx bx_05_03" id = "useClick">
+					<ul class="bx bx_05_03" id="useClick">
 						<li><span class="name">활용</span>
 							<div id="ApiUse" class="num_cont"></div></li>
 						<li>
 							<p class="p_cont">승인되어 활용중인 단계</p>
 						</li>
 					</ul>
-					<!-- 					<ul class="bx bx_04"> -->
-					<!-- 						<li><span class="name">변경신청</span> -->
-					<!-- 							<div class="num_cont"> -->
-					<!-- 								<span id="ApiChange" class="color2"></span> -->
-					<!-- 							</div></li> -->
-					<!-- 						<li> -->
-					<!-- 							<p class="p_cont">신청중인 단계</p> -->
-					<!-- 						</li> -->
-					<!-- 					</ul> -->
 				</div>
 				<div class="use_bx">
-					<ul class="bx bx_02" id = "rejectClick">
+					<ul class="bx bx_02" id="rejectClick">
 						<li><span class="name">반려</span>
 							<div id="ApiReject" class="num_cont"></div></li>
 						<li>
@@ -539,7 +543,7 @@ button.gray_btn:hover {
 					</ul>
 				</div>
 				<div class="use_bx">
-					<ul class="bx bx_05" id = "stopClick">
+					<ul class="bx bx_05" id="stopClick">
 						<li><span class="name">중지</span>
 							<div id="ApiStop" class="num_cont">건</div></li>
 						<li>
@@ -548,53 +552,45 @@ button.gray_btn:hover {
 					</ul>
 				</div>
 			</div>
-			<!-- 			<div class="use_wr"> -->
-			<!-- 				<div class="use_bx"> -->
-			<!-- 					<ul class="bx bx_01"> -->
-			<!-- 						<li><span class="name">신청</span> 							<div id= "APiapplication" class="num_cont"></div> -->
-			<!-- 							<span id="APiapplication" class="num_cont"></span></li> -->
-			<!-- 						<li> -->
-			<!-- 							<p class="p_cont">신청중인 단계</p> -->
-			<!-- 						</li> -->
-			<!-- 					</ul> -->
-			<!-- 					<ul class="bx bx_02"> -->
-			<!-- 						<li><span class="name">보류</span> -->
-			<!-- 							<div class="num_cont"> -->
-			<!-- 								<span id="ApiHold" class="color1"></span> -->
-			<!-- 							</div></li> -->
-			<!-- 						<li><span class="name">반려</span> -->
-			<!-- 							<div id="ApiReject" class="num_cont"></div></li> -->
-			<!-- 					</ul> -->
-			<!-- 				</div> -->
-			<!-- 				<div class="use_bx"> -->
-			<!-- 					<ul class="bx bx_03"> -->
-			<!-- 						<li><span class="name">활용</span> -->
-			<!-- 							<div id="ApiUse" class="num_cont"></div></li> -->
-			<!-- 						<li> -->
-			<!-- 							<p class="p_cont">승인되어 활용중인 단계</p> -->
-			<!-- 						</li> -->
-			<!-- 					</ul> -->
-			<!-- 					<ul class="bx bx_04"> -->
-			<!-- 						<li><span class="name">변경신청</span> -->
-			<!-- 							<div class="num_cont"> -->
-			<!-- 								<span id="ApiChange" class="color2"></span> -->
-			<!-- 							</div></li> -->
-			<!-- 						<li> -->
-			<!-- 							<p class="p_cont">신청중인 단계</p> -->
-			<!-- 						</li> -->
-			<!-- 					</ul> -->
-			<!-- 				</div> -->
-
-			<!-- 				<div class="use_bx"> -->
-			<!-- 					<ul class="bx bx_05"> -->
-			<!-- 						<li><span class="name">중지</span> -->
-			<!-- 							<div id="ApiStop" class="num_cont">건</div></li> -->
-			<!-- 						<li> -->
-			<!-- 							<p class="p_cont">중지 신청하여 운영이 중지된 단계</p> -->
-			<!-- 						</li> -->
-			<!-- 					</ul> -->
-			<!-- 				</div> -->
-			<!-- 			</div> -->
+			<div class="use_wr">
+<!-- 				<div class="use_bx"> -->
+<!-- 					<ul class="bx bx_05_01" id="applicationClick"> -->
+<!-- 						<li><span class="name">신청</span> -->
+<!-- 						 							<div id= "APiapplication" class="num_cont"></div> -->
+<!-- 							<span id="APiapplication" class="num_cont"></span></li> -->
+<!-- 						<li> -->
+<!-- 							<p class="p_cont">신청중인 단계</p> -->
+<!-- 						</li> -->
+<!-- 					</ul> -->
+<!-- 				</div> -->
+				<div class="use_bx">
+					<ul class="bx bx_05_03" id="DevuseClick">
+						<li><span class="name">개발 활용</span>
+							<div id="DevApiUse" class="num_cont"></div></li>
+						<li>
+							<p class="p_cont">승인되어 활용중인 개발키</p>
+						</li>
+					</ul>
+				</div>
+<!-- 				<div class="use_bx"> -->
+<!-- 					<ul class="bx bx_02" id="rejectClick"> -->
+<!-- 						<li><span class="name">반려</span> -->
+<!-- 							<div id="ApiReject" class="num_cont"></div></li> -->
+<!-- 						<li> -->
+<!-- 							<p class="p_cont">반려된 신청</p> -->
+<!-- 						</li> -->
+<!-- 					</ul> -->
+<!-- 				</div> -->
+				<div class="use_bx">
+					<ul class="bx bx_05" id="DevstopClick">
+						<li><span class="name">개발 중지</span>
+							<div id="DevApiStop" class="num_cont">건</div></li>
+						<li>
+							<p class="p_cont" style = "color:#2C2C2C;">중지된 개발키 </p>
+						</li>
+					</ul>
+				</div>
+			</div>
 			<div class="contBox">
 				<div class="nameBox" style="display: flex; align-items: center;">
 					<h4 class="name">
@@ -621,7 +617,8 @@ button.gray_btn:hover {
 				<button class="blue_btn ReApi" style="display: none;">신청하기</button>
 				<button class="blue_btn extend" style="display: none;">연장하기</button>
 				<button class="gray_btn Applying" style="display: none;">신청중</button>
-				<!-- 				<button class="gray_btn TestKey" style="display: none;">개발키 신청</button> -->
+				<button class="gray_btn TestKey" style="display: none;">개발키
+					신청</button>
 			</div>
 		</div>
 	</div>

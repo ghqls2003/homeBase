@@ -196,5 +196,21 @@
 		where menu_cd like '%' || #{menuDiv} || '%'
 		and up_menu_cd = #{upMenuCd}
 	</select>
+	
+	<!-- 메뉴 접근 권한 -->
+	<select id="mnAccAuth" parameterType="paraMap" resultType="resultMap">
+	/* 메뉴 접근 권한 */
+		SELECT CONCAT(acc.authrt_cd, '(', (SELECT an.authrt_nm FROM dqvs.dvs_cmm_mt_auth an WHERE an.authrt_cd = acc.authrt_cd), ')') auth_nm
+		FROM
+			dqvs.dvs_cmm_mt_menu mn
+		LEFT OUTER JOIN
+			dqvs.dvs_cmm_rt_access acc
+		ON mn.menu_cd = acc.menu_cd
+		WHERE mn.use_yn = 'Y'
+			AND acc.use_yn = 'Y'
+			AND acc.authrt_cd NOT IN ('T01', 'T02', 'T03')
+			AND mn.up_menu_cd != ''
+			AND mn.menu_cd = #{menuCd}
+	</select>
 
 </mapper>

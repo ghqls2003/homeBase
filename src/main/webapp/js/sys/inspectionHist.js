@@ -7,6 +7,7 @@
 	var fileNo = 0;
 	var filesArr = [];
 	var rowClickChk = false;
+	var excelDownArc = {};
 	
 	$(document).ready(function() {
 		kendo.ui.progress($(document.body), true);
@@ -14,14 +15,12 @@
 		$inspectionHist.event.setUIEvent();
 	});
 	
-	var excelDownArc = {};
-	
 	$inspectionHist.ui = {
 		pageLoad: function() {
-			$inspectionHist.ui.autoTextarea();
+			$inspectionHist.ui.autoTextarea(); // 회사 자동검색 구역
 			$inspectionHist.ui.search();
-			$inspectionHist.ui.detailSearch();
-			$inspectionHist.ui.areaSearch();
+			$inspectionHist.ui.detailSearch(); // 상세 팝업 드롭다운
+			$inspectionHist.ui.areaSearch(); // 지자체 검색
 		},
 		
 		detailSearch: function(){
@@ -307,6 +306,7 @@
 				value: "value"
 			});
 		},
+		
 		telNumFormat: function(strP) {
 		    if(strP == null ||  strP == '') {
 		        return '';
@@ -488,6 +488,7 @@
 				
 				$inspectionHist.event.chckRsltClick(params);
 			});
+			
 			// 등록 팝업 X, 닫기 버튼
 			$(".insertClose").on("click", function() {
 				location.reload();
@@ -651,37 +652,36 @@
 		},
 		
 		chckRsltClick: function(params) {
+			if($(params.chckRslt).val()=="불합격"){
+				$('#'+params.prcsCn).removeClass('input');
+				$('#'+params.prcsCn).removeClass('readOnlyGrayBtn');
+				$('#'+params.prcsCn).removeAttr('readonly');
+				//후속처리여부
+				var prcsCn = [
+					{ text: "경고" },
+					{ text: "벌금" },
+					{ text: "휴업" },
+				];
 				
-				if($(params.chckRslt).val()=="불합격"){
-					$('#'+params.prcsCn).removeClass('input');
-					$('#'+params.prcsCn).removeClass('readOnlyGrayBtn');
-					$('#'+params.prcsCn).removeAttr('readonly');
-					//후속처리여부
-					var prcsCn = [
-						{ text: "경고" },
-						{ text: "벌금" },
-						{ text: "휴업" },
-					];
-					
-					$('#'+params.prcsCn).kendoDropDownList({
-						dataTextField: "text",
-						dataValueField: "text",
-						dataSource: prcsCn,
-					});
-				}else if($(params.chckRslt).val()=="합격"){
-					$('#'+params.prcsCn).closest('span.k-dropdownlist').remove();
-					var inputElement = $('<input>', {
-					    type: 'text',
-					    id: params.prcsCn,
-					    name: params.prcsCn,
-					    maxlength: '80',
-					    class: 'input readOnlyGrayBtn',
-					    'aria-label': '후속처리내용',
-					    readonly: true
-					});
-					
-					$(params.divNm).append(inputElement);
-				}
+				$('#'+params.prcsCn).kendoDropDownList({
+					dataTextField: "text",
+					dataValueField: "text",
+					dataSource: prcsCn,
+				});
+			}else if($(params.chckRslt).val()=="합격"){
+				$('#'+params.prcsCn).closest('span.k-dropdownlist').remove();
+				var inputElement = $('<input>', {
+				    type: 'text',
+				    id: params.prcsCn,
+				    name: params.prcsCn,
+				    maxlength: '80',
+				    class: 'input readOnlyGrayBtn',
+				    'aria-label': '후속처리내용',
+				    readonly: true
+				});
+				
+				$(params.divNm).append(inputElement);
+			}
 		},
 		
 		fileValidation: function(obj) {
@@ -841,16 +841,7 @@
 			$inspectionHist.event.paramsValidation(params);
 		},
 		
-		insertInspection: function(params){
-			ajax(true, contextPath + '/sys/inspectionHist/insertInspectionHist', 'body', '확인인중입니다.', params, function (data) {
-				alert("등록을 성공하셨습니다");
-				$("#insertPopup").removeClass("view");
-				location.reload();
-		    });
-		},
-		
 		insertFile: function(params){
-			
 			if (fileCkd == true) {
 				// 폼데이터 담기
 			    var formData = new FormData();
@@ -883,6 +874,15 @@
 			
 		},
 		
+		insertInspection: function(params){
+			ajax(true, contextPath + '/sys/inspectionHist/insertInspectionHist', 'body', '확인인중입니다.', params, function (data) {
+				alert("등록을 성공하셨습니다");
+				$("#insertPopup").removeClass("view");
+				location.reload();
+		    });
+		},
+		
+		// 클립리포트
 		issued: function(data){
 			var params = {};
 			
@@ -1010,14 +1010,6 @@
 			}
 		},
 		
-		// 파일 삭제
-		deleteFile: function(num) {
-			var detailFileSnNum = '#detailFileSn'+num;
-			param={};
-			param.fileSn = $(detailFileSnNum).attr('value');
-			$(detailFileSnNum).remove();
-		},
-		
 		updateInspection: function(params) {
 			ajax(true, contextPath + '/sys/inspectionHist/updateInspectionHist', 'body', '처리중입니다.', params, function(data) {
 				alert("수정되었습니다");
@@ -1038,6 +1030,14 @@
 			}
 		},
 		
+		// 파일 삭제
+		deleteFile: function(num) {
+			var detailFileSnNum = '#detailFileSn'+num;
+			param={};
+			param.fileSn = $(detailFileSnNum).attr('value');
+			$(detailFileSnNum).remove();
+		},
+		
 		fileDownBtn : function(element){
 			var atchFileSn = element.getAttribute('data-value');
 			var atchFileNm = element.innerText;
@@ -1046,7 +1046,7 @@
 		
 		paramsValidation: function(params) {
 			if(params.exmnr == "" && params.jbgd == "" && params.ogdp == "" && params.exmnr2 == "" && params.jbgd2 == "" && params.ogdp2 == "" && params.exmnr3 == "" && params.jbgd3 == "" && params.ogdp3 == "") {
-				alert("지도원 정보는 필수입니다..");
+				alert("지도원 정보는 필수입니다.");
 			}else if((params.exmnr != "" ||params.jbgd != "" || params.ogdp != "")&&(params.exmnr == "" || params.jbgd == "" || params.ogdp == "")) {
 				alert("첫번째 지도원 정보를 확인해주세요.");
 			}else if((params.exmnr2 != "" ||params.jbgd2 != "" || params.ogdp2 != "")&&(params.exmnr2 == "" || params.jbgd2 == "" || params.ogdp2 == "")) {

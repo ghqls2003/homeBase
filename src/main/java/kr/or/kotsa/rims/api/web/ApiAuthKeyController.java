@@ -67,16 +67,28 @@ public class ApiAuthKeyController extends CmmnAbstractServiceImpl {
 	public Object selectlistApiAuthKey(@RequestBody Map<String, Object> paramsMap, HttpServletRequest request,
 			HttpServletResponse response) throws RimsException {
 		ModelAndView mav = new ModelAndView("jsonView");
-		paramsMap.put("userSn", getUserSn());
-		paramsMap.put("authrtCd", getAuthrtCd());
-		int total = apiAuthKeyService.selectlistViewCnt(paramsMap);
-		paramsMap.put("total", total);
+		String authrtCd = (String) paramsMap.get("authrtCd");
+		if ("K01".equals(authrtCd) || "Z01".equals(authrtCd) || "D01".equals(authrtCd)) {
+			paramsMap.put("userSn", getUserSn());
+			paramsMap.put("authrtCd", getAuthrtCd());
+			int total = apiAuthKeyService.selectlistViewCnt(paramsMap);
+			paramsMap.put("total", total);
 
-		List<Map<String, Object>> result = apiAuthKeyService.selectlistView(paramsMap);
-		mav.addObject("data", result);
-		mav.addObject("total", total);
+			List<Map<String, Object>> result = apiAuthKeyService.selectlistView(paramsMap);
+			mav.addObject("data", result);
+			mav.addObject("total", total);
+			}else {
+				paramsMap.put("userSn", getUserSn());
+				paramsMap.put("authrtCd", getAuthrtCd());
+				int total = apiAuthKeyService.selectlistViewCnt2(paramsMap);
+				paramsMap.put("total", total);
 
+				List<Map<String, Object>> result = apiAuthKeyService.selectlistView2(paramsMap);
+				mav.addObject("data", result);
+				mav.addObject("total", total);			
+		}
 		return mav;
+
 	}
 
 	@RequestMapping("apiAuthKey/checkstts")
@@ -345,6 +357,7 @@ public class ApiAuthKeyController extends CmmnAbstractServiceImpl {
 	@ResponseBody
 	public Object selectlistApiSttsView(@RequestBody Map<String, Object> paramsMap) {
 		paramsMap.put("userSn", getUserSn());
+		paramsMap.put("authrtCd", getAuthrtCd());
 		int total = apiAuthKeyService.selectApiSttsViewCnt(paramsMap);
 		paramsMap.put("total", total);
 		List<Map<String, Object>> list = apiAuthKeyService.selectApiSttsView(paramsMap);
@@ -352,6 +365,21 @@ public class ApiAuthKeyController extends CmmnAbstractServiceImpl {
 		mav.addObject("data", list);
 		mav.addObject("total", total);
 
+		return mav;
+	}
+	@RequestMapping("apiAuthKey/apiSttsview2")
+	@ResponseBody
+	public Object selectlistApiSttsView2(@RequestBody Map<String, Object> paramsMap) {
+		paramsMap.put("userSn", getUserSn());
+		paramsMap.put("authrtCd", getAuthrtCd());
+
+		int total = apiAuthKeyService.selectApiSttsViewCnt2(paramsMap);
+		paramsMap.put("total", total);
+		List<Map<String, Object>> list = apiAuthKeyService.selectApiSttsView2(paramsMap);
+		ModelAndView mav = new ModelAndView("jsonView");
+		mav.addObject("data", list);
+		mav.addObject("total", total);
+		
 		return mav;
 	}
 	
