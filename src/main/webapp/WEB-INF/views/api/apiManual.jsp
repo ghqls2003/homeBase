@@ -18,34 +18,93 @@ https://cdn.jsdelivr.net/npm/swiper@10.2.0/swiper-bundle.min.js
 
 <script src="<c:out value='${contextPath}/js/api/ApiManual.js'/>"></script>
 <style>
-.api_page .contBox .cont{padding: 40px 44px 35px;}
-.api_page.guide .btn_flex{margin-top: 73px;}
-.api_page p.guide_info{font-size: 1.8rem;font-weight: 500;color: #000;line-height: 26px;}
-.api_page ul.method_wr{display: flex;align-items: center;justify-content: center;margin-top: 33px;}
-.api_page ul.method_wr li.mid{margin: -70px 48px 0;}
-.api_page ul.method_wr li .img_bx{width: 99px;height: 99px; background-color: #F5F8FE;border: 1px solid #DBE0EC;border-radius: 100%;display: flex;align-items: center;justify-content: center;margin: 0 auto;}
-.api_page ul.method_wr li p{font-size: 1.6rem;font-weight: 500;color: #040404;line-height: 26px;text-align: center;margin-top: 11px;}
-
-@media (max-width:1500px) {
-    .api_page .contBox .cont {padding: 32px 28px 25px;}
-}
-@media (max-width:680px) {
-    .api_page p.guide_info{line-height: 22px;}
-    .api_page ul.method_wr li.mid{margin: -60px 15px 0;}
-    .api_page ul.method_wr li p{line-height: 22px;}
-}
-@media (max-width:640px) {
-    .api_page .contBox .cont{padding: 22px 18px;}
-}
-@media (max-width:480px) {
-    .api_page p.guide_info{font-size: 1.6rem;}
-    .api_page ul.method_wr li p{font-size: 1.5rem;line-height: 18px;}
-    .api_page ul.method_wr li p br{display: none;word-break: keep-all;}
+.api_page .contBox .cont {
+	padding: 40px 44px 35px;
 }
 
+.api_page.guide .btn_flex {
+	margin-top: 73px;
+}
 
-<style>
-.swiper {
+.api_page p.guide_info {
+	font-size: 1.8rem;
+	font-weight: 500;
+	color: #000;
+	line-height: 26px;
+}
+
+.api_page ul.method_wr {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 33px;
+}
+
+.api_page ul.method_wr li.mid {
+	margin: -70px 48px 0;
+}
+
+.api_page ul.method_wr li .img_bx {
+	width: 99px;
+	height: 99px;
+	background-color: #F5F8FE;
+	border: 1px solid #DBE0EC;
+	border-radius: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto;
+}
+
+.api_page ul.method_wr li p {
+	font-size: 1.6rem;
+	font-weight: 500;
+	color: #040404;
+	line-height: 26px;
+	text-align: center;
+	margin-top: 11px;
+}
+
+@media ( max-width :1500px) {
+	.api_page .contBox .cont {
+		padding: 32px 28px 25px;
+	}
+}
+
+@media ( max-width :680px) {
+	.api_page p.guide_info {
+		line-height: 22px;
+	}
+	.api_page ul.method_wr li.mid {
+		margin: -60px 15px 0;
+	}
+	.api_page ul.method_wr li p {
+		line-height: 22px;
+	}
+}
+
+@media ( max-width :640px) {
+	.api_page .contBox .cont {
+		padding: 22px 18px;
+	}
+}
+
+@media ( max-width :480px) {
+	.api_page p.guide_info {
+		font-size: 1.6rem;
+	}
+	.api_page ul.method_wr li p {
+		font-size: 1.5rem;
+		line-height: 18px;
+	}
+	.api_page ul.method_wr li p br {
+		display: none;
+		word-break: keep-all;
+	}
+}
+
+<
+style>.swiper {
 	width: 100%;
 	height: 100%;
 }
@@ -75,51 +134,52 @@ https://cdn.jsdelivr.net/npm/swiper@10.2.0/swiper-bundle.min.js
 }
 
 .horizontal-list2 {
-  background-color: white;
-  padding: 10px;
-  list-style-type: none;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+	background-color: white;
+	padding: 10px;
+	list-style-type: none;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
 }
 
 .horizontal-list2 li {
-  margin: 0 10px;
-  padding: 0;
+	margin: 0 10px;
+	padding: 0;
 }
 
 .Move_btn {
-  font-size: medium;
-  background-color: #fff8df;
-  color: #9D5F01;
-  border: none;
-  display: flex; 
-  align-items: center; 
-  padding: 8px 16px;
-  border-radius: 5px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  cursor: pointer;
-  display : flex;
+	font-size: medium;
+	background-color: #fff8df;
+	color: #9D5F01;
+	border: none;
+	display: flex;
+	align-items: center;
+	padding: 8px 16px;
+	border-radius: 5px;
+	transition: background-color 0.3s ease, color 0.3s ease;
+	cursor: pointer;
+	display: flex;
 }
 
 .Move_btn img {
-  margin-right: 5px; 
+	margin-right: 5px;
 }
 
 .Move_btn:hover {
-  background-color: black;
-  color: white;
+	background-color: black;
+	color: white;
 }
-
-
 </style>
 <div class="subPage sub03">
 	<div id="container">
 		<div class="wrap">
 			<div class="titBox">
 				<div class="tit01">
-					<img src="${contextPath}/images/sub/ico_tit.png" alt="타이틀아이콘" class="ico_tit">
+					<img src="${contextPath}/images/sub/ico_tit.png" alt="타이틀아이콘"
+						class="ico_tit">
+					<h2>
 						<c:out value='${tableName}' />
+					</h2>
 				</div>
 				<ul class="tit02">
 					<li class="home"><img
@@ -138,8 +198,8 @@ https://cdn.jsdelivr.net/npm/swiper@10.2.0/swiper-bundle.min.js
 					<div>
 						<ul class="horizontal-list2">
 							<li>
-								<button class="Move_btn"
-									id="Shortcuts01" style="font-size: medium; width:140px;">
+								<button class="Move_btn" id="Shortcuts01"
+									style="font-size: medium; width: 140px;">
 									<img src="${contextPath}/images/sub/ico_down.png" alt="다운로드아이콘" />
 									PDF 다운로드
 								</button>
@@ -150,29 +210,28 @@ https://cdn.jsdelivr.net/npm/swiper@10.2.0/swiper-bundle.min.js
 							<li class="pdfSelect" style="width: 120px;">
 								<button href="javascript:void(0)" id="tabBtn01"
 									style="font-size: medium; width: 90%" class="manual_btn">
-									가입 및<br /> 권한 신청
+									목록<br />
 								</button>
 							</li>
 							<li class="pdfSelect" style="width: 120px;">
 								<button href="javascript:void(0)" id="tabBtn02"
 									style="font-size: medium; width: 90%" class="manual_btn">
-									대여사업자 <br />  관리
+									개요 및 <br /> 상세
 								</button>
 							</li>
 							<li class="pdfSelect" style="width: 120px;">
 								<button href="javascript:void(0)" id="tabBtn03"
 									style="font-size: medium; width: 90%" class="manual_btn">
-									통계
-								</button>
+									첨부표</button>
 							</li>
 							<li class="pdfSelect" style="width: 120px;">
 								<button href="javascript:void(0)" id="tabBtn04"
-									style="font-size: medium; width: 90%" class="manual_btn">고객지원</button>
+									style="font-size: medium; width: 90%" class="manual_btn">개발예시</button>
 							</li>
 							<li></li>
 						</ul>
 					</div>
-					<div id ="ForUser">
+					<div id="ForUser">
 						<div class="swiperContent" id="ForWeb">
 							<div class="swiper">
 								<div class="swiper-wrapper">
@@ -317,8 +376,8 @@ https://cdn.jsdelivr.net/npm/swiper@10.2.0/swiper-bundle.min.js
 					</div>
 				</div>
 			</div>
-			
-			
+
+
 		</div>
 	</div>
 

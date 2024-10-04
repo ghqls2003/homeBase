@@ -15,11 +15,10 @@
 	var optVal = null;  // 차량 검색 조건
 	var carListColmuns = [
 		{ title: "순번", width: "40px", field: "rn", template: "#: rn #" },
-		{ title: "대여번호", width: "130px", field: "rentNo", template: "#: rentNo != null ? rentNo : '-'#" },
+		{ title: "대여번호", width: "200px", field: "rentNo", template: "#: rentNo != null ? rentNo : '-'#" },
+		{ title: "회사명", width: "150px", field: "coNm", template: "#: coNm != null ? coNm : '-'#" },
 		{ title: "등록일", width: "140px", field: "regDt", template: "#: regDt != null ? regDt : '-'#" },
-		{ title: "차대번호", width: "180px", field: "vin", template: "#: vin != null ? vin : '-'#" },
-		{ title: "차종", width: "80px", field: "carmdl", template: "#: carmdl != null ? carmdl : '-'#" },
-		{ title: "연식", width: "100px", field: "mdlyr", template: "#: mdlyr != null ? mdlyr : '-'#" },
+		{ title: "최종결과", width: "100px", field: "lastVrfcRslt", template: "#: lastVrfcRslt != null ? lastVrfcRslt : '-'#" },
 		{ title: "대여시작일", width: "140px", field: "rentBgngDt", template: "#: rentBgngDt != null ? rentBgngDt : '-'#" },
 		{ title: "대여종료일", width: "140px", field: "rentEndDt", template: "#: rentEndDt != null ? rentEndDt : '-'#" },
 	];
@@ -396,6 +395,7 @@
 
 					if (gridId == "#carGrid") {
 						$("#carVhclRegNoVal").val(data.vhclRegNo);
+						$("#carVhclRegNoVal").val(data.vhclRegNo);
 						$("#regRentNo").val(data.rentNo);
 						$("#rsvEndTime").val(data.rentEndDt);
 						$("#start-picker02").val(data.rentBgngDt);
@@ -404,6 +404,7 @@
 						$("#regRgtrDln").val(data.dln);
 						$("#lcnsFlnm").val(data.lcnsFlnm);
 						$("#ReglcnsAsortCd").val(data.lcnsAsortCd);
+						$("#RsvedlastRst").val(data.vrfcCd);
 
 					}
 				}
@@ -434,6 +435,7 @@
 			params.dln = $("#regRgtrDln").val();
 			params.lcnsFlnm = $("#lcnsFlnm").val();
 			params.lcnsAsortCd = $("#ReglcnsAsortCd").val();
+			params.lastRst = $("#RsvedlastRst").val();
 			if (params.vhclRegNo == null || params.vhclRegNo == '') {
 				alert("차량번호를 등록해 주세요");
 			} else if (params.startDt == null || params.startDt == '') {

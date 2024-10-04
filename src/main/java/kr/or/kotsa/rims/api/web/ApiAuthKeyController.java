@@ -67,7 +67,7 @@ public class ApiAuthKeyController extends CmmnAbstractServiceImpl {
 	public Object selectlistApiAuthKey(@RequestBody Map<String, Object> paramsMap, HttpServletRequest request,
 			HttpServletResponse response) throws RimsException {
 		ModelAndView mav = new ModelAndView("jsonView");
-		String authrtCd = (String) paramsMap.get("authrtCd");
+		String authrtCd = getAuthrtCd();
 		if ("K01".equals(authrtCd) || "Z01".equals(authrtCd) || "D01".equals(authrtCd)) {
 			paramsMap.put("userSn", getUserSn());
 			paramsMap.put("authrtCd", getAuthrtCd());

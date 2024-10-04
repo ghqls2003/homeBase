@@ -18,6 +18,9 @@
 			drma.co_nm,
 			drma.brno,
 			car.vhcl_reg_no,
+			ddhv.vrfc_rslt,
+			ddhv.vrfc_cd,
+			dqvs.fn_get_cdnm('verify_cd', ddhv.vrfc_cd) as last_vrfc_rslt,
 			car.vin,
 			car.carmdl,
 			car.dln,
@@ -259,7 +262,7 @@
 				#{periodRsv},
 				#{startDt}::timestamp,
 				#{endtDt}::timestamp,
-				'최초등록', 
+				#{lastRst}, 
 				now(),
 				now(),
 				#{rgtrSn}::numeric,
@@ -318,9 +321,9 @@
 			    rsvt_end_ymd,
 			    case 
 			        WHEN last_vrfc_rslt = '처리완료' THEN '처리완료'
-			        ELSE dqvs.fn_get_cdnm('vrfc_rslt', last_vrfc_rslt)
+			        ELSE dqvs.fn_get_cdnm('verify_cd', last_vrfc_rslt)
     			END as last_vrfc_rslt,
-   			    <!-- dqvs.fn_get_cdnm('vrfc_rslt', last_vrfc_rslt) as last_vrfc_rslt, -->
+   			    <!-- dqvs.fn_get_cdnm('verify_cd', last_vrfc_rslt) as last_vrfc_rslt, -->
 			    last_vrfc_ymd,
 			    next_vrfc_ymd,
 			    rgtr_sn,

@@ -28,7 +28,7 @@
 						      RIGHT(dcms.user_nm, 1) as rqstr_nm
 				        	, dcms.user_id
 				        	, damk.cert_key
-				        , damk.oper_se_cd
+				        	, damk.oper_se_cd
 				        	, damk.secret_key
 				        	, damk.stts_cd
 				        	, dcmu.ogdp_nm
@@ -53,7 +53,7 @@
 				        <if test="sttsCd != null and sttsCd != ''">
 				        	AND damk.stts_cd = #{sttsCd}
 				        </if>
-				        				        <if test="DevOper != '' and DevOper != null">
+					    <if test="DevOper != null and DevOper != ''">
 				            AND damk.oper_se_cd = #{DevOper}
 				        </if>
 						) AS T
@@ -117,9 +117,9 @@
 					<if test="searchCondition == 'userId' and searchText != ''">
 						and LOWER(dcms.user_id) like '%' || LOWER(#{searchText}) || '%'
 				    </if>
-<!-- 				    				        <if test="DevOper != '' and DevOper != null"> -->
-<!-- 				            AND damk.oper_se_cd = #{DevOper} -->
-<!-- 				        </if> -->
+					    <if test="DevOper != null and DevOper != ''">
+				            AND damk.oper_se_cd = #{DevOper}
+				        </if>
 				        <if test="authrtCd != 'Z01' and authrtCd != 'K01' and authrtCd != 'D01'">
 				        	AND damk.user_sn = #{userSn}::numeric
 				        </if>
@@ -181,7 +181,7 @@
 				        <if test="authrtCd == 'Z01' or authrtCd == 'K01' or authrtCd == 'D01'">
 					      	AND	damk.issu_dt BETWEEN TO_DATE(#{startPicker02}, 'yyyy-mm-dd') AND TO_DATE(#{endPicker02}, 'yyyy-mm-dd')+1
 					    </if>
-					    				        <if test="DevOper != '' and DevOper != null">
+					    <if test="DevOper != null and DevOper != ''">
 				            AND damk.oper_se_cd = #{DevOper}
 				        </if>
 						<if test="searchCondition == 'userNm' and searchText != ''">
@@ -239,9 +239,9 @@
 				        <if test="authrtCd == 'Z01' or authrtCd == 'K01' or authrtCd == 'D01'">
 					      	AND	damk.issu_dt BETWEEN TO_DATE(#{startPicker02}, 'yyyy-mm-dd') AND TO_DATE(#{endPicker02}, 'yyyy-mm-dd')+1
 					    </if>
-<!-- 					    <if test="DevOper != '' and DevOper != null"> -->
-<!-- 				            AND damk.oper_se_cd = #{DevOper} -->
-<!-- 				        </if> -->
+					    <if test="DevOper != null and DevOper != ''">
+				            AND damk.oper_se_cd = #{DevOper}
+				        </if>
 						<if test="searchCondition == 'userNm' and searchText != ''">
 							and LOWER(dcms.user_nm) like '%' || LOWER(#{searchText}) || '%'
 					    </if>

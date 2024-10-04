@@ -126,7 +126,7 @@
 
 		checkApiNum: function() {
 
-			if (authrtCd == 'Z01' || authrtCd == 'K01' || authrtCd == 'D01') {
+			if (authrtCd.includes("Z") || authrtCd.includes("G") || authrtCd.includes("K")) {
 				$(".apply").hide();
 				$(".reissuance").hide();
 				$(".extend").hide();
@@ -208,19 +208,19 @@
 		 * @author	     : 김경룡
 		 */
 		setColumnsEtc: function() {
-			if (authrtCd == 'Z01' || authrtCd == 'K01' || authrtCd == 'D01') {
+			if (authrtCd.includes("Z") || authrtCd.includes("G") || authrtCd.includes("K")) {
 				authAdmin = 1;
 				apiListColumns =
 					[
 						{ field: "sn", title: "순번", width: 30 },
-						{ field: "issuDt", title: "발급일", width: 60 },
+						{ field: "issuDt", title: "발급일", width: 120 },
 						{
-							field: "coNm", title: "회사명", width: 60,
+							field: "coNm", title: "회사명", width: 100,
 							template: function(dataItem) {
 								return dataItem.coNm ? "<span class='cell-popup copy-key' data-key='" + dataItem.coNm + "'>" + dataItem.coNm + "</span>" : '-';
 							}
 						},
-						{ field: "rqstrNm", title: "사용자명", width: 60 },
+						{ field: "rqstrNm", title: "사용자명", width: 90 },
 						{ field: "userId", title: "사용자ID", width: 60 },
 						{
 							field: "certKey",
@@ -270,9 +270,9 @@
 				apiListColumns =
 					[
 						{ field: "sn", title: "순번", attributes: { "class": "table-cell" }, width: 30 },
-						{ field: "issuDt", title: "발급일", attributes: { "class": "table-cell" }, width: 40 },
-						{ field: "coNm", title: "회사명", attributes: { "class": "table-cell" }, width: 40 },
-						{ field: "rqstrNm", title: "사용자이름", attributes: { "class": "table-cell" }, width: 40 },
+						{ field: "issuDt", title: "발급일", attributes: { "class": "table-cell" }, width: 120 },
+						{ field: "coNm", title: "회사명", attributes: { "class": "table-cell" }, width: 100 },
+						{ field: "rqstrNm", title: "사용자이름", attributes: { "class": "table-cell" }, width: 90 },
 						{
 							field: "certKey",
 							title: "인증키",
@@ -289,6 +289,7 @@
 								return "<span class='cell-popup copy-key' data-key='" + dataItem.secretKey + "'>" + dataItem.secretKey + "</span>";
 							}
 						},
+
 						{
 							field: "operSeCd",
 							title: "구분",
@@ -312,18 +313,16 @@
 		},
 
 		ApiSet: function() {
-			if (authrtCd == 'Z01' || authrtCd == 'K01' || authrtCd == 'D01') {
+			if (authrtCd.includes("Z") || authrtCd.includes("G") || authrtCd.includes("K")) {
 				$("#managerSearch").show()
 				$("#userSearch").hide()
 				const arg = {};
-				//				arg.UserSn = UserSn;
 				$apiAuth.ui.apiView();
 
 			} else {
 				$("#userSearch").show()
 				$("#managerSearch").hide()
 				const arg = {};
-				//				arg.UserSn = UserSn;
 
 				$apiAuth.ui.apiView();
 
@@ -346,12 +345,11 @@
 							}
 						},
 						parameterMap: function(options) {
-							if (authrtCd == "K01" || authrtCd == "Z01" || authrtCd == 'D01') {
+							if (authrtCd.includes("Z") || authrtCd.includes("G") || authrtCd.includes("K")) {
 								options.startPicker02 = $("#start-picker02").val();
 								options.endPicker02 = $("#end-picker02").val();
 								options.searchCondition = $("#searchCondition").val();
 								options.searchText = $("#search_box").val();
-//								options.authrtCd = authrtCd
 								options.DevOper = devOper
 								options.sttsCd = normalUserStts
 							} else {
@@ -443,17 +441,14 @@
 		},
 		apiSttsview: function() {
 			const options = {};
-			if (authrtCd == "K01" || authrtCd == "Z01" || authrtCd == 'D01') {
+			if (authrtCd.includes("Z") || authrtCd.includes("G") || authrtCd.includes("K")) {
 				options.startPicker02 = $("#start-picker02").val();
 				options.endPicker02 = $("#end-picker02").val();
 				options.searchCondition = $("#searchCondition").val();
 				options.searchText = $("#search_box").val();
-//				options.authrtCd = authrtCd
 				options.sttsCd = $("#sttsDrop").val()
 				options.devOper = devOper
 			} else {
-				//								options.userSn = UserSn
-				//				options.authrtCd = authrtCd
 				options.sttsCd = normalUserStts
 				options.devOper = devOper
 
@@ -489,12 +484,11 @@
 		},
 		apiSttsview2: function() {
 			const options = {};
-			if (authrtCd == "K01" || authrtCd == "Z01" || authrtCd == 'D01') {
+			if (authrtCd.includes("Z") || authrtCd.includes("G") || authrtCd.includes("K")) {
 				options.startPicker02 = $("#start-picker02").val();
 				options.endPicker02 = $("#end-picker02").val();
 				options.searchCondition = $("#searchCondition").val();
 				options.searchText = $("#search_box").val();
-//				options.authrtCd = authrtCd
 				options.sttsCd = $("#sttsDrop").val()
 				options.sttsCd = normalUserStts
 			} else {
@@ -704,7 +698,7 @@
 				//				var confirmation = confirm("API를 신청하시겠습니까?");
 				var confirmation = confirm("API를 신청하시겠습니까?");
 				if (confirmation) {
-					$apiAuth.ui.reissueAPi();
+					$apiAuth.ui.issueAPi();
 				} else {
 					return alert('취소되었습니다.')
 				}

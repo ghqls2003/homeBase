@@ -17,13 +17,14 @@
 
 <style>
 .k-picker-solid {
-    height: 40px;
-    background-color: #FFFFFF;
-    border: 1px solid #DBE0EC;
-    border-radius: 8px 0px 0px 8px;
-    background-image: none;
-    top: -5px;
+	height: 40px;
+	background-color: #FFFFFF;
+	border: 1px solid #DBE0EC;
+	border-radius: 8px 0px 0px 8px;
+	background-image: none;
+	top: -5px;
 }
+
 .scrollBar02 {
 	overflow-y: auto;
 }
@@ -59,9 +60,9 @@
 /* 	} */
 /* } */
 @media ( max-width : 376px) {
-.sub03 ul.yearBox  {
-    display: ruby;
-}
+	.sub03 ul.yearBox {
+		display: ruby;
+	}
 	.popup .k-picker-solid {
 		width: 100% !important;
 		border-radius: 10px;
@@ -81,9 +82,9 @@
 }
 
 @media ( max-width : 360px) {
-.sub03 ul.yearBox  {
-    display: ruby;
-}
+	.sub03 ul.yearBox {
+		display: ruby;
+	}
 	.popup .k-picker-solid {
 		width: 100% !important;
 		border-radius: 10px;
@@ -103,9 +104,9 @@
 }
 
 @media ( max-width : 390px) {
-.sub03 ul.yearBox  {
-    display: ruby;
-}
+	.sub03 ul.yearBox {
+		display: ruby;
+	}
 	.popup .k-picker-solid {
 		width: 100% !important;
 		border-radius: 10px;
@@ -127,9 +128,9 @@
 }
 
 @media ( max-width : 650px) {
-.sub03 ul.yearBox  {
-    display: ruby;
-}
+	.sub03 ul.yearBox {
+		display: ruby;
+	}
 	.popup .k-picker-solid {
 		width: 100% !important;
 		border-radius: 10px;
@@ -147,9 +148,9 @@
 }
 
 @media ( max-width : 420px) {
-.sub03 ul.yearBox  {
-    display: ruby;
-}
+	.sub03 ul.yearBox {
+		display: ruby;
+	}
 	.popup .k-picker-solid {
 		width: 100% !important;
 		border-radius: 10px;
@@ -168,9 +169,9 @@
 }
 
 @media ( max-width : 480px) {
-.sub03 ul.yearBox  {
-    display: ruby;
-}
+	.sub03 ul.yearBox {
+		display: ruby;
+	}
 	.popup .k-picker-solid {
 		width: 100% !important;
 		border-radius: 10px;
@@ -378,12 +379,12 @@ table.tb .tb_flex23 {
 						<li class="mo_li" style="width: 150px;"><label
 							for="end-picker01"></label> <input id="end-picker01"
 							title="datepicker" aria-label="종료기간조회"></li>
-<!-- 					</ul> -->
-<!-- 					<ul class="selec_box" id="selectBox1"> -->
-						<li class="mo-li">									
-											<label for="lncdDrop"></label> <input id="lncdDrop"></li>
-						<li class="mo-li">									
-											<label for="searchCd"></label> <input id="searchCd"></li>
+						<!-- 					</ul> -->
+						<!-- 					<ul class="selec_box" id="selectBox1"> -->
+						<li class="mo-li"><label for="lncdDrop"></label> <input
+							id="lncdDrop"></li>
+						<li class="mo-li"><label for="searchCd"></label> <input
+							id="searchCd"></li>
 						<li class="mo_li"><label for="searchWrd"
 							style="display: none"></label> <input type="text" id="searchWrd"
 							class="searchWrd input" aria-label="대여번호를 입력하세요"
@@ -400,7 +401,9 @@ table.tb .tb_flex23 {
 			<div class="contBox lastBox lastBox02">
 				<div class="nameBox nameBox-flex">
 					<div style="display: flex; align-items: center;">
-						<h4 class="name">대여이력 관리 현황</h4>
+						<h4 class="name">
+							<c:out value='${tableName}' />
+						</h4>
 						&emsp; 총&nbsp;<span id="totCnt" style="font-weight: bold;"></span>건
 					</div>
 					<ul class="horizontal-list"
@@ -416,7 +419,7 @@ table.tb .tb_flex23 {
 
 				</div>
 				<table id="rsvGrid">
-					<caption>대여이력 현황</caption>
+					<caption>자격확인 반복예약 현황</caption>
 				</table>
 			</div>
 
@@ -439,7 +442,6 @@ table.tb .tb_flex23 {
 <!-- 		</div> -->
 <!-- 		<div class="content"> -->
 <!-- <!-- 			<div class="scrollBar02" style="height: 400px;"> -->
--->
 <!-- 			<div class="scrollBar02"> -->
 <!-- 				<div class="search_top"> -->
 <!-- 					<div class="selec_wr" style="display: flex;"> -->
@@ -769,13 +771,22 @@ table.tb .tb_flex23 {
 										</div>
 									</td>
 								</tr>
+								<!-- 								<tr> -->
+								<!-- 									<th scope="col">연식</th> -->
+								<!-- 									<td> -->
+								<!-- 										<div class="tb_flex"> -->
+								<!-- 											<label for="rsvedModelYear">연식</label> <input type="text" -->
+								<!-- 												id="rsvedModelYear" name="rsvedModelYear" class="input" -->
+								<!-- 												readonly /> -->
+								<!-- 										</div> -->
+								<!-- 									</td> -->
+								<!-- 								</tr> -->
 								<tr>
-									<th scope="col">연식</th>
+									<th scope="col">최종검증결과</th>
 									<td>
 										<div class="tb_flex">
-											<label for="rsvedModelYear">연식</label> <input type="text"
-												id="rsvedModelYear" name="rsvedModelYear" class="input"
-												readonly />
+											<label for="RsvedlastRst">최종 검증결과</label> <input type="text"
+												id="RsvedlastRst" name="RsvedlastRst" class="input" readonly />
 										</div>
 									</td>
 								</tr>
@@ -827,15 +838,6 @@ table.tb .tb_flex23 {
 											<label for="RsvedlastCfDt">최종 검증일자</label> <input type="text"
 												id="RsvedlastCfDt" name="RsvedlastCfDt" class="input"
 												readonly />
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th scope="col">최종검증결과</th>
-									<td>
-										<div class="tb_flex">
-											<label for="RsvedlastRst">최종 검증결과</label> <input type="text"
-												id="RsvedlastRst" name="RsvedlastRst" class="input" readonly />
 										</div>
 									</td>
 								</tr>

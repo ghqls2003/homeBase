@@ -82,34 +82,34 @@
 				},
 			});
 			tabBtn01.on('click', function() {
-				swiper.slideTo(2); // 3 번째 슬라이드로 이동
+				swiper.slideTo(1); // 2번째 슬라이드로 이동
 			});
 			tabBtn02.on('click', function() {
-				swiper.slideTo(14); // 13 번째 슬라이드로 이동
+				swiper.slideTo(4); // 5 번째 슬라이드로 이동
 			});
 			tabBtn03.on('click', function() {
-				swiper.slideTo(15); // 14 번째 슬라이드로 이동
+				swiper.slideTo(24); // 25 번째 슬라이드로 이동
 			});
 			tabBtn04.on('click', function() {
-				swiper.slideTo(16); // 17 번째 슬라이드로 이동
+				swiper.slideTo(29); // 26 번째 슬라이드로 이동
 			});
 			swiper.on('slideChange', function() {
-				if (swiper.activeIndex >= 0 && swiper.activeIndex <= 13) {
+				if (swiper.activeIndex >= 0 && swiper.activeIndex <= 3) {
 					$('#tabBtn01').addClass('active');
 				} else {
 					$('#tabBtn01').removeClass('active');
 				}
-				if (swiper.activeIndex === 14) {
+				if (swiper.activeIndex === 4) {
 					$('#tabBtn02').addClass('active');
 				} else {
 					$('#tabBtn02').removeClass('active');
 				}
-				if (swiper.activeIndex === 15) {
+				if (swiper.activeIndex === 24) {
 					$('#tabBtn03').addClass('active');
 				} else {
 					$('#tabBtn03').removeClass('active');
 				}
-				if (swiper.activeIndex >=  16) {
+				if (swiper.activeIndex >=  29) {
 					$('#tabBtn04').addClass('active');
 				} else {
 					$('#tabBtn04').removeClass('active');
