@@ -111,7 +111,7 @@
 	            <div class="box">
 	                <div class="popup_top">
 	                    <h4>문자 조회</h4>
-	                    <div class="close" id="close">
+	                    <div class="close detailClose">
 	                        <span></span>
 	                        <span></span>
 	                    </div>
@@ -152,7 +152,7 @@
 	                </div>
 	                <div class="btn_flex">
 	                    <button class="blue_btn" id="resendMsg">재전송</button>
-	                    <button class="gray_btn cancel_btn">취소</button>
+	                    <button class="gray_btn detailClose">취소</button>
 	                </div>
 	            </div>
 	        </div>
@@ -161,7 +161,7 @@
 	            <div class="box">
 	                <div class="popup_top">
 	                    <h4>대여사업자 문자 발송</h4>
-	                    <div class="close" id="close">
+	                    <div class="close insertClose">
 	                        <span></span>
 	                        <span></span>
 	                    </div>
@@ -275,7 +275,7 @@
 	                    </div>
 	                    <div class="btn_flex">
 	                        <button class="blue_btn" id="sendMsg">발송</button>
-	                        <button class="gray_btn cancel_btn">취소</button>
+	                        <button class="gray_btn insertClose">취소</button>
 	                    </div>
 	                </div>
 	            </div>
@@ -286,7 +286,7 @@
 	            <div class="box">
 	                <div class="popup_top">
 	                    <h4>대여사업자 문자 발송</h4>
-	                    <div class="close" id="close">
+	                    <div class="close insertClose">
 	                        <span></span>
 	                        <span></span>
 	                    </div>
@@ -391,7 +391,7 @@
 		                </div>
 	                    <div class="btn_flex">
 	                        <button class="blue_btn" id="sendIndivMsg">발송</button>
-	                        <button class="gray_btn cancel_btn">취소</button>
+	                        <button class="gray_btn insertClose">취소</button>
 	                    </div>
 	                </div>
 	            </div>

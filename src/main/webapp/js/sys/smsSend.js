@@ -738,8 +738,16 @@
             });
 
 			// 등록 팝업 X, 닫기 버튼
-			$("#close, .cancel_btn").on("click", function() {
+			$(".insertClose").on("click", function() {
 				location.reload();
+        	});
+			$(".detailClose").on("click", function() {
+				var grid = $("#smsSendGrid").data("kendoGrid");
+				grid.dataSource.read();
+				grid.clearSelection();  // 상세보기 팝업창 닫았을 때, select 해제
+			    $(".scrollBar02").scrollTop(0);
+			    $("body").css("overflow", "auto");
+				$(".viewMsg_popup").removeClass("view");
         	});
 	
 			// 전체, 권한별, 법인별 체크시 초기화
