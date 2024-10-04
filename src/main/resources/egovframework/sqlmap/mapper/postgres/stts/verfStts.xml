@@ -199,7 +199,7 @@
 		</if>
 		<if test="verfMthd != null and verfMthd != ''">
 			<choose>
-				<when test='mthd.equals("4")'>
+				<when test='verfMthd.equals("4")'>
 					AND  hs.vrfc_mthd IN ('4', '5')
 				</when>
 				<otherwise>
