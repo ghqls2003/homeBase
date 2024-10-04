@@ -42,6 +42,11 @@ button.red_btn {
     background-color: #f5f5f5;
 }
 
+.sm_popup .sm_box {
+    width: 1100px;
+    height: 500px;
+}
+
 </style>
 
 <div class="subPage sub04">
@@ -75,13 +80,13 @@ button.red_btn {
 			                	<ul class="selec_box">
 		                            <li class="li_slec">
 			                            <label for="searchCoNm" hidden>회사명</label>
-			                            <input type="text" id="searchCoNm" class="searchCoNm input" aria-label="회사명" placeholder="회사명" maxLength="80" oninput="charOnly(this)" />
+			                            <input type="text" id="searchCoNm" class="searchCoNm input" aria-label="회사명" placeholder="회사명을 입력하세요" maxLength="80" oninput="charOnly(this)" />
 		                            </li>
 		                        </ul>
 		                        <ul class="selec_box">
 		                            <li class="li_slec">
 			                            <label for="searchCarNum" hidden>차량번호</label>
-			                            <input type="text" id="searchCarNum" class="searchCarNum input" aria-label="차량번호"  placeholder="차량번호" maxLength="80" oninput="charOnly(this)" />
+			                            <input type="text" id="searchCarNum" class="searchCarNum input" aria-label="차량번호"  placeholder="차량번호를 입력하세요" maxLength="80" oninput="charOnly(this)" />
 		                            </li>
 		                        </ul>
 			                    <div class="year_picker">
@@ -129,7 +134,7 @@ button.red_btn {
 	        </div>
 	        
 	        <div class="btn_flex">
-			    <button type="button" class="blue_btn reg_btn" style="margin-top: 60px;">등록하기</button>
+<!-- 			    <button type="button" class="blue_btn reg_btn" style="margin-top: 60px;">등록하기</button> -->
 			</div>
 	
 	        <!-- 팝업 -->
@@ -388,12 +393,13 @@ button.red_btn {
 								    	</table>
 								    	<table class="tb rental_tb01">
 								    		 <tr>
-								                <th scope="col">소속</th>
+								                <th scope="col">회사명</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="">소속</label>
-								                        <input type="text" id="insertAffilitn" class="input " maxLength="200"/>
-								                        <button id="" class="yellow_btn">중복확인</button>
+								                        <label for="">회사명</label>
+								                        <input type="text" id="insertCoNm" class="input readOnlyGrayBtn" maxLength="200"/>
+<!-- 								                        <button id="" class="yellow_btn">중복확인</button> -->
+								                        <button id="coNmBtn" class="yellow_btn coNmBtn "><img src="${contextPath}/images/sub/ico_search02.png" alt="검색아이콘"></button>
 								                    </div>
 								                </td>
 								            </tr>
@@ -402,8 +408,8 @@ button.red_btn {
 								                <td>
 								                    <div class="tb_flex">
 								                        <label for="garageRoadNmAddr">차량번호</label>
-								                        <input type="text" id="insertRegCarNo" class="input" maxLength="200" aria-label="차량번호"/>
-								                        <button id="addrBtn02" class="yellow_btn">중복확인</button>
+								                        <input type="text" id="insertRegCarNo" class="input readOnlyGrayBtn" maxLength="200" aria-label="차량번호"/>
+								                        <button id="carBtn" class="yellow_btn carBtn "><img src="${contextPath}/images/sub/ico_search02.png" alt="검색아이콘"></button>
 								                    </div>
 								                </td>
 								            </tr>
@@ -457,6 +463,42 @@ button.red_btn {
 					</div>
 	            </div>
 	        </div>
+	        
+	        <!-- 대여이력등록 팝업 -->
+			<div id="carPopup" class="sm_popup car_register02">
+				<div id="carPopupBox" class="sm_box" >
+					<div class="popup_top">
+						<h4>차량 찾기</h4>
+						<div class="sm_close sm_close_btn carClose">
+							<span></span>
+							<span></span>
+						</div>
+					</div>
+					<div class="content">
+						<div class="search_wr">
+							<div class="search_flex" style="display: flex; align-items: center;margin-bottom:13px;">
+								<span style="font-size: 1.4rem;margin-right:13px;">차량번호</span>
+								<label for="carSearchWrd" style="display: none">검색조건</label>
+								<input id="carSearchWrd" class="input com_input" aria-label="검색조건 입력" placeholder="차량등록 번호를 입력하세요">
+								<button class="yellow_btn" id="carPopupSearchBtn">
+									  검색 <img src="${contextPath}/images/sub/ico_search02.png" alt="검색">
+								</button>
+							</div>
+						</div>
+			
+						<div id="carTa" class="result">
+							<table id="carGrid">
+								<caption>자동차리스트</caption>
+							</table>
+						</div>
+						<div class="btn_flex">
+							<button id="carVhclRegNoVal" class="blue_btn cancel_btn resizeBox carClose">확인</button>
+							<button class="gray_btn cancel_btn resizeBox carClose">취소</button>
+						</div>
+					</div>
+				</div>
+			</div>
+	        
 	        <!-- 결합정보 상세보기 팝업 -->
 	        <div class="popup viewDefect_popup msg_send  popup_type02">
 	            <div class="box">

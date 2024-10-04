@@ -68,5 +68,18 @@ public class DefectServiceImpl extends CmmnAbstractServiceImpl implements Defect
 		return defectDao.selectSggNm(paramsMap);
 	}
 	
+	@Override
+	public Map<String, Object> selectDetailDefectInfo(Map<String, Object> paramsMap) {
+		Map<String, Object> result = new HashMap<>();
+
+		int total = defectDao.selectDetailDefectInfoCnt(paramsMap);
+		List<Map<String, Object>> data = defectDao.selectDetailDefectInfo(paramsMap);
+
+		result.put("total", total);
+		result.put("data", data);
+
+		return result;
+	}
+	
 
 }

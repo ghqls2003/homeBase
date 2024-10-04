@@ -1,5 +1,6 @@
 package kr.or.kotsa.rims.sys.web;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -87,6 +88,8 @@ public class DefectController extends CmmnAbstractServiceImpl{
 		String resultMsg = "";
 		String resultMsg1 = "";
 		ModelAndView mav = new ModelAndView("jsonView");
+		paramsMap.put("userSn", getUserSn());
+		
 		
 		ret = defectService.insertDefect(paramsMap);
 		if(ret == 1) {
@@ -196,4 +199,23 @@ public class DefectController extends CmmnAbstractServiceImpl{
     public List<Map<String, Object>> SggNm(@RequestBody Map<String, Object> paramsMap) throws RimsException {
         return defectService.selectSggNm(paramsMap);
     }
+    
+	@RequestMapping("/defect/selectCarList")
+	@ResponseBody
+	public Object selectCarList(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		Map<String, Object> result = new HashMap<>();
+		
+		List<Map<String, Object>> list = defectDao.selectCarList(paramsMap);
+		int total = defectDao.selectCarListCnt(paramsMap);
+		
+		result.put("data", list);
+		result.put("total", total);
+		return result;
+	}
+	
+	@RequestMapping("/defect/selectDetailDefectInfo")
+	@ResponseBody
+	public Map<String, Object> selectDetailDefectInfo(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		return defectService.selectDetailDefectInfo(paramsMap);
+	}
 }

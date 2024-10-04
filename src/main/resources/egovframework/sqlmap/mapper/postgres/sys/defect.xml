@@ -41,6 +41,38 @@
 		    </if>	
 		    ) as Ta
 	</sql>
+	
+		<sql id="carQuery">
+	(
+		select * from(
+			select
+				row_number() over() as rn ,
+				car.vhcl_reg_no,
+				car.vin,
+				car.carmdl,
+				car.mdlyr,
+				car.vhcl_nm,
+				car.bzmn_sn,
+				car.crno,
+				car.ownr_nm,
+				(select brno from dqvs.dvs_rac_mt_agency drma where bzmn_sn = car.bzmn_sn),
+				car.engine_fom,
+				case car.use_yn  when 'Y' then '사용' when 'N' then '미사용' else '미상' END AS use_yn ,
+				to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
+				from dqvs.dvs_rac_mt_car car
+				where 1=1
+				<if test="searchWrd != '' and searchWrd != null">
+					and car.vhcl_reg_no like '%' || #{searchWrd} || '%'
+				</if>
+				<if test="bzmnSn != '' and bzmnSn != null">
+					and car.crno = (select crno from dqvs.dvs_rac_mt_agency where bzmn_sn = #{bzmnSn} )
+				</if>
+		) T
+		WHERE 1 = 1
+		ORDER BY T.rn ASC
+		limit 100
+	) as t0
+	</sql>
 
 
 	<select id="selectDefectInfo" resultType="map">
@@ -73,12 +105,13 @@
 		coalesce(vhcl_nm,'-') as vhcl_nm,  
 		coalesce(engine_fom,'-') as engine_fom,  
 		coalesce(use_yn,'-') as use_yn, 
-		coalesce(sgg_cd,'-') as sgg_cd, 
+		coalesce(t1.sgg_cd,'-') as sgg_cd, 
 		coalesce(brno ,'-') as brno,
-		coalesce(rmrk,'-') as rmrk
+		coalesce(rmrk,'-') as rmrk,
+		co_nm
 	from (
 		select * from dvs_rac_mt_car where vhcl_reg_no = #{vhclRegNo} 
-	) t0 left join (select crno, brno from dvs_rac_mt_agency) t1 on t0.crno = t1.crno
+	) t0 left join (select crno, brno, sgg_cd, co_nm from dvs_rac_mt_agency) t1 on t0.crno = t1.crno
 	limit 1
 	</select>
 	
@@ -101,33 +134,41 @@
 	
 	<insert id="insertDefect" parameterType="paraMap">
 	/*시정조치 결과 등록*/
-<!-- 		INSERT INTO dvs_rac_mt_defect (  -->
-<!-- 			  actnSn -->
-<!-- 			, actnTyCd -->
-<!-- 			, actnRsCd -->
-<!-- 			, actnCn -->
-<!-- 			, actnDt -->
-<!-- 			, actnYn -->
-<!-- 			, affilitn -->
-<!-- 			, regCarNo -->
-<!-- 			, defectSn -->
-<!-- 			, regNm -->
-<!-- 			, regDt -->
-<!-- 			, rmrk -->
-<!-- 			) VALUES ( -->
-<!-- 				  #{actnSn} -->
-<!-- 				, #{actnTyCd} -->
-<!-- 				, #{actnRsCd} -->
-<!-- 				, #{actnCn} -->
-<!-- 				, #{actnDt} -->
-<!-- 				, #{actnYn} -->
-<!-- 				, #{affilitn} -->
-<!-- 				, #{regCarNo} -->
-<!-- 				, #{defectSn} -->
-<!-- 				, #{regNm} -->
-<!-- 				, #{regDt} -->
-<!-- 				, #{rmrk} -->
-<!-- 			) -->
+INSERT INTO dvs_rac_mt_defectActn ( 
+			  vin
+			, defects_recall_no
+			, defects_reg_no
+			, vhcl_no
+			, co_nm
+			, crrtvact_type
+			, crrtvact_rslt
+			, crrtvact_cn
+			, crrtvact_day
+			, crrtvact_yn
+			, rgtr_sn
+			, reg_dt
+			, mdfr_sn
+			, mdfcn_dt
+			, atch_file_sn
+			, rmrk
+			) VALUES (
+				  #{vin}
+				, #{actnSn}
+				, #{defectSn}
+				, #{regCarNo}
+				, #{coNm}
+				, #{actnTyCd}
+				, #{actnRsCd}
+				, #{actnCn}
+				, #{actnDt}::timestamp
+				, #{actnYn}
+				, #{userSn} ::numeric
+				, now()::timestamp
+				, null
+				, null
+				, #{actnFileAtchSn}
+				, #{rmrk}
+			)
 	</insert>
 	
 	<update id="deleteDefect" parameterType="paraMap">
@@ -179,6 +220,45 @@
 		</if>
 		order by sgg_cd
     </select>
+    
+    	<select id="CarList" resultType="resultMap">
+	    select * from 
+			<include refid="carQuery" />
+		<if test="take != '' and take != null">
+			LIMIT #{take} OFFSET #{skip}
+		</if>
+	</select>
+	
+		<select id="CarListCnt" resultType="int">
+	SELECT COUNT(*) FROM (
+		SELECT * FROM (
+			SELECT
+				row_number() over() as rn ,
+			car.vhcl_reg_no,
+			car.vin,
+			car.carmdl,
+			car.mdlyr,
+			car.vhcl_nm,
+			car.bzmn_sn,
+			car.ownr_nm,
+			(select brno from dqvs.dvs_rac_mt_agency drma where bzmn_sn = car.bzmn_sn),
+			car.engine_fom,
+			case car.use_yn  when 'Y' then '사용' when 'N' then '미사용' else '미상' END AS use_yn ,
+			to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
+			from dqvs.dvs_rac_mt_car car
+			where 1=1
+			<if test="searchWrd != '' and searchWrd != null">
+				and car.vhcl_reg_no like '%' || #{searchWrd} || '%'
+			</if>
+			<if test="bzmnSn != '' and bzmnSn != null">
+				and car.crno = (select crno from dqvs.dvs_rac_mt_agency where bzmn_sn = #{bzmnSn} )
+			</if>
+		) AS T
+		WHERE 1=1
+		ORDER BY T.rn ASC
+		limit 100
+	) AS C
+	</select>
     
 
 </mapper>
