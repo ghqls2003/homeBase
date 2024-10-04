@@ -6,6 +6,7 @@
 	var excelDownArc = {};
 	var searchTriggered = false;
 	var receiverParams= {};
+	
 	W.$smsSend = W.$smsSend || {};
 	
 	$(document).ready(function() {
@@ -916,11 +917,11 @@
 							$smsSend.event.incValid();
 						}else{
 							$(".chkSend_popup").addClass("view");
-								var grid = $("#receiver_grid").data("kendoGrid");
-				                if (grid) {
-									$("#grid_box").empty();
-					                $('#grid_box').append('<table id="receiver_grid"></table>');
-			                }
+							var grid = $("#receiver_grid").data("kendoGrid");
+			                if (grid) {
+								$("#grid_box").empty();
+				                $('#grid_box').append('<table id="receiver_grid"></table>');
+		                	}
 							$smsSend.ui.groupReceiverList();
 							$smsSend.event.groupSendCheck();
 						}
@@ -941,7 +942,7 @@
 			            if (target===0) {
 			                alert('수신자를 선택해주세요.');
 			            } else {
-							 $(".chkSend_popup").addClass("view");
+							$(".chkSend_popup").addClass("view");
 							var grid = $("#receiver_grid").data("kendoGrid");
 			                if (grid) {
 								$("#grid_box").empty();
@@ -1168,9 +1169,6 @@
 			return ajax(true, contextPath+'/sys/smsSend/selectReceiverList', 'body', '확인중입니다.', params, function(data) {
 				return $smsSend.event.insertSms(data);
 			});
-			
-			
-			
 		},
 		
 		// 발송 처리
@@ -1197,22 +1195,22 @@
 				    }
 				});
             } else {
-					var num = 0;
-					$.each(user_sn, function(x, y) {
-						$.each(data.data, function(index, item) {
-							if(item.user_sn==y){
-								num++;
-								dest_count = num;
-								var telno = item.telno.replace(/-/g, '')
-								dest_info += item.user_nm+"^"+telno
-								rcvr.push(item.user_nm)
-								rcvr_telno.push(telno)
-								if (num < user_sn.length) {
-							        dest_info += "|";
-							    }
-							}
-						});
+				var num = 0;
+				$.each(user_sn, function(x, y) {
+					$.each(data.data, function(index, item) {
+						if(item.user_sn==y){
+							num++;
+							dest_count = num;
+							var telno = item.telno.replace(/-/g, '')
+							dest_info += item.user_nm+"^"+telno
+							rcvr.push(item.user_nm)
+							rcvr_telno.push(telno)
+							if (num < user_sn.length) {
+						        dest_info += "|";
+						    }
+						}
 					});
+				});
             }
 			var msg_reserv_time = $('#check_send_date').text();
 			if(msg_reserv_time!="즉시 전송"){
@@ -1244,10 +1242,8 @@
 				
 				// 시간을 두 자리 숫자로 변환
 				hours = hours.toString().padStart(2, '0');
-				
 				sndng_rsvt_dt = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 				send_date = year + month + day + hours + minutes + seconds;
-				
 			}
 			
 			params.dest_info = dest_info;
@@ -1275,29 +1271,27 @@
 		    var one_char = "";
 		    var str2 = "";
 		
-		    for(var i=0; i<str_len; i++)
-		    {
+		    for(var i=0; i<str_len; i++){
 		        one_char = str.charAt(i);
-		        if(escape(one_char).length > 4) {
+		        if(escape(one_char).length > 4){
 		            rbyte += 2;                                         //한글2Byte
 		        }else{
 		            rbyte++;                                            //영문 등 나머지 1Byte
 		        }
+
 		        if(rbyte <= maxByte){
 		            rlen = i+1;                                          //return할 문자열 갯수
 		        }
 		     }
-		     if(rbyte > maxByte)
-		     {
+
+		     if(rbyte > maxByte){
 		        alert("메세지는 최대 " + maxByte + "byte를 초과할 수 없습니다.")
 		        str2 = str.substr(0,rlen);                                  //문자열 자르기
 		        obj.value = str2;
 		        $smsSend.event.fnChkByte(obj, maxByte);
-		     }
-		     else
-		     {
-				 var byteInfoWrap = $(obj).closest('.msg_write_box').prev('.byteInfoWrap');
-       			 var byteInfo = byteInfoWrap.find('#byteInfo');
+		     }else{
+				var byteInfoWrap = $(obj).closest('.msg_write_box').prev('.byteInfoWrap');
+       			var byteInfo = byteInfoWrap.find('#byteInfo');
 		        if (byteInfo.length > 0) {
 				    $('#byteInfo').text(rbyte);
 				}else{
@@ -1305,6 +1299,5 @@
 				}
 		     }
 		},
-		
 	}
 }(window, document, jQuery));

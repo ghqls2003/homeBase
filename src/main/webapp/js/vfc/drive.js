@@ -1068,12 +1068,12 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			$('#similarityChk').on('change', function() {
 				if ($('#similarityChk').prop('checked')) {
 					similarityChk = true
-					console.log(similarityChk)
+					//console.log(similarityChk)
 					// 유사도 검증 안내 팝업
 					$(".similarity_pop").css("display", "flex");
 				} else {
 					similarityChk = false
-					console.log(similarityChk)
+					//console.log(similarityChk)
 				}
 				
 //				if(similarityImage){

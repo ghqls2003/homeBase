@@ -319,10 +319,8 @@
 		                                                <input id="searchAuthrtCd">
 		                                            </li>
 		                                            <li class="li_slec">
-						                           	    <div class="dropdown">
-						                           	    	<label for="searchOtherCondition"></label>
-		                                                    <input id="searchOtherCondition">
-						                           	    </div>
+					                           	    	<label for="searchOtherCondition" hidden> 검색조건(전체)</label>
+	                                                    <input id="searchOtherCondition">
 						                            </li>
 						                             <li class="li_slec">
 							                            <label for="searchBox" hidden>검색 내용</label>
