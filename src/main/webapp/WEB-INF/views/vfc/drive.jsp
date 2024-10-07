@@ -12,6 +12,7 @@ var userType = '${userType}'
 var userTypeBool = '${userTypeBool}' === 'true';
 var userOperSystemBool = '${userOperSystemBool}' === 'true';
 var authrtCd = '${authrtCd}'
+var userType = '${userType}'
 </script>
 <style>
 @media (max-width: 480px) {
@@ -19,6 +20,7 @@ var authrtCd = '${authrtCd}'
         width: 380px;
     }
 }
+
 </style>
 
 
@@ -211,7 +213,7 @@ var authrtCd = '${authrtCd}'
 
 	                                <div class="btn_flex">
     	                            	<button class="gray_btn qrCfm" disabled>완료</button>
-                                  		<button class="gray_btn cancel_btn">취소</button>
+                                  		<button class="gray_btn cancel_btn" id="qrCancle">취소</button>
                                 	</div>
                               	</div>
                             </div>
@@ -289,6 +291,7 @@ var authrtCd = '${authrtCd}'
 
                     <p class="tb_top">※ 외국인 : 성명란에 공백 없이 영어 대문자로 입력해주시기 바랍니다.</p>
                     <p class="tb_top" style="color:#FF7F50;">※ 면허증 촬영 시, 본인의 면허증 정보가 정확히 일치하는지 확인해 주시기 바랍니다.</p>
+                    <p class="tb_top" id="similarity_tb_top" style="color:#509cff;">※ 면허증 촬영 시에만 유사도 검증이 가능합니다.</p>
                     <div class="license_wr">
 	                    <div class="license_bg">
 	                    	<button class="info-btn info-btn01">
@@ -423,6 +426,10 @@ var authrtCd = '${authrtCd}'
 	                         </div>
 						</div>
 					</div>
+					<div class="similarityChkBox">
+						<input type="checkbox" id="similarityChk" >
+						<label for="similarityChk">유사도 검증</label>
+					</div>
                 </div>
 	        </div>
 	        <p class="info">※ 본 웹사이트에 게시된 정보는 프로그램이나 그 밖의 기술적 장치를 이용하여 무단으로 사용할 수 없습니다.</p>
@@ -547,6 +554,23 @@ var authrtCd = '${authrtCd}'
                 <button class="gray_btn cancel_btn" id ="cancelAndInit">닫기</button>
             </div>
 		</div>
+    </div>
+</div>
+
+<!-- 유사도 검증 안내 팝업 -->
+<div class="similarity_pop">
+    <div class="box">
+        <div class="popup_top">
+            <h4>비대면 검증 안내</h4>
+            <div class="close">
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="content">
+        	 <img src="${contextPath}/images/sub/sv_info.png" alt="유사도 검증 안내">
+        	 <p>운전자격 확인 버튼 클릭 시, 운전면허증 사진과의 유사도 검증을 위해 얼굴 인식 촬영이 시작됩니다.</p>
+        </div>
     </div>
 </div>
 

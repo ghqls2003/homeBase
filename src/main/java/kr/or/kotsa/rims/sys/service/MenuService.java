@@ -1,5 +1,6 @@
 package kr.or.kotsa.rims.sys.service;
 
+import java.util.List;
 import java.util.Map;
 
 import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
@@ -23,5 +24,8 @@ public interface MenuService {
 
 	//메뉴 순서
 	public int selectMenuOrdr(Map<String, Object> paramsMap) throws RimsException;
+	
+	//메뉴 접근 권한
+	public List<Map<String, Object>> mnAccAuth(Map<String, Object> paramsMap) throws RimsException;
 
 }

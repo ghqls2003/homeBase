@@ -1,6 +1,5 @@
 package kr.or.kotsa.rims.vfc.web;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,20 +14,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import kr.or.kotsa.rims.cmmn.biz.service.CmmnService;
 import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
 import kr.or.kotsa.rims.cmmn.sys.service.CmmnAbstractServiceImpl;
 import kr.or.kotsa.rims.vfc.service.ContactlessVfcService;
 
 @Controller
-@PropertySource("classpath:/egovframework/egovProps/globals.properties")
 @RequestMapping("vfc")
 public class ContactlessVfcController extends CmmnAbstractServiceImpl {
 
-	private static final String IS_MOBILE = "MOBI";
-	private static final String IS_PC = "PC";
-
 	@Autowired
 	private ContactlessVfcService contactlessVfcService;
+	
+	
+	private static final String IS_MOBILE = "MOBI";
+	private static final String IS_PC = "PC";
 
 	/**
 	 * 자격검증 화면
@@ -38,13 +37,43 @@ public class ContactlessVfcController extends CmmnAbstractServiceImpl {
 	 * @return
 	 * @throws RimsException
 	 */
-	@RequestMapping("contactlessVfc")
+	@RequestMapping("/contactlessVfc")
 	public ModelAndView viewMain(@RequestParam Map<String, Object> paramsMap, ModelAndView mav,
 								 HttpServletRequest request, HttpServletResponse response) throws RimsException {
+		
+		String userType = isDevice(request);
+		Boolean userTypeBool = true;
+		Boolean userOperSystemBool = true;
 
+		if(userType == "MOBI") {
+			userTypeBool = false;
+			String userOperSystem = getOperatingSystem(request);
+			if(userOperSystem == "iOS") {
+				userOperSystemBool = false;
+			}
+		}
+		
+		paramsMap.put("url", "vfc/contactlessVfc");
+		//List<Map<String, Object>> tableNameData = cmmnService.findTableNameByUrl(paramsMap);
+		//String tableName = tableNameData.get(0).get("menu_nm").toString();
+		//mav.addObject("tableName",tableName);
+		
+		mav.addObject("userType", userType);
+		mav.addObject("userTypeBool", userTypeBool);
+		mav.addObject("userOperSystemBool", userOperSystemBool);
+		mav.addObject("authrtCd", getAuthrtCd());
+		mav.setViewName("vfc/contactlessVfc");
+		mav.addObject("error", request.getAttribute("error"));
+		
 		return mav;
 	}
 
+	@RequestMapping("contactlessVfc/selectRentInfo")
+	@ResponseBody
+    public List<Map<String, Object>> selectlistView(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+        return contactlessVfcService.selectRentInfo(paramsMap);
+    }
+	
 	public static String isDevice(HttpServletRequest req) {
 		String userAgent = req.getHeader("User-Agent").toUpperCase();
 		if(userAgent.contains(IS_MOBILE) || userAgent.contains("IPAD") ||
@@ -55,7 +84,7 @@ public class ContactlessVfcController extends CmmnAbstractServiceImpl {
 			return IS_PC;
 		}
 	}
-
+	
 	public static String getOperatingSystem(HttpServletRequest req) {
 		String userAgent = req.getHeader("User-Agent").toUpperCase();
 
@@ -65,11 +94,17 @@ public class ContactlessVfcController extends CmmnAbstractServiceImpl {
 			return "Android";
 		}
 	}
-
-	@RequestMapping("contactlessVfc/selectRentInfo")
+	
+	/**
+	 * 운전자격 확인 코드
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping("contactlessVfc/selectVerifyCd")
 	@ResponseBody
-    public List<Map<String, Object>> selectlistView(@RequestBody Map<String, Object> paramsMap) throws RimsException {
-		List<Map<String, Object>> aa = contactlessVfcService.selectRentInfo(paramsMap);
-        return contactlessVfcService.selectRentInfo(paramsMap);
-    }
+	public Object selectVerifyCd(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		return contactlessVfcService.selectVerifyCd(paramsMap);
+	}
+	
 }

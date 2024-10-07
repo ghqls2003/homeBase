@@ -61,8 +61,6 @@
 	// 팝업창 로딩 체크
 	var detailCk = 0;
 	
-	var sq = '1';
-	
     $(document).ready(function() {
 		kendo.ui.progress($(document.body), true);
 		$(".excelDownBtn").attr("disabled", true);
@@ -110,17 +108,6 @@
 				value: new Date(nowYear, nowMonth, nowDate)
 			});
 			$("#rent-picker").attr("readonly", true);
-
-			var lcnsIdntData = [
-				{ cd_nm: "국내 면허", cd: "1" },
-				{ cd_nm: "국제 면허", cd: "2" }
-			];
-			$("#searchLcnsCd").kendoDropDownList({
-				optionLabel: "국내, 국제 면허(전체)",
-				dataTextField: "cd_nm",
-				dataValueField: "cd",
-				dataSource: lcnsIdntData,
-			});
 
 			var rentSttsData = [
 				{ cd_nm: "미확정", cd: "1" },
@@ -182,16 +169,6 @@
 						$('#end-picker03').data("kendoDateTimePicker").value(new Date($('#start-picker03').val()));
 				}
 			});
-			
-
-//			$(".regChk").on('change', function(){
-//				var regVal = $("input[name='regChk']:checked").val();
-//				if(regVal == 'intLic'){
-//					$("#licenseView").attr('style', 'display: contents');
-//				}else{
-//					$("#licenseView").attr('style', 'display: none');
-//				}
-//			});
 
 			// 최초 파라미터 세팅
 			$rentalHistManage.event.setData();			
@@ -233,12 +210,10 @@
 							options.startDt			= searchParamsArc.startDt;
 							options.endDt			= searchParamsArc.endDt;
 							options.rentDt			= searchParamsArc.rentDt;
-							options.lcnsIdntfCd	= searchParamsArc.lcnsIdntfCd;
 							options.rentSttsCd		= searchParamsArc.rentSttsCd;
 							options.vhclRegNo		= searchParamsArc.vhclRegNo;
 							options.coNm				= searchParamsArc.coNm;
 							options.dln					= searchParamsArc.dln;
-							options.selectQuery  = sq;
 							return JSON.stringify(options);
 						}
 					},
@@ -424,7 +399,6 @@
 				searchParamsArc.rentDt = $("#rent-picker").val();
 				searchParamsArc.vhclRegNo = $("#searchWrd").val();
 				searchParamsArc.coNm = $("#searchCoNm").val();
-				searchParamsArc.lcnsIdntfCd = $("#searchLcnsCd").val();
 				searchParamsArc.rentSttsCd = $("#searchRentSttsCd").val();
 				searchParamsArc.dln = $("#searchDln").val();
 				
@@ -518,11 +492,6 @@
 			$(".sm_popup .close").on("click",function(){
 				$(".sm_popup").removeClass("view");
 			});
-			
-			$("#regChk02").on("click", function() {
-				$("#globalLicense").addClass("view");
-			});
-
         },
         
         setData: function() {
@@ -532,7 +501,6 @@
 			searchParamsArc.rentDt = $("#rent-picker").val();
 			searchParamsArc.vhclRegNo = $("#searchWrd").val();
 			searchParamsArc.coNm = $("#searchCoNm").val();
-			searchParamsArc.lcnsIdntfCd = $("#searchLcnsCd").val();
 			searchParamsArc.rentSttsCd = $("#searchRentSttsCd").val();
 			searchParamsArc.dln = $("#searchDln").val();
 		},
@@ -550,7 +518,6 @@
 
         regiPopup : function() {
 			$("#regi").addClass("view");
-			$("#regChk01").prop("checked", true);
 //			$("#licenseView").attr('style', 'display: none');
 			$("#files").val('');
 			$(".filetype").val('');
@@ -618,10 +585,6 @@
 				encryptFileAjax(contextPath + "/cmmn/encryptFileUpload", formData, function (response) {
 					if (response != null) {
 						params.atchFileSn = response.fileSn;
-						if(regVal == 'intLic')
-							params.lcnsIdntfCd = "2";	// 국제 면허
-						else
-							params.lcnsIdntfCd = "1"; // 국내 면허
 
 						ajax(true, contextPath + '/vfc/rentalHistManage/insertRentReg.do', 'body', '확인인중입니다.', params, function (data) {
 							alert("대여이력에 등록을 성공하셨습니다");
@@ -855,26 +818,6 @@
 					html += '					</div>';
 					html += '				</td>';
 					html += '			</tr>';
-
-					//국제 면허의 경우 첨부된 면허증 사본(다운로드) 필드 노출 여부
-					if(data[i].lcnsIdntfCd === '2'){
-						//파일이 존재하는 경우
-						if(data[i].atchFileSn && data[i].atchFileNm !== '-'){
-							html += '			<tr>';
-							html += '				<th scope="col">국제 면허증 파일</th>';
-							html += '				<td>';
-							html += '					<div class="tb_flex">';
-							html += '						<label for="detailFileDown">파일 다운로드</label>';
-							html += '						<input type="text" id="" name="detailFileDown" class="input no_line" value="'+nvl(data[i].atchFileNm,' ')+'" >';
-							html += '					</div>';
-							html += '				</td>';
-							html += '			</tr>';
-						} else{
-
-						}
-					} else {
-
-					}
 					html += '		</table>';
 					html += '	</div>';
 					html += '</div>';

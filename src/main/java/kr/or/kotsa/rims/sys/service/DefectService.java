@@ -20,5 +20,7 @@ public interface DefectService {
 
 	public List<Map<String, Object>> selectSggNm(Map<String, Object> paramsMap);
 	
+	Map<String, Object> selectDetailDefectInfo(Map<String, Object> paramsMap);
+	
 	
 }

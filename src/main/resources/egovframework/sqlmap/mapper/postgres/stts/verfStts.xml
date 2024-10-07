@@ -38,7 +38,14 @@
 					AND agency.reg_cmptnc_cd = '''||#{cmptncCd}||'''
 				</if>
 				<if test="mthd != null and mthd != ''">
-					AND vrfc_mthd = '''||#{mthd}||'''
+					<choose>
+						<when test='mthd.equals("4")'>
+							AND vrfc_mthd IN (''4'', ''5'')
+						</when>
+						<otherwise>
+							AND vrfc_mthd = '''||#{mthd}||'''
+						</otherwise>
+					</choose>
 				</if>
 				GROUP BY hs.dt
 					, hs.hr
@@ -191,7 +198,14 @@
 			</choose>
 		</if>
 		<if test="verfMthd != null and verfMthd != ''">
-			AND hs.vrfc_mthd = #{verfMthd}
+			<choose>
+				<when test='verfMthd.equals("4")'>
+					AND  hs.vrfc_mthd IN ('4', '5')
+				</when>
+				<otherwise>
+					AND hs.vrfc_mthd = #{verfMthd}
+				</otherwise>
+			</choose>
 		</if>
 		<if test ="auth != null and auth != ''">
 			AND agency.bzmn_se_cd = #{auth} 

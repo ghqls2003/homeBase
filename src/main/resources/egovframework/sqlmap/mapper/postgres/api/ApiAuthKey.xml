@@ -28,7 +28,7 @@
 						      RIGHT(dcms.user_nm, 1) as rqstr_nm
 				        	, dcms.user_id
 				        	, damk.cert_key
-<!-- 				        , damk.oper_se_cd -->
+				        	, damk.oper_se_cd
 				        	, damk.secret_key
 				        	, damk.stts_cd
 				        	, dcmu.ogdp_nm
@@ -52,6 +52,9 @@
 				        </if>
 				        <if test="sttsCd != null and sttsCd != ''">
 				        	AND damk.stts_cd = #{sttsCd}
+				        </if>
+					    <if test="DevOper != null and DevOper != ''">
+				            AND damk.oper_se_cd = #{DevOper}
 				        </if>
 						) AS T
 					) AS t1
@@ -98,7 +101,7 @@
 							end as rqstr_nm
 				        	, dcms.user_id
 				        	, damk.cert_key
-<!-- 				        	, damk.oper_se_cd -->
+				        	, damk.oper_se_cd
 				        	, damk.secret_key
 				        	, damk.stts_cd
 				        	, dcmu.ogdp_nm
@@ -114,6 +117,9 @@
 					<if test="searchCondition == 'userId' and searchText != ''">
 						and LOWER(dcms.user_id) like '%' || LOWER(#{searchText}) || '%'
 				    </if>
+					    <if test="DevOper != null and DevOper != ''">
+				            AND damk.oper_se_cd = #{DevOper}
+				        </if>
 				        <if test="authrtCd != 'Z01' and authrtCd != 'K01' and authrtCd != 'D01'">
 				        	AND damk.user_sn = #{userSn}::numeric
 				        </if>
@@ -175,6 +181,67 @@
 				        <if test="authrtCd == 'Z01' or authrtCd == 'K01' or authrtCd == 'D01'">
 					      	AND	damk.issu_dt BETWEEN TO_DATE(#{startPicker02}, 'yyyy-mm-dd') AND TO_DATE(#{endPicker02}, 'yyyy-mm-dd')+1
 					    </if>
+					    <if test="DevOper != null and DevOper != ''">
+				            AND damk.oper_se_cd = #{DevOper}
+				        </if>
+						<if test="searchCondition == 'userNm' and searchText != ''">
+							and LOWER(dcms.user_nm) like '%' || LOWER(#{searchText}) || '%'
+					    </if>
+						<if test="searchCondition == 'userId' and searchText != ''">
+							and LOWER(dcms.user_id) like '%' || LOWER(#{searchText}) || '%'
+					    </if>
+				        <if test="authrtCd != 'Z01' and authrtCd != 'K01' and authrtCd != 'D01'">
+				        	AND damk.user_sn = #{userSn}::numeric
+				        </if>
+				        <if test="sttsCd != null and sttsCd != ''">
+				        	AND damk.stts_cd = #{sttsCd}
+				        </if>
+						) AS T
+					) AS t1
+					left JOIN dqvs.dvs_rac_mt_agency agency ON t1.bzmn_sn = agency.bzmn_sn
+					where 1=1 
+					<if test="searchCondition == 'companyNm' and searchText != '' ">
+				        AND agency.co_nm  like '%' || LOWER(#{searchText}) || '%'
+				    </if>
+				    	)t2
+    </select>
+   <select id="listApiAuthKeyCnt2" resultType="int">
+    select
+		count(t2.*)
+	from(		
+		SELECT 
+			t1.*,
+			agency.co_nm,
+			row_number() over(	order by T1.issu_dt_org desc) sn
+				FROM
+					(
+					SELECT 
+						CASE T.stts_cd WHEN '1' THEN '신청중' WHEN '2' THEN '활용중' WHEN '3' THEN '반려' WHEN '4' THEN '중지'
+				        				 ELSE '기타' END status_description
+				        , T.*updateSttCd
+					FROM
+				    	(
+				        SELECT TO_CHAR(damk.issu_dt, 'YYYY-MM-DD') issu_dt
+				        	, damk.issu_dt issu_dt_org
+				        	, damk.user_sn
+				        	, dcms.user_nm
+				        	, dcms.user_id
+				        	, damk.cert_key
+				        	, damk.secret_key
+				        	, damk.stts_cd
+				        	, dcmu.ogdp_nm
+				        	, dcmu.bzmn_sn
+						FROM
+				        	dqvs.dvs_api_mt_key damk
+				        JOIN dqvs.dvs_cmm_mt_sso dcms ON dcms.user_sn = damk.user_sn
+				        join dqvs.dvs_cmm_mt_user dcmu on dcmu.user_sn = damk.user_sn
+				        WHERE 1=1
+				        <if test="authrtCd == 'Z01' or authrtCd == 'K01' or authrtCd == 'D01'">
+					      	AND	damk.issu_dt BETWEEN TO_DATE(#{startPicker02}, 'yyyy-mm-dd') AND TO_DATE(#{endPicker02}, 'yyyy-mm-dd')+1
+					    </if>
+					    <if test="DevOper != null and DevOper != ''">
+				            AND damk.oper_se_cd = #{DevOper}
+				        </if>
 						<if test="searchCondition == 'userNm' and searchText != ''">
 							and LOWER(dcms.user_nm) like '%' || LOWER(#{searchText}) || '%'
 					    </if>
@@ -240,7 +307,17 @@
 			<if test="userSn != null and userSn != ''">
 				user_sn = #{userSn}::NUMERIC
 				AND cert_key = #{cert}
-<!-- 				and oper_se_cd = '1' -->
+				and oper_se_cd = '1'
+			</if>
+     </update> 
+    <update id="updateApiTestKey">
+    /* 승인버튼 */
+     	UPDATE dqvs.dvs_api_mt_key
+		SET stts_cd = '4'
+		WHERE 
+			<if test="userSn != null and userSn != ''">
+				user_sn = #{userSn}::NUMERIC
+				and oper_se_cd = '0'
 			</if>
      </update> 
     <update id="updateapproveApiList">
@@ -266,7 +343,7 @@
 			<if test="userSn != null and userSn != ''">
 				 user_sn = #{userSn}::NUMERIC
 				 AND cert_key = #{cert}
-<!-- 				 and oper_se_cd = '1' -->
+				 and oper_se_cd = '1'
 			</if>
 		
 
@@ -294,7 +371,7 @@
 			<if test="userSn != null and userSn != ''">
 				user_sn = #{userSn}::NUMERIC
 				AND cert_key = #{cert}
-<!-- 				and oper_se_cd = '1' -->
+				and oper_se_cd = '1'
 			</if>
      </update> 
     <update id="updatestopUseList">
@@ -319,7 +396,7 @@
 			<if test="userSn != null and userSn != ''">
 				user_sn = #{userSn}::NUMERIC
 				AND cert_key = #{cert}
-<!-- 				and oper_se_cd = '1' -->
+				and oper_se_cd = '1'
 			</if>
 
      </update> 
@@ -335,7 +412,7 @@
 			<if test="userSn != null and userSn != ''">
 				 user_sn = #{userSn}::NUMERIC
 			</if>
-<!-- 			AND stts_cd = '2' -->
+			AND stts_cd = '2'
      </update> 
     
     
@@ -359,7 +436,7 @@
 		WHERE
 		    <if test="userSn != null and userSn != ''">
 				mstr_key.user_sn = #{userSn}::NUMERIC
-<!-- 				and oper_se_cd = '1' -->
+				and oper_se_cd = '1'
        		</if>
      </update> 
      
@@ -376,7 +453,7 @@
 					issu_dt,
 					cert_token,	
 					token_issu_dt
-<!-- 					,oper_se_cd -->
+					,oper_se_cd
 					)
 				values(
 					#{userSn}::NUMERIC,
@@ -387,7 +464,7 @@
 					now(),
 					null,
 					null
-<!-- 					'1' -->
+					,'1'
 				);
     </insert>
      <insert id="insertApiTestKey"  parameterType="paraMap">
@@ -402,7 +479,7 @@
 					issu_dt,
 					cert_token,	
 					token_issu_dt
-<!-- 					,oper_se_cd -->
+					,oper_se_cd
 					)
 				values(
 					#{userSn}::NUMERIC,
@@ -413,7 +490,7 @@
 					now(),
 					null,
 					null
-<!-- 					'0' -->
+					,'0'
 				);
     </insert>
      <insert id="insertReApi"  parameterType="paraMap">
@@ -504,7 +581,7 @@
     		<if test="userSn != null and userSn != ''">
     			user_sn = #{userSn}::NUMERIC
        		</if>
-<!--     		AND stts_cd = '1' -->
+    		AND stts_cd = '1'
     </update>
     
     <update id="updateReStts">
@@ -517,7 +594,7 @@
     		<if test="userSn != null and userSn != ''">
     			user_sn = #{userSn}::NUMERIC
        		</if>
-<!--     		AND stts_cd = '1' -->
+    		AND stts_cd = '1'
     </update>
     <update id="updateextendAPi">
 			UPDATE dqvs.dvs_api_mt_stts
@@ -558,6 +635,7 @@
 				    LEFT JOIN
 				        dqvs.dvs_rac_mt_agency agency ON dcmu.bzmn_sn = agency.bzmn_sn
 				    WHERE 1=1
+						and damk.oper_se_cd = '1'
 				        <if test="searchCondition == 'userNm' and searchText != ''">
 				            AND LOWER(dcms.user_nm) LIKE '%' || LOWER(#{searchText}) || '%'
 				        </if>
@@ -610,6 +688,7 @@
 		    LEFT JOIN
 		        dqvs.dvs_rac_mt_agency agency ON dcmu.bzmn_sn = agency.bzmn_sn
 		    WHERE 1=1
+					and damk.oper_se_cd = '1'
 		        <if test="searchCondition == 'userNm' and searchText != ''">
 		            AND LOWER(dcms.user_nm) LIKE '%' || LOWER(#{searchText}) || '%'
 		        </if>
@@ -638,5 +717,113 @@
 		        ELSE '기타'
 		    END
 	</select>
-    
+        <select id="apiSttsViewCnt2" resultType="int">
+		select
+				count(*)
+			from
+				(	
+				SELECT
+				    CASE
+				        WHEN T.stts_cd = '2' THEN '활용'
+				        WHEN T.stts_cd = '4' THEN '중지'
+				        ELSE '기타'
+				    END AS stts,
+				    COUNT(*) AS count
+				FROM (
+				    SELECT
+				        damk.stts_cd
+				    FROM
+				        dqvs.dvs_api_mt_key damk
+				    JOIN
+				        dqvs.dvs_cmm_mt_sso dcms ON dcms.user_sn = damk.user_sn
+				    JOIN
+				        dqvs.dvs_cmm_mt_user dcmu ON dcmu.user_sn = damk.user_sn
+				    LEFT JOIN
+				        dqvs.dvs_rac_mt_agency agency ON dcmu.bzmn_sn = agency.bzmn_sn
+				    WHERE 1=1
+						and damk.oper_se_cd = '0'
+				        <if test="searchCondition == 'userNm' and searchText != ''">
+				            AND LOWER(dcms.user_nm) LIKE '%' || LOWER(#{searchText}) || '%'
+				        </if>
+				        <if test="searchCondition == 'userId' and searchText != ''">
+				            AND LOWER(dcms.user_id) LIKE '%' || LOWER(#{searchText}) || '%'
+				        </if>
+				        <if test="authrtCd != 'Z01' and authrtCd != 'K01' and authrtCd != 'D01'">
+				            AND damk.user_sn = #{userSn}::numeric
+				        </if>
+				        <if test="authrtCd == 'Z01' or authrtCd == 'K01' or authrtCd == 'D01'">
+				            AND damk.issu_dt BETWEEN TO_DATE(#{startPicker02}, 'yyyy-mm-dd') AND TO_DATE(#{endPicker02}, 'yyyy-mm-dd') + 1
+				        </if>
+				        <if test="sttsCd != null and sttsCd != ''">
+				            AND damk.stts_cd = #{sttsCd}
+				        </if>
+				        <if test="searchCondition == 'companyNm' and searchText != ''">
+				            AND agency.co_nm LIKE '%' || LOWER(#{searchText}) || '%'
+				        </if>
+
+				) AS T
+				GROUP BY
+				    CASE
+				        WHEN T.stts_cd = '2' THEN '활용'
+				        WHEN T.stts_cd = '4' THEN '중지'
+				        ELSE '기타'
+				    END
+		    ) a
+    </select>	
+	<select id= "apiSttsView2" parameterType="paraMap" resultType="resultMap">
+
+		SELECT
+		    CASE
+		        WHEN T.stts_cd = '2' THEN '활용'
+		        WHEN T.stts_cd = '4' THEN '중지'
+		        ELSE '기타'
+		    END AS stts,
+		    COUNT(*) AS count
+		FROM (
+		    SELECT
+		        damk.stts_cd
+		    FROM
+		        dqvs.dvs_api_mt_key damk
+		    JOIN
+		        dqvs.dvs_cmm_mt_sso dcms ON dcms.user_sn = damk.user_sn
+		    JOIN
+		        dqvs.dvs_cmm_mt_user dcmu ON dcmu.user_sn = damk.user_sn
+		    LEFT JOIN
+		        dqvs.dvs_rac_mt_agency agency ON dcmu.bzmn_sn = agency.bzmn_sn
+		    WHERE 1=1
+					and damk.oper_se_cd = '0'
+		        <if test="searchCondition == 'userNm' and searchText != ''">
+		            AND LOWER(dcms.user_nm) LIKE '%' || LOWER(#{searchText}) || '%'
+		        </if>
+		        <if test="searchCondition == 'userId' and searchText != ''">
+		            AND LOWER(dcms.user_id) LIKE '%' || LOWER(#{searchText}) || '%'
+		        </if>
+		        <if test="authrtCd != 'Z01' and authrtCd != 'K01' and authrtCd != 'D01'">
+		            AND damk.user_sn = #{userSn}::numeric
+		        </if>
+		        <if test="authrtCd == 'Z01' or authrtCd == 'K01' or authrtCd == 'D01'">
+		            AND damk.issu_dt BETWEEN TO_DATE(#{startPicker02}, 'yyyy-mm-dd') AND TO_DATE(#{endPicker02}, 'yyyy-mm-dd') + 1
+		        </if>
+		        <if test="sttsCd != null and sttsCd != ''">
+		            AND damk.stts_cd = #{sttsCd}
+		        </if>
+		        <if test="searchCondition == 'companyNm' and searchText != ''">
+		            AND agency.co_nm LIKE '%' || LOWER(#{searchText}) || '%'
+		        </if>
+		) AS T
+		GROUP BY
+		    CASE
+		        WHEN T.stts_cd = '2' THEN '활용'
+		        WHEN T.stts_cd = '4' THEN '중지'
+		        ELSE '기타'
+		    END
+	</select>
+    	<select id="findDevData" parameterType="paraMap" resultType="resultMap">
+		select
+			count(*)
+		from dqvs.dvs_api_mt_key
+		where
+			user_sn = #{userSn}::numeric
+			and oper_se_cd = '1'
+	</select>
 </mapper>

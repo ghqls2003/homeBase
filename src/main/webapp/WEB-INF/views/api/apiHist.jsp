@@ -13,28 +13,28 @@
 	var User = "${UserSn}";
 </script>
 <style>
-/* .api_page .select button.select-btn { */
-/*     padding: 2px 12px; */
-/*     background-color: #F5F8FE; */
-/*     border: 1px solid #DBE0EC; */
-/*     border-radius: 8px; */
-/*     font-size: 2.4rem; */
-/*     line-height: 26px; */
-/*     color: #040404; */
-/*     font-weight: 500; */
-/*     margin-right: 10px; */
-/*     cursor: pointer; */
-/* } */
+.api_page .select button.select-btn {
+	padding: 2px 12px;
+	background-color: #F5F8FE;
+	border: 1px solid #DBE0EC;
+	border-radius: 8px;
+	font-size: 2.4rem;
+	line-height: 26px;
+	color: #040404;
+	font-weight: 500;
+	margin-right: 10px;
+	cursor: pointer;
+}
 
-/* .api_page .select button.select-btn:hover { */
-/*     background-color: #364BC6; */
-/*     color: #fff; */
-/* } */
+.api_page .select button.select-btn:hover {
+	background-color: #364BC6;
+	color: #fff;
+}
 
-/* .api_page .select button.selected { */
-/*     background-color: #364BC6; */
-/*     color: #fff; */
-/* } */
+.api_page .select button.selected {
+	background-color: #364BC6;
+	color: #fff;
+}
 
 .ap .k-input-value-text {
 	color: #364BC6;
@@ -92,14 +92,14 @@
 					<li class="current"><c:out value='${tableName}' /></li>
 				</ul>
 			</div>
-<!-- 			<br /> -->
+			<br />
 
-<!-- 			<!-- 운영/개발키 이력 탭버튼 --> 
-<!-- 			<div class="select"> -->
-<!-- 				<button class="select-btn selected" id = "tabBtn01">운영</button> -->
-<!-- 				<button class="select-btn" id = "tabBtn02">개발</button> -->
-<!-- 			</div> -->
-<!-- 			<br /> -->
+			<!-- 운영/개발키 이력 탭버튼 -->
+			<div class="select">
+				<button class="select-btn selected" id="tabBtn01">운영</button>
+				<button class="select-btn" id="tabBtn02">개발</button>
+			</div>
+			<br />
 
 			<div class="selec_wr" id="search_area" style="margin-bottom: 20px;">
 				<div class="mo_flex">
@@ -265,20 +265,6 @@
 				</div>
 			</div>
 			<!--api 개발 주석 해제하고 쓰면 됨 -->
-			<div class="contBox lastBox lastBox02">
-				<!-- 				<div class="nameBox nameBox-flex"> -->
-				<!-- 					<ul class="horizontal-list" -->
-				<!-- 						style="list-style: none; padding: 0; display: flex; justify-content: space-between;"> -->
-				<!-- 						<li style="width: 80px;"><a href="javascript:void(0)" -->
-				<!-- 							id="tabBtn01" class="on">운영 API</a></li> -->
-				<!-- 						<li style="width: 120px;"><a href="javascript:void(0)" -->
-				<!-- 							id="tabBtn02">개발 API</a></li> -->
-				<!-- 					</ul> -->
-				<!-- 			        <button class="download-btn" onClick={clickExcelBtn}> -->
-				<%-- 			            <img src="${contextPath}/images/sub/ico_down.png" alt="다운로드아이콘" /> --%>
-				<!-- 			            엑셀 -->
-				<!-- 			        </button> -->
-				<!-- 				</div> -->
 				<div class="contBox lastBox02" id="tabview1">
 					<div class="nameBox nameBox-flex">
 						<h4 class="name">API 운영 이용이력</h4>
@@ -290,18 +276,16 @@
 					<table id="grid">
 					</table>
 				</div>
-								<div class="contBox lastBox02" id="tabview2"">
-									<div class="nameBox nameBox-flex">
-										<h4 class="name">API 개발 이용이력</h4>
-										<button class="download-btn"
-											id="apiDevExcel">
-											<img src="${contextPath}/images/sub/ico_down.png" alt="다운로드아이콘" />
-											엑셀
-										</button>
-									</div>
-									<table id="grid02"></table>
-								</div>
-			</div>
+				<div class="contBox lastBox02" id="tabview2"">
+					<div class="nameBox nameBox-flex">
+						<h4 class="name">API 개발 이용이력</h4>
+						<button class="download-btn" id="apiDevExcel">
+							<img src="${contextPath}/images/sub/ico_down.png" alt="다운로드아이콘" />
+							엑셀
+						</button>
+					</div>
+					<table id="grid02"></table>
+				</div>
 			<!--  -->
 
 			<!-- 			<div class="contBox"> -->

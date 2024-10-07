@@ -46,4 +46,20 @@ public class DefectDao extends CmmnAbstractMapper {
 		return selectList("sys.defect.selectSggNm", paramsMap);
 	}
 	
+	public List<Map<String, Object>> selectCarList(Map<String, Object> paramsMap) {
+		return selectList("sys.defect.CarList", paramsMap);
+	}
+
+	public int selectCarListCnt(Map<String, Object> paramsMap) {
+		return selectOne("sys.defect.CarListCnt", paramsMap);
+	}
+	
+	public int selectDetailDefectInfoCnt(Map<String, Object> paramsMap) {
+		return selectOne("sys.defect.selectDetailDefectInfoCnt", paramsMap);
+	}
+	
+	public List<Map<String, Object>> selectDetailDefectInfo(Map<String, Object> paramsMap) {
+		return selectList("vfc.rentIdp.selectDetailDefectInfo", paramsMap);
+	}
+	
 }		

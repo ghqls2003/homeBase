@@ -435,7 +435,7 @@
 					pageSize: 10,
 					serverPaging: true,
 					serverSorting: false,
-					autoBind: false,
+					autoBind: false
 				},
 				columns: [
 					{ field: "rn", title: "순번", width: "50px", template: "#: rn #", sortable: false },
@@ -646,6 +646,7 @@
 					excelDownArc.searchAprvStts = "2";
 					excelDownArc.searchBsnStts = "0";
 					excelDownArc.searchChk = "jurisdiction";
+					excelDownArc.delYn = $("#delYn").val();
 				}
 
 				excelDown("/sys/companyManage/excelDown", excelDownArc, fileNm, totalRowCount);

@@ -18,6 +18,7 @@ var authrtCd = '${authrtCd}'
         font-size: 1.6rem !important;
     }
 }
+
 </style>
 
 
@@ -197,6 +198,7 @@ var authrtCd = '${authrtCd}'
 
                     <p class="tb_top">※ 외국인 : 성명란에 공백 없이 영어 대문자로 입력해주시기 바랍니다.</p>
                     <p class="tb_top" style="color:#FF7F50;">※ 면허증 촬영 시, 본인의 면허증 정보가 정확히 일치하는지 확인해 주시기 바랍니다.</p>
+                    <p class="tb_top" style="color:#509cff;">※ 유사도 검증을 위해 수기입력이 제한됩니다.</p>
                     <div class="license_wr">
 	                    <div class="license_bg">
 	                    	<button class="info-btn info-btn01">
@@ -244,7 +246,7 @@ var authrtCd = '${authrtCd}'
 	                                    </li>
 	                                    <li>
 	                                        <label for="name"></label>
-	                                        <input type="text" id="name" class="license_input lc_input03" placeholder="성명을 기입하세요" maxlength="40">
+	                                        <input type="text" id="name" class="license_input lc_input03" placeholder="성명" maxlength="40">
 	                                    </li>
 	                                </ul>
 	                                <div class="type_box">
@@ -331,6 +333,27 @@ var authrtCd = '${authrtCd}'
 	                         </div>
 						</div>
 					</div>
+<!-- 					<div class="similarity_box"> -->
+<!-- 						 <button class="yellow_btn similarity-btn" onclick =$contactlessVfc.event.similarityVerf();>유사도 검증</button> -->
+<!--                          <button class="similarity_info_btn"> -->
+<%--                              <img src="${contextPath}/images/sub/ico_tooltip.png" alt="운전면허번호규칙 설명"> --%>
+<!--                          </button> -->
+<!--                          유사도 검증 안내 팝업 -->
+<!--                          <div class="similarity_pop"> -->
+<!--                              <div class="box"> -->
+<!--                                  <div class="popup_top"> -->
+<!--                                      <h4>비대면 검증 안내</h4> -->
+<!--                                      <div class="close"> -->
+<!--                                          <span></span> -->
+<!--                                          <span></span> -->
+<!--                                      </div> -->
+<!--                                  </div> -->
+<!--                                  <div class="content"> -->
+<%--                                  	 <img src="${contextPath}/images/sub/lc_info01.jpg" alt="운전면허 번호 규칙"> --%>
+<!--                                  </div> -->
+<!--                              </div> -->
+<!--                          </div> -->
+<!-- 					</div> -->
                 </div>
 	        </div>
 	        <p class="info">※ 본 웹사이트에 게시된 정보는 프로그램이나 그 밖의 기술적 장치를 이용하여 무단으로 사용할 수 없습니다.</p>
@@ -396,6 +419,23 @@ var authrtCd = '${authrtCd}'
                 <button class="gray_btn cancel_btn" id ="cancelAndInit">닫기</button>
             </div>
 		</div>
+    </div>
+</div>
+
+<!-- 유사도 검증 안내 팝업 -->
+<div class="similarity_pop">
+    <div class="box">
+        <div class="popup_top">
+            <h4>비대면 검증 안내</h4>
+            <div class="close">
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="content">
+        	 <img src="${contextPath}/images/sub/sv_info.png" alt="유사도 검증 안내">
+        	 <p>운전자격 확인 버튼 클릭 시, 운전면허증 사진과의 유사도 검증을 위해 얼굴 인식 촬영이 시작됩니다.</p>
+        </div>
     </div>
 </div>
 

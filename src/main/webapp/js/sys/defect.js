@@ -4,8 +4,21 @@
 
     W.$defect = W.$defect || {};
 
+	var carListColmuns = [
+		{ title: "순번", width: "40px", field: "rn", template: "#: rn #" },
+		{ title: "차량등록번호", width: "130px", field: "vhclRegNo", template: "#: vhclRegNo #" },
+		{ title: "차대번호", width: "180px", field: "vin", template: "#: vin #" },
+		{ title: "차종", width: "80px", field: "carmdl", template: "#: carmdl != null ? carmdl : '-'#" },
+		{ title: "연식", width: "100px", field: "mdlyr", template: "#: mdlyr #" },
+		{ title: "소유자명", width: "130px", field: "ownrNm", template: "#: ownrNm #" },
+		{ title: "사용여부", width: "100px", field: "useYn", template: "#: useYn #" },
+		{ title: "등록일", width: "140px", field: "regDt", template: "#: regDt #" }
+	];
+
 	var vin;
 	var defects_sn;
+	
+	var optVal = null;  // 차량 검색 조건
 	
 	var detailActnInfo = {
 		/*
@@ -109,7 +122,7 @@
 				dataBound: function(e) {
 					kendo.ui.progress($(document.body), false);
 				},
-				change: $defect.ui.rowClickEvent
+				//change: $defect.ui.rowClickEvent
 			})
 
 		},
@@ -143,16 +156,17 @@
 			var param = {};
 			
 			//기간 검색
-			var oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1));
+			var oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 13));
 			
 			$("#start-picker01").kendoDatePicker({
+				dateInput: true,
 				format: "yyyy-MM-dd",
-				//value: new Date(oneMonthAgo),
+				value: new Date(oneMonthAgo),
 			});
 
 			$("#end-picker01").kendoDatePicker({
 				format: "yyyy-MM-dd",
-				//value: new Date(),
+				value: new Date(),
 			});	
 			
 			$("#actnOcrnDt").kendoDatePicker({
@@ -191,6 +205,8 @@
 			});
 			
 		
+			
+		
 			// 조치 여부
 			var prcsSttsYn = [
 				{ value: "Y", text: "조치" },
@@ -213,6 +229,12 @@
 			var actnCn = [
 				{ value: "Y", text: "성공" },
 				{ value: "N", text: "실패" },
+			];
+			
+			//시정조치 결과 코드
+			var actnRs = [
+				{ value: "Y", text: "결과 코드 1" },
+				{ value: "N", text: "결과 코드 2" },
 			];
 			
 			
@@ -246,11 +268,11 @@
 				dataSource: actnTyCd
 			});
 
-			$("#insertActnCn").kendoDropDownList({
-				optionLabel: '시정조치 내용(전체)',
+			$("#insertActnRsCd").kendoDropDownList({
+				optionLabel: '시정조치 결과코드(전체)',
 				dataTextField: "text",
 				dataValueField: "value",
-				dataSource: actnCn
+				dataSource: actnRs
 			});
 			
 			$("#detailActnCn").kendoDropDownList({
@@ -340,7 +362,88 @@
 				selectable: "row",
 				change: $defect.ui.decttGridrowClickEvent
 			});
-		}
+		},
+		
+				carGrid: function() {
+			var gridId = "#carGrid";
+			optVal = $("#carSearchWrd").val();
+			$defect.ui.carGridModule(gridId);
+		},
+		
+		carGridModule: function(gridId) {
+			$(gridId).kendoGrid({
+				dataSource: {
+					data: null,
+					transport: {
+						read: {
+							dataType: "json",
+							contentType: "application/json; charset=utf-8",
+							url: contextPath + '/sys/defect/selectCarList',
+							type: "POST",
+							beforeSend: function(xhr) {
+								xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+							},
+						},
+						parameterMap: function(options) {
+							options.searchWrd = optVal;
+							return JSON.stringify(options);
+						}
+					},
+					schema: {
+						data: "data",
+						total: "total",
+					},
+					pageSize: 5,
+					serverPaging: true
+				},
+				navigatable: true,
+				pageable: {
+					pageSizes: [5, 10, 20],
+					buttonCount: 5
+				},
+				noRecords: {
+					template: "데이터가 없습니다."
+				},
+				columns: carListColmuns,
+				scrollable: true,
+				editable: false,
+				resizable: true,
+				selectable: "row",
+				change: function(e) {
+					var rows = e.sender.select();
+					var data = null;
+
+					rows.each(function(e) {
+						var grid = $(gridId).data("kendoGrid");
+						var item = grid.dataItem(this);
+						data = item;
+					})
+
+					if (gridId == "#carGrid") {
+						$("#carVhclRegNoVal").val(data.vhclRegNo);
+						$("#regRentNo").val(data.rentNo);
+						$("#regRgtrSn").val(data.rgtrSn);
+						$("#regVin").val(data.vin);
+						$("#regCarmdl").val(data.carmdl);
+						$("#regVhclNm").val(data.vhclNm);
+						$("#regBzmnSn").val(data.bzmnSn);
+						$("#regCrno").val(data.crno);
+						$("#regEngineType").val(data.engineFom);
+						$("#regModelYear").val(data.mdlyr);
+					} else {
+						$("#detailVhclRegNo").val(data.vhclRegNo);
+						$("#detailRgtrSn").val(data.rgtrSn);
+						$("#detailVin").val(data.vin);
+						$("#detailCarmdl").val(data.carmdl);
+						$("#detailVhclNm").val(data.vhclNm);
+						$("#detailBzmnSn").val(data.bzmnSn);
+						$("#detailCrno").val(data.crno);
+						$("#detailEngineType").val(data.engineFom);
+						$("#detailModelYear").val(data.mdlyr);
+					}
+				}
+			});
+		},
 		
 		
 		
@@ -409,7 +512,32 @@
 			$(".exel_down").on("click", function() {
 				$defect.event.excelDown();
 			});
+	
+			//차량 목록			
+			$("#carBtn").on("click", function() {
+				$defect.event.carGridPopup();
+			});
 			
+			$("#carPopupSearchBtn").on("click", function() {
+				$defect.event.carPopupSearch();
+			});
+			
+			$("#carVhclRegNoVal").on("click", function() {
+				$defect.event.carNoval();
+			});
+			
+			$(".carClose").on("click", function() {
+				$("#carTa").empty();
+				if ($("#carTa")[0].children.length == 0) {
+					$("#carSearchWrd").val('');
+					$("#carTa").append("<table id='carGrid'><caption>자동차리스트</caption></table>");
+				}
+
+			});
+			
+			$(".sm_popup .cancel_btn").on("click", function() {
+				$(".sm_popup").removeClass("view");
+			});
 		},
 		
 		dateFomat: function(data) {
@@ -433,9 +561,9 @@
 			param.vhclRegNo = vhclRegNo; //194호2737
 			ajax(true, contextPath + '/sys/defect/selectValidDuplicate', 'body', '처리중입니다.', param, function(data) {
 				if (data.dataCarInfoList.length > 0) {
-					 data.dataCarInfoList[0].sgg_cd = 3117000000; //울산광역시 동구
+					// data.dataCarInfoList[0].sgg_cd = 3117000000; //울산광역시 동구
 						
-					$("#brno").val(data.dataCarInfoList[0].brno);
+					$("#brno").val(toBizrnoNumFormat(data.dataCarInfoList[0].brno));
 					$("#mdlyr").val(data.dataCarInfoList[0].mdlyr);
 					$("#engineFom").val(data.dataCarInfoList[0].engine_fom);
 					$('#ctpvNm').data("kendoDropDownList").value(data.dataCarInfoList[0].sgg_cd.toString().substring(0,2));
@@ -446,6 +574,10 @@
 					$("#vhclNm").val(data.dataCarInfoList[0].vhcl_nm);
 					$('#useYn').data("kendoDropDownList").value(data.dataCarInfoList[0].use_yn);
 					$('#rmrk').val(data.dataCarInfoList[0].rmrk);
+					
+					$("#insertCoNm").val(data.dataCarInfoList[0].co_nm);
+					$("#insertRegCarNo").val(data.dataCarInfoList[0].vhcl_reg_no);
+					
 				}
 				if(data.dataDefectList.length >0){
 					$("#defectCarGrid").data("kendoGrid").setDataSource(data.dataDefectList);					
@@ -456,8 +588,13 @@
 		},
 		
 		detailInfoPopup: function(dataItem) {
+			var params = {
+				vin : dataItem.vin,
+				defects_sn : dataItem.defects_sn, 
+			};
 			vin = dataItem.vin;
 			defects_sn = dataItem.defects_sn;
+			
 	
 			$("#actnVin").val(dataItem.vin);
 			$("#actnDefectsSn").val(dataItem.defects_sn);
@@ -466,7 +603,8 @@
 			$("#actnDefectsTypeCd").val(dataItem.defects_type_cd);
 			$("#actnOcrnDt").data("kendoDatePicker").value(new Date(dataItem.ocrn_dt));
 			
-			
+			ajax(true, contextPath + '/sys/defect/selectDetailDefectInfo', 'body', '확인중입니다.', params, function(data) {
+
 				$("#detailActnSn").val(detailActnInfo.detailActnSn);
 				$("#detailActnVin").val(detailActnInfo.detailActnVin);
 				$("#detailActnCarRegNo").val(detailActnInfo.detailActnCarRegNo);
@@ -483,9 +621,10 @@
 				$('#detailActnYn').data("kendoDropDownList").value(detailActnInfo.detailActnYn);
 				$("#detailActnDt").data("kendoDatePicker").value(new Date(detailActnInfo.detailActnDt ? detailActnInfo.detailActnDt : ''));
 				$("#detailActnRegDt").data("kendoDatePicker").value(new Date(detailActnInfo.detailActnRegDt));
-			
-			
-			$(".viewDefect_popup").addClass("view");
+
+
+				$(".viewDefect_popup").addClass("view");
+			});
 		},
 		
 		//팝업 - params에 set
@@ -518,59 +657,57 @@
 			var actnCn = $("#insertActnCn").val();
 
 			//시정조치일
-			var actnDt = new Date($("#insertActnDt").val());
+//			var actnDt = new Date($("#insertActnDt").val());
+			var actnDt = $("#insertActnDt").val();
 			
 			//시정조치여부
 			var actnYn = $("#insertActnYn").val();
 			
-			//소속
-			var affilitn = $('#insertAffilitn').val();
-			affilitn = affilitn.trim();
+			//회사명
+			var coNm = $('#insertCoNm').val();
+			coNm = coNm.trim();
 			
 			//차량번호
 			var regCarNo = $('#insertRegCarNo').val();
 			regCarNo = regCarNo.trim();
-			
+
 			//결함일련번호
 			var insertDefectSn = $("#insertDefectSn").val();
 			var defectSn = insertDefectSn.replace(/[^0-9]/g, "");
-			
+
 			//등록자
 			var regNm = $('#insertRegNm').val();
 			regNm = regNm.trim();
-			
-			//등록일자
-			var regDt = new Date($("#insertRegDt").val());
-			
+
+
 			//비고
 			var rmrk = $('#insertRmrk').val();
 			rmrk = rmrk.trim();
-			
+
 			//시정조치 결과파일
 			var resultAtch = $("#actnResultAtch").val();
-			
-			
-			
+
+
 			var params = {
-				actnSn : nvl(actnSn,null),
-				actnTyCd : nvl(actnTyCd,null),
-				actnRsCd :nvl(actnRsCd,null),
-				actnCn :nvl(actnCn,null),
-				actnDt :nvl(actnDt,null),
-				actnYn :nvl(actnYn,null),
-				affilitn :nvl(affilitn,null),
-				regCarNo :nvl(regCarNo,null),
-				defectSn :nvl(defectSn,null),
-				regNm :nvl(regNm,null),
-				regDt :nvl(regDt,null),
-				rmrk :nvl(rmrk,null),
-				resultAtch : nvl($('#actnResultAtch').val(),null)
+
+				vin: $("#vin").val(),
+				actnSn: nvl(actnSn, null),
+				actnTyCd: nvl(actnTyCd, null),
+				actnRsCd: nvl(actnRsCd, null),
+				actnCn: nvl(actnCn, null),
+				actnDt: nvl(actnDt, null),
+				actnYn: nvl(actnYn, null),
+				coNm: nvl(coNm, null),
+				regCarNo: nvl(regCarNo, null),
+				defectSn: nvl(defectSn, null),
+				regNm: nvl(regNm, null),
+				rmrk: nvl(rmrk, null),
 			}
-			
-			if(params.actnSn == null || params.actnSn == ""){
+
+			if (params.actnSn == null || params.actnSn == "") {
 				alert('시정조치 일련번호 입력은 필수입니다');
 				return;
-			}else if(params.actnTyCd == null || params.actnTyCd == ""){
+			} else if (params.actnTyCd == null || params.actnTyCd == "") {
 				alert('시정조치 유형코드 입력은 필수입니다');
 				return;
 			} else if (params.actnRsCd == null || params.actnRsCd == "") {
@@ -585,7 +722,7 @@
 			}else if (params.actnYn == null || params.actnYn == "") {
 				alert('조치여부 입력은 필수입니다');
 				return;
-			}else if (params.affilitn == null || params.affilitn == "") {
+			}else if (params.coNm == null || params.coNm == "") {
 				alert('소속 입력은 필수입니다');
 				return;
 			}else if (params.regCarNo == null || params.regCarNo == "") {
@@ -596,9 +733,6 @@
 				return;
 			}else if (params.regNm == null || params.regNm == "") {
 				alert('등록자 입력은 필수입니다');
-				return;
-			}else if (params.regDt == null || params.regDt == "") {
-				alert('등록일자 입력은 필수입니다');
 				return;
 			}else if (params.rmrk == null || params.rmrk == "") {
 //				alert('비고 입력은 필수입니다');
@@ -659,7 +793,11 @@
 			});
 		},
 		
-		
+		carGridPopup: function() {
+			$defect.ui.carGrid();
+			$("#carPopup").addClass("view");
+		},
+				
 		actnFileUpload: function() {
 			$("#actnFileUpload").click();
 			$("#actnFileUpload").change(function() {
@@ -679,6 +817,17 @@
 					}
 				}
 			});
+		},
+		
+		carPopupSearch: function() {
+			optVal = $("#carSearchWrd").val();
+			var grid = $('#carGrid').data('kendoGrid');
+			grid.dataSource.page(1);
+		},
+		
+		carNoval: function() {
+			var carRegNoVal = $("#carVhclRegNoVal").val();
+			$("#insertRegCarNo").val(carRegNoVal);
 		},
 		
 		excelDown1: function() {

@@ -3,17 +3,14 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
 <%@ taglib prefix="sec"	uri="http://www.springframework.org/security/tags"%>
 <c:set var="contextPath" value="${pageContext.request.contextPath }" />
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script src="${contextPath}/js/stts/totStts.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <link rel="stylesheet" type="text/css" href="${contextPath}/css/custom/mainView.css" />
 <script src="${contextPath}/ext-lib/kendoui.for.jquery.2021.3.1207.commercial/js/jszip.min.js"></script>
 
 <style>
 #grid01 > tbody > tr.k-detail-row > td.k-detail-cell > div > div.k-grid-norecords, 
 #gvAccGrid > tbody > tr.k-detail-row > td.k-detail-cell > div > div.k-grid-norecords,
-#carShareGrid > tbody > tr.k-detail-row > td.k-detail-cell > div > div.k-grid-norecords {
+#carShare > div.k-grid.k-widget.k-grid-display-block > div.k-grid-content.k-auto-scrollable > div.k-grid-norecords {
 	justify-content: center;
 	font-size: 16px;
 }
@@ -37,6 +34,33 @@
 }
 .k-picker-solid {
 	height: 30px;
+}
+.contBox .cont {
+    padding: 11px 25px 12px;
+}
+table.rental_tb01 {
+    margin-right: 50px;
+}
+/* .popup .k-picker-solid {
+    width: 206.2px !important;
+} */
+button.red_btn {
+    width: 152px;
+    height: 54px;
+    background-color: #ff3838;
+    border-radius: 8px;
+    font-size: 1.8rem;
+    line-height: 26px;
+    color: #fff;
+    margin-right: 10px;
+}
+button.red_btn:hover {
+    background-color: #fff;
+    color: #ff3838;
+    border: 1px solid #ff3838;
+}
+#insertPopup > div.info_wr > div > div:nth-child(1) > table:nth-child(1) > tbody > tr:nth-child(1) > td > div > span {
+	padding: 0px;
 }
 </style>
 
@@ -65,6 +89,8 @@
 				</ul>
 			</div>
 			<br />
+			
+			<!-- 대여사업자 현황 -->
 	        <div class="cont-flex">
 	        	<div id="zone1" class="left-bx cmn-bx" style="width: 80%">
 	            	<div id="areaGrid"  class="contBox flex-box">
@@ -96,6 +122,8 @@
 			</div>
 			<br />
 			<br />
+			
+			<!-- 지자체별 가입  사용자 현황 -->
 			<div id="gvAccession" class="contBox tmCond">
 	           	<div class="nameBox" style="display: flex; justify-content: space-between;">
 	               	<h4 class="name">지자체별 가입 사용자 현황</h4>
@@ -126,6 +154,8 @@
 			</div>
 			<br />
 			<br />
+			
+			<!-- 카쉐어링 업체 현황 -->
 			<div id="carShare" class="contBox tmCond">
 	           	<div class="nameBox" style="display: flex; justify-content: space-between;">
 	               	<h4 class="name">카쉐어링 업체 현황</h4>
@@ -135,10 +165,214 @@
 	                    </button>
 	               	</div>
 				</div>
+				<div class="search_top">
+					<div class="selec_wr" style="height: 50px; display: flex; justify-content: flex-end;">
+						<button class="blue_btn insertBtn" type="button" style="height: 30px; width: 80px;">
+							등록
+						</button>
+					</div>
+				</div>
 	            <table id="carShareGrid">
 	            	<caption>카쉐어링 업체 현황</caption>
 	            </table>
 			</div>
+			
+			<!-- 카쉐어링 등록 팝업 -->
+			<div class="popup insert_popup" style="z-index: 999">
+		        <div id="insertPopup" class="box">
+		            <div class="popup_top">
+		                <h4>카쉐어링 업체 등록</h4>
+		                <div class="close insertClose">
+		                    <span></span>
+		                    <span></span>
+		                </div>
+		            </div>
+					<div class="info_wr">
+						<div class="contBox" style="margin-top: 0px;">
+						    <div class="cont cont-flex">
+						        <table class="tb rental_tb01">
+						        	<tr>
+						                <th scope="col" style="width: 100px;">회사명</th>
+						                <td>
+						                    <div class="tb_flex">
+						                        <label for="cmpNm">회사명</label>
+						                        <input type="text" id="cmpNm"  maxLength="80" class="input clear" oninput="charOnly(this)" />
+						                    </div>
+						                </td>
+						            </tr>
+						            <tr>
+						                <th scope="col" style="width: 100px;">차량등록대수</th>
+						                <td>
+						                    <div class="tb_flex">
+						                        <label for="regCar">차량등록대수</label>
+						                        <input type="number" id="regCar" class="input clear" min="0" max="10000000" value="0" />
+						                    </div>
+						                </td>
+						            </tr>
+						            <tr>
+						                <th scope="col" class="note_name" style="width: 100px;">영업소</th>
+						                <td class="textarea_wr">
+						                	<div class="tb_flex" style="display: flex; flex-direction: column;">
+						                		<label for="bsnOffcCnt">영업소 수</label>
+						                        <input type="number" id="bsnOffcCnt" class="input clear" min="0" max="10000" value="0" />
+						                		<label for="bsnOffc">영업소</label>
+						                		<textarea id="bsnOffc" maxLength="1000" cols="30" rows="5" class="noteBox" oninput="charOnly(this)"  placeholder="영업소 상세 입력" ></textarea>
+							                </div>
+						                </td>
+						            </tr>
+						        </table>
+						        <table class="tb rental_tb01">
+						        	<tr>
+						                <th scope="col" style="width: 100px;">지역</th>
+						                <td>
+						                    <div class="">
+						                        <label for="areaDrop">지역</label>
+						                        <input type="text" id="areaDrop" maxLength="80" class="input clear" readOnly />
+						                    </div>
+						                </td>
+						            </tr>
+						            <tr>
+						                <th scope="col" style="width: 100px;">회원수</th>
+						                <td>
+						                    <div class="tb_flex">
+						                        <label for="userCnt">회원수</label>
+							                        <input type="number" id="userCnt" class="input clear" min="0" max="10000000" value="0" />
+						                    </div>
+						                </td>
+						            </tr>
+						            <tr>
+										<th scope="col" class="note_name" style="width: 100px;">예약소</th>
+						                <td class="textarea_wr">
+						                	<div class="tb_flex" style="display: flex; flex-direction: column;">
+						                		<label for="rsrvtnOffcCnt">예약소 수</label>
+						                        <input type="number" id="rsrvtnOffcCnt" class="input clear" min="0" max="10000" value="0" />
+						                		<label for="rsrvtnOffc">예약소</label>
+						                		<textarea id="rsrvtnOffc" maxLength="1000" cols="30" rows="5" class="noteBox" oninput="charOnly(this)" placeholder="예약소 상세 입력" ></textarea>
+							                </div>
+						                </td>
+						            </tr>
+						        </table>
+						    </div>
+						    <div class="cont cont-flex">
+						        <table class="tb rental_tb02">
+						            <tr>
+						                <th scope="col" class="note_name">비고</th>
+						                <td class="textarea_wr">
+						                	<div class="tb_flex">
+						                		<label for="insertRmrk">비고</label>
+						                		<textarea id="insertRmrk" maxLength="1000" cols="30" rows="5" class="noteBox" oninput="charOnly(this)"  style="height:100px !important;"></textarea>
+							                </div>
+						                </td>
+						            </tr>
+						        </table>
+							</div>
+						</div>
+					</div>
+					<div class="btn_flex">
+						<button class="blue_btn insertConfirmBtn" value="Insert" onClick="javaScript:$statistics.event.insertCarShare();">등록</button>
+						<button class="gray_btn insertClose" value="Cancel">닫기</button>
+					</div>
+	        	</div>
+	    	</div>		
+	    	
+	    	<!-- 카쉐어링 상세팝업 -->
+			<div class="popup update_popup" style="z-index: 999">
+		        <div id="detailPopup" class="box">
+		            <div class="popup_top">
+		                <h4>카쉐어링 업체 상세 내용</h4>
+		                <div class="close detailClose">
+		                    <span></span>
+		                    <span></span>
+		                </div>
+		            </div>
+					<div class="info_wr">
+						<div class="contBox" style="margin-top: 0px;">
+						    <div class="cont cont-flex">
+						        <table class="tb rental_tb01">
+						            <tr>
+						                <th scope="col" style="width: 100px;">지역</th>
+						                <td>
+						                    <div class="">
+						                        <label for="areaDropDetail">지역</label>
+						                        <input type="text" id="areaDropDetail" maxLength="80" class="input clear" oninput="charOnly(this)" />
+						                    </div>
+						                </td>
+						            </tr>
+						            <tr>
+						                <th scope="col" style="width: 100px;">차량등록대수</th>
+						                <td>
+						                    <div class="tb_flex">
+						                        <label for="regCarDetail">차량등록대수</label>
+						                        <input type="number" id="regCarDetail" class="input clear" min="0" max="10000000" value="0" />
+						                    </div>
+						                </td>
+						            </tr>
+						            <tr>
+						                <th scope="col" class="note_name" style="width: 100px;">영업소</th>
+						                <td class="textarea_wr">
+						                	<div class="tb_flex" style="display: flex; flex-direction: column;">
+						                		<label for="bsnOffcCntDetail">영업소 수</label>
+						                        <input type="number" id="bsnOffcCntDetail" class="input clear"  min="0" max="10000" value="0" />
+						                		<label for="bsnOffcDetail">영업소</label>
+						                		<textarea id="bsnOffcDetail" maxLength="1000" cols="30" rows="5" class="noteBox" oninput="charOnly(this)"  placeholder="영업소 상세 입력" ></textarea>
+							                </div>
+						                </td>
+						            </tr>
+						        </table>
+						        <table class="tb rental_tb01">
+						            <tr>
+						                <th scope="col" style="width: 100px;">업체명</th>
+						                <td>
+						                    <div class="tb_flex">
+						                        <label for="cmpNmDetail">업체명</label>
+						                        <input type="text" id="cmpNmDetail"  maxLength="80" class="input clear" oninput="charOnly(this)" />
+						                    </div>
+						                </td>
+						            </tr>
+						            <tr>
+						                <th scope="col" style="width: 100px;">회원수</th>
+						                <td>
+						                    <div class="tb_flex">
+						                        <label for="userCntDetail">회원수</label>
+							                        <input type="number" id="userCntDetail" class="input clear"  min="0" max="10000000" value="0" />
+						                    </div>
+						                </td>
+						            </tr>
+						            <tr>
+										<th scope="col" class="note_name" style="width: 100px;">예약소</th>
+						                <td class="textarea_wr">
+						                	<div class="tb_flex" style="display: flex; flex-direction: column;">
+						                		<label for="rsrvtnOffcCntDetail">예약소 수</label>
+						                        <input type="number" id="rsrvtnOffcCntDetail" class="input clear"  min="0" max="10000" value="0" />
+						                		<label for="rsrvtnOffcDetail">예약소</label>
+						                		<textarea id="rsrvtnOffcDetail" maxLength="1000" cols="30" rows="5" class="noteBox" oninput="charOnly(this)" placeholder="예약소 상세 입력" ></textarea>
+							                </div>
+						                </td>
+						            </tr>
+						        </table>
+						    </div>
+						    <div class="cont cont-flex">
+						        <table class="tb rental_tb02">
+						            <tr>
+						                <th scope="col" class="note_name">비고</th>
+						                <td class="textarea_wr">
+						                	<div class="tb_flex">
+						                		<label for="rmrkDetail">비고</label>
+						                		<textarea id="rmrkDetail" maxLength="1000" cols="30" rows="5" class="noteBox" oninput="charOnly(this)"  style="height:100px !important;"></textarea>
+							                </div>
+						                </td>
+						            </tr>
+						        </table>
+							</div>
+						</div>
+					</div>
+					<div class="btn_flex">
+						<button class="blue_btn updateConfirmBtn" value="Update" onClick="javaScript:$statistics.event.updateCarShare();">수정</button>
+						<button class="red_btn deleteConfirmBtn" value="Delete" onClick="javaScript:$statistics.event.deleteCarShare();">삭제</button>
+						<button class="gray_btn detailClose" value="Cancel">닫기</button>
+					</div>
+	        	</div>
+	    	</div>			
 		</div>
 	</div>
 </div>

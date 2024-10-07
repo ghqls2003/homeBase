@@ -31,6 +31,9 @@ public class ApiAuthKeyDao extends CmmnAbstractMapper {
 	public int selectlistViewCnt(Map<String, Object> paramsMap) {
 		return selectOne("mm.apiAuthKey.listApiAuthKeyCnt", paramsMap);
 	}
+	public int selectlistViewCnt2(Map<String, Object> paramsMap) {
+		return selectOne("mm.apiAuthKey.listApiAuthKeyCnt2", paramsMap);
+	}
 	public int selectchecksttsCnt(Map<String, Object> paramsMap) {
 		return selectOne("mm.apiAuthKey.checksttsCnt", paramsMap);
 	}
@@ -118,11 +121,20 @@ public class ApiAuthKeyDao extends CmmnAbstractMapper {
 	public int updateSttCd(Map<String, Object> paramsMap)throws RimsException {
 		return update("mm.apiAuthKey.updateSttCd", paramsMap);
 	}
+	public Map<String, Object> findDevData(Map<String, Object> paramsMap) {
+		return selectOne("mm.apiAuthKey.findDevData", paramsMap);
+	}
 	public int insertApiAuthKey(Map<String, Object> paramsMap) {
 		return insert("mm.apiAuthKey.insertApiAuthKey", paramsMap);
 	}
+	public int updateApiTestKey(Map<String, Object> paramsMap) {
+		return update("mm.apiAuthKey.updateApiTestKey", paramsMap);
+	}
 	public int insertApiTestKey(Map<String, Object> paramsMap) {
 		return insert("mm.apiAuthKey.insertApiTestKey", paramsMap);
+	}
+	public int findApiDev(Map<String, Object> paramsMap) {
+		return insert("mm.apiAuthKey.findApiDev", paramsMap);
 	}
 	public int selectapiInsert(Map<String, Object> paramsMap) {
 		return insert("mm.apiAuthKey.apiInsert", paramsMap);
@@ -143,5 +155,11 @@ public class ApiAuthKeyDao extends CmmnAbstractMapper {
 	}   
 	public int selectApiSttsViewCnt(Map<String, Object> paramsMap) {
 		return selectOne("mm.apiAuthKey.apiSttsViewCnt", paramsMap);
+	}
+	public List<Map<String, Object>> selectApiSttsView2(Map<String, Object> paramsMap) {
+		return selectList("mm.apiAuthKey.apiSttsView2", paramsMap);
+	}   
+	public int selectApiSttsViewCnt2(Map<String, Object> paramsMap) {
+		return selectOne("mm.apiAuthKey.apiSttsViewCnt2", paramsMap);
 	}
 }

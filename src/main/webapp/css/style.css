@@ -1408,7 +1408,7 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
 .sub04 .selec_wr ul.selec_box li.li_slec{margin-right: 11px;}
 .sub04 .selec_wr ul.selec_box li.chk_wr{margin-left: 15px;display: flex;align-items: center;}
 .sub04 .selec_wr ul.selec_box li.chk_wr label{margin-left: 6px;margin-right: 16px;}
-.sub04 .selec_wr ul.selec_box li .k-picker-solid{width: auto !important; border-radius: 8px;background-color: #fff;}
+.sub04 .selec_wr ul.selec_box li .k-picker-solid{border-radius: 8px;background-color: #fff;}
 
 .sub04 .selec_wr ul.selec_box li .selec_flex{display: flex; align-items: center; justify-content: flex-start;}
 
@@ -1517,6 +1517,7 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
 .indivSelec_popup .selectBtnBox {display: flex; margin: 10px;}
 .indivSelec_popup .selectBtnBox button.selected {background-color: #364BC6 !important; color: #fff !important;}
 .indivSelec_popup .selectBtnBox button.select-btn {padding: 2px 12px; background-color: #F5F8FE; border: 1px solid #DBE0EC; border-radius: 8px; line-height: 26px; color: #040404; font-weight: 500; margin-right: 10px;}
+.indivSelec_popup .k-picker-solid{width: auto !important;}
 .inc_receiver_list{border: 1px solid lavender;}
 /* 문자 확인 */
 .chkSend_popup .box .content {padding: 38px 37px 0px 37px; height: 460px;}
@@ -1558,7 +1559,7 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
     .indivSelec_popup .li_slec label {font-size: 1.2rem;}
     .indivSelec_popup .selec_wr {flex-wrap: wrap; gap: 12px;}
 /*     .indivSelec_popup .k-grid-content {height: 276px;} */
-	.indivSelec_popup .selec_box {flex-wrap: wrap;}
+	.indivSelec_popup .selec_box {flex-wrap: wrap;gap: 8px;}
 }
 @media (max-width:950px) {
 	.sub04 .selec_wr ul.selec_box li .k-picker-solid{border-radius: 8px;background-color: #fff;}
@@ -1603,7 +1604,7 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
     .sub04 ul.yearBox li.mo_li {width: 100%;}
     .sub04 ul.yearBox li .k-datepicker {width: 100%;}
     .sub04 .selec_wr ul.selec_box li.li_slec {margin-right: 9px; width: 100%;}
-    .sub04 .selec_wr ul.selec_box li .k-picker-solid {width: 100%;}
+    .sub04 .selec_wr ul.selec_box li .k-picker-solid {width: 100% !important;}
 
     .sub04 .search_btn {width: 100%; margin-right: 0;}
 
@@ -1613,8 +1614,9 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
     .indivSelec_popup .selec_wr .mo_flex {width: 100%;}
     .indivSelec_popup .selec_wr ul.selec_box {flex-direction: row; gap: 12px 0; align-items: center;}
     .indivSelec_popup .k-picker-solid {width: 84px !important;;}
-    .indivSelec_popup .selec_wr ul.selec_box li.li_slec {width: auto;}
+    .indivSelec_popup .selec_wr ul.selec_box li.li_slec {width: 100% !important;}
     .indivSelec_popup .k-grid-content {height: 200px;}
+    .indivSelec_popup #receiverSearchBtn {margin-left: 0;}
 
     .chkSend_popup .box {width: 80vw;}
     .chkSend_popup .box .content {padding: 20px 37px;}
