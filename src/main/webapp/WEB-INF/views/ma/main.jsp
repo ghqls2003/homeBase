@@ -351,8 +351,8 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <button class="m_btn" id="myButton">
-                                        운전자격 검증
+                                    <button class="m_btn" id="myButton" hidden>
+                                        비대면 운전자격 검증
                                         <span class="arrow_box">
                                             <img src="${contextPath}/images/main/btn_arrow.png" alt="운전자격검증" class="ico_arrow">
                                         </span>
