@@ -1280,7 +1280,12 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 		},
 		
 		verifyLicense : function() {
-				deleteLicenseImageFile();
+			if(userOperSystemBool){
+				ocrInterface.deleteLicenseImageFile();
+			} else {
+				window.webkit.messageHandlers.deleteLicenseImageFile.postMessage('');
+			}
+				
                 var dateData = $drive.event.vfcHistDateDt();
                 var startDtTm = dateData.startDtTm;
                 var endDtTm = dateData.endDtTm;

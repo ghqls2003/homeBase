@@ -1268,7 +1268,11 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 		},
 		
 		verifyLicense : function(similarityData) {
-				deleteLicenseImageFile();
+			if(userOperSystemBool){
+				ocrInterface.deleteLicenseImageFile();
+			} else {
+				window.webkit.messageHandlers.deleteLicenseImageFile.postMessage('');
+			}
                 var dateData = $drive.event.vfcHistDateDt();
                 var startDtTm = dateData.startDtTm;
                 var endDtTm = dateData.endDtTm;

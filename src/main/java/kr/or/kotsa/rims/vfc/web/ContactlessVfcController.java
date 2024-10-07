@@ -39,7 +39,7 @@ public class ContactlessVfcController extends CmmnAbstractServiceImpl {
 	 * @return
 	 * @throws RimsException
 	 */
-	@RequestMapping("contactlessVfc")
+	@RequestMapping("/contactlessVfc")
 	public ModelAndView viewMain(@RequestParam Map<String, Object> paramsMap, ModelAndView mav,
 								 HttpServletRequest request, HttpServletResponse response) throws RimsException {
 		
@@ -55,16 +55,16 @@ public class ContactlessVfcController extends CmmnAbstractServiceImpl {
 			}
 		}
 		
-		paramsMap.put("url", "vfc/drive");
-		List<Map<String, Object>> tableNameData = cmmnService.findTableNameByUrl(paramsMap);
-		String tableName = tableNameData.get(0).get("menu_nm").toString();
-		mav.addObject("tableName",tableName);
+		paramsMap.put("url", "vfc/contactlessVfc");
+		//List<Map<String, Object>> tableNameData = cmmnService.findTableNameByUrl(paramsMap);
+		//String tableName = tableNameData.get(0).get("menu_nm").toString();
+		//mav.addObject("tableName",tableName);
 		
 		mav.addObject("userType", userType);
 		mav.addObject("userTypeBool", userTypeBool);
 		mav.addObject("userOperSystemBool", userOperSystemBool);
 		mav.addObject("authrtCd", getAuthrtCd());
-		mav.setViewName("vfc/drive");
+		mav.setViewName("vfc/contactlessVfc");
 		mav.addObject("error", request.getAttribute("error"));
 		
 		return mav;
