@@ -369,9 +369,9 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 						                    </p><br>`;
 											$('#result').prepend(html);
 										}
-										var html = `<br><p class="current_info">
-												유사도 검증 결과 유사도는` + Math.floor(parseFloat(similarityData.similarityConfidence) * 100) + `% 이며, 
-												생체 감지는` + Math.floor(parseFloat(similarityData.livenessConfidence) * 100) + `% 입니다.
+										var html = `<p class="current_info">
+												유사도 검증 결과 유사도는 ` + Math.floor(parseFloat(similarityData.similarityConfidence) * 100) + `%이며,<br>
+												생체 감지는 ` + Math.floor(parseFloat(similarityData.livenessConfidence) * 100) + `%입니다.
 					                    </p><br>`;
 										$('#result').prepend(html);
 										
