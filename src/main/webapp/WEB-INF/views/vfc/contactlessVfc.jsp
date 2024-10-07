@@ -423,7 +423,7 @@ var authrtCd = '${authrtCd}'
 <div class="similarity_pop">
     <div class="box">
         <div class="popup_top">
-            <h4>비대면 검증 안내</h4>
+            <h4>유사도 검증 안내</h4>
             <div class="close">
                 <span></span>
                 <span></span>
