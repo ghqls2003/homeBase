@@ -113,7 +113,7 @@
 					{ field: "defects_type_cd", title: "결합유형", width: "100px", template: "#= defects_type_cd != null ? defects_type_cd : '-' #", sortable: true },
 					{ field: "prcs_stts_cd", title: "처리상태코드", width: "100px", template: "#= prcs_stts_cd != null ? prcs_stts_cd : '-' #", sortable: true },
 					{ field: "defects_cn", title: "결합내용", width: "100px", template: "#= defects_cn != null ? defects_cn : '-' #", sortable: true },
-					{ field: "rn", title: "시정조치 결과", width: "100px", template: "#= rn != null ? 'Y' : 'N' #", sortable: true },
+					{ field: "crrtvact_rslt", title: "시정조치 결과", width: "100px", template: "#= crrtvact_rslt != null ? crrtvact_rslt : '-' #", sortable: true },
 				],
 				scrollable: true,
 				editable: false,
@@ -209,8 +209,8 @@
 		
 			// 조치 여부
 			var prcsSttsYn = [
-				{ value: "Y", text: "조치" },
-				{ value: "N", text: "미조치" },
+				{ value: "조치", text: "조치" },
+				{ value: "미조치", text: "미조치" },
 			];
 			
 			//사용 여부

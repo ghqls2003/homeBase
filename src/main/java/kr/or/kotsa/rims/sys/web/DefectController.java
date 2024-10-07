@@ -166,7 +166,7 @@ public class DefectController extends CmmnAbstractServiceImpl{
 	
     	String fileName = "defect" + (new java.text.SimpleDateFormat("yyyyMMddHHmmss")).format(new java.util.Date());
     	String colName[] = {"순번", "차대번호",  "차량번호", "결합일련번호","발생일시","결합유형","처리상태코드","결합내용","시정조치결과"};
-    	String valName[] = {"rn", "vin", "vhcl_reg_no", "defects_sn","ocrn_dt","defects_type_cd","prcs_stts_cd","defects_cn"};
+    	String valName[] = {"rn", "vin", "vhcl_reg_no", "defects_sn","ocrn_dt","defects_type_cd","prcs_stts_cd","defects_cn","crrtvact_rslt"};
 
     	List<Map<String, Object>> colValue = defectDao.selectDefectInfo(paramsMap);
     	int total = defectDao.selectDefectInfoCnt(paramsMap);

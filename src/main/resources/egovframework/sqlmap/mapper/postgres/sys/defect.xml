@@ -14,7 +14,8 @@
 						t1.defects_type_cd ,
 						t1.prcs_stts_cd ,
 						coalesce(t1.defects_cn,'-') as  defects_cn,
-						t2.co_nm
+						t2.co_nm,
+						coalesce((select crrtvact_rslt from dvs_rac_mt_defectactn where t1.vin = vin),'-') as crrtvact_rslt
 					from dvs_rac_mt_car t0 left join dvs_rac_mt_defect t1 on t0.vin = t1.vin
 					left join (select * from (
 						select crno, 
@@ -30,9 +31,9 @@
 			<if test="vhclRegNo != '' and vhclRegNo != null">
 	           	and vhcl_reg_no like '%' || #{vhclRegNo} ||'%'
 			</if>
-<!-- 			<if test="prcsSttsYn != '' and prcsSttsYn != null"> -->
-<!-- 	           	and prcs_stts_yn = #{sttsYn} -->
-<!-- 			</if> -->
+			<if test="prcsSttsYn != '' and prcsSttsYn != null">
+	           	and crrtvact_rslt = #{prcsSttsYn}
+			</if>
 			<if test ='startDt != null and startDt != ""'>
 		        AND ocrn_dt::TIMESTAMP <![CDATA[>=]]>  #{startDt}::TIMESTAMP
 		    </if>
