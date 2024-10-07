@@ -12,7 +12,6 @@ var userType = '${userType}'
 var userTypeBool = '${userTypeBool}' === 'true';
 var userOperSystemBool = '${userOperSystemBool}' === 'true';
 var authrtCd = '${authrtCd}'
-var userType = '${userType}'
 </script>
 <style>
 @media (max-width: 480px) {
