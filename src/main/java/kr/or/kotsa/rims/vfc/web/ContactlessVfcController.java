@@ -103,7 +103,7 @@ public class ContactlessVfcController extends CmmnAbstractServiceImpl {
 	 */
 	@RequestMapping("contactlessVfc/selectVerifyCd")
 	@ResponseBody
-	public Object selectVerifyCd(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+	public Map<String, Object> selectVerifyCd(@RequestBody Map<String, Object> paramsMap) throws RimsException {
 		return contactlessVfcService.selectVerifyCd(paramsMap);
 	}
 	

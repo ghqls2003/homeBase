@@ -67,7 +67,6 @@
 				$main.ui.creatTopNotice(data);
 			});
 			if(pcType !== "PC" && guest){
-				console.log('ok')
 				$('#myButton').removeAttr("hidden");
 			};
 

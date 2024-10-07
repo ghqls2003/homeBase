@@ -9,5 +9,5 @@ import java.util.List;
 public interface ContactlessVfcService {
     public List<Map<String, Object>> selectRentInfo(Map<String, Object> paramsMap) throws RimsException;
 
-	public Object selectVerifyCd(Map<String, Object> paramsMap);
+    public Map<String, Object> selectVerifyCd(Map<String, Object> paramsMap);
 }
