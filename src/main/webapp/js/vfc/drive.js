@@ -721,8 +721,6 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 //			    var param = {onewayYn : onewayYn,
 //			                 vrfcHstrySn : vrfcHstrySn1
 //			                 };
-//// todo
-////				if ('01하5030'== ''){
 //				if ($('#car_num').val() == ''){
 //					alert('차량번호를 입력해주세요.');
 //
