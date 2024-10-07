@@ -411,11 +411,8 @@ var authrtCd = '${authrtCd}'
             </div>
             <p class="p_info">※ 본 웹사이트에 게시된 정보는 프로그램이나 그 밖의 기술적 장치를 이용하여 무단으로 사용할 수 없습니다.</p>
 			<br/>
-            <input id="resetChk" type="checkbox">
-            <label for="resetChk">입력 정보 초기화</label>
 
             <div class="btn_flex">
-                <button class="blue_btn" id="rentCfm">대여처리</button>
                 <button class="gray_btn cancel_btn" id ="cancelAndInit">닫기</button>
             </div>
 		</div>

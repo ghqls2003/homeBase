@@ -709,7 +709,6 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 //			$("#num04").attr('disabled', true);
 //			$('input[type=radio]').attr("disabled", true);
 			vrfcMthd = 2;
-			$drive.event.lessThan1Year(data.idIssueDate);
 		}
 	};
 
@@ -758,38 +757,6 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			$('.reset-btn').click(function(){
 				$drive.event.resetInput();
 			});
-
-            // 대여유형 포함 코드 =======================================
-//			$('#rentCfm').click(function(){
-//			    var onewayYn = $("input[type=radio][name=category02]:checked").val();
-//			    var vrfcHstrySn1 = vrfcHstrySn;
-//			    var param = {onewayYn : onewayYn,
-//			                 vrfcHstrySn : vrfcHstrySn1
-//			                 };
-//// todo
-////				if ('01하5030'== ''){
-//				if ($('#car_num').val() == ''){
-//					alert('차량번호를 입력해주세요.');
-//
-//				}else if (onewayYn =='' || onewayYn == null || onewayYn == ' '){
-//				    alert('대여유형을 선택해주세요.');
-//				}
-//				else {
-//					$drive.event.updateRentSttsCdInclRentalType(param);
-//				}
-//			});
-			//================================================end=======
-
-            // 대여유형 미포함 코드 =======================================
-			$('#rentCfm').click(function(){
-				if ($('#car_num').val() == ''){
-					alert('차량번호를 입력해주세요.');
-				} else {
-					$drive.event.updateRentSttsCd();
-				}
-			});
-			//================================================end=======
-
 
 			$('.carNum_btn').click(function(){
 				$('#car_num_pop').val('');
@@ -904,7 +871,6 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 
 									vrfcMthd = 2;
 
-									$drive.event.lessThan1Year(data.id.issued_date, license_parts);
 									kendo.ui.progress($(".upload_popup"), false);
 								} else {
 									alert("식별되지 않는 정보가 있습니다.\n이미지 상태를 확인해주시기 바랍니다");
@@ -1046,8 +1012,6 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			$("#cancelAndInit").on("click",function(){
 				$('.result_popup').css('display', 'none');
 			    $(".result_popup").removeClass("view");
-				if($('#resetChk').prop("checked"))
-					$drive.event.resetInput();
 				location.reload();
 			});
 
@@ -1327,7 +1291,6 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 							$('.result_popup').css('display', 'block');
 							$('.result_popup').addClass("view");
 
-							$("#resetChk").prop('checked', false);
 							if (result.respCode == 500) {
 
 								var html = `<p class="current_info">
@@ -1336,7 +1299,6 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			                        <span class="red">*</span> 비정상 사유 : 운전자격확인 프로세스가 정상적으로 이루어지지 않았습니다.` +
 			                    '</p>';
 								$('#result').append(html);
-								$('#rentCfm').css('display', 'none');
 								return;
 							}
 
@@ -1397,7 +1359,6 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 										//==================================================운전자격확인 이력 건수 end
 										var html = `<p class="current_info">운전면허정보 조회 결과 <span class="point">정상</span> 입니다.</p>`;
 										$('#result').prepend(html);
-										$('#rentCfm').css('display', 'block');
 									} else{
 										var html = `<p class="current_info">
 					                        운전면허정보 조회 결과 <span class="point02">비정상</span> 입니다.
@@ -1405,7 +1366,6 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 					                        <span class="red">*</span> 비정상 사유 : `+ result.code.cdNm +
 					                    '</p>';
 										$('#result').append(html);
-										$('#rentCfm').css('display', 'none');
 									}
 								}
 							});
@@ -1423,61 +1383,6 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			}
 // =====================end =================
 		},
-
-		lessThan1Year: function(issued, license_parts) {
-			var today = new Date();
-			var todayYear = today.getFullYear();
-			var sdt = new Date(dateFormatting(issued));
-			var dayMinu = (today.getTime() - sdt.getTime()) / (1000*60*60*24);
-
-			if (license_parts[1] == todayYear.toString().slice(-2) && dayMinu < 365) {
-				$("#licenseCareer").html("※ 면허 발급 기준 <span style='color:red'>1년 미만</span>의 면허증입니다.");
-				for(var i=1; i<5; i++) {
-					$("#num0"+i).css({"color":"white", "background-color":"red"});
-				}
-			} else if(license_parts[1] < todayYear.toString().slice(-2) && license_parts[3].slice(-1) == 0 && dayMinu < 365) {
-				$("#licenseCareer").html("※ 면허 발급 기준 <span style='color:red'>1년 미만</span>의 면허증입니다.");
-				for(var i=1; i<5; i++) {
-					$("#num0"+i).css({"color":"white", "background-color":"red"});
-				}
-			}
-		},
-
-//        // 대여유형 포함
-//        updateRentSttsCdInclRentalType : function(param) {
-//            var obj = param;
-//            obj.rentno = rentno;
-//            obj.rentalTypeYn = 'Y';
-//            if($(".point02").length) {
-//                alert("면허정보 조회 결과 비정상이기 때문에 대여처리 할 수 없습니다.");
-//            } else {
-//                ajax(false, contextPath+"/vfc/drive/updateRentSttsCd", "", "", obj, function(result) {
-//                    if (result != null && result=="success"){
-//                        alert("대여처리 완료되었습니다.");
-//                        $(".result_popup").removeClass("view");
-//                        location.reload();
-//                    }
-//                });
-//            }
-//        },
-//
-//        // 대여유형 미!!!포함
-        updateRentSttsCd : function() {
-            var obj1 = {};
-            obj1.rentno = rentno;
-            obj1.rentalTypeYn = 'N';
-            if($(".point02").length) {
-                alert("면허정보 조회 결과 비정상이기 때문에 대여처리 할 수 없습니다.");
-            } else {
-                ajax(false, contextPath+"/vfc/drive/updateRentSttsCd", "", "", obj1, function(result) {
-                    if (result != null && result=="success"){
-                        alert("대여처리 완료되었습니다.");
-                        $(".result_popup").removeClass("view");
-                        location.reload();
-                    }
-                });
-            }
-        },
 
 		resetInput : function() {
 			$("#num01").data("kendoDropDownList").select(0);
