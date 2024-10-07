@@ -365,12 +365,16 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 										} else {
 					                    	var html = `<br><p class="current_info">
 						                        최근 7일 운전자격확인 건수는
-						                        <span class = "popupSpan" id = "rslt_rentalHistory">`+ result.VfcHistCnt + `건</span> 입니다.<br>
-												유사도 검증 결과 유사도는` +  similarityData.similarityConfidence + `% 이며, 
-												생체 감지는` + similarityData.livenessConfidence + `% 입니다.
+						                        <span class = "popupSpan" id = "rslt_rentalHistory" onclick =$drive.event.popupRntlHsListClick(); >`+ result.VfcHistCnt + `건</span> 입니다.
 						                    </p><br>`;
 											$('#result').prepend(html);
 										}
+										var html = `<br><p class="current_info">
+												유사도 검증 결과 유사도는` + Math.floor(parseFloat(similarityData.similarityConfidence) * 100) + `% 이며, 
+												생체 감지는` + Math.floor(parseFloat(similarityData.livenessConfidence) * 100) + `% 입니다.
+					                    </p><br>`;
+										$('#result').prepend(html);
+										
 										//==================================================운전자격확인 이력 건수 end
 										var html = `<p class="current_info">운전면허정보 조회 결과 <span class="point">정상</span> 입니다.</p>`;
 										$('#result').prepend(html);

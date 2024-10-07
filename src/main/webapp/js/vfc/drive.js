@@ -1272,13 +1272,13 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			alert("alcheraCheckResult 도착");
 			var data = JSON.parse(json);
 			if(data.similarityConfidence != null && data.livenessConfidence != null) {
-				$drive.event.verifyLicense();
+				$drive.event.verifyLicense(data);
 			} else {
 				alert('data 없음'); //추후 수정
 			}
 		},
 		
-		verifyLicense : function() {
+		verifyLicense : function(similarityData = []) {
 			if(userType !== "PC"){
 				if(userOperSystemBool){
 					ocrInterface.deleteLicenseImageFile();
@@ -1397,12 +1397,19 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 						                    </p><br>`;
 											$('#result').prepend(html);
 										} else {
-                                        $drive.event.popupVhclDfctList();
-					                    	var html = `<br><p class="current_info">
+                                        	$drive.event.popupVhclDfctList();
+											var html = `<br><p class="current_info">
 						                        최근 7일 운전자격확인 건수는
 						                        <span class = "popupSpan" id = "rslt_rentalHistory" onclick =$drive.event.popupRntlHsListClick(); >`+ result.VfcHistCnt + `건</span> 입니다.
-						                        유사도 검증 결과 유사도는` +  similarityData.similarityConfidence + `% 이며, 
-												생체 감지는` + similarityData.livenessConfidence + `% 입니다.
+						                    </p><br>`;
+											$('#result').prepend(html);
+										}
+										if(similarityData.length != 0){
+											var html = `<br><p class="current_info">
+						                        최근 7일 운전자격확인 건수는
+						                        <span class = "popupSpan" id = "rslt_rentalHistory" onclick =$drive.event.popupRntlHsListClick(); >`+ result.VfcHistCnt + `건</span> 입니다.<br>
+												유사도 검증 결과 유사도는` + Math.floor(parseFloat(similarityData.similarityConfidence) * 100) `% 이며, 
+												생체 감지는` + Math.floor(parseFloat(similarityData.livenessConfidence) * 100) + `% 입니다.
 						                    </p><br>`;
 											$('#result').prepend(html);
 										}

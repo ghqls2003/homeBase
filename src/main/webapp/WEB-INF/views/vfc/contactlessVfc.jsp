@@ -64,7 +64,7 @@ var authrtCd = '${authrtCd}'
 	                                <input id="signguCd" placeholder="시군구코드" style="display:none">
 	                                <input id="regDt" placeholder="등록일" style="display:none">
 	                                <button class="yellow_btn rentInfoNo_btn">
-	                                    검색<img src="${contextPath}/images/sub/ico_search02.png" alt="검색아이콘" class="basic_ico">
+	                                    확인
 	                                </button>
 
 	                            </div>
