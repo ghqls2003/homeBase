@@ -636,12 +636,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			const idLicenseTypeArray = data.idLicenseType.split(',');
 			data.idLicenseType = idLicenseTypeArray[0].trim();
 			similarityImage = true;
-//			if(data.id.org_image_path!=null && data.id.org_image_path!=''){
-//				similarityImage = true;
-//				//alert(similarityImage)
-//			}else{
-//				//alert(similarityImage)
-//			}
 			$drive.ui.getOcrData(data);
         },
 		getOcrData:function(data){
@@ -1076,11 +1070,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 					//console.log(similarityChk)
 				}
 				
-//				if(similarityImage){
-//					alert("됐다");
-//				}else{
-//					alert("안됨")
-//				}
 			    //$drive.event.similarityChkFn(); // 호출할 함수
 			});
 			
@@ -1286,11 +1275,12 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			if(data.similarityConfidence != null && data.livenessConfidence != null) {
 				$drive.event.verifyLicense();
 			} else {
-				alert('data 없음');
+				alert('data 없음'); //추후 수정
 			}
 		},
 		
 		verifyLicense : function() {
+				deleteLicenseImageFile();
                 var dateData = $drive.event.vfcHistDateDt();
                 var startDtTm = dateData.startDtTm;
                 var endDtTm = dateData.endDtTm;

@@ -1264,14 +1264,11 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 		// 웹으로 결과 전달(2)  // 앱테스트중
 		alcheraCheckResult: function(json) {
 			var data = JSON.parse(json);
-			if(data.similarityConfidence != null && data.livenessConfidence != null) {
-				$drive.event.verifyLicense();
-			} else {
-				alert('data 없음');
-			}
+				$drive.event.verifyLicense(data);
 		},
 		
-		verifyLicense : function() {
+		verifyLicense : function(similarityData) {
+				deleteLicenseImageFile();
                 var dateData = $drive.event.vfcHistDateDt();
                 var startDtTm = dateData.startDtTm;
                 var endDtTm = dateData.endDtTm;
@@ -1386,7 +1383,9 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
                                         $drive.event.popupVhclDfctList();
 					                    	var html = `<br><p class="current_info">
 						                        최근 7일 운전자격확인 건수는
-						                        <span class = "popupSpan" id = "rslt_rentalHistory" onclick =$drive.event.popupRntlHsListClick(); >`+ result.VfcHistCnt + `건</span> 입니다.
+						                        <span class = "popupSpan" id = "rslt_rentalHistory" onclick =$drive.event.popupRntlHsListClick(); >`+ result.VfcHistCnt + `건</span> 입니다.<br>
+												유사도 검증 결과 유사도는` +  similarityData.similarityConfidence + `% 이며, 
+												생체 감지는` + similarityData.livenessConfidence + `% 입니다.
 						                    </p><br>`;
 											$('#result').prepend(html);
 										}
