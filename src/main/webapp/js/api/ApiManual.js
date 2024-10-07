@@ -99,12 +99,12 @@
 				} else {
 					$('#tabBtn01').removeClass('active');
 				}
-				if (swiper.activeIndex === 4) {
+				if (swiper.activeIndex >= 4 && swiper.activeIndex < 24 ) {
 					$('#tabBtn02').addClass('active');
 				} else {
 					$('#tabBtn02').removeClass('active');
 				}
-				if (swiper.activeIndex === 24) {
+				if (swiper.activeIndex >= 24 && swiper.activeIndex < 29 ) {
 					$('#tabBtn03').addClass('active');
 				} else {
 					$('#tabBtn03').removeClass('active');

@@ -39,6 +39,7 @@ var expryYmd;
 				$("#search_area").hide();
 			}
 			$('#apiReUseBtn').hide();
+			/*관리자 일때 데이터피커*/
 			$("#start-Picker01").kendoDatePicker({
 				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 2),
 				//				value: new Date(2024, 3, 1),
@@ -97,61 +98,6 @@ var expryYmd;
 					}
 				}
 			});
-			$("#start_Picker_Dev02").kendoDatePicker({
-				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 2),
-				dateInput: true,
-				format: "yyyy-MM-dd",
-				parseFormats: ["yyyy-MM-dd"],
-				max: new Date(),
-				change: function() {
-					var startDate = this.value();
-					var endDatePicker = $("#end_Picker_Dev02").data("kendoDatePicker");
-
-					if (startDate) {
-						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 2);
-						endDatePicker.min(startDate);
-						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
-						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
-					}
-				}
-			});
-			$("#start-Picker02").kendoDatePicker({
-				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 2),
-				dateInput: true,
-				format: "yyyy-MM-dd",
-				parseFormats: ["yyyy-MM-dd"],
-				max: new Date(),
-				change: function() {
-					var startDate = this.value();
-					var endDatePicker = $("#end-Picker02").data("kendoDatePicker");
-
-					if (startDate) {
-						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 2);
-						endDatePicker.min(startDate);
-						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
-						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
-					}
-				}
-			});
-			//						$("#start-Picker02").kendoDatePicker({
-			//							value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 7),
-			//							dateInput: true,
-			//							format: "yyyy-MM-dd",
-			//							parseFormats: ["yyyy-MM-dd"],
-			//							max: new Date(),
-			//							change: function() {
-			//								var startDate = this.value();
-			//								var endDatePicker = $("#end-Picker02").data("kendoDatePicker");
-			//			
-			//								if (startDate) {
-			//									var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 7);
-			//									endDatePicker.min(startDate);
-			//									endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
-			//									endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
-			//								}
-			//							}
-			//						});
-
 			$("#end_Picker_Dev01").kendoDatePicker({
 				value: new Date(),
 				dateInput: true,
@@ -172,23 +118,25 @@ var expryYmd;
 					}
 				}
 			});
-			$("#end_Picker_Dev02").kendoDatePicker({
-				value: new Date(),
+			
+			/*사업자 일떄 데이트피커*/
+			
+			$("#start-Picker02").kendoDatePicker({
+				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 2),
+				//				value: new Date(2024, 3, 1),
 				dateInput: true,
 				format: "yyyy-MM-dd",
 				parseFormats: ["yyyy-MM-dd"],
 				max: new Date(),
 				change: function() {
-					var endDate = this.value();
-					var startDatePicker = $("#start_Picker_Dev02").data("kendoDatePicker");
-					var startDate = startDatePicker.value();
+					var startDate = this.value();
+					var endDatePicker = $("#end-Picker02").data("kendoDatePicker");
 
 					if (startDate) {
-						var diffInDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
-						if (diffInDays > 2) {
-							alert("2일 이내만 조회 가능합니다.");
-							this.value(new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 2));
-						}
+						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 1);
+						endDatePicker.min(startDate);
+						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
+						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
 					}
 				}
 			});
@@ -205,9 +153,48 @@ var expryYmd;
 
 					if (startDate) {
 						var diffInDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
-						if (diffInDays > 7) {
-							alert("7일 이내만 조회 가능합니다.");
-							this.value(new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 7));
+						if (diffInDays > 2) {
+							alert("2일 이내만 조회 가능합니다.");
+							this.value(new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 1));
+						}
+					}
+				}
+			});
+
+			$("#start_Picker_Dev02").kendoDatePicker({
+				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 2),
+				dateInput: true,
+				format: "yyyy-MM-dd",
+				parseFormats: ["yyyy-MM-dd"],
+				max: new Date(),
+				change: function() {
+					var startDate = this.value();
+					var endDatePicker = $("#end_Picker_Dev02").data("kendoDatePicker");
+
+					if (startDate) {
+						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 2);
+						endDatePicker.min(startDate);
+						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
+						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
+					}
+				}
+			});
+			$("#end_Picker_Dev02").kendoDatePicker({
+				value: new Date(),
+				dateInput: true,
+				format: "yyyy-MM-dd",
+				parseFormats: ["yyyy-MM-dd"],
+				max: new Date(),
+				change: function() {
+					var endDate = this.value();
+					var startDatePicker = $("#start_Picker_Dev02").data("kendoDatePicker");
+					var startDate = startDatePicker.value();
+
+					if (startDate) {
+						var diffInDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+						if (diffInDays > 2) {
+							alert("2일 이내만 조회 가능합니다.");
+							this.value(new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 2));
 						}
 					}
 				}
@@ -476,8 +463,9 @@ var expryYmd;
 								var endtime2 = $("#end_Picker_Dev02").val();
 								var resultTime3 = startTime2.replace(/-/g, '')
 								var resultTime4 = endtime2.replace(/-/g, '')
-								options.endPicker02 = startTime2
-								options.startPicker02 = endtime2
+								options.startPicker02 = resultTime3
+								options.endPicker02 = resultTime4
+
 								options.searchSttsCd = $("#search_stts_cd_api").val();
 								options.detailYN = $("#search_stts_cd_error").val();
 							}

@@ -561,7 +561,7 @@ var userType = '${userType}'
 <div class="similarity_pop">
     <div class="box">
         <div class="popup_top">
-            <h4>비대면 검증 안내</h4>
+            <h4>유사도 검증 안내</h4>
             <div class="close">
                 <span></span>
                 <span></span>
@@ -583,7 +583,7 @@ var userType = '${userType}'
 <!-- 대여이상 해당차량의 상세팝업 조회 링크   -->
 
 <div class="subPage sub03">
-<div class="popup detail_popup popup_type02" id='detail_popup_mobiDefect_box'">
+<div class="popup detail_popup popup_type02" id='detail_popup_mobiDefect_box'>
  <div class="box">
         <div class="popup_top">
             <h4>차량 상세</h4>

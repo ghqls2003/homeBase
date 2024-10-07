@@ -18,7 +18,6 @@ var authrtCd = '${authrtCd}'
         font-size: 1.6rem !important;
     }
 }
-
 </style>
 
 
@@ -65,7 +64,7 @@ var authrtCd = '${authrtCd}'
 	                                <input id="signguCd" placeholder="시군구코드" style="display:none">
 	                                <input id="regDt" placeholder="등록일" style="display:none">
 	                                <button class="yellow_btn rentInfoNo_btn">
-	                                    검색<img src="${contextPath}/images/sub/ico_search02.png" alt="검색아이콘" class="basic_ico">
+	                                    확인
 	                                </button>
 
 	                            </div>
@@ -111,9 +110,6 @@ var authrtCd = '${authrtCd}'
 	            </div>
 	        </div>
 	        
-	        
-	        
-	        
 	        <div class="contBox lastBox" id="clVfcInfo" style="display:none">
 	            <div class="nameBox">
 	                <h4 class="name">면허정보 입력</h4>
@@ -125,75 +121,6 @@ var authrtCd = '${authrtCd}'
                             <img src="../images/sub/ico_photo02.png" alt="면허증 촬영" class="hover_ico">
                             면허증 촬영
                         </button>
-
-                        <!-- 면허증 업로드 팝업 -->
-                        <div class="popup upload_popup" style="display:none;">
-                            <div class="box" style="height:680px; width:600px;">
-                             	<div class="popup_top">
-                                	<h4>면허증 업로드</h4>
-                                	<div class="close">
-                                  		<span></span>
-                                  		<span></span>
-                                	</div>
-                              	</div>
-                              	<div class="content">
-                              		<p class="qr_txt" style="font-size:17px;">
-                              			*인식률을 높이기 위해 정위치의 면허증 이미지를 업로드해주시기 바랍니다.<br/>
-	                              		<br/>
-                              			<span style="font-size:18px; font-weight:bold;">&lt;예시&gt;</span>
-                              		</p>
-                              		<div style="background-color:black; display: flex; justify-content: center; align-items: center; height:323px;">
-	                              		<div class="license_bg" style="margin:0; width:515px; height:313px;" >
-					                        <div class="license_flex">
-					                            <div class="upload_box" style="position: relative; margin-top: 0; width: 170px; height: 220px; top: -19px;">
-					                                <div class="upload_bg">
-					                                </div>
-					                            </div>
-					                        </div>
-					                    </div>
-				                    </div>
-				                    <div></div>
-                                	<div class="license_wr">
-                                    	<div class="qr_code" id="qrCodeArea1" style="width:200px; padding:10px; background-color:white;display:none">
-                                    	</div>
-                                    	<p class="qr_txt" style="font-size:17px;">
-	                                        * JPG, JPEG 파일만 업로드 가능합니다.
-	                                    </p>
-                                	</div>
-                                    <br />
-                                	<table class="tb rental_tb01 wTable t01">
-			                        	<tbody>
-			                        	<tr>
-											<th scope="col">파일</th>
-												<td>
-													<div class="contBox">
-				                                    	<div class="nameBox">
-															<div id="uploadFlex" class="tb_flex">
-<!-- 																<label for="temp_co_nm">파일</label> -->
-																<div class="inpSearch">
-																	<label for="fileTypeCheckInput" style="display: none;"></label>
-																	<input type="text" id="fileTypeCheckInput" class="inp filetype" disabled="disabled" style="width: 300px; border: none;"/>
-																	<label for="findFile" style="display: none;"></label>
-																	<input type="file" id="findFile" name="files" class="upload-hidden" accept="image/*" style="display: none;" />
-																</div>
-																<div style="float:right">
-																	<img style="cursor: pointer;" id="searchFile" src="${contextPath}/images/ico_search.png" alt="검색 아이콘"/>
-																</div>
-															</div>
-														</div>
-													</div>
-												</td>
-											</tr>
-			                        	</tbody>
-			                        </table>
-
-	                                <div class="btn_flex">
-    	                            	<button id="fileSubmit" class="qrCfmUpload gray_btn">업로드</button>
-                                  		<button class="gray_btn cancel_btn">취소</button>
-                                	</div>
-                              	</div>
-                            </div>
-                        </div>
                     </div>
 
                     <p class="tb_top">※ 외국인 : 성명란에 공백 없이 영어 대문자로 입력해주시기 바랍니다.</p>
@@ -207,11 +134,6 @@ var authrtCd = '${authrtCd}'
 	                        <div class="license_flex">
 	                            <div class="upload_box">
 	                                <div class="upload_bg">
-	                                    <%-- <button class="upload_btn">
-	                                        <img src="${contextPath}/images/sub/ico_upload.png" alt="업로드" class="basic_ico">
-	                                        <img src="${contextPath}/images/sub/ico_upload02.png" alt="업로드" class="hover_ico">
-	                                        업로드
-	                                    </button> --%>
 	                                </div>
 	                            </div>
 	                            <div class="input_form">
@@ -333,33 +255,11 @@ var authrtCd = '${authrtCd}'
 	                         </div>
 						</div>
 					</div>
-<!-- 					<div class="similarity_box"> -->
-<!-- 						 <button class="yellow_btn similarity-btn" onclick =$contactlessVfc.event.similarityVerf();>유사도 검증</button> -->
-<!--                          <button class="similarity_info_btn"> -->
-<%--                              <img src="${contextPath}/images/sub/ico_tooltip.png" alt="운전면허번호규칙 설명"> --%>
-<!--                          </button> -->
-<!--                          유사도 검증 안내 팝업 -->
-<!--                          <div class="similarity_pop"> -->
-<!--                              <div class="box"> -->
-<!--                                  <div class="popup_top"> -->
-<!--                                      <h4>비대면 검증 안내</h4> -->
-<!--                                      <div class="close"> -->
-<!--                                          <span></span> -->
-<!--                                          <span></span> -->
-<!--                                      </div> -->
-<!--                                  </div> -->
-<!--                                  <div class="content"> -->
-<%--                                  	 <img src="${contextPath}/images/sub/lc_info01.jpg" alt="운전면허 번호 규칙"> --%>
-<!--                                  </div> -->
-<!--                              </div> -->
-<!--                          </div> -->
-<!-- 					</div> -->
                 </div>
 	        </div>
 	        <p class="info">※ 본 웹사이트에 게시된 정보는 프로그램이나 그 밖의 기술적 장치를 이용하여 무단으로 사용할 수 없습니다.</p>
 	        <div class="btn_flex" id="clVfcBtn" style="display:none">
-	            <button class="blue_btn verify-btn" style="display: none;">운전자격 확인</button>
-	            <button class="blue_btn verify-btn-app" style="display: none;">운전자격 확인</button>  <%--앱테스트중 --%>
+	            <button class="blue_btn verify-btn-app">운전자격 확인</button>
 	            <button class="gray_btn reset-btn">초기화</button>
 	        </div>
 	    </div>
@@ -411,11 +311,8 @@ var authrtCd = '${authrtCd}'
             </div>
             <p class="p_info">※ 본 웹사이트에 게시된 정보는 프로그램이나 그 밖의 기술적 장치를 이용하여 무단으로 사용할 수 없습니다.</p>
 			<br/>
-            <input id="resetChk" type="checkbox">
-            <label for="resetChk">입력 정보 초기화</label>
 
             <div class="btn_flex">
-                <button class="blue_btn" id="rentCfm">대여처리</button>
                 <button class="gray_btn cancel_btn" id ="cancelAndInit">닫기</button>
             </div>
 		</div>
@@ -426,7 +323,7 @@ var authrtCd = '${authrtCd}'
 <div class="similarity_pop">
     <div class="box">
         <div class="popup_top">
-            <h4>비대면 검증 안내</h4>
+            <h4>유사도 검증 안내</h4>
             <div class="close">
                 <span></span>
                 <span></span>

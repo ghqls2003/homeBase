@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import kr.or.kotsa.rims.cmmn.biz.service.CmmnService;
 import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
 import kr.or.kotsa.rims.cmmn.sys.service.CmmnAbstractServiceImpl;
+import kr.or.kotsa.rims.cmmn.sys.util.GenericExcelView;
 import kr.or.kotsa.rims.stts.service.VerfSttsService;
 
 @Controller
@@ -86,4 +88,10 @@ public class verfSttsController extends CmmnAbstractServiceImpl {
 		
 		return authSelected;
 	}
+	
+	// kendoExcel AOP 태우기용
+	@PostMapping("/verfStts/excelDown")
+    public void excelDown(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
+                                      HttpServletRequest request, HttpServletResponse response) throws RimsException {
+    }	
 }

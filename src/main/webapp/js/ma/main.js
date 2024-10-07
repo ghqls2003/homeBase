@@ -66,8 +66,8 @@
 			ajax(true, contextPath + '/ma/main/topNotice', 'body', '조회 중입니다', null, function(data) {
 				$main.ui.creatTopNotice(data);
 			});
-			if(pcType == "PC"||!guest){
-				$('#myButton').remove();
+			if(pcType !== "PC" && guest){
+				$('#myButton').removeAttr("hidden");
 			};
 
         },

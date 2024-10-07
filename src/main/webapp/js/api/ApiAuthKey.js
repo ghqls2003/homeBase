@@ -841,8 +841,6 @@
 			if (confirm("중지 하시겠습니까?")) {
 				ajax(true, contextPath + '/api/apiAuthKey/stopUse', 'body', '확인중입니다.', param, function(data) {
 					alert("중지 되었습니다");
-					//				var grid = $('#grid').data('kendoGrid');
-					//				grid.dataSource.page(1);
 					location.reload();
 				});
 			}

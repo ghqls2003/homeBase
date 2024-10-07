@@ -11,7 +11,6 @@ import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
 @Repository
 public class ContactlessVfcDao extends CmmnAbstractMapper {
     public List<Map<String, Object>> selectRentInfo(Map<String, Object> paramsMap) throws RimsException {
-    	List<Map<String, Object>> aa= selectList("vfc.contactlessVfc.selectRentInfo", paramsMap);
         return selectList("vfc.contactlessVfc.selectRentInfo", paramsMap);
     }
 }

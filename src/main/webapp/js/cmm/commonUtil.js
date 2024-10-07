@@ -1554,7 +1554,141 @@ function excelDownAjax(excelPath, downFormName, fileNm) {
     xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
     xhr.setRequestHeader('Content-Type','application/json');
     xhr.responseType = 'blob'; // !!필수!!
+    console.log(downFormName)
     xhr.send(JSON.stringify(downFormName)); // 파라미터 설정
+}
+
+
+/**
+ * @name			: kendoExcelAOPAcc
+ * @description	: kendoExcelExport AOP 접근제어 테스트중
+ * @date				: 2024. 10. 04
+ * @author			: 김경룡
+ */
+function kendoExcelAOPAcc(a_data, accUrl) {
+	ajax(false, contextPath + "/cmmn/selectPrvYn", "", "", {menuCd: sessionMenuId}, function(result) {
+        if (result != null) {
+            var prvYn = result[0].prvc_idntf_yn;
+
+//				if (prvYn === "Y") {
+				if (1) {
+					if ($("#elxExcelDownReason").length === 0) {
+						var $excelDownReasonInput = '<input type="hidden" id="elxExcelDownReason" name="excelDownReason" />';
+						$(".sub03").append($excelDownReasonInput);
+					}
+					$("#excelDownReasonPopup").remove();
+
+
+					var dialogCont = '<div id="excelDownReasonPopup" class="popup popup_type02 view">';
+					dialogCont    += '    <div class="box">';
+					dialogCont    += '        <div class="popup_top">';
+					dialogCont    += '            <h4>엑셀다운로드</h4>';
+					dialogCont    += '            <div class="close">';
+					dialogCont    += '            <span></span>';
+					dialogCont    += '            <span></span>';
+					dialogCont    += '            </div>';
+					dialogCont    += '        </div>';
+					dialogCont    += '        <div class="content">';
+					dialogCont 	  += '            <table class="rental_tb01 tb cont">';
+					dialogCont    += '				<tr>';
+					dialogCont    += '					<th colspan="2">개인정보가 포함된 자료를 다운로드하기 위해선 사유가 필요합니다.</th>';
+					dialogCont    += '				</tr>';
+
+					dialogCont    += '				<tr>';
+					dialogCont    += '					<th>사유입력</th>';
+					dialogCont    += '					<td class="textarea_wr"><textarea class="noteBox" rows="5" id="excelDownReason" maxlength="4000"  placeholder = "사유입력(최소 20자 이상 입력하세요) "></textarea></td>';
+					dialogCont    += '              </tr>';
+
+					dialogCont    += '              </table>';
+					dialogCont    += '              <div class="btn_flex" style="margin-top: 22px;">';
+					dialogCont    += '                  <button class="blue_btn" id="btnExcelDownload">다운로드</button>';
+					dialogCont    += '                  <button class="gray_btn" id="btnClose">취소</button>';
+					dialogCont    += '			  </div>';
+					dialogCont    += '		  </div>';
+					dialogCont    += '	  </div>';
+					dialogCont    += '</div>';
+
+					$(document).on("click", ".close", function() {
+						$("#excelDownReasonPopup").removeClass("view");
+					});
+
+					$(document).on("click", "#btnClose", function() {
+						$('#excelDownReasonPopup .close').click();
+					});
+
+					$(document).off("click", "#btnExcelDownload").on("click", "#btnExcelDownload", function() {
+						var excelDownReason = $("#excelDownReason").val();
+						if(validateExcelDownReason(excelDownReason)){
+							var params = {
+	                            excelDownReason: $("#excelDownReason").val(),
+	                            total: a_data.length
+	                        };
+	                        ajax(false, contextPath + accUrl, "", "", params, function(result) {});
+							$("#excelDownReasonPopup").removeClass("view");
+						}
+					});
+
+					$(".sub03").append(dialogCont);
+					$("#excelDownReasonPopup").addClass("view");
+
+				} else {
+	                var params = {total: a_data.length};
+	                ajax(false, contextPath + accUrl, "", "", params, function(result) {});
+				}
+		    return 1;
+        } else {
+	    	return 0;
+		}
+    });
+}
+
+function showExcelReasonPopup(callback) {
+    if ($("#elxExcelDownReason").length === 0) {
+        var $excelDownReasonInput = '<input type="hidden" id="elxExcelDownReason" name="excelDownReason" />';
+        $(".sub03").append($excelDownReasonInput);
+    }
+
+    $("#excelDownReasonPopup").remove(); // 기존 팝업 제거
+
+    var dialogCont = '<div id="excelDownReasonPopup" class="popup popup_type02 view">';
+    dialogCont    += '    <div class="box">';
+    dialogCont    += '        <div class="popup_top">';
+    dialogCont    += '            <h4>엑셀다운로드</h4>';
+    dialogCont    += '            <div class="close">';
+    dialogCont    += '            <span></span>';
+    dialogCont    += '            <span></span>';
+    dialogCont    += '            </div>';
+    dialogCont    += '        </div>';
+    dialogCont    += '        <div class="content">';
+    dialogCont    += '            <table class="rental_tb01 tb cont">';
+    dialogCont    += '                <tr><th colspan="2">개인정보가 포함된 자료를 다운로드하기 위해선 사유가 필요합니다.</th></tr>';
+    dialogCont    += '                <tr>';
+    dialogCont    += '                    <th>사유입력</th>';
+    dialogCont    += '                    <td class="textarea_wr"><textarea class="noteBox" rows="5" id="excelDownReason" maxlength="4000" placeholder="사유입력(최소 20자 이상 입력하세요) "></textarea></td>';
+    dialogCont    += '                </tr>';
+    dialogCont    += '            </table>';
+    dialogCont    += '            <div class="btn_flex" style="margin-top: 22px;">';
+    dialogCont    += '                <button class="blue_btn" id="btnExcelDownload">다운로드</button>';
+    dialogCont    += '                <button class="gray_btn" id="btnClose">취소</button>';
+    dialogCont    += '            </div>';
+    dialogCont    += '        </div>';
+    dialogCont    += '    </div>';
+    dialogCont    += '</div>';
+
+    $(".sub03").append(dialogCont);
+    $("#excelDownReasonPopup").addClass("view");
+
+    // 팝업 닫기 이벤트
+    $(document).on("click", ".close, #btnClose", function() {
+        $("#excelDownReasonPopup").removeClass("view");
+    });
+
+    // 다운로드 버튼 클릭 시
+    $(document).off("click", "#btnExcelDownload").on("click", "#btnExcelDownload", function() {
+        var excelDownReason = $("#excelDownReason").val();
+        callback(excelDownReason); // 입력된 사유를 콜백으로 전달
+        $("#excelDownReasonPopup").removeClass("view"); // 팝업 닫기
+    });
 }
 
 /**
