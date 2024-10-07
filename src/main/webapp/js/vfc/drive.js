@@ -1279,11 +1279,13 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 		},
 		
 		verifyLicense : function() {
-			if(userOperSystemBool){
-				ocrInterface.deleteLicenseImageFile();
-			} else {
-				window.webkit.messageHandlers.deleteLicenseImageFile.postMessage('');
-			}
+			if(userType !== "PC"){
+				if(userOperSystemBool){
+					ocrInterface.deleteLicenseImageFile();
+				} else {
+					window.webkit.messageHandlers.deleteLicenseImageFile.postMessage('');
+				}
+			} else {}
 				
                 var dateData = $drive.event.vfcHistDateDt();
                 var startDtTm = dateData.startDtTm;
