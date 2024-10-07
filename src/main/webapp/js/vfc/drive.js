@@ -1398,16 +1398,32 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 											$('#result').prepend(html);
 										} else {
                                         	$drive.event.popupVhclDfctList();
-											var html = `<br><p class="current_info">
+											var html = `<p class="current_info">
 						                        최근 7일 운전자격확인 건수는
 						                        <span class = "popupSpan" id = "rslt_rentalHistory" onclick =$drive.event.popupRntlHsListClick(); >`+ result.VfcHistCnt + `건</span> 입니다.
 						                    </p><br>`;
 											$('#result').prepend(html);
 										}
-										if(!$.isEmptyObject(similarityData)){
-											var html = `<p class="current_info">
-												유사도 검증 결과 유사도는 ` + Math.floor(parseFloat(similarityData.similarityConfidence) * 100) `%이며,<br>
-												생체 감지는 ` + Math.floor(parseFloat(similarityData.livenessConfidence) * 100) + `%입니다.
+										if(Object.keys(similarityData).length != 0){
+											var similarityConfidence = parseFloat(similarityData.similarityConfidence);
+											var livenessConfidence = parseFloat(similarityData.livenessConfidence);
+											
+											if (Number.isInteger(similarityConfidence)) {
+											    similarityConfidence = parseFloat(similarityConfidence) * 100;
+											} else {
+											    similarityConfidence = (parseFloat(similarityConfidence) * 100).toFixed(2); 
+											}
+											
+											if (Number.isInteger(livenessConfidence)) {
+											    livenessConfidence = parseFloat(livenessConfidence) * 100;
+											} else {
+											    livenessConfidence = (parseFloat(livenessConfidence) * 100).toFixed(2); 
+											}
+
+											
+											var html = `<br><p class="current_info">
+												유사도 검증 결과 유사도는 ` + similarityConfidence + `%이며,<br>
+												생체 감지는 ` + livenessConfidence + `%입니다.
 						                    </p><br>`;
 											$('#result').prepend(html);
 										}
