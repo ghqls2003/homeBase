@@ -26,8 +26,6 @@ public class ContactlessVfcController extends CmmnAbstractServiceImpl {
 	@Autowired
 	private ContactlessVfcService contactlessVfcService;
 	
-	@Autowired
-	private CmmnService cmmnService;
 	
 	private static final String IS_MOBILE = "MOBI";
 	private static final String IS_PC = "PC";
@@ -95,6 +93,18 @@ public class ContactlessVfcController extends CmmnAbstractServiceImpl {
 		} else {
 			return "Android";
 		}
+	}
+	
+	/**
+	 * 운전자격 확인 코드
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping("contactlessVfc/selectVerifyCd")
+	@ResponseBody
+	public Object selectVerifyCd(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		return contactlessVfcService.selectVerifyCd(paramsMap);
 	}
 	
 }

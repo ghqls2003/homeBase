@@ -1263,6 +1263,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
         
 		// 웹으로 결과 전달(2)  // 앱테스트중
 		alcheraCheckResult: function(json) {
+			alert("alcheraCheckResult 도착");
 			var data = JSON.parse(json);
 				$drive.event.verifyLicense(data);
 		},
