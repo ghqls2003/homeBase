@@ -4,7 +4,16 @@
 	<sql id="defectInfoSql">
 		(	select 
 				row_number() over (order by vhcl_reg_no asc) as rn,
-				*
+				vin,
+				defects_sn,
+				vhcl_reg_no,
+				ocrn_dt,
+				defects_type_cd,
+				prcs_stts_cd,
+				defects_cn,
+				co_nm,
+				crrtvact_rslt,
+				case crrtvact_rslt when 'Y' then '조치' when 'N' then '미조치' else '-' end as crrtvact_rslt_nm
 				from (
 					select 
 						t0.vin,
@@ -15,7 +24,7 @@
 						t1.prcs_stts_cd ,
 						coalesce(t1.defects_cn,'-') as  defects_cn,
 						t2.co_nm,
-						coalesce((select crrtvact_rslt from dvs_rac_mt_defectactn where t1.vin = vin),'-') as crrtvact_rslt
+						coalesce((select cmptn_yn from dvs_rac_mt_defect_actn where t1.vin = vin),'-') as crrtvact_rslt
 					from dvs_rac_mt_car t0 left join dvs_rac_mt_defect t1 on t0.vin = t1.vin
 					left join (select * from (
 						select crno, 
@@ -31,8 +40,8 @@
 			<if test="vhclRegNo != '' and vhclRegNo != null">
 	           	and vhcl_reg_no like '%' || #{vhclRegNo} ||'%'
 			</if>
-			<if test="prcsSttsYn != '' and prcsSttsYn != null">
-	           	and crrtvact_rslt = #{prcsSttsYn}
+			<if test="crrtvactRslt != '' and crrtvactRslt != null">
+	           	and crrtvact_rslt = #{crrtvactRslt}
 			</if>
 			<if test ='startDt != null and startDt != ""'>
 		        AND ocrn_dt::TIMESTAMP <![CDATA[>=]]>  #{startDt}::TIMESTAMP
@@ -192,6 +201,94 @@ INSERT INTO dvs_rac_mt_defectActn (
 	</update>
 	
 	
+	<select id="selectDetailDefectInfo" resultType="resultMap">
+		select 
+			defects_sn,
+			defects_reg_no,
+			vin,
+			vhcl_reg_no,
+			defects_cn,
+			crrtvact_strt_day,
+			userSn,
+			prcs_stts_cd,
+			crrtvact_yn,
+			case crrtvact_yn when 'Y' then '시정 완료' when 'N' then '시정 미완료' else '-' end as crrtvact_yn_nm,
+			reg_dt,
+			cmptn_yn,
+			case cmptn_yn when 'Y' then '조치 완료' when 'N' then '조치 미완료' else '-' end as cmptn_yn_nm,
+			crrtvact_ttl
+		from (	 
+			select 
+				defects_sn,
+				coalesce(actn.defects_reg_no,'-') as defects_reg_no, 
+				defect.vin, 
+				vhcl_reg_no,
+				defects_cn,
+				crrtvact_strt_day,
+				#{userSn} ::numeric as userSn,
+				prcs_stts_cd, 
+				actn.crrtvact_yn, 
+				actn.reg_dt,
+				cmptn_yn ,
+				coalesce(crrtvact_ttl,'-') as crrtvact_ttl
+			from 
+				(select * from dvs_rac_mt_defect) defect 
+			left join 
+				dvs_rac_mt_defect_actn actn 
+			on defect.vin = actn.vin
+			left join 
+			 	dvs_rac_mt_car car 
+			on defect.vin = car.vin
+			where defect.vin = #{vin}
+		) t1	
+	</select>
+	
+	<select id="selectDetailDefectInfoCnt" resultType="int">
+	select 
+		count(*) 
+	from (
+		select	
+			defects_sn, 
+			defects_reg_no,
+			vin,
+			vhcl_reg_no,
+			defects_cn,
+			crrtvact_strt_day,
+			userSn,
+			prcs_stts_cd,
+			crrtvact_yn,
+			case crrtvact_yn when 'Y' then '시정 완료' when 'N' then '시정 미완료' else '-' end as crrtvact_rslt_nm,
+			reg_dt,
+			cmptn_yn,
+			case cmptn_yn when 'Y' then '조치 완료' when 'N' then '조치 미완료' else '-' end as crrtvact_rslt_nm,
+			crrtvact_ttl
+		from (	 
+			select 
+				defects_sn,
+				actn.defects_reg_no, 
+				defect.vin, 
+				vhcl_reg_no,
+				defects_cn,
+				crrtvact_strt_day,
+				#{userSn} ::numeric as userSn,
+				prcs_stts_cd, 
+				actn.crrtvact_yn, 
+				actn.reg_dt,
+				cmptn_yn,
+				coalesce(crrtvact_ttl,'-') as crrtvact_ttl
+			from 
+				(select * from dvs_rac_mt_defect) defect 
+			left join 
+				dvs_rac_mt_defect_actn actn 
+			on defect.vin = actn.vin
+			left join 
+			 	dvs_rac_mt_car car 
+			on defect.vin = car.vin
+			where defect.vin = #{vin}
+		) as t1 	
+	) as t2
+	</select>
+	
 	
 	 
     <select id="selectCtpvNm" resultType="map">
@@ -222,7 +319,7 @@ INSERT INTO dvs_rac_mt_defectActn (
 		order by sgg_cd
     </select>
     
-    	<select id="CarList" resultType="resultMap">
+    <select id="CarList" resultType="resultMap">
 	    select * from 
 			<include refid="carQuery" />
 		<if test="take != '' and take != null">
@@ -230,35 +327,35 @@ INSERT INTO dvs_rac_mt_defectActn (
 		</if>
 	</select>
 	
-		<select id="CarListCnt" resultType="int">
-	SELECT COUNT(*) FROM (
-		SELECT * FROM (
-			SELECT
-				row_number() over() as rn ,
-			car.vhcl_reg_no,
-			car.vin,
-			car.carmdl,
-			car.mdlyr,
-			car.vhcl_nm,
-			car.bzmn_sn,
-			car.ownr_nm,
-			(select brno from dqvs.dvs_rac_mt_agency drma where bzmn_sn = car.bzmn_sn),
-			car.engine_fom,
-			case car.use_yn  when 'Y' then '사용' when 'N' then '미사용' else '미상' END AS use_yn ,
-			to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
-			from dqvs.dvs_rac_mt_car car
-			where 1=1
-			<if test="searchWrd != '' and searchWrd != null">
-				and car.vhcl_reg_no like '%' || #{searchWrd} || '%'
-			</if>
-			<if test="bzmnSn != '' and bzmnSn != null">
-				and car.crno = (select crno from dqvs.dvs_rac_mt_agency where bzmn_sn = #{bzmnSn} )
-			</if>
-		) AS T
-		WHERE 1=1
-		ORDER BY T.rn ASC
-		limit 100
-	) AS C
+	<select id="CarListCnt" resultType="int">
+		SELECT COUNT(*) FROM (
+			SELECT * FROM (
+				SELECT
+					row_number() over() as rn ,
+				car.vhcl_reg_no,
+				car.vin,
+				car.carmdl,
+				car.mdlyr,
+				car.vhcl_nm,
+				car.bzmn_sn,
+				car.ownr_nm,
+				(select brno from dqvs.dvs_rac_mt_agency drma where bzmn_sn = car.bzmn_sn),
+				car.engine_fom,
+				case car.use_yn  when 'Y' then '사용' when 'N' then '미사용' else '미상' END AS use_yn ,
+				to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
+				from dqvs.dvs_rac_mt_car car
+				where 1=1
+				<if test="searchWrd != '' and searchWrd != null">
+					and car.vhcl_reg_no like '%' || #{searchWrd} || '%'
+				</if>
+				<if test="bzmnSn != '' and bzmnSn != null">
+					and car.crno = (select crno from dqvs.dvs_rac_mt_agency where bzmn_sn = #{bzmnSn} )
+				</if>
+			) AS T
+			WHERE 1=1
+			ORDER BY T.rn ASC
+			limit 100
+		) AS C
 	</select>
     
 

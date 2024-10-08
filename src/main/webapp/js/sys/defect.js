@@ -18,24 +18,7 @@
 	var vin;
 	var defects_sn;
 	
-	var optVal = null;  // 차량 검색 조건
-	
-	var detailActnInfo = {
-		/*
-		detailActnSn : '시정조치 일련번호111',
-		detailActnVin : 'KMJHG17GPNC003586',
-		detailActnCarRegNo : '차량번호111',
-		detailActnCn : 'Y', //시정조치 내용,
-		detailActnDt : '2024-08-01',
-		detailActnNm : '등록자111',
-		detailActnTyCd: 'Y', //'시정조치 유형코드',
-		detailActnRsCd: '시정조치 결과코드11',
-		detailActnRegDt: '2024-08-01',
-		detailActnRmrk: ' 비고11',
-		detailActnYn: 'Y' //'조치여부'
-		*/
-	}
-    
+	var optVal = null;  // 차량 검색 조건   
 
 	//그리드 처음 로딩여부
 	var firstLoad = true;
@@ -82,7 +65,7 @@
 							options.startDt = startDt;
 							options.endDt = endDt;
 							options.vhclRegNo = $("#searchCarNum").val();
-							options.prcsSttsYn = $("#prcsSttsYn").val();
+							options.crrtvactRslt = $("#crrtvactRslt").val();
 
 							return JSON.stringify(options);
 						}
@@ -113,7 +96,7 @@
 					{ field: "defects_type_cd", title: "결합유형", width: "100px", template: "#= defects_type_cd != null ? defects_type_cd : '-' #", sortable: true },
 					{ field: "prcs_stts_cd", title: "처리상태코드", width: "100px", template: "#= prcs_stts_cd != null ? prcs_stts_cd : '-' #", sortable: true },
 					{ field: "defects_cn", title: "결합내용", width: "100px", template: "#= defects_cn != null ? defects_cn : '-' #", sortable: true },
-					{ field: "crrtvact_rslt", title: "시정조치 결과", width: "100px", template: "#= crrtvact_rslt != null ? crrtvact_rslt : '-' #", sortable: true },
+					{ field: "crrtvact_rslt_nm", title: "시정조치 결과", width: "100px", template: "#= crrtvact_rslt_nm != null ? crrtvact_rslt_nm : '-' #", sortable: true },
 				],
 				scrollable: true,
 				editable: false,
@@ -122,13 +105,13 @@
 				dataBound: function(e) {
 					kendo.ui.progress($(document.body), false);
 				},
-				//change: $defect.ui.rowClickEvent
+				change: $defect.ui.rowClickEvent
 			})
 
 		},
 		
 		rowClickEvent: function(e) {
-			//kendo.ui.progress($("#defectGrid"), true);
+			kendo.ui.progress($("#defectGrid"), true);
 			var rows = e.sender.select();
 			var dataItem = null;
 			
@@ -163,11 +146,13 @@
 				format: "yyyy-MM-dd",
 				value: new Date(oneMonthAgo),
 			});
+			$("#start-picker01").attr("readonly", true);
 
 			$("#end-picker01").kendoDatePicker({
 				format: "yyyy-MM-dd",
 				value: new Date(),
-			});	
+			});
+			$("#end-picker01").attr("readonly", true);	
 			
 			$("#actnOcrnDt").kendoDatePicker({
 				value: new Date(),
@@ -190,7 +175,7 @@
 				max: new Date()
 			});
 			
-			$("#detailActnDt").kendoDatePicker({
+			$("#detailActnCrrTvActStrtDay").kendoDatePicker({
 				value: new Date(),
 				dateInput: true,
 				format: "yyyy-MM-dd",
@@ -208,9 +193,9 @@
 			
 		
 			// 조치 여부
-			var prcsSttsYn = [
-				{ value: "조치", text: "조치" },
-				{ value: "미조치", text: "미조치" },
+			var crrtvactRslt = [
+				{ value: "Y", text: "조치" },
+				{ value: "N", text: "미조치" },
 			];
 			
 			//사용 여부
@@ -238,11 +223,11 @@
 			];
 			
 			
-			$("#prcsSttsYn").kendoDropDownList({
+			$("#crrtvactRslt").kendoDropDownList({
 				optionLabel: '조치여부(전체)',
 				dataTextField: "text",
 				dataValueField: "value",
-				dataSource: prcsSttsYn
+				dataSource: crrtvactRslt
 			});
 			
 			
@@ -258,7 +243,7 @@
 				optionLabel: '조치여부(전체)',
 				dataTextField: "text",
 				dataValueField: "value",
-				dataSource: prcsSttsYn
+				dataSource: crrtvactRslt
 			});
 			
 			$("#insertActnTyCd").kendoDropDownList({
@@ -282,25 +267,21 @@
 				dataSource: actnCn
 			});
 			
-			$("#detailActnTyCd").kendoDropDownList({
-				optionLabel: '시정조치 유형코드(전체)',
-				dataTextField: "text",
-				dataValueField: "value",
-				dataSource: actnTyCd
-			});
+//			$("#detailActnTyCd").kendoDropDownList({
+//				optionLabel: '시정조치 유형코드(전체)',
+//				dataTextField: "text",
+//				dataValueField: "value",
+//				dataSource: actnTyCd
+//			});
 			
-			$("#detailActnYn").kendoDropDownList({
-				optionLabel: '조치여부(전체)',
-				dataTextField: "text",
-				dataValueField: "value",
-				dataSource: prcsSttsYn
-			});
+//			$("#detailActnYn").kendoDropDownList({
+//				optionLabel: '조치여부(전체)',
+//				dataTextField: "text",
+//				dataValueField: "value",
+//				dataSource: crrtvactRslt
+//			});
 
 					
-		
-			
-			
-			
 			ajax(true, contextPath + '/sys/defect/selectCtpvNm', 'body', '처리중입니다.', param, function(data) {
 				$('#ctpvNm').kendoDropDownList({
 					optionLabel: "시도",
@@ -364,7 +345,7 @@
 			});
 		},
 		
-				carGrid: function() {
+		carGrid: function() {
 			var gridId = "#carGrid";
 			optVal = $("#carSearchWrd").val();
 			$defect.ui.carGridModule(gridId);
@@ -602,25 +583,32 @@
 			$("#actnDefectsCn").val(dataItem.defects_cn);
 			$("#actnDefectsTypeCd").val(dataItem.defects_type_cd);
 			$("#actnOcrnDt").data("kendoDatePicker").value(new Date(dataItem.ocrn_dt));
+			$("#actnOcrnDt").data("kendoDatePicker").readonly(true);
+			
 			
 			ajax(true, contextPath + '/sys/defect/selectDetailDefectInfo', 'body', '확인중입니다.', params, function(data) {
+		
 
-				$("#detailActnSn").val(detailActnInfo.detailActnSn);
-				$("#detailActnVin").val(detailActnInfo.detailActnVin);
-				$("#detailActnCarRegNo").val(detailActnInfo.detailActnCarRegNo);
-				$("#detailActnNm").val(detailActnInfo.detailActnNm);
+				$("#detaildefectsRegNo").val(data.data[0].defectsRegNo);    //시정조치 일련번호
+				$("#detailVin").val(data.data[0].vin);            //차대번호
+				$("#detailCarRegNo").val(data.data[0].vhclRegNo); //차량번호
+				//$("#detailActnNm").val(data.data[0].usersn);        //등록자
 
-				$("#detailActnRsCd").val(detailActnInfo.detailActnRsCd);
-				$("#detailActnRmrk").val(detailActnInfo.detailActnRmrk);
+				$("#detailCmptnYnNm").val(data.data[0].cmptnYnNm);     //시정조치 결과
+				//$("#detailActnRmrk").val(data.); //비고
 
-				$("#detailActnDefectSn").val(dataItem.defects_sn);
+				$("#detailActnDefectSn").val(data.data[0].defectsSn); //결함일련번호
 
 
-				$('#detailActnTyCd').data("kendoDropDownList").value(detailActnInfo.detailActnTyCd);
-				$('#detailActnCn').data("kendoDropDownList").value(detailActnInfo.detailActnCn);
-				$('#detailActnYn').data("kendoDropDownList").value(detailActnInfo.detailActnYn);
-				$("#detailActnDt").data("kendoDatePicker").value(new Date(detailActnInfo.detailActnDt ? detailActnInfo.detailActnDt : ''));
-				$("#detailActnRegDt").data("kendoDatePicker").value(new Date(detailActnInfo.detailActnRegDt));
+				$('#detailActnCrrtvActTtl').val(data.data[0].crrtvactTtl);    //시정조치 유형
+				//$('#detailActnCn').data("kendoDropDownList").value(data.data[0].defectsCn); // 결함내용(시정조치 내용)
+				$('#detailActnCrrtvActYnNm').val(data.data[0].crrtvactYnNm); //조치여부
+				
+				$("#detailActnCrrTvActStrtDay").data("kendoDatePicker").value(new Date(data.data[0].crrtvactStrtDay ? data.data[0].crrtvactStrtDay : '')); //시정조치일
+				$("#detailActnCrrTvActStrtDay").data("kendoDatePicker").readonly(true);
+				
+				$("#detailActnRegDt").data("kendoDatePicker").value(new Date(data.data[0].regDt)); //등록일자
+				$("#detailActnRegDt").data("kendoDatePicker").readonly(true);
 
 
 				$(".viewDefect_popup").addClass("view");
@@ -830,21 +818,6 @@
 			$("#insertRegCarNo").val(carRegNoVal);
 		},
 		
-		excelDown1: function() {
-			var fileNm = 'defect'
-			var params = {};
-
-			params.coNm = $("#searchCoNm").val();
-			params.vhclRegNo = $("#searchCarNum").val();
-			params.sttsYn = $("#prcsSttsYn").val();
-			
-			params.regStDt = $("#start-picker01").val();
-			// 등록 종료일 검색 조건: 날짜 + 23:59:59 
-			params.regEdDt = $("#end-picker01").val() ? $("#end-picker01").val() + ' 23:59:59' : $("#end-picker01").val();
-			params._csrf = $('._csrf').val();
-
-			excelDown("/sys/defect/excelDown", params, fileNm);
-		},
 		
 		excelDown: function() {
 			var excelDownArc = {};
@@ -860,7 +833,7 @@
 
 					excelDownArc.coNm = $("#searchCoNm").val();
 					excelDownArc.vhclRegNo = $("#searchCarNum").val();
-					excelDownArc.sttsYn = $("#prcsSttsYn").val();
+					excelDownArc.crrtvactRslt = $("#crrtvactRslt").val();
 					excelDownArc.startDt = startDt;
 					excelDownArc.endDt = endDt;
 				}
