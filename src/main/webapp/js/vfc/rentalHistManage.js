@@ -86,21 +86,21 @@
 				nowMinutes = 0;
 			}
 
-			var oneWeekAgo = new Date(new Date().setDate(new Date().getDate() - 7));
+//			var oneWeekAgo = new Date(new Date().setDate(new Date().getDate() - 7));
 
-			$("#start-picker01").kendoDatePicker({
-				format: "yyyy-MM-dd",
-				parseFormats: ["yyyy-MM-dd"],
-				value: new Date(oneWeekAgo)
-			});
-			$("#start-picker01").attr("readonly", true);
+//			$("#start-picker01").kendoDatePicker({
+//				format: "yyyy-MM-dd",
+//				parseFormats: ["yyyy-MM-dd"],
+//				value: new Date(oneWeekAgo)
+//			});
+//			$("#start-picker01").attr("readonly", true);
 
-            $("#end-picker01").kendoDatePicker({
-				format: "yyyy-MM-dd",
-				parseFormats: ["yyyy-MM-dd"],
-				value: new Date(nowYear, nowMonth, nowDate)
-			});
-			$("#end-picker01").attr("readonly", true);
+//            $("#end-picker01").kendoDatePicker({
+//				format: "yyyy-MM-dd",
+//				parseFormats: ["yyyy-MM-dd"],
+//				value: new Date(nowYear, nowMonth, nowDate)
+//			});
+//			$("#end-picker01").attr("readonly", true);
 			
 			$("#rent-picker").kendoDatePicker({
 				format: "yyyy-MM-dd",
@@ -394,8 +394,8 @@
 
 			$("#searchBtn").on("click",function(){
 				// 엑셀 다운로드 및 데이터 유지용 파라미터
-				searchParamsArc.startDt = $("#start-picker01").val();
-				searchParamsArc.endDt = $("#end-picker01").val();
+//				searchParamsArc.startDt = $("#start-picker01").val();
+//				searchParamsArc.endDt = $("#end-picker01").val();
 				searchParamsArc.rentDt = $("#rent-picker").val();
 				searchParamsArc.vhclRegNo = $("#searchWrd").val();
 				searchParamsArc.coNm = $("#searchCoNm").val();
@@ -405,18 +405,18 @@
 				$(".excelDownBtn").attr("disabled", true);
 				$("#searchBtn").attr("disabled", true);
 
-				var start = new Date($("#start-picker01").val());
-				var end = new Date($("#end-picker01").val());
-				if(end > new Date(new Date(start).setDate(start.getDate() + 7))){
-					alert("일주일 이상으로 선택할 수 없습니다.");
-					$('#start-picker01').data("kendoDatePicker").value(new Date(new Date(end).setDate(end.getDate() - 7)));
-					return;
-				}
-				
-				if(new Date($('#start-picker01').val()) > new Date($('#end-picker01').val())){
-					alert("시작일은 종료일보다 늦을 수 없습니다.");
-					return;
-				}
+//				var start = new Date($("#start-picker01").val());
+//				var end = new Date($("#end-picker01").val());
+//				if(end > new Date(new Date(start).setDate(start.getDate() + 7))){
+//					alert("일주일 이상으로 선택할 수 없습니다.");
+//					$('#start-picker01').data("kendoDatePicker").value(new Date(new Date(end).setDate(end.getDate() - 7)));
+//					return;
+//				}
+//				
+//				if(new Date($('#start-picker01').val()) > new Date($('#end-picker01').val())){
+//					alert("시작일은 종료일보다 늦을 수 없습니다.");
+//					return;
+//				}
 
 				$("#rentalHistGrid").data("kendoGrid").dataSource.page(1);
 			});
@@ -496,8 +496,8 @@
         
         setData: function() {
 			searchParamsArc = {};
-			searchParamsArc.startDt = $("#start-picker01").val();
-			searchParamsArc.endDt = $("#end-picker01").val();
+//			searchParamsArc.startDt = $("#start-picker01").val();
+//			searchParamsArc.endDt = $("#end-picker01").val();
 			searchParamsArc.rentDt = $("#rent-picker").val();
 			searchParamsArc.vhclRegNo = $("#searchWrd").val();
 			searchParamsArc.coNm = $("#searchCoNm").val();
@@ -989,6 +989,8 @@
 
 				ajax(true, contextPath + '/vfc/rentalHistManage/updateDeleteYn', 'body', '확인인중입니다.', params, function (data) {
 					alert("대여이력이 삭제되었습니다.");
+					$("#detailInfoPopup").removeClass("view");
+					$('#rentalHistGrid').data('kendoGrid').dataSource.read();
 				});
 			}
 		}

@@ -45,22 +45,24 @@
                 <div class="selec_wr">
                     <div class="mo_flex">
                         <div class="year_picker">
+<!--                             <ul class="yearBox"> -->
+<!--                                 <li class="mo_li"> -->
+<!--                                 	<label for="start-picker01">등록일자시작</label> -->
+<!--                                     <input id="start-picker01" title="datepicker" -->
+<!--                                     	aria-label="시작기간조회"> -->
+<!--                                 </li> -->
+<!--                                 <li class="bar">-</li> -->
+<!--                                 <li class="mo_li"> -->
+<!--                                     <label for="end-picker01">등록일자종료</label> -->
+<!--                                     <input id="end-picker01" title="datepicker" -->
+<!--                                         aria-label="종료기간조회"> -->
+<!--                                 </li> -->
+<!--                             </ul> -->
+<!--                             <ul class="yearBox"> -->  <!-- 원본 -->
+<!--                                 <li class="mo_li"> -->  <!-- 원본 -->
                             <ul class="yearBox">
-                                <li class="mo_li">
-                                	<label for="start-picker01">등록일자시작</label>
-                                    <input id="start-picker01" title="datepicker"
-                                    	aria-label="시작기간조회">
-                                </li>
-                                <li class="bar">-</li>
-                                <li class="mo_li">
-                                    <label for="end-picker01">등록일자종료</label>
-                                    <input id="end-picker01" title="datepicker"
-                                        aria-label="종료기간조회">
-                                </li>
-                            </ul>
-                            <ul class="yearBox">
-                                <li class="mo_li">
-                                	<label for="rent-picker">대여일자</label>
+                                <li class="mo_li" style="display: flex; align-items: center;">
+                                	<label for="rent-picker" style="width: 60px">대여일자</label>
                                     <input id="rent-picker" title="datepicker"
                                     	aria-label="대여일자조회">
                                 </li>
