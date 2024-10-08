@@ -319,11 +319,19 @@
 			    dqvs.fn_get_cdnm('vrfc_period', vrfc_period) as vrfc_period,
 			    rsvt_bgng_ymd,
 			    rsvt_end_ymd,
-			    case 
-			        WHEN last_vrfc_rslt = '처리완료' THEN '처리완료'
-			        ELSE dqvs.fn_get_cdnm('verify_cd', last_vrfc_rslt)
-    			END as last_vrfc_rslt,
+			    dqvs.fn_get_cdnm('verify_cd', lcns_asort_cd) as alcnsAsortCd,
+			    lcns_asort_cd,
+<!-- 			    case  -->
+<!-- 			        WHEN last_vrfc_rslt = '처리완료' THEN '처리완료' -->
+<!-- 			        ELSE dqvs.fn_get_cdnm('verify_cd', last_vrfc_rslt) -->
+<!--     			END as last_vrfc_rslt, -->
+    			CASE
+			        when last_vrfc_rslt = '00'or last_vrfc_rslt = '1' or last_vrfc_rslt = '0'
+			        then dqvs.fn_get_cdnm('verify_cd', last_vrfc_rslt)
+			        else dqvs.fn_get_cdnm('vrfc_rslt', last_vrfc_rslt)
+			        end as last_vrfc_rslt,
    			    <!-- dqvs.fn_get_cdnm('verify_cd', last_vrfc_rslt) as last_vrfc_rslt, -->
+   			    last_vrfc_rslt,
 			    last_vrfc_ymd,
 			    next_vrfc_ymd,
 			    rgtr_sn,
