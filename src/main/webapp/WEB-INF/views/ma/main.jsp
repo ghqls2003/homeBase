@@ -69,6 +69,7 @@
                     var admstt = '${admstt}' === 'true';
                     var busine = '${busine}' === 'true';
                     var pcType = '${type}'
+                    var userTypeDetail = '${userTypeDetail}' === 'true';  /* 모바일 웹을 구분 - true(웹), false(앱) */
                 </script>
                 
                 <script>

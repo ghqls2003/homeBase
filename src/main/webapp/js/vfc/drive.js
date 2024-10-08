@@ -18,7 +18,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 	$(document).ready(function() {
 		$drive.ui.pageLoad();		//최초 페이지 로드 시
 		$drive.event.setUIEvent();
-		
 	});
 
 	var pcColumns = [
@@ -107,19 +106,28 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			if(userType=="PC"){
 				$(".similarityChkBox").css("display", "none");
 				$("#similarity_tb_top").css("display", "none");
+			} else if(userType == "MOBI" && userTypeDetail) {
+				$(".similarityChkBox").css("display", "none");
+				$("#similarity_tb_top").css("display", "none");
 			}
 			
 			$drive.ui.kendoGrid();
 			$drive.ui.detailDefectGrid();
-
+			
 			if(userTypeBool){
 				$(".photo_btn").remove();
 				$(".verify-btn-app").remove();
 				$(".verify-btn").css("display", "block");
 			} else {
-				$(".upload_btn").remove();
-				$(".verify-btn").remove();
-				$(".verify-btn-app").css("display", "block");
+				if(userType == "MOBI" && userTypeDetail) {
+					$(".photo_btn").remove();
+					$(".verify-btn-app").remove();
+					$(".verify-btn").css("display", "block");
+				} else {
+					$(".upload_btn").remove();
+					$(".verify-btn").remove();
+					$(".verify-btn-app").css("display", "block");
+				}
 			}
 
 			$("#start-picker02").kendoDatePicker({
@@ -813,11 +821,13 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 				document.getElementById("findFile").value = '';
 				$('.filetype').val('');
 				$(".upload_popup").removeClass("view");
+				$(".upload_popup").css("display", "none");
 			});
 			$(".upload_popup .close").on("click",function(){
 				document.getElementById("findFile").value = '';
 				$('.filetype').val('');
 		    	$(".upload_popup").removeClass("view");
+				$(".upload_popup").css("display", "none");
 			});
 			// 파일 찾기
 			$("#searchFile").on("click", function() {
@@ -1279,13 +1289,13 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 		},
 		
 		verifyLicense : function(similarityData = {}) {
-			if(userType !== "PC"){
+			if(userType == "MOBI" && !userTypeDetail){
 				if(userOperSystemBool){
 					ocrInterface.deleteLicenseImageFile();
 				} else {
 					window.webkit.messageHandlers.deleteLicenseImageFile.postMessage('');
 				}
-			} else {}
+			}
 				
                 var dateData = $drive.event.vfcHistDateDt();
                 var startDtTm = dateData.startDtTm;

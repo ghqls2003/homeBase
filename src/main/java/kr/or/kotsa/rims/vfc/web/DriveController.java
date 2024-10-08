@@ -63,6 +63,7 @@ public class DriveController extends CmmnAbstractServiceImpl {
 
 	private static final String IS_MOBILE = "MOBI";
 	private static final String IS_PC = "PC";
+	private static boolean IS_MW = false;
 
 	private String poket;
 
@@ -80,6 +81,7 @@ public class DriveController extends CmmnAbstractServiceImpl {
 
 
 		String userType = isDevice(request);
+		boolean userTypeDetail = isAccMthd(request);
 		Boolean userTypeBool = true;
 		Boolean userOperSystemBool = true;
 
@@ -99,6 +101,7 @@ public class DriveController extends CmmnAbstractServiceImpl {
 
 
 		mav.addObject("userType", userType);
+		mav.addObject("userTypeDetail", userTypeDetail);
 		mav.addObject("userTypeBool", userTypeBool);
 		mav.addObject("userOperSystemBool", userOperSystemBool);
 		mav.addObject("authrtCd", getAuthrtCd());
@@ -115,6 +118,15 @@ public class DriveController extends CmmnAbstractServiceImpl {
 			return IS_MOBILE;
 		} else {
 			return IS_PC;
+		}
+	}
+	
+	public static boolean isAccMthd(HttpServletRequest req) {
+		String userAgent = req.getHeader("User-Agent").toUpperCase();
+		if(userAgent.indexOf("INRIMSAPP") > -1) {
+			return IS_MW;
+		} else {
+			return true;
 		}
 	}
 
