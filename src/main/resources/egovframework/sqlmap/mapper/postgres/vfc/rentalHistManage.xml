@@ -55,7 +55,7 @@
 				dqvs.dvs_rac_mt_agency agency
 			ON rent.bzmn_sn = agency.bzmn_sn			
 			WHERE 1=1
-			<if test='authrtCd.indexOf("Z") == -1 or authrtCd.indexOf("M") == -1 or authrtCd.indexOf("K") == -1'>
+			<if test='authrtCd.indexOf("Z") == -1 and authrtCd.indexOf("M") == -1 and authrtCd.indexOf("K") == -1'>
 				AND rent.del_yn = 'N'
 			</if>
 			<if test="vhclRegNo != '' and vhclRegNo != null">

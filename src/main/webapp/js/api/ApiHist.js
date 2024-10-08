@@ -224,11 +224,6 @@ var expryYmd;
 
 
 		selectSearchData: function() {
-			var searchOtherCondition = [
-				//				{ value: "", text: "API 선택" },
-				{ value: "1", text: "운전자격확인 단건 조회	" },
-				{ value: "2", text: "운전자격확인 배치 조회" },
-			];
 			ajax(true, contextPath + '/api/apiHist/ckapiList', 'body', '처리중입니다.', {}, function(data) {
 				var ckResults = data.ckResults;
 				var defaultValue = "1";
@@ -258,27 +253,6 @@ var expryYmd;
 					value: defaultValue,
 				});
 			});
-
-
-
-			//						$("#search_stts_cd_Dev01").kendoDropDownList({
-			//							dataTextField: "text",
-			//							dataSource: searchOtherCondition,
-			//							dataValueField: "value"
-			//							, value: "1"
-			//						});
-//			$("#search_stts_cd_api").kendoDropDownList({
-//				dataTextField: "text",
-//				dataSource: searchOtherCondition,
-//				dataValueField: "value"
-//				, value: "1"
-//			});
-//			$("#search_stts_cd_api_Dev").kendoDropDownList({
-//				dataTextField: "text",
-//				dataSource: searchOtherCondition,
-//				dataValueField: "value"
-//				, value: "1"
-//			});
 			var searchOtherCondition2 = [
 				{ value: "", text: "회사명 (선택)" },
 				{ value: "user", text: "요청사" },
@@ -299,14 +273,9 @@ var expryYmd;
 				{ value: "E1", text: "정상" },
 				{ value: "E2", text: "에러" }
 			];
-			var searchOtherCondition4 = [
-				{ value: "", text: "에러유무 (선택)" },
-				{ value: "E1", text: "정상" },
-				{ value: "E2", text: "에러" }
-			];
 			$("#search_stts_cd_error").kendoDropDownList({
 				dataTextField: "text",
-				dataSource: searchOtherCondition4,
+				dataSource: searchOtherCondition3,
 				dataValueField: "value",
 				value: "E1"
 
@@ -315,6 +284,7 @@ var expryYmd;
 				dataTextField: "text",
 				dataSource: searchOtherCondition3,
 				dataValueField: "value"
+				,value: "E1"
 			});
 			$("#search_stts_cd3").kendoDropDownList({
 				dataTextField: "text",
@@ -326,6 +296,7 @@ var expryYmd;
 				dataTextField: "text",
 				dataSource: searchOtherCondition3,
 				dataValueField: "value"
+				,value: "E1"
 			});
 		},
 
@@ -467,7 +438,7 @@ var expryYmd;
 								options.endPicker02 = resultTime4
 
 								options.searchSttsCd = $("#search_stts_cd_api").val();
-								options.detailYN = $("#search_stts_cd_error").val();
+								options.detailYN = $("#search_stts_cd_error_dev").val();
 							}
 							return JSON.stringify(options);
 						}
@@ -568,20 +539,27 @@ var expryYmd;
 			var resultTime3 = startTime2.replace(/-/g, '')
 			var resultTime4 = endtime2.replace(/-/g, '')
 			var options = {}
+			var startTime = $("#start_Picker_Dev01").val();
+			var endtime = $("#end_Picker_Dev01").val();
+			var resultTime = startTime.replace(/-/g, '')
+			var resultTime2 = endtime.replace(/-/g, '')
 			if (Auth == 'K01' || Auth == 'D01' || Auth == 'Z01' || Auth == 'S04') {
-
-				options.endPicker02 = endtime
-				options.startPicker02 = startTime
+				options.endPicker02 = endtime;
+				options.startPicker02 = startTime;
 				options.searchSttsCd = $("#search_stts_cd_Dev01").val();
 				options.searchSttsCd2 = $("#search_stts_cd_Dev02").val();
 				options.detailYN = $("#search_stts_cd_Dev03").val();
 				options.searchReq = $("#search_box_Dev01").val();
 			} else {
-				options.endPicker = endtime2
-				options.startPicker = startTime2
-				options.searchSttsCdAPI = $("#search_stts_cd_api_Dev").val();
-				options.ErrorCd = $("#search_stts_cd_error_dev").val();
-				//								options.searchReq = $("#search_box").val();
+				var startTime2 = $("#start_Picker_Dev02").val();
+				var endtime2 = $("#end_Picker_Dev02").val();
+				var resultTime3 = startTime2.replace(/-/g, '')
+				var resultTime4 = endtime2.replace(/-/g, '')
+				options.startPicker02 = resultTime3
+				options.endPicker02 = resultTime4
+
+				options.searchSttsCd = $("#search_stts_cd_api").val();
+				options.detailYN = $("#search_stts_cd_error_dev").val();
 			}
 			var filename = "apiHistDev"
 			var totalRowCount = $("#grid02").data("kendoGrid").dataSource.total();

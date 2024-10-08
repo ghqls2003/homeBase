@@ -965,7 +965,7 @@ ul.yearBox li.bar{margin: 0 8px;}
 /* 면허정보입력 수정 */
 .sub02_03 .lastBox .cont{padding: 50px 44px 75px;}
 .sub02_03 .license_wr{display: flex;align-items: flex-start;}
-.sub02_03 .license_bg{position: relative; background: url('../images/sub/license_bg.jpg') no-repeat center / cover;width: 631px;height: 405px;margin: 25px 0;border-radius: 20px;padding:68px 27px 41px;}
+.sub02_03 .license_bg{position: relative; background: url('../images/sub/license_bg.jpg') no-repeat center / contain;width: 631px;height: 405px;margin: 25px 0;border-radius: 20px;padding:68px 27px 41px;}
 .sub02_03 .license_bg .license_flex{display: flex;align-items: flex-start;}
 .sub02_03 .license_bg .upload_box{position: relative; background-color: #fff;width: 200px;height: 262px;padding: 10px;margin-right: 11px;margin-top: 26px;}
 .sub02_03 .license_bg .upload_bg{background: url('../images/sub/upload_bg.jpg') no-repeat center / contain;width: 100%;height: 100%;}
@@ -1015,6 +1015,21 @@ ul.yearBox li.bar{margin: 0 8px;}
 .sub02_03 .rule_pop .content{height: 495px; background-color: #fff; padding: 24px 48px;border-left: 1px solid #E8EDF8;border-right: 1px solid #E8EDF8;border-bottom: 1px solid #E8EDF8;border-radius: 0 0 8px 8px;}
 .sub02_03 .rule_pop .content img{margin: auto;width: 80%;}
 
+/* 면허증 업로드 팝업 */
+.sub02_03 .popup.upload_popup  .box{height:680px; width:600px;}
+.sub02_03 .popup.upload_popup  .box .license_box{display: flex; justify-content: center; align-items: center; height:323px;}
+.sub02_03 .popup.upload_popup  .box .upload_box{position: relative; margin-top: 0; width: 170px; height: 220px; top: -19px;}
+.sub02_03 .popup.upload_popup  .box .license_bg{margin:0; width:515px; height:313px;}
+.sub02_03 .popup.upload_popup .license_wr{display: block;}
+.sub02_03 .popup.upload_popup p.qr_txt1{font-size: 1.7rem;line-height: 26px;font-weight: 600;color: #000;text-align: center;}
+.sub02_03 .popup.upload_popup p sapn{font-size:1.7rem; font-weight:bold}
+.sub02_03 .popup.upload_popup .wTable {table-layout: fixed; width: 100%;}
+.sub02_03 .popup.upload_popup .contBox div {width: 100%;}
+.sub02_03 .popup.upload_popup .contBox input {width: 100%;}
+.sub02_03 .popup.upload_popup .contBox .fileDiv {flex: 1;}
+.sub02_03 .popup.upload_popup .contBox .inpSearch {padding-left: 10px;}
+.sub02_03 .popup.upload_popup .contBox #searchFile {float: right;}
+.sub02_03 .popup.upload_popup .contBox .nameBox {padding: 0; height: 100%;}
 
 @media (max-width:1500px) {
     .sub02_03 table.rental_tb01{margin-right: 25px;}
@@ -1029,6 +1044,13 @@ ul.yearBox li.bar{margin: 0 8px;}
 }
 @media (max-width:1300px) {
     .sub02_03 table.tb th{width: 113px;}
+    .sub02_03 .popup.upload_popup  .box{height: 550px; width: 900px;}
+    .sub02_03 .popup.upload_popup  .box .license_bg .upload_box{display: block;width: 100px;height: 120px;margin: 30px 0px;}
+    .sub02_03 .popup.upload_popup  .box .license_box{display: flex; justify-content: center; align-items: center; height:220px;}
+    .sub02_03 .popup.upload_popup  .box .btn_flex{margin-top: 10px;}
+    .sub02_03 .popup.upload_popup  .box table th{font-size: 1.5rem;}
+    .sub02_03 .popup.upload_popup  .box .license_bg{width: 299px;height: 198px;padding:33px 10px 12px}
+    
 }
 
 @media (max-width:950px) {
@@ -1045,12 +1067,24 @@ ul.yearBox li.bar{margin: 0 8px;}
     .sub02_03 .license_bg .type_box li.chkBox ul.chk_flex{width: 266px;}
 
     .sub02_03 .rule_pop .content img{width: 100%;}
+    
+    .sub02_03 .popup.upload_popup  .box table th{font-size: 1.6rem;}
+    .sub02_03 .popup.upload_popup  .box{height:680px; width:600px;}
+	.sub02_03 .popup.upload_popup  .box .license_box{display: flex; justify-content: center; align-items: center; height:323px;}
+	.sub02_03 .popup.upload_popup .box .license_bg .upload_box{position: relative; margin: 50px 0 0 30px; width: 150px; height: 200px; top: -19px;}
+	.sub02_03 .popup.upload_popup  .box .license_bg{margin:0; width:515px; height:313px;}
+	.sub02_03 .popup.upload_popup p.qr_txt1{font-size: 1.7rem;line-height: 26px;font-weight: 600;color: #000;text-align: center;}
+	.sub02_03 .popup.upload_popup p sapn{font-size:1.7rem; font-weight:bold}
+	.sub02_03 .popup.upload_popup .wTable {table-layout: fixed;width: 100%;}
+	    
 
 
 }
 @media (max-width:768px) {
     .sub02_03 .popup.photo_popup .box{width: 540px;}
     .sub02_03 .popup.license_popup .box{width: 540px;}
+    
+    .sub02_03 .popup.upload_popup  .box{width: 540px;}
 
     .sub02_03 .license_bg ul.input_num{margin-left: 46px;;}
     
@@ -1060,11 +1094,13 @@ ul.yearBox li.bar{margin: 0 8px;}
     .sub02_03  button.info-btn01{display: block;}
     .sub02_03  button.info-btn02{display: none;}
     .sub02_03 .rule_pop .box{width: 80%;}
+    
 }
 
 @media (max-width:640px) {
     .sub02_03 .lastBox .cont{padding: 22px 18px}
     .sub02_03 .license_bg{width: 299px;height: 198px;padding:33px 10px 12px}
+    
     .sub02_03 .license_bg .upload_box{width: 82px;height: 99px;margin-right: 7px;padding:5px}
     .sub02_03 .license_bg ul.input_num{margin-left: 33px;}
 
@@ -1102,7 +1138,11 @@ ul.yearBox li.bar{margin: 0 8px;}
 
     .sub02_03 button.info-btn01{top: -34px;}
     .sub02_03 button.info-btn01 img{width: 26px;}
-
+    
+    .sub02_03 .popup.upload_popup .box .license_bg{width: 299px;height: 198px;padding:33px 10px 12px}
+    .sub02_03 .popup.upload_popup .box .license_bg .upload_box{display: block;width: 100px;height: 120px; margin: 30px 0px;}
+    
+    
 }
 
 @media (max-width:550px) {
@@ -1116,6 +1156,10 @@ ul.yearBox li.bar{margin: 0 8px;}
     .sub02_03 .popup.license_popup .contBox .cont{padding:14px 18px;}
     .sub02_03 .popup.license_popup .agreeInfo_wr{flex-direction: column;align-items: flex-start;}
     .sub02_03 .popup.license_popup .agreeInfo_wr label{font-size: 1.4rem;}
+    
+    .sub02_03 .popup.upload_popup  .box{width: 390px;}
+    .sub02_03 .popup.upload_popup  .box .license_bg .upload_box{display: block;width: 100px !important;height: 120px !important;margin: 30px 0px;}
+    .sub02_03 .popup.upload_popup  p.qr_txt1{line-height: 19px;}
 }
 @media (max-width:520px) {
     .sub02_03 .popup.photo_popup .photo_wr{height: 237px;}
@@ -1133,6 +1177,12 @@ ul.yearBox li.bar{margin: 0 8px;}
     .sub02_03 .popup.photo_popup .box{width: 320px;height: 425px;}
     .sub02_03 .popup.photo_popup .photo_wr{height: 216px;}
     .sub02_03 .popup.license_popup .box{width: 320px;height: 469px;}
+    
+    .sub02_03 .popup.upload_popup .box{width: 320px;height: 550px;}
+    .sub02_03 .popup.upload_popup  .box .license_bg .upload_box{display: block;width: 100px !important;height: 120px !important;margin: 25px 0;}
+    .sub02_03 .popup.upload_popup  .box .license_box{display: flex; justify-content: center; align-items: center; height:220px;}
+    .sub02_03 .popup.upload_popup  .box .btn_flex{margin-top: 10px;}
+    .sub02_03 .popup.upload_popup  .box table th{font-size: 1.5rem;}
     
 }
 @media (max-width:420px) {

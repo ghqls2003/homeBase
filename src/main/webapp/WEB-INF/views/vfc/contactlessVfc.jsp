@@ -29,12 +29,12 @@ var authrtCd = '${authrtCd}'
 	            <div class="tit01">
 	                <img src="${contextPath}/images/sub/ico_tit.png" alt="타이틀아이콘" class="ico_tit">
 	                <img src="${contextPath}/images/mobile01.png" alt="모바일" style="display: none;">
-	               <h2><c:out value='비대면 검증'/></h2>
+	               <h2>비대면 운전자격 검증</h2>
 	            </div>
 	            <ul class="tit02">
 	                <li class="home"><img src="${contextPath}/images/sub/ico_home.png" alt="홈아이콘"></li>
 	                <li class="mid"><img src="${contextPath}/images/sub/ico_menuLine.png" alt="라인"></li>
-	                <li class="current">운전자격확인</li>
+	                <li class="current">비대면 운전자격 검증</li>
 	            </ul>
 	        </div>
 

@@ -9,10 +9,10 @@
 <script src="${contextPath}/ext-lib/qrcode.js"></script>
 <script>
 var userType = '${userType}'
+var userTypeDetail = '${userTypeDetail}' === 'true';  /* 모바일 웹을 구분 - true(웹), false(앱) */
 var userTypeBool = '${userTypeBool}' === 'true';
 var userOperSystemBool = '${userOperSystemBool}' === 'true';
 var authrtCd = '${authrtCd}'
-var userType = '${userType}'
 </script>
 <style>
 @media (max-width: 480px) {
@@ -221,7 +221,7 @@ var userType = '${userType}'
 
                         <!-- 면허증 업로드 팝업 -->
                         <div class="popup upload_popup" style="display:none;">
-                            <div class="box" style="height:680px; width:600px;">
+                            <div class="box">
                              	<div class="popup_top">
                                 	<h4>면허증 업로드</h4>
                                 	<div class="close">
@@ -230,15 +230,15 @@ var userType = '${userType}'
                                 	</div>
                               	</div>
                               	<div class="content">
-                              		<p class="qr_txt" style="font-size:17px;">
+                              		<p class="qr_txt1">
                               			*인식률을 높이기 위해 정위치의 면허증 이미지를 업로드해주시기 바랍니다.<br/>
 	                              		<br/>
-                              			<span style="font-size:18px; font-weight:bold;">&lt;예시&gt;</span>
+                              			<span>&lt;예시&gt;</span>
                               		</p>
-                              		<div style="background-color:black; display: flex; justify-content: center; align-items: center; height:323px;">
-	                              		<div class="license_bg" style="margin:0; width:515px; height:313px;" >
+                              		<div class="license_box">
+	                              		<div class="license_bg" >
 					                        <div class="license_flex">
-					                            <div class="upload_box" style="position: relative; margin-top: 0; width: 170px; height: 220px; top: -19px;">
+					                            <div class="upload_box">
 					                                <div class="upload_bg">
 					                                </div>
 					                            </div>
@@ -249,7 +249,7 @@ var userType = '${userType}'
                                 	<div class="license_wr">
                                     	<div class="qr_code" id="qrCodeArea1" style="width:200px; padding:10px; background-color:white;display:none">
                                     	</div>
-                                    	<p class="qr_txt" style="font-size:17px;">
+                                    	<p class="qr_txt1">
 	                                        * JPG, JPEG 파일만 업로드 가능합니다.
 	                                    </p>
                                 	</div>
@@ -265,11 +265,11 @@ var userType = '${userType}'
 <!-- 																<label for="temp_co_nm">파일</label> -->
 																<div class="inpSearch">
 																	<label for="fileTypeCheckInput" style="display: none;"></label>
-																	<input type="text" id="fileTypeCheckInput" class="inp filetype" disabled="disabled" style="width: 300px; border: none;"/>
+																	<input type="text" id="fileTypeCheckInput" class="inp filetype" disabled="disabled" style="border: none;"/>
 																	<label for="findFile" style="display: none;"></label>
 																	<input type="file" id="findFile" name="files" class="upload-hidden" accept="image/*" style="display: none;" />
 																</div>
-																<div style="float:right">
+																<div class="fileDiv">
 																	<img style="cursor: pointer;" id="searchFile" src="${contextPath}/images/ico_search.png" alt="검색 아이콘"/>
 																</div>
 															</div>

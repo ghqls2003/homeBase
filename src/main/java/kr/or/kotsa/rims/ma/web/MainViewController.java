@@ -54,6 +54,7 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 	
 	private static final String IS_MOBILE = "MOBI";
 	private static final String IS_PC = "PC";
+	private static boolean IS_MW = false;
 
 	@Autowired
 	private MainViewService mainViewService;
@@ -94,6 +95,7 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 			}
 		}
 		String userType = isDevice(request);
+		boolean userTypeDetail = isAccMthd(request);
 		
 		
 //      이건 내부 WAS를 못잡더라		
@@ -150,6 +152,7 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 		mav.addObject("busine", busine);
 		mav.addObject("admstt", admstt);
 		mav.addObject("type", userType);
+		mav.addObject("userTypeDetail", userTypeDetail);
 		mav.addObject("guest", guest);
 		mav.addObject("error", request.getAttribute("error"));
 		return mav;
@@ -163,6 +166,17 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 	    } else {
 	        return IS_PC;
 	    }
+	}
+	
+	public static boolean isAccMthd(HttpServletRequest req) {
+		String userAgent = req.getHeader("User-Agent").toUpperCase();
+		if(userAgent.contains("INRIMSAPP")) {
+			return IS_MW;
+		} else if(userAgent.contains("IPHONE") && !userAgent.contains("SAFARI")) {
+			return IS_MW;
+		} else {
+			return true;
+		}
 	}
 	
 	/**
