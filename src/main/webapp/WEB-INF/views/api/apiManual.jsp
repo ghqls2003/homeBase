@@ -22,6 +22,11 @@ https://cdn.jsdelivr.net/npm/swiper@10.2.0/swiper-bundle.min.js
 	padding: 40px 44px 35px;
 }
 
+.swiper-slide img {
+  max-width: 65%; /* 너비를 부모 요소에 맞추기 */
+  height: auto;    /* 비율을 유지하면서 높이 자동 조정 */
+}
+
 .api_page.guide .btn_flex {
 	margin-top: 73px;
 }
@@ -72,6 +77,10 @@ https://cdn.jsdelivr.net/npm/swiper@10.2.0/swiper-bundle.min.js
 }
 
 @media ( max-width :680px) {
+.swiper-slide img {
+  max-width: 100%; 
+  height: auto;   
+}
 	.api_page p.guide_info {
 		line-height: 22px;
 	}
@@ -84,12 +93,20 @@ https://cdn.jsdelivr.net/npm/swiper@10.2.0/swiper-bundle.min.js
 }
 
 @media ( max-width :640px) {
+.swiper-slide img {
+  max-width: 100%; 
+  height: auto;   
+}
 	.api_page .contBox .cont {
 		padding: 22px 18px;
 	}
 }
 
 @media ( max-width :480px) {
+.swiper-slide img {
+  max-width: 100%; 
+  height: auto;   
+}
 	.api_page p.guide_info {
 		font-size: 1.6rem;
 	}

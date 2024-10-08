@@ -539,20 +539,27 @@ var expryYmd;
 			var resultTime3 = startTime2.replace(/-/g, '')
 			var resultTime4 = endtime2.replace(/-/g, '')
 			var options = {}
+			var startTime = $("#start_Picker_Dev01").val();
+			var endtime = $("#end_Picker_Dev01").val();
+			var resultTime = startTime.replace(/-/g, '')
+			var resultTime2 = endtime.replace(/-/g, '')
 			if (Auth == 'K01' || Auth == 'D01' || Auth == 'Z01' || Auth == 'S04') {
-
-				options.endPicker02 = endtime
-				options.startPicker02 = startTime
+				options.endPicker02 = endtime;
+				options.startPicker02 = startTime;
 				options.searchSttsCd = $("#search_stts_cd_Dev01").val();
 				options.searchSttsCd2 = $("#search_stts_cd_Dev02").val();
 				options.detailYN = $("#search_stts_cd_Dev03").val();
 				options.searchReq = $("#search_box_Dev01").val();
 			} else {
-				options.endPicker = endtime2
-				options.startPicker = startTime2
-				options.searchSttsCdAPI = $("#search_stts_cd_api_Dev").val();
+				var startTime2 = $("#start_Picker_Dev02").val();
+				var endtime2 = $("#end_Picker_Dev02").val();
+				var resultTime3 = startTime2.replace(/-/g, '')
+				var resultTime4 = endtime2.replace(/-/g, '')
+				options.startPicker02 = resultTime3
+				options.endPicker02 = resultTime4
+
+				options.searchSttsCd = $("#search_stts_cd_api").val();
 				options.detailYN = $("#search_stts_cd_error_dev").val();
-				//								options.searchReq = $("#search_box").val();
 			}
 			var filename = "apiHistDev"
 			var totalRowCount = $("#grid02").data("kendoGrid").dataSource.total();
