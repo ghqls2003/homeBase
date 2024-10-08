@@ -12,6 +12,8 @@ import com.clipsoft.clipreport.export.hwpx.contents.header.borderfill.charproper
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -34,6 +36,7 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 	@Value(value="${Globals.brno.publicDataApi.url}")
 	private String proxyUrl;
 
+	private static final Logger logger = LoggerFactory.getLogger(CompanyManageServiceImpl.class);
 
 	// 주 사업자등록번호
 	@Override
@@ -327,8 +330,10 @@ public class CompanyManageServiceImpl extends CmmnAbstractServiceImpl implements
 					return result;
 				}
 			} catch (HttpClientErrorException e) {
-				System.err.println("HTTP 오류:" + e.getStatusCode());
-				System.err.println("HTTP 오류 응답:" + e.getResponseBodyAsString());
+//				System.err.println("HTTP 오류:" + e.getStatusCode());
+//				System.err.println("HTTP 오류 응답:" + e.getResponseBodyAsString());
+				logger.error("HTTP 오류: {}",e.getStatusCode());
+				logger.error("HTTP 오류 응답: {}",e.getResponseBodyAsString());
 
 				ObjectMapper objectMapper = new ObjectMapper();
 				Map<String,Object> errorResponse = objectMapper.readValue(e.getResponseBodyAsString(),Map.class);
