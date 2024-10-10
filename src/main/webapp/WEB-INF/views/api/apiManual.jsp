@@ -23,7 +23,7 @@ https://cdn.jsdelivr.net/npm/swiper@10.2.0/swiper-bundle.min.js
 }
 
 .swiper-slide img {
-	max-width: 55%;
+	max-width: 45%;
 	height: auto;
 }
 

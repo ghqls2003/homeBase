@@ -134,66 +134,81 @@
 				$(".NewApi").hide();
 				$(".TestKey").hide();
 			} else {
-				//				var userSn = UserSn
-				var param = {}
-				//				param.userSn = userSn
+				var param = {};
+				// param.userSn = userSn;
 				ajax(true, contextPath + '/api/apiAuthKey/listView', 'body', '조회중입니다', param, function(data) {
-					var apiData = data;
+				    var apiData = data;
 
-					var hasOperSeCdZero = apiData.data.some(function(item) {
-						return item.operSeCd === '0';
-					});
+				    // 초기 상태로 모든 버튼 숨김
+				    $(".apply").hide();
+				    $(".reissuance").hide();
+				    $(".extend").hide();
+				    $(".Applying").hide();
+				    $(".NewApi").hide();
+				    $(".TestKey").hide();
+				    $(".ReApi").hide();
 
-					//
-					$(".apply").hide();
-					$(".reissuance").hide();
-					$(".extend").hide();
-					$(".Applying").hide();
-					$(".NewApi").hide();
-					let found = false;
+				    let found = false;
 
-					for (let i = 0; i < apiData.data.length; i++) {
-						if (apiData.data[i].sttsCd == '1' && apiData.data[i].operSeCd == '1') {
-							$(".Applying").show();
-							found = true;
-							break;
-						}
-					}
+				    // operSeCd가 '1'인 데이터 찾기
+				    var operSeCdOneData = apiData.data.find(function(item) {
+				        return item.operSeCd == '1';
+				    });
 
-					if (!found) {
-						if (apiData.data.length == 0) {
-							$(".apply").show();
-							$(".extend").hide();
-							$(".Applying").hide();
-							$(".reissuance").hide();
-						} else {
-							if (apiData.data[0].sttsCd == '1') {
-								$(".Applying").show();
-								$(".extend").hide();
-								$(".Applying").hide();
-								$(".reissuance").hide();
-								$(".TestKey").hide();
+				    // operSeCd가 '1'인 데이터가 있으면 sttsCd를 기준으로 처리
+				    if (operSeCdOneData) {
+				        found = true;
+				        const sttsCd = operSeCdOneData.sttsCd;
 
-							}
-							if (apiData.data[0].sttsCd == '2') {
-								$(".apply").hide();
-								$(".reissuance").show();
-								$(".TestKey").show();
-								$(".extend").show();
-							}
-							if (apiData.data[0].sttsCd == '3') {
-								$(".ReApi").show();
-								$(".reissuance").hide();
-								$(".extend").hide();
-							}
-							if (apiData.data[0].sttsCd == '4') {
-								$(".ReApi").show();
-								$(".reissuance").hide();
-								$(".extend").hide();
-							}
-						}
-					}
+				        // sttsCd 값에 따라 hide, show 처리
+				        if (sttsCd == '1') {
+				            $(".Applying").show();
+				            $(".extend").hide();
+				            $(".reissuance").hide();
+				            $(".TestKey").hide();
+				        } 
+				        else if (sttsCd == '2') {
+				            $(".apply").hide();
+				            $(".reissuance").show();
+				            $(".TestKey").show();
+				            $(".extend").show();
+				        } 
+				        else if (sttsCd == '3' || sttsCd == '4') {
+				            $(".ReApi").show();
+				            $(".reissuance").hide();
+				            $(".extend").hide();
+				        }
+				    } 
+
+				    // operSeCd == '1'이 없을 때의 기본 처리
+				    if (!found) {
+				        if (apiData.data.length == 0) {
+				            $(".apply").show();
+				        } else {
+				            const sttsCd = apiData.data[0].sttsCd;
+				            // sttsCd 값에 따라 hide, show 처리
+				            if (sttsCd == '1') {
+				                $(".Applying").show();
+				                $(".extend").hide();
+				                $(".reissuance").hide();
+				                $(".TestKey").hide();
+				            } 
+				            else if (sttsCd == '2') {
+				                $(".apply").hide();
+				                $(".reissuance").show();
+				                $(".TestKey").show();
+				                $(".extend").show();
+				            } 
+				            else if (sttsCd == '3' || sttsCd == '4') {
+				                $(".ReApi").show();
+				                $(".reissuance").hide();
+				                $(".extend").hide();
+				            }
+				        }
+				    }
 				});
+
+
 
 			}
 

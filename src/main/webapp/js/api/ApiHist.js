@@ -436,8 +436,8 @@ var expryYmd;
 								var resultTime4 = endtime2.replace(/-/g, '')
 								options.startPicker02 = resultTime3
 								options.endPicker02 = resultTime4
-
-								options.searchSttsCd = $("#search_stts_cd_api").val();
+								
+								options.searchSttsCd = $("#search_stts_cd_api_Dev").val();
 								options.detailYN = $("#search_stts_cd_error_dev").val();
 							}
 							return JSON.stringify(options);
