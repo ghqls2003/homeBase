@@ -139,7 +139,7 @@
 			var param = {};
 			
 			//기간 검색
-			var oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 13));
+			var oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1));
 			
 			$("#start-picker01").kendoDatePicker({
 				dateInput: true,
@@ -458,22 +458,26 @@
 			$(".searchBtn").on("click", function() {
 				var start = new Date($("#start-picker01").val());
 				var end = new Date($("#end-picker01").val());
-
+				if (end > new Date(new Date(start).setMonth(start.getMonth() + 1))) {
+					alert("한 달 이상으로 선택할 수 없습니다.");
+					$('#start-picker01').data("kendoDatePicker").value(new Date(new Date(end).setMonth(end.getMonth() - 1)));
+					return;
+				}
 
 				if (new Date($('#start-picker01').val()) > new Date($('#end-picker01').val())) {
 					alert("시작일은 종료일보다 늦을 수 없습니다.");
 					$('#end-picker01').data("kendoDatePicker").value(new Date($('#start-picker01').val()));
 					return;
 				}
-				
+
 				$defect.event.sendListSearch();
 			});
-			
+
 			//차량등록번호 중복확인 버튼
 			$("#valiDuplicate").on("click", function() {
-				$defect.event.executeValidDuplicate();	
+				$defect.event.executeValidDuplicate();
 			});
-			
+
 			//  수정 버튼
 			$(".updateBtn").on("click", function(){
 				$defect.event.executeUpdate();
