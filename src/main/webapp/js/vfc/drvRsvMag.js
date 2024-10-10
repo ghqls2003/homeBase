@@ -11,6 +11,7 @@
 	});
 	var rsvStrData = null;
 	var detailstartDate = null;
+	var detailEndDate = null;
 	var ClickSearchRsv = 0;
 	var optVal = null;  // 차량 검색 조건
 	var carListColmuns = [
@@ -279,6 +280,7 @@
 				var lastDate = new Date(data[0].lastVrfcYmd);
 
 				$('#rsvedRentNo').val(data[0].rentNo);
+				$('#rsvedModelYear').val(data[0].alcnsasortcd);
 				$('#rsvedPeriod').val(data[0].vrfcPeriod);
 				$('#RsvedlastCfDt').val(formatDate(data[0].lastVrfcYmd));
 				$('#RsvedlastRst').val(data[0].lastVrfcRslt);
@@ -288,42 +290,51 @@
 				$('#rsvedEndTime').val(formatDate(data[0].rsvtEndYmd));
 				$('#RsvedNtCfDt').val(formatDate(data[0].nextVrfcYmd));
 
+				var endDate = formatDate(data[0].rsvtEndYmd);
 				var startDate = formatDate(data[0].rsvtBgngYmd);
 				detailstartDate = startDate;
+				detailEndDate = endDate;
 				$drvRsvMag.ui.detailCondition();
 			});
 		},
 		detailCondition: function() {
+			//예약기간 설정 종료일 7일전으로 설정한 코드
 			if (ClickSearchRsv === 1) {
-				$("#start-picker03").kendoDatePicker({
-					value: detailstartDate,
-					format: "yyyy-MM-dd HH:mm",
-					parseFormats: ["yyyy-MM-dd HH:mm"],
-					min: detailstartDate,
-					change: function() {
-						var selectedDate = this.value();
-						if (selectedDate < detailstartDate) {
-							this.value(detailstartDate);
-						}
-					}
-				});
+			    $("#start-picker03").kendoDatePicker({
+			        value: detailstartDate,
+			        format: "yyyy-MM-dd HH:mm",
+			        parseFormats: ["yyyy-MM-dd HH:mm"],
+			        min: detailstartDate,
+			        max: new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7)), // endDate의 7일 전까지 설정
+			        change: function() {
+			            var selectedDate = this.value();
+			            if (selectedDate < detailstartDate) {
+			                this.value(detailstartDate);
+			            } else if (selectedDate > new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7))) {
+			                this.value(new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7)));
+			            }
+			        }
+			    });
 			} else {
-				if ($("#start-picker03").data("kendoDateTimePicker")) {
-					$("#start-picker03").data("kendoDateTimePicker").destroy(); // 기존 인스턴스 파괴
-				}
+			    if ($("#start-picker03").data("kendoDateTimePicker")) {
+			        $("#start-picker03").data("kendoDateTimePicker").destroy(); // 기존 인스턴스 파괴
+			    }
 
-				$("#start-picker03").kendoDatePicker({
-					value: detailstartDate,
-					format: "yyyy-MM-dd HH:mm",
-					parseFormats: ["yyyy-MM-dd HH:mm"],
-					min: detailstartDate,
-					change: function() {
-						var selectedDate = this.value();
-						if (selectedDate < detailstartDate) {
-							this.value(detailstartDate);
-						}
-					}
-				});
+			    $("#start-picker03").kendoDatePicker({
+			        value: detailstartDate,
+			        format: "yyyy-MM-dd HH:mm",
+			        parseFormats: ["yyyy-MM-dd HH:mm"],
+			        min: detailstartDate,
+			        max: new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7)), // endDate의 7일 전까지 설정
+			        change: function() {
+			            var selectedDate = this.value();
+			            if (selectedDate < detailstartDate) {
+			                this.value(detailstartDate);
+			            } else if (selectedDate > new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7))) {
+			                this.value(new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7)));
+			            }
+			        }
+			    });
 			}
 
 
@@ -396,6 +407,7 @@
 					if (gridId == "#carGrid") {
 						$("#carVhclRegNoVal").val(data.vhclRegNo);
 						$("#carVhclRegNoVal").val(data.vhclRegNo);
+						$("#regVhclRegNo").val(data.vhclRegNo);
 						$("#regRentNo").val(data.rentNo);
 						$("#rsvEndTime").val(data.rentEndDt);
 						$("#start-picker02").val(data.rentBgngDt);
@@ -478,7 +490,7 @@
 			options.lncdDrop = $('#lncdDrop').val();
 			options.searchWrd = $('#searchWrd').val();
 
-			var filename = "rsvGrid";
+			var filename = "자격확인반복예약_일시";
 
 			//			excelDown("/os/OPSuseSttus/historylistexcelDown", options, filename, totalRowCount);
 			excelDown("/vfc/drvRsvMag/listexcel", options, filename);
@@ -597,7 +609,7 @@
 			var lcnsAsortCd = $("#ReglcnsAsortCd").val();
 			var lcnsFlnm = $("#lcnsFlnm").val();
 
-			$("#regVhclRegNo").val(carRegNoVal);
+			$("#regRentNo").val(carRegNoVal);
 			$("#rsvEndTime").val(carRegNoVal2);
 			$("#ReglcnsAsortCd").val(lcnsAsortCd);
 			$("#lcnsFlnm").val(lcnsFlnm);

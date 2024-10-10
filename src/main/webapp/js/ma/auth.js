@@ -25,9 +25,10 @@
 				$('#txtForuser').hide();
 				$('#txtForPublic').hide();
 				$('#txtForLAE').hide();
+				$('#txtForuser3').hide();
 				$('#txtForuser2').hide();
-//				$('#txtForPublic2').hide();
-//				$('#txtForLAE2').hide();
+				$('#txtForPublic2').hide();
+				$('#txtForLAE2').hide();
 			ajax(false, contextPath+"/ma/auth/selectCtpvNm", "", "", {}, function(data) {
 				$(".ctpvNm").kendoDropDownList({
 					dataSource: data,
@@ -494,6 +495,7 @@
 				$(".authority_02").css('display', 'block');
 				$('#txtForuser').show();
 				$('#txtForuser2').show();
+				$('#txtForuser3').show();
 				
 				authrtCd = "S01"
 				$("#tab-1").addClass("current");
@@ -544,7 +546,8 @@
 				$(".authority_01").css('display', 'none');
 				$(".authority_02").css('display', 'block');
 				$('#txtForPublic').show();
-				$('#txtForuser2').show();
+				$('#txtForPublic2').show();
+				$('#txtForuser3').show();
 				$("#tab-1").removeClass("current");
 				$("#tab-2").addClass("current");
 				$("#tab-3").removeClass("current");
@@ -576,7 +579,8 @@
 				$(".authority_01").css('display', 'none');
 				$(".authority_02").css('display', 'block');
 				$('#txtForLAE').show();
-				$('#txtForuser2').show();
+				$('#txtForLAE2').show();
+				$('#txtForuser3').show();
 				authrtCd = "G01"
 				$("#tab-1").removeClass("current");
 				$("#tab-2").removeClass("current");
