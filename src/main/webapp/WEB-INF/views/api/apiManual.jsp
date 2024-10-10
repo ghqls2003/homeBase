@@ -23,7 +23,7 @@ https://cdn.jsdelivr.net/npm/swiper@10.2.0/swiper-bundle.min.js
 }
 
 .swiper-slide img {
-	max-width: 65%;
+	max-width: 45%;
 	height: auto;
 }
 
@@ -76,7 +76,38 @@ https://cdn.jsdelivr.net/npm/swiper@10.2.0/swiper-bundle.min.js
 	margin-top: 11px;
 }
 
+@media ( max-width :2000px) {
+	.swiper-slide img {
+		max-width: 50%;
+		height: auto;
+	}
+	.api_page .contBox .cont {
+		padding: 32px 28px 25px;
+	}
+}
+@media ( max-width :1800px) {
+	.swiper-slide img {
+		max-width: 35%;
+		height: auto;
+	}
+	.api_page .contBox .cont {
+		padding: 32px 28px 25px;
+	}
+}
+@media ( max-width :1800px) {
+	.swiper-slide img {
+		max-width: 35%;
+		height: auto;
+	}
+	.api_page .contBox .cont {
+		padding: 32px 28px 25px;
+	}
+}
 @media ( max-width :1500px) {
+	.swiper-slide img {
+		max-width: 100%;
+		height: auto;
+	}
 	.api_page .contBox .cont {
 		padding: 32px 28px 25px;
 	}

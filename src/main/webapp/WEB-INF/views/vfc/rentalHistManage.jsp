@@ -61,8 +61,8 @@
 <!--                             <ul class="yearBox"> -->  <!-- 원본 -->
 <!--                                 <li class="mo_li"> -->  <!-- 원본 -->
                             <ul class="yearBox">
-                                <li class="mo_li" style="display: flex; align-items: center;">
-                                	<label for="rent-picker" style="width: 60px">대여일자</label>
+                                <li class="mo_li" style="display: flex; align-items: center;">  <!-- 추가된 style -->
+                                	<label for="rent-picker" style="width: 60px">대여일자</label>  <!-- 추가된 style -->
                                     <input id="rent-picker" title="datepicker"
                                     	aria-label="대여일자조회">
                                 </li>

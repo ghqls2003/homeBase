@@ -1301,14 +1301,12 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 				vrfcMthd: vrfcMthd
 			};
 
-//			console.log("param",param);
 
-			//⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐ 🚗 todo : 반드시 추후 주석 풀것!!!!!!!!!!!!!!!!!!!!!!
 			if(param.carNum == '')
 				alert('차량번호를 입력해 주십시오.')
 			else if($('#num01').val()!='' && $('#num02').val()!='' && $('#num03').val()!='' && $('#num04').val()!='' &&
 				$('#user_name02').val()!='' && $("input[type=radio][name=category01]:checked").val() !=undefined){
-            //======================================================== end =========================
+
 				ajax(true, contextPath+"/vfc/drive/verifyLicense", 'body', '처리중입니다.', param, function(data) {
 					if(data != null && data != ""){
 
@@ -1342,9 +1340,9 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 
 							param.cd = data.body.f_rtn_code;
 							param.sn = data.vrfc_hstry_sn;
-//							param.dln ='251301689481'; //✂️todo
-							param.dln = $('#num01').val() + $('#num02').val() + $('#num03').val() + $('#num04').val(); //✂️todo
-							ajax(true, contextPath+"/vfc/drive/selectVerifyCd", 'body', '처리중입니다.', param, function(result) {
+							param.dln = $('#num01').val() + $('#num02').val() + $('#num03').val() + $('#num04').val();
+							$drive.cmmn.cusAjax(true, contextPath+"/vfc/drive/selectVerifyCd", '#loadingMessage', '처리 중 입니다. 잠시만 기다려 주세요. ',param, function(result) {
+//							ajax(true, contextPath+"/vfc/drive/selectVerifyCd", 'body', '처리중입니다.', param, function(result) {
 								if (result != null && result != "") {
 									rentno = result.rentno;
 									if(data.body.f_rtn_code == '00'){
@@ -1362,7 +1360,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 											$('#result').prepend(html);
 										}
 
-																				// ✂️todo : 대여이력건수 result.rentCnt
+										// ✂️todo : 대여이력건수 result.rentCnt
                                         //										if(result.rentCnt == 0){
                                         //											var html = `<br><p class="current_info" >
                                         //						                        최근 7일 대여이력이 없습니다.
@@ -1395,20 +1393,20 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 										if(Object.keys(similarityData).length != 0){
 											var similarityConfidence = parseFloat(similarityData.similarityConfidence);
 											var livenessConfidence = parseFloat(similarityData.livenessConfidence);
-											
+
 											if (Number.isInteger(similarityConfidence)) {
 											    similarityConfidence = parseFloat(similarityConfidence) * 100;
 											} else {
-											    similarityConfidence = (parseFloat(similarityConfidence) * 100).toFixed(2); 
+											    similarityConfidence = (parseFloat(similarityConfidence) * 100).toFixed(2);
 											}
-											
+
 											if (Number.isInteger(livenessConfidence)) {
 											    livenessConfidence = parseFloat(livenessConfidence) * 100;
 											} else {
-											    livenessConfidence = (parseFloat(livenessConfidence) * 100).toFixed(2); 
+											    livenessConfidence = (parseFloat(livenessConfidence) * 100).toFixed(2);
 											}
 
-											
+
 											var html = `<br><p class="current_info">
 												유사도 검증 결과 유사도는 ` + similarityConfidence + `%이며,<br>
 												생체 감지는 ` + livenessConfidence + `%입니다.
@@ -1438,11 +1436,9 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 						alert("운전자격 확인 중 오류가 발생하였습니다.");
 					}
 	            });
-//// 🚗 todo 추후주석 풀기
 			} else{
 				alert("필수입력 정보를 입력해 주십시오.");
 			}
-// =====================end =================
 		},
 
 		lessThan1Year: function(issued, license_parts) {
@@ -1521,7 +1517,66 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			$('input[type=radio]').attr("disabled", false);
 			vrfcMthd = 1;
 		},
-		
+
 	};
+
+    $drive.cmmn = {
+            // 로딩 표시하는 ajax
+            cusAjax :function(isLodingBool, url, isLodingElement, beforeSendText, ajaxParam, fn_success, fn_complete){
+                var temHtml  = `<div id="loadingMessage" class="center-message" style="display:none;"></div>`;
+                $('body').append(temHtml);
+                var loader = isLoading($(isLodingElement)[0], {
+                    type: "overlay",
+                    class : "fa fa-refresh fa-spin",
+                    text: beforeSendText
+                });
+
+                var header = $("meta[name='_csrf_header']").attr("content");
+                var token  = $("meta[name='_csrf']").attr("content");
+
+                $.ajax({
+                    url : url,
+                    type : 'POST',
+    //                async: choiceSync,
+                    contentType : "application/json",
+                    data : JSON.stringify(ajaxParam),
+                    dataType : "json",
+                    beforeSend : function(xhr) {
+                        $("#loadingMessage").css("display","block");
+                        xhr.setRequestHeader(header, token);
+                        if (isLodingBool) {
+                            loader.loading();
+                        }
+                    },
+                    success : function(data) {
+                        if(fn_success != null || fn_complete != undefined){
+                            fn_success(data);
+                        }
+                    },
+                    error : function(xhr, textStatus) {
+                        if (xhr.status == 401) {
+                            alert("권한이 없습니다. 사용자 인증이 필요합니다.");
+                        } else if (xhr.status == 403) {
+                            alert("세션이 만료되었습니다. 다시 로그인하세요.\n" + textStatus);
+                            location.href = contextPath;
+                        } else {
+
+                            alert("처리 중 에러가 발생하였습니다.");
+                        }
+                    },
+                    complete : function(xhr, status) {
+                               if(isLodingBool){
+                                   $("#loadingMessage").css("display", "none");
+                                   loader.remove();
+                               }
+
+                        if(fn_complete != null || fn_complete != undefined){
+                            fn_complete(xhr);
+                        }
+                    }
+                });
+            }
+
+    };
 
 }(window, document, jQuery));
