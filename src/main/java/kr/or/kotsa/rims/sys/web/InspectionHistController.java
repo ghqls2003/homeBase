@@ -38,7 +38,7 @@ public class InspectionHistController extends CmmnAbstractServiceImpl{
 	public ModelAndView viewInspectionHist(@RequestParam Map<String, Object> paramsMap, ModelAndView mav,
 			HttpServletRequest request, HttpServletResponse response, HttpSession session) throws RimsException {
 		
- 		String [] validAuth = {"Z02", "K01", "M01", "D01", "G01"};
+ 		String [] validAuth = {"Z01", "K01", "M01", "G01"};
 		if(Arrays.asList(validAuth).contains(getAuthrtCd())) {
 		} else {
 			mav.setViewName("redirect:/");

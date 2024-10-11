@@ -632,7 +632,8 @@
 			, #{mdfr_sn}::numeric
 			, now()::timestamp
 			, #{mdfcn_ip}
-		)
+		)ON CONFLICT (vin, mdfr_sn) 
+		DO NOTHING
 	</insert>
 	
 	<delete id="deleteBookmark" parameterType="paraMap">
