@@ -9,7 +9,7 @@
     <div class="inner">
         <div class="content">
             <ul class="f_menu">
-                <li><a class="privacy" href="" style="font-weight:bold;">개인정보 처리방침</a></li>
+                <li><a id="privacy" href="/ma/privacy" style="color: blue;font-weight:bold;">개인정보 처리방침</a></li>
                 <li>|</li>
                 <li><a href="">이용 약관</a></li>
             </ul>
