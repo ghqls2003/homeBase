@@ -8,6 +8,7 @@
 <script src="${contextPath}/js/vfc/contactlessVfc.js"></script>
 <script>
 var userType = '${userType}'
+var userTypeDetail = '${userTypeDetail}' === 'true';  /* 모바일 웹을 구분 - true(웹), false(앱) */
 var userTypeBool = '${userTypeBool}' === 'true';
 var userOperSystemBool = '${userOperSystemBool}' === 'true';
 var authrtCd = '${authrtCd}'

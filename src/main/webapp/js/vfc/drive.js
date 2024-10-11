@@ -186,6 +186,11 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			    // 마지막으로 처리된 값을 저장
 			    lastValue = target.value;
 			});*/
+			
+			
+			if(userType=="MOBI" && userTypeDetail==true){
+				$("#versionNotice").css("display", "block");
+			}
 
 		},
 

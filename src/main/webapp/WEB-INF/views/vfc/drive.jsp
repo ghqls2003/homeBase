@@ -308,6 +308,7 @@ var authrtCd = '${authrtCd}'
                         </div>
                     </div>
 
+                    <p class="tb_top " style="color:#6c24c9;" id="versionNotice">※ 면허증 촬영 및 유사도 검증 기능 사용을 위해 최신 버전의 어플리케이션으로 업데이트 해주십시오.</p>
                     <p class="tb_top">※ 외국인 : 성명란에 공백 없이 영어 대문자로 입력해주시기 바랍니다.</p>
                     <p class="tb_top" style="color:#FF7F50;">※ 면허증 촬영 시, 본인의 면허증 정보가 정확히 일치하는지 확인해 주시기 바랍니다.</p>
                     <p class="tb_top" id="similarity_tb_top" style="color:#509cff;">※ 면허증 촬영 시에만 유사도 검증이 가능합니다.</p>

@@ -60,6 +60,13 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 						$("#crno").val(data.crno);
 				});
 			}
+			
+			if(userType=="MOBI" && userTypeDetail==true){
+				alert("면허증 촬영 및 유사도 검증 기능 사용을 위해 최신 버전의 어플리케이션으로 업데이트 해주십시오.");
+				$("#rentInfoNo").attr('readonly', true);
+				$("#rentInfoNo").css("background-color", "#f5f5f5"); 
+			}
+			
 		},
 		
 		search: function(element){

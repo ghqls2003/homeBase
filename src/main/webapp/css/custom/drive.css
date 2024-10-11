@@ -194,3 +194,7 @@ table.tb td .k-picker-solid {
     justify-content: center;
     font-weight: bold;
 }
+
+#versionNotice{
+	display:none;
+}
