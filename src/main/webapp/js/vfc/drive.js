@@ -1292,6 +1292,8 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                 var dateData = $drive.event.vfcHistDateDt();
                 var startDtTm = dateData.startDtTm;
                 var endDtTm = dateData.endDtTm;
+
+				
 			var param = {
 				num: $('#num01').val() + $('#num02').val() + $('#num03').val() + $('#num04').val(),
 				name: $('#name').val(),
@@ -1312,7 +1314,9 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 				useYn: $("#useYn").val(),
 				signguCd: $("#signguCd").val(),
 				regDt: $("#regDt").val(),
-				vrfcMthd: vrfcMthd
+				vrfcMthd: vrfcMthd,
+				similarityConfidence: similarityData.similarityConfidence,
+				livenessConfidence: similarityData.livenessConfidence
 			};
 
 

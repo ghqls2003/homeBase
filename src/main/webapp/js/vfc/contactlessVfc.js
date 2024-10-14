@@ -311,7 +311,9 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 				useYn: $("#useYn").val(),
 				signguCd: $("#signguCd").val(),
 				regDt: $("#regDt").val(),
-				vrfcMthd: vrfcMthd
+				vrfcMthd: vrfcMthd,
+				similarityConfidence: similarityData.similarityConfidence,
+				livenessConfidence: similarityData.livenessConfidence
 			};
 
 			//⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐ 🚗 todo : 반드시 추후 주석 풀것!!!!!!!!!!!!!!!!!!!!!!
