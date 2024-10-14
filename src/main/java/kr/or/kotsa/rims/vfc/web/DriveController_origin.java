@@ -45,7 +45,7 @@
 //@Controller
 //@PropertySource("classpath:/egovframework/egovProps/globals.properties")
 //@RequestMapping("vfc")
-//public class DriveController_origin extends CmmnAbstractServiceImpl {
+//public class DriveController extends CmmnAbstractServiceImpl {
 //	@Autowired
 //	private DriveService driveService;
 //
@@ -63,7 +63,6 @@
 //
 //	private static final String IS_MOBILE = "MOBI";
 //	private static final String IS_PC = "PC";
-//	private static boolean IS_MW = false;
 //
 //	private String poket;
 //
@@ -81,10 +80,9 @@
 //
 //
 //		String userType = isDevice(request);
-//		boolean userTypeDetail = isAccMthd(request);
 //		Boolean userTypeBool = true;
 //		Boolean userOperSystemBool = true;
-//		
+//
 //		if(userType == "MOBI") {
 //			userTypeBool = false;
 //			String userOperSystem = getOperatingSystem(request);
@@ -101,7 +99,6 @@
 //
 //
 //		mav.addObject("userType", userType);
-//		mav.addObject("userTypeDetail", userTypeDetail);
 //		mav.addObject("userTypeBool", userTypeBool);
 //		mav.addObject("userOperSystemBool", userOperSystemBool);
 //		mav.addObject("authrtCd", getAuthrtCd());
@@ -118,16 +115,6 @@
 //			return IS_MOBILE;
 //		} else {
 //			return IS_PC;
-//		}
-//	}
-//	
-//	public static boolean isAccMthd(HttpServletRequest req) {
-//		String userAgent = req.getHeader("User-Agent").toUpperCase();
-//		System.out.println("뭐야"+userAgent);
-//		if(userAgent.contains("INRIMSAPP")) {
-//			return IS_MW;
-//		} else {
-//			return true;
 //		}
 //	}
 //

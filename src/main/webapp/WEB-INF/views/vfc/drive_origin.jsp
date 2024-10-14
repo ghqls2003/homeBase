@@ -9,7 +9,6 @@
 <script src="${contextPath}/ext-lib/qrcode.js"></script>
 <script>
 var userType = '${userType}'
-var userTypeDetail = '${userTypeDetail}' === 'true';  /* 모바일 웹을 구분 - true(웹), false(앱) */
 var userTypeBool = '${userTypeBool}' === 'true';
 var userOperSystemBool = '${userOperSystemBool}' === 'true';
 var authrtCd = '${authrtCd}'
@@ -20,26 +19,6 @@ var authrtCd = '${authrtCd}'
         width: 380px;
     }
 }
-
-.center-message {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.7);
-    color: #fff;
-    padding: 10px 10px;
-    border-radius: 5px;
-    z-index: 9999;
-    font-size: 16px;
-}
-
-@media (max-width: 480px) {
-    .center-message {
-        font-size: 11px;
-    }
-}
-
 </style>
 
 
@@ -232,7 +211,7 @@ var authrtCd = '${authrtCd}'
 
 	                                <div class="btn_flex">
     	                            	<button class="gray_btn qrCfm" disabled>완료</button>
-                                  		<button class="gray_btn cancel_btn" id="qrCancle">취소</button>
+                                  		<button class="gray_btn cancel_btn">취소</button>
                                 	</div>
                               	</div>
                             </div>
@@ -240,7 +219,7 @@ var authrtCd = '${authrtCd}'
 
                         <!-- 면허증 업로드 팝업 -->
                         <div class="popup upload_popup" style="display:none;">
-                            <div class="box">
+                            <div class="box" style="height:680px; width:600px;">
                              	<div class="popup_top">
                                 	<h4>면허증 업로드</h4>
                                 	<div class="close">
@@ -249,15 +228,15 @@ var authrtCd = '${authrtCd}'
                                 	</div>
                               	</div>
                               	<div class="content">
-                              		<p class="qr_txt1">
+                              		<p class="qr_txt" style="font-size:17px;">
                               			*인식률을 높이기 위해 정위치의 면허증 이미지를 업로드해주시기 바랍니다.<br/>
 	                              		<br/>
-                              			<span>&lt;예시&gt;</span>
+                              			<span style="font-size:18px; font-weight:bold;">&lt;예시&gt;</span>
                               		</p>
-                              		<div class="license_box">
-	                              		<div class="license_bg" >
+                              		<div style="background-color:black; display: flex; justify-content: center; align-items: center; height:323px;">
+	                              		<div class="license_bg" style="margin:0; width:515px; height:313px;" >
 					                        <div class="license_flex">
-					                            <div class="upload_box">
+					                            <div class="upload_box" style="position: relative; margin-top: 0; width: 170px; height: 220px; top: -19px;">
 					                                <div class="upload_bg">
 					                                </div>
 					                            </div>
@@ -268,7 +247,7 @@ var authrtCd = '${authrtCd}'
                                 	<div class="license_wr">
                                     	<div class="qr_code" id="qrCodeArea1" style="width:200px; padding:10px; background-color:white;display:none">
                                     	</div>
-                                    	<p class="qr_txt1">
+                                    	<p class="qr_txt" style="font-size:17px;">
 	                                        * JPG, JPEG 파일만 업로드 가능합니다.
 	                                    </p>
                                 	</div>
@@ -284,11 +263,11 @@ var authrtCd = '${authrtCd}'
 <!-- 																<label for="temp_co_nm">파일</label> -->
 																<div class="inpSearch">
 																	<label for="fileTypeCheckInput" style="display: none;"></label>
-																	<input type="text" id="fileTypeCheckInput" class="inp filetype" disabled="disabled" style="border: none;"/>
+																	<input type="text" id="fileTypeCheckInput" class="inp filetype" disabled="disabled" style="width: 300px; border: none;"/>
 																	<label for="findFile" style="display: none;"></label>
 																	<input type="file" id="findFile" name="files" class="upload-hidden" accept="image/*" style="display: none;" />
 																</div>
-																<div class="fileDiv">
+																<div style="float:right">
 																	<img style="cursor: pointer;" id="searchFile" src="${contextPath}/images/ico_search.png" alt="검색 아이콘"/>
 																</div>
 															</div>
@@ -308,10 +287,8 @@ var authrtCd = '${authrtCd}'
                         </div>
                     </div>
 
-                    <p class="tb_top " style="color:#6c24c9;" id="versionNotice">※ 면허증 촬영 및 유사도 검증 기능 사용을 위해 최신 버전의 어플리케이션으로 업데이트 해주십시오.</p>
                     <p class="tb_top">※ 외국인 : 성명란에 공백 없이 영어 대문자로 입력해주시기 바랍니다.</p>
                     <p class="tb_top" style="color:#FF7F50;">※ 면허증 촬영 시, 본인의 면허증 정보가 정확히 일치하는지 확인해 주시기 바랍니다.</p>
-                    <p class="tb_top" id="similarity_tb_top" style="color:#509cff;">※ 면허증 촬영 시에만 유사도 검증이 가능합니다.</p>
                     <div class="license_wr">
 	                    <div class="license_bg">
 	                    	<button class="info-btn info-btn01">
@@ -446,10 +423,6 @@ var authrtCd = '${authrtCd}'
 	                         </div>
 						</div>
 					</div>
-					<div class="similarityChkBox">
-						<input type="checkbox" id="similarityChk" >
-						<label for="similarityChk">유사도 검증</label>
-					</div>
                 </div>
 	        </div>
 	        <p class="info">※ 본 웹사이트에 게시된 정보는 프로그램이나 그 밖의 기술적 장치를 이용하여 무단으로 사용할 수 없습니다.</p>
@@ -577,23 +550,6 @@ var authrtCd = '${authrtCd}'
     </div>
 </div>
 
-<!-- 유사도 검증 안내 팝업 -->
-<div class="similarity_pop">
-    <div class="box">
-        <div class="popup_top">
-            <h4>유사도 검증 안내</h4>
-            <div class="close">
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-        <div class="content">
-        	 <img src="${contextPath}/images/sub/sv_info.png" alt="유사도 검증 안내">
-        	 <p>운전자격 확인 버튼 클릭 시, 운전면허증 사진과의 유사도 검증을 위해 얼굴 인식 촬영이 시작됩니다.</p>
-        </div>
-    </div>
-</div>
-
 <!--  2024.07.31 jeonghyewon code add -->
 <!-- 결과 팝업에 팝업 중 대여 이력 정보  -->
 <div class="popup result_popup_in_popup drvie_popup sub02_04" id="popup_drvVfcHist_box" style="display : none"></div>
@@ -603,7 +559,7 @@ var authrtCd = '${authrtCd}'
 <!-- 대여이상 해당차량의 상세팝업 조회 링크   -->
 
 <div class="subPage sub03">
-<div class="popup detail_popup popup_type02" id='detail_popup_mobiDefect_box'>
+<div class="popup detail_popup popup_type02" id='detail_popup_mobiDefect_box'">
  <div class="box">
         <div class="popup_top">
             <h4>차량 상세</h4>
