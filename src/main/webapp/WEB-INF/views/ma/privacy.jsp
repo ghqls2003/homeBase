@@ -11,6 +11,17 @@
 <link rel="stylesheet" type="text/css"
 	href="${contextPath}/css/custom/privacyContent.css" />
 
+<style>
+.mt0 {
+	display: flex;
+	align-items: center;
+	font-size: 20px;
+}
+.title_none {
+	font-size: 17px;
+}
+</style>
+
 <%-- <script src="${contextPath}/js/sft/privacy.js"></script> --%>
 <head>
 <script type="text/javascript">
@@ -45,79 +56,6 @@ $(function(){
 	}, function(){
 		$('#label_layer_5').hide();
 	});
-	
-	var tmp = "";
-	document.getElementById("table01").style.display = "none";
-	document.getElementById("table02").style.display = "none";
-	document.getElementById("table03").style.display = "none";
-	document.getElementById("table04").style.display = "none";
-	document.getElementById("table05").style.display = "none";
-	document.getElementById("table06").style.display = "none";
-	document.getElementById("table07").style.display = "none";
-	document.getElementById("table08").style.display = "none";
-	document.getElementById("table09").style.display = "none";
-	document.getElementById("table10").style.display = "none";
-	document.getElementById("table11").style.display = "none";
-	document.getElementById("table12").style.display = "none";
-	document.getElementById("table13").style.display = "none";
-
-		
-	
-	// 표 펼치기/접기
-	$(".toggle-table").on("click", ".toggle-button", function(){
-		var button = $(this);
-		
-		if(button.attr("id") == "btn_01"){
-			tmp = document.getElementById("table01");
-		} else if(button.attr("id") == "btn_02") {
-			tmp = document.getElementById("table02");
-		} else if(button.attr("id") == "btn_03") {
-			tmp = document.getElementById("table03");
-		} else if(button.attr("id") == "btn_04") {
-			tmp = document.getElementById("table04");
-		} else if(button.attr("id") == "btn_05") {
-			tmp = document.getElementById("table05");
-		} else if(button.attr("id") == "btn_06") {
-			tmp = document.getElementById("table06");
-		} else if(button.attr("id") == "btn_07") {
-			tmp = document.getElementById("table07");
-		} else if(button.attr("id") == "btn_08") {
-			tmp = document.getElementById("table08");
-		} else if(button.attr("id") == "btn_09") {
-			tmp = document.getElementById("table09");
-		} else if(button.attr("id") == "btn_10") {
-			tmp = document.getElementById("table10");
-		} else if(button.attr("id") == "btn_11") {
-			tmp = document.getElementById("table11");
-		} else if(button.attr("id") == "btn_12") {
-			tmp = document.getElementById("table12");
-		} else if(button.attr("id") == "btn_13") {
-			tmp = document.getElementById("table13");
-		} 
-		
-		if (button.hasClass("on")){ //접었을 때
-		
-			var table = button.removeClass("on").next();
-			table.stop().animate({height: 0}, 300);
-			
-			tmp.style.display = "none";
-		} else { //펼쳤을 때
-			
-			var table = button.addClass("on").next().stop();
-			
-			var beginHeight = table.height();
-			
-			tmp.style.display = "";
-			
-			table.css({height: "auto"});
-			var targetHeight = table.height();
-			
-			//애니메이션
-			table.css({height: beginHeight}).animate({height: targetHeight}, 300);
-			
-		}
-	});
-
 }); 
 </script>
 </head>
@@ -604,9 +542,6 @@ $(function(){
 			<p>② 한국교통안전공단에서 처리하고 있는 개인정보는 수집 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 개인정보 보호법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.</p>
 			<p>③ 한국교통안전공단에서 등록·공개하고 있는 개인정보파일의 처리 목적은 다음과 같습니다.</p>
 			
-			<div class="toggle-table">
-	<a class="button blue toggle-button" id="btn_01">개인정보의 처리 목적▼</a>
-	<div>
 		<table style="width:100%; table-layout:fixed;" class="table" id="table01">
 			<caption>개인정보의 처리 목적</caption>
 			<colgroup>
@@ -638,10 +573,19 @@ $(function(){
 						<p style="text-align:center; font-size:80%">사용자 관리 및 권한관리 </p>
 					</td>
 				</tr>
+				<tr>
+					<td style="word-break:break-all">
+						<p style="text-align:center; font-size:80%"> 운전자격확인이력</p>
+					</td>
+					<td style="word-break:break-all">
+						<p style="text-align:center; font-size:80%">「개인정보 보호법」 제15조제1항제3호, 「여객자동차 운수사업법」 제34조의2제2항, 제34조의3제1항, 같은 법 시행령 제38조제3항제9의2호 및 제45조의2</p>
+					</td>
+					<td style="word-break:break-all">
+						<p style="text-align:center; font-size:80%">운전자격확인 관리</p>
+					</td>
+				</tr>
 			</tbody>
 		</table>
-	</div>
-</div>
 			
 			<br>
 		
@@ -664,9 +608,7 @@ $(function(){
 			<p>① 한국교통안전공단에서 처리하는 개인정보는 수집·이용 목적으로 명시한 범위 내에서 처리하며, 개인정보 보호법 및 관련 법령에서 정하는 보유기간을 준용하여 이행하고 있습니다.</p>
 			<p>② 한국교통안전공단은 법률의 특별한 규정을 준수하거나 법령 등에서 정하는 소관 업무의 수행하기 위하여 다음과 같이 개인정보를 수집⋅이용합니다.</p>
 			
-			<div class="toggle-table">
-				<a class="button blue toggle-button" id="btn_02">개인정보의 처리 항목 및 보유기간 (법령 등)▼</a>			
-				<div>
+				<b>개인정보의 처리 항목 및 보유기간 (법령 등)▼</b>
 					<table style="width:100%; table-layout:fixed;" class="table" id="table02">
 						<caption>개인정보의 처리 목적, 처리하는 개인정보의 항목, 처리 및 보유기간</caption>
 						<colgroup>
@@ -701,12 +643,9 @@ $(function(){
 							</tr>
 						</tbody>
 					</table>
-				</div>
-			</div>
+					
 			<p>③ 한국교통안전공단은 원활한 서비스 제공을 위해 다음의 경우 정보주체의 동의를 얻어 필요 최소한의 범위로만 개인정보를 수집⋅이용합니다.</p>
-			<div class="toggle-table">
-				<a class="button blue toggle-button" id="btn_13">개인정보의 처리 항목 및 보유기간 (동의)▼</a>			
-				<div>
+				<b>개인정보의 처리 항목 및 보유기간 (동의)▼</b>			
 					<table style="width:100%; table-layout:fixed;" class="table" id="table13">
 						<caption>개인정보의 처리 목적, 처리하는 개인정보의 항목, 처리 및 보유기간</caption>
 						<colgroup>
@@ -735,8 +674,8 @@ $(function(){
 							
 							<td><p style="text-align:center; font-size:80%">운전자격확인시스템</p></td>
 							<td><p style="text-align:center; font-size:80%"> 사용자</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, IP주소, (주사무소⋅영업소(예약소)) 소속 회사, 전화번호, (공공기관) 기관명, 소속부서명, (지자체 담당자) 등록 지자체</p></td>
-							<td><p style="text-align:center; font-size:80%">핸드폰, 보조 연락처</p></td>
+							<td><p style="text-align:center; font-size:80%">이름, IP주소, (주사무소⋅영업소(예약소)) 소속 회사, 핸드폰, 전화번호, (공공기관) 기관명, 소속부서명, (지자체 담당자) 등록 지자체</p></td>
+							<td><p style="text-align:center; font-size:80%">보조 연락처</p></td>
 							<td><p style="text-align:center; font-size:80%">「개인정보 보호법」 제15조제1항제1호에 따른 정보주체의 동의</p></td>
 							<td><p style="text-align:center; font-size:80%">회원탈퇴시까지</p></td>
 							</tr>
@@ -744,9 +683,6 @@ $(function(){
 							
 						</tbody>
 					</table>
-				</div>
-			</div>			
-		
 
 			<br>
 			
@@ -755,7 +691,6 @@ $(function(){
 			</h5>
 			<p>① 한국교통안전공단은 14세 미만 아동에 대해 개인정보를 수집할 때 법정대리인의 동의를 얻어 해당 서비스 수행에 필요한 최소한의 개인정보를 수집합니다.</p>
 			<p>② 한국교통안전공단은 “자동차사고 피해자 가족 등 지원업무” 및 “교육신청 및 수강(무인비행장치교육)” 목적과 관련하여 아동의 개인정보를 수집할 경우에는 법정대리인으로부터 별도의 동의를 얻습니다.</p>	
-			<p>③ 한국교통안전공단은 14세 미만 아동의 개인정보를 수집할 때에는 아동에게 법정대리인의 성명, 연락처와 같이 최소한의 정보를 요구할 수 있으며, 동의 내용을 게재한 인터넷 사이트에 법정대리인이 동의 여부를 표시하도록 하고, 그 동의 표시를 확인했음을 법정대리인의 휴대전화 문자메시지로 알리는 방법으로 적법한 법정대리인이 동의하였는지를 확인합니다.</p>
 
 			<br>
 			
@@ -764,9 +699,6 @@ $(function(){
 			</h5>
 			<p>① 한국교통안전공단은 운영하고 있는 개인정보처리시스템이 정보주체의 개인정보파일에 미칠 영향에 대해 조사, 분석, 평가하기 위해 ｢개인정보 보호법｣ 제33조에 따라 “개인정보 영향평가”받고 있습니다.</p>
 			<p>② 한국교통안전공단은 다음 개인정보파일에 대해 영향평가를 수행하였습니다.</p>
-			<div class="toggle-table">
-				<a class="button blue toggle-button" id="btn_03">개인정보 영향평가의 수행▼</a>
-				<div>
 					<table style="width:100%; table-layout:fixed;" class="table" id="table03">
 						<caption>개인정보 영향평가의 수행</caption>
 						<colgroup>
@@ -813,8 +745,6 @@ $(function(){
 							</tr>
 						</tbody>
 					</table>
-				</div>
-			</div>			
 
 			<br>
 			
@@ -841,339 +771,7 @@ $(function(){
 			<h5 class="mt0" id="next7">제7조 (개인정보의 제3자 제공)
 				<img src="/images/privacy/privacyPolicy_icon06.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
-			<p>① 한국교통안전공단은 정보주체의 동의, 법률의 특별한 규정 등 「개인정보 보호법」 제17조 및 제18조에 해당하는 경우에만 개인정보를 제3자에게 제공합니다. </p>
-			<p>② 한국교통안전공단은 법률의 특별한 규정을 준수하거나 법령 등에서 정하는 소관 업무의 수행하기 위하여 다음과 같이 개인정보를 제공합니다.</p>
-			<div class="toggle-table">
-				<a class="button blue toggle-button" id="btn_04">개인정보의 제3자 제공 (법령 등)▼</a>			
-				<div>
-					<table style="width:100%; table-layout:fixed;" class="table" id="table04">
-						<caption>개인정보의 제3자 제공 (법률)</caption>
-						<colgroup>
-							<col style="width: 17%;">
-							<col style="width: 13%;">
-							<col style="width: 15%;">
-							<col style="width: 15%;">
-							<col style="width: 15%;">
-							<col style="width: 15%;">
-							<col style="width: 15%;">
-						</colgroup>				
-						<thead>
-							<tr>
-								<th scope="col">시스템명</th>
-								<th scope="col">개인정보파일명</th>
-								<th scope="col">제공받는 자</th>
-								<th scope="col">제공 목적</th>
-								<th scope="col">제공 항목</th>
-								<th scope="col">보유 및 이용기간</th>
-								<th scope="col">제공 근거</th>								
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">지역무관콜센터(채권관리)시스템</p></td>
-							<td><p style="text-align:center; font-size:80%">채권매입 신청 정보</p></td>
-							<td><p style="text-align:center; font-size:80%">금융기관(은행 : 우리, 신한, 하나, 농협, 부산, 대구, 국민, 광주)</p></td>
-							<td><p style="text-align:center; font-size:80%">채권매입 요청</p></td>
-							<td><p style="text-align:center; font-size:80%">주민(외국인)등록번호, 이름, 주소</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「지방세기본법 시행령」 제95조 1항, 
-							금융실명거래 및 비밀보장에 관한 법률」 제3조 및 같은 법 시행령 제4조의2</p></td>
-							</tr>
-							<tr>
-							<td rowspan="3"><p style="text-align:center; font-size:80%">운수종사자관리시스템</p></td>
-							<td rowspan="3"><p style="text-align:center; font-size:80%">운수종사자 정보</p></td>
-							<td><p style="text-align:center; font-size:80%">지자체(시·도) 및 조합, 운수업체</p></td>
-							<td><p style="text-align:center; font-size:80%">운수종사자 현황 </p></td>
-							<td><p style="text-align:center; font-size:80%">운수회사현황, 재직운전자명단, 입퇴사자명단, 운전면허취소,정지,철회자 명단, 운전정밀검사 미수검자명단, 버스･택시 자격증미취득자명단, 중대교통사고야기자 명단, 입퇴사7일경과 등록명단</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「여객자동차 운수사업법」 제22조제1항, 제27조제2항
-							「운수종사자 관리시스템의 구축·운영 및 이용방법 등에 관한 규정」 제15조제2항</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">지자체(시·도) 및 조합, 운수업체</p></td>
-							<td><p style="text-align:center; font-size:80%">운수종사자 현황 </p></td>
-							<td><p style="text-align:center; font-size:80%">중대교통사고 발생자명단, 사고운전면허 취소자명단, 운전정밀검사 미수검자명단, 화물자격증 미취득자명단, 운수회사현황, 교통법규위반</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「화물자동차 운수사업법」 제10조의2제3항
-							「운수종사자 관리시스템의구축·운영 및 이용방법 등에 관한 규정」 제15조제2항</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">운수업체</p></td>
-							<td><p style="text-align:center; font-size:80%">신규채용(채용 예정 포함) 또는 재직운전자 관리</p></td>
-							<td><p style="text-align:center; font-size:80%">주민(외국인)등록번호, 이름, 입퇴사 이력, 교통사고 법규위반정보, 운전정밀검사 이력, 운전면허 행정처분 이력, 운송종사자격증 취득 이력, 운수종사자 교육 이수 이력</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「운수종사자 관리시스템의 구축·운영 및 이용방법 등에 관한 규정」 제18조 제3항, 별지 제8호서식</p></td>
-							</tr>
-							<tr>
-							<td rowspan="6"><p style="text-align:center; font-size:80%">국가자격시험 통합시스템(도로)</p></td>
-							<td rowspan="5"><p style="text-align:center; font-size:80%">도로(화물, 버스, 택시) 자격시험 응시자 및 소유자 관리</p></td>
-							<td><p style="text-align:center; font-size:80%">국가평생교육진흥원</p></td>
-							<td><p style="text-align:center; font-size:80%">학점인정</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, 생년월일, 자격증번호, 취득일자</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「학점인정 등에 관한 법률」 제7조 제2항 제4호</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">충청북도 개인택시 운송사업조합</p></td>
-							<td><p style="text-align:center; font-size:80%">신규 택시 자격번호 부여</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, 주민등록번호, 자격증번호, 취득일자</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「운수종사자 관리시스템의 구축·운영 및 이용 방법 등에 관한 규정」 제15조</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">지자체 및 조합, 경찰청, 국방부, 채용업체, 화물복지단체</p></td>
-							<td><p style="text-align:center; font-size:80%">도로자격 자격증 진위여부</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, 생년월일, 핸드폰, 검사결과, 자격번호, 취득일자, 재발급이력, 성별</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「여객자동차 운수사업법」 제22조의 2</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">지자체 및 조합, 경찰청, 국방부</p></td>
-							<td><p style="text-align:center; font-size:80%">도로자격시험 예약내역 검증</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, 생년월일, 핸드폰, 예약내역</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「여객자동차 운수사업법」 제22조의 2</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">지자체</p></td>
-							<td><p style="text-align:center; font-size:80%">카드단말기 상 자격번호 입력</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, 주민등록번호, 자격증번호</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「여객자동차 운수사업법」 제38조 제7항</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">교통안전관리자 자격시험 응시자 및 소유자 관리</p></td>
-							<td><p style="text-align:center; font-size:80%">국가평생교육진흥원</p></td>
-							<td><p style="text-align:center; font-size:80%">학점인정</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, 생년월일, 자격증번호, 취득일자</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「학점인정 등에 관한 법률」 제7조 제2항 제4호</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">위험물질운송 안전관리시스템</p></td>
-							<td><p style="text-align:center; font-size:80%">운전자정보</p></td>
-							<td><p style="text-align:center; font-size:80%">소방청, 한국도로공사, 경찰청, 대테러센터, 국가위기관리센터, 대통령경호처, 단말기통신사(SKT, KT, 에스원)</p></td>
-							<td><p style="text-align:center; font-size:80%">고속도로 사고 발생 시 대응, 이용자에 대한 정보지원금의 분리납부 및 A/S 지원</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, 핸드폰</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「물류정책기본법 제29조 제2항 제4호</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">지원사업정보시스템</p></td>
-							<td><p style="text-align:center; font-size:80%">자동차사고 피해지원자파일</p></td>
-							<td><p style="text-align:center; font-size:80%">국민권익위원회</p></td>
-							<td><p style="text-align:center; font-size:80%">공공기관의 종합청렴도 평가를위한 민원인, 직원에 대한 설문조사 실시</p></td>
-							<td><p style="text-align:center; font-size:80%">생활자금대출 및 장학금지원 민원인의 이름, 전화번호, 이메일</p></td>
-							<td><p style="text-align:center; font-size:80%">종합청렴도
-							조사완료시까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「개인정보보호법」제18조제2항제2호,
-							「부패방지 및 국민권익위원회의 설치와 운영에 관한 법률」
-							12조제6호,제27조의2,제29조</p></td>
-							</tr>
-							<tr>
-							<td rowspan="4"><p style="text-align:center; font-size:80%">국가자격시험 통합시스템(철도)</p></td>
-							<td rowspan="4"><p style="text-align:center; font-size:80%">자격시험응시</p></td>
-							<td><p style="text-align:center; font-size:80%">국가평생교육진흥원</p></td>
-							<td><p style="text-align:center; font-size:80%">학점인증 신청관련 자격 진위여부</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, 생년월일, 자격면허종류, 취득일, 자격유효기간</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「개인정보보호법 제15조 제1항 제3호, 제17조 제1항 제2호</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">병무청</p></td>
-							<td><p style="text-align:center; font-size:80%">확인신체검사, 병역의무이행일 연기관련 정보 확인</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, 생년월일, 자격면허종류, 취득일, 자격유효기간</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「개인정보보호법」 제15조제1항제3호, 병역법 제11조의2 및 제77조의 2</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">철도운영기관</p></td>
-							<td><p style="text-align:center; font-size:80%">채용 지원자 자격진위 확인</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, 생년월일, 자격면허종류, 취득일, 자격유효기간</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「개인정보보호법 제15조 제1항 제3호, 제17조 제1항 제2호</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">철도사법경찰대</p></td>
-							<td><p style="text-align:center; font-size:80%">철도사고. 사건 관련 철도종사자 자격 관련 진위 확인</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, 생년월일, 자격면허번호, 자격면허종류, 취득일, 자격유효기간</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">개인정보보호법 제15조 제1항 제3호, 형사소송법 제199조</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">자동차검사 관리시스템</p></td>
-							<td><p style="text-align:center; font-size:80%">자동차 소유자 정보</p></td>
-							<td><p style="text-align:center; font-size:80%">행정안전부</p></td>
-							<td><p style="text-align:center; font-size:80%">자동차 검사(튜닝)에 따른 등록면허세 납부</p></td>
-							<td><p style="text-align:center; font-size:80%">소유자 이름, 소유자 주소, 차대번호, 자동차등록번호</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「공공기관 운영에 관한 법률」 제13조제2항, 같은 법 시행령 제17조제3항</p></td>
-							</tr>
-							<tr>
-							<td rowspan="3"><p style="text-align:center; font-size:80%">사이버검사소 시스템</p></td>
-							<td><p style="text-align:center; font-size:80%">자동차 소유자 정보</p></td>
-							<td><p style="text-align:center; font-size:80%">한국도로공사</p></td>
-							<td><p style="text-align:center; font-size:80%">자동차의 소유자 진위확인에 이용</p></td>
-							<td><p style="text-align:center; font-size:80%">자동차 소유자 진위 여부</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「자동차관리법」 제69조의2, 제77조 제10항 같은 법 시행령 제14조의2, 제14조의3, 제14조의4, 같은 법 시행규칙 제150조제2항</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">홈페이지 회원정보</p></td>
-							<td><p style="text-align:center; font-size:80%">국민권익위원회</p></td>
-							<td><p style="text-align:center; font-size:80%">공공기관의 종합청렴도 평가를위한 민원인, 직원에 대한 설문조사 실시</p></td>
-							<td><p style="text-align:center; font-size:80%">튜닝승인 민원인의 이름, 전화번호, 이메일</p></td>
-							<td><p style="text-align:center; font-size:80%">종합청렴도
-							조사완료시까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「개인정보보호법」제18조제2항제2호,
-							「부패방지 및 국민권익위원회의 설치와 운영에 관한 법률」
-							12조제6호,제27조의2,제29조</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">교육신청자 정보</p></td>
-							<td><p style="text-align:center; font-size:80%">고용노동부(직업능력개발정보)</p></td>
-							<td><p style="text-align:center; font-size:80%">근로자직업능력개발 훈련에 관한 사무</p></td>
-							<td><p style="text-align:center; font-size:80%">주민(외국인)등록번호, 이름</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「고용보험법」 시행령 제145조의2,「국민 평생 직업능력개발법 시행령」제145조의2</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">특수검사 관리시스템</p></td>
-							<td><p style="text-align:center; font-size:80%">특수검사 대상 업체정보</p></td>
-							<td><p style="text-align:center; font-size:80%">국민권익위원회</p></td>
-							<td><p style="text-align:center; font-size:80%">공공기관의 종합청렴도 평가를위한 민원인, 직원에 대한 설문조사 실시</p></td>
-							<td><p style="text-align:center; font-size:80%">기기정도검사 민원인의 이름, 전화번호, 이메일</p></td>
-							<td><p style="text-align:center; font-size:80%">종합청렴도
-							조사완료시까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「개인정보보호법」제18조제2항제2호,
-							「부패방지 및 국민권익위원회의 설치와 운영에 관한 법률」
-							12조제6호,제27조의2,제29조</p></td>
-							</tr>
-							<tr>
-							<td rowspan="2"><p style="text-align:center; font-size:80%">통합경영관리시스템(회계·계약)</p></td>
-							<td rowspan="2"><p style="text-align:center; font-size:80%">회계및계약정보</p></td>
-							<td><p style="text-align:center; font-size:80%">국세청</p></td>
-							<td><p style="text-align:center; font-size:80%">국세청에 세무신고 및 납세</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, 생년월일, 주민등록번호, 사업자등록번호, 법인등록번호</p></td>
-							<td><p style="text-align:center; font-size:80%">5년</p></td>
-							<td><p style="text-align:center; font-size:80%">「법인세법」제3조(납세의무자) 및제4조(과세소득의범위), 「소득세법」제2조(납세의무) 및제137조(근로소득세액의 연말정산), 「부가가치세법」제3조(납세의무자), 「지방세법」및「지방세징수법」, 「국가계약법」제6조(계약사무의위임·위탁) 및제7조(계약의방법), 「국세기본법」제85조의 3(장부등의비치와보존)</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">국민권익위원회</p></td>
-							<td><p style="text-align:center; font-size:80%">공공기관의 종합청렴도 평가를위한 민원인, 직원에 대한 설문조사 실시</p></td>
-							<td><p style="text-align:center; font-size:80%">계약 및 관리 업무(측정업무명) 민원인 및 소속 직원의 이름, 전화번호, 이메일</p></td>
-							<td><p style="text-align:center; font-size:80%">종합청렴도
-							조사완료시까지</p></td>
-							<td><p style="text-align:center; font-size:80%">「개인정보보호법」제18조제2항제2호,
-							「부패방지 및 국민권익위원회의 설치와 운영에 관한 법률」
-							12조제6호,제27조의2,제29조</p></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			
-			<p>③ 한국교통안전공단은 원활한 서비스 제공을 위해 다음의 경우 정보주체의 동의를 얻어 필요 최소한의 범위로만 제공합니다.</p>
-			<div class="toggle-table">
-				<a class="button blue toggle-button" id="btn_05">개인정보의 제3자 제공 (동의)▼</a>			
-				<div>
-					<table style="width:100%; table-layout:fixed;" class="table" id="table05">
-						<caption>개인정보의 제3자 제공 (동의)</caption>
-						<colgroup>
-							<col style="width: 15%;">
-							<col style="width: 15%;">
-							<col style="width: 15%;">
-							<col style="width: 15%;">
-							<col style="width: 15%;">
-							<col style="width: 15%;">
-							<col style="width: 15%;">
-						</colgroup>				
-						<thead>
-							<tr>
-								<th scope="col">시스템명</th>
-								<th scope="col">개인정보파일명</th>
-								<th scope="col">제공받는 자</th>
-								<th scope="col">제공 목적</th>
-								<th scope="col">제공 항목</th>
-								<th scope="col">보유 및 이용기간</th>
-								<th scope="col">제공 근거</th>								
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">국가자격시험 통합시스템(도로)</p></td>
-							<td><p style="text-align:center; font-size:80%">도로분야(화물, 버스, 택시) 자격시험 응시자 및 소유자 관리</p></td>
-							<td><p style="text-align:center; font-size:80%">네이버</p></td>
-							<td><p style="text-align:center; font-size:80%">취득 자격정보를 자격증 서비스에서 확인</p></td>
-							<td><p style="text-align:center; font-size:80%">자격증번호, 자격증종류, 사진</p></td>
-							<td><p style="text-align:center; font-size:80%">서비스 가입 해지 시 또는 네이버 회원 탈퇴 시까지</p></td>
-							<td><p style="text-align:center; font-size:80%">정보주체의 동의</p></td>
-							</tr>
-							<tr>
-							<td rowspan="2"><p style="text-align:center; font-size:80%">운전적성 정밀검사시스템</p></td>
-							<td><p style="text-align:center; font-size:80%">검사결과 정보</p></td>
-							<td><p style="text-align:center; font-size:80%">지자체 및 조합, 경찰청, 국방부, 채용업체, 화물복지단체</p></td>
-							<td><p style="text-align:center; font-size:80%">운전적성 정밀검사 결과 검증</p></td>
-							<td><p style="text-align:center; font-size:80%">성명, 생년월일, 검사 결과, 재발급이력(필요시), 성별(필요시)</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성시까지</p></td>
-							<td><p style="text-align:center; font-size:80%">정보주체의 동의</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">홈페이지 예약정보</p></td>
-							<td><p style="text-align:center; font-size:80%">지자체 및 조합, 경찰청, 국방부</p></td>
-							<td><p style="text-align:center; font-size:80%">운전적성정밀검사 예약내역 검증</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, 생년월일, 예약내역</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성시까지</p></td>
-							<td><p style="text-align:center; font-size:80%">정보주체의 동의</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">드론 정보통합시스템</p></td>
-							<td><p style="text-align:center; font-size:80%">비행승인</p></td>
-							<td><p style="text-align:center; font-size:80%">경찰청</p></td>
-							<td><p style="text-align:center; font-size:80%">비행승인여부 확인</p></td>
-							<td><p style="text-align:center; font-size:80%">성명, 생년월일, 연락처</p></td>
-							<td><p style="text-align:center; font-size:80%">비행승인의 비행기간 종료시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">정보주체의 동의</p></td>
-							</tr>
-							<tr>
-							<td rowspan="3"><p style="text-align:center; font-size:80%">기계식주차장 정보시스템</p></td>
-							<td><p style="text-align:center; font-size:80%">기계식 주차장 관리인 교육정보</p></td>
-							<td><p style="text-align:center; font-size:80%">국토교통부, 지자체</p></td>
-							<td><p style="text-align:center; font-size:80%">기계식주차장 관리인교육 수료여부 확인</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, 생년월일, 자택주소, 근무지주소, 휴대폰번호, 수료번호</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시까지</p></td>
-							<td><p style="text-align:center; font-size:80%">정보주체의 동의</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">기계식 주차장 관리자 정보</p></td>
-							<td><p style="text-align:center; font-size:80%">국토교통부, 승강기안전공단, 주차안전기술원, 지자체</p></td>
-							<td><p style="text-align:center; font-size:80%">검사일정 및 검사이력 관리</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, 핸드폰번호, 일반전화번호, 설치장소</p></td>
-							<td><p style="text-align:center; font-size:80%">관리자 변경 시 삭제조치</p></td>
-							<td><p style="text-align:center; font-size:80%">정보주체의 동의</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">기계식주차장 사고조사 정보</p></td>
-							<td><p style="text-align:center; font-size:80%">국토교통부, 지자체</p></td>
-							<td><p style="text-align:center; font-size:80%">기계식주차장 사고조사</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, 전화번호, 기계식주차장정보, 사고발생일시 및 피해정도등</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">정보주체의 동의</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">자동차제작결함 시스템</p></td>
-							<td><p style="text-align:center; font-size:80%">자동차 결함정보 수집파일(결함신고)</p></td>
-							<td><p style="text-align:center; font-size:80%">한국소비자원</p></td>
-							<td><p style="text-align:center; font-size:80%">소비자 보호를 위한 결함정보 공유</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, 핸드폰, E-Mail, 결함내용,제작사명, 차명</p></td>
-							<td><p style="text-align:center; font-size:80%">목적 달성 시 까지</p></td>
-							<td><p style="text-align:center; font-size:80%">정보주체의 동의</p></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>	
-			<p>④ 한국교통안전공단은 「개인정보보호법」 제18조제1항에 따라 수집⋅이용 및 제공 범위를 초과하여 개인정보를 이용하거나 제공하지 않습니다. 한국교통안전공단은 「개인정보보호법」 제18조제2항에 따라 다른 법률에 특별한 규정이 있는 경우 등에는 개인정보를 목적 외의 용도로 이용하거나 이를 제3자에게 제공할 수 있습니다. </p>
+			<p>① 한국교통안전공단은 개인정보를 제3자에게 제공하지 않습니다. </p>
 			<p>※ 보다 상세한 <한국교통안전공단>의 개인정보 목적 외 이용⋅제공에 관한 사항은 공단 홈페이지(www.kotsa.or.kr)의 이용안내 → 개인정보처리방침 → 개인정보 목적 외 이용⋅제공 게시판에서 조회 및 확인하실 수 있습니다.</p>
 			<div class="btn">
 				<a class="button blue" href="https://www.kotsa.or.kr/portal/bbs/privprovision_list.do?menuCode=07020300" target="_blank">개인정보 목적 외 이용⋅제공</a>
@@ -1199,13 +797,9 @@ $(function(){
 				<img src="/images/privacy/privacyPolicy_icon08.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 한국교통안전공단은 원활한 업무처리를 위하여 다음과 같이 개인정보 처리업무를 위탁 하고 있습니다.</p>
-			<div class="toggle-table">
-				<a class="button blue toggle-button" id="btn_06">개인정보 처리의 위탁▼</a>
-				<div>
 					<table style="width:100%; table-layout:fixed;" class="table" id="table06">
 						<caption>개인정보 처리의 위탁</caption>
 						<colgroup>
-							<col style="width: 10%;">
 							<col style="width: 20%;">
 							<col style="width: 20%;">
 							<col style="width: 20%;">
@@ -1213,7 +807,6 @@ $(function(){
 						</colgroup>				
 						<thead>
 							<tr>
-								<th scope="col" rowspan="2">순번</th>
 								<th scope="col" rowspan="2">부서명</th>
 								<th scope="col" colspan="2">위탁받는 자</th>
 								<th scope="col" rowspan="2">위탁 업무</th>
@@ -1225,93 +818,12 @@ $(function(){
 						</thead>
 						<tbody>
 							<tr>
-							<td rowspan="2"><p style="text-align:center; font-size:80%">1</p></td>
-							<td rowspan="2"><p style="text-align:center; font-size:80%">한국교통안전공단 정보운영처</p></td>
-							<td><p style="text-align:center; font-size:80%">대신정보통신</p></td>
-							<td><p style="text-align:center; font-size:80%">㈜씨유소프트</p></td>
-							<td rowspan="2"><p style="text-align:center; font-size:80%">2024~2025 한국교통안전공단 정보시스템 통합 유지관리 용역</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">㈜엠티데이타</p></td>
-							<td><p style="text-align:center; font-size:80%">㈜유니디아</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">2</p></td>
-							<td><p style="text-align:center; font-size:80%">한국교통안전공단 교통물류정책처</p></td>
-							<td colspan="2"><p style="text-align:center; font-size:80%">네이버시스템즈</p></td>
-							<td colspan="2"><p style="text-align:center; font-size:80%">2024년 위험물질운송 안전관리시스템 유지보수 용역</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">3</p></td>
-							<td><p style="text-align:center; font-size:80%;">한국교통안전공단 대외협력실</p></td>
-							<td colspan="2"><p style="text-align:center; font-size:80%;">칼리그램</p></td>
-							<td colspan="2"><p style="text-align:center; font-size:80%;">TS매거진 제작 용역</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">4</p></td>
-							<td><p style="text-align:center; font-size:80%;">한국교통안전공단 정보보안처</p></td>
-							<td colspan="2"><p style="text-align:center; font-size:80%;">(주)싸이버원</p></td>
-							<td colspan="2"><p style="text-align:center; font-size:80%;">공단 정보시스템 웹취약점 점검</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">5</p></td>
-							<td><p style="text-align:center; font-size:80%;">한국교통안전공단 운영지원처</p></td>
-							<td colspan="2"><p style="text-align:center; font-size:80%;">(주)현대이지웰페어</p></td>
-							<td colspan="2"><p style="text-align:center; font-size:80%;">선택적 복리후생 컨설팅 및 서비스협약서</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">6</p></td>
-							<td><p style="text-align:center; font-size:80%;">한국교통안전공단 인재개발처</p></td>
-							<td colspan="2"><p style="text-align:center; font-size:80%;">㈜휴스테이션</p></td>
-							<td colspan="2"><p style="text-align:center; font-size:80%;">직무중심 채용위탁 용역</p></td>
-							</tr>
-							<tr>
-							<td><p style="text-align:center; font-size:80%">7</p></td>
-							<td><p style="text-align:center; font-size:80%;">한국교통안전공단 인재개발처</p></td>
-							<td colspan="2"><p style="text-align:center; font-size:80%;">인트로맨(주)</p></td>
-							<td colspan="2"><p style="text-align:center; font-size:80%;">기간제근로자 채용 위탁 용역</p></td>
-							</tr>
-							<tr>
-								<td><p style="text-align:center; font-size:80%">8</p></td>
-								<td><p style="text-align:center; font-size:80%;">한국교통안전공단 인재개발처</p></td>
-								<td colspan="2"><p style="text-align:center; font-size:80%;">(주)현대경제연구원</p></td>
-								<td colspan="2"><p style="text-align:center; font-size:80%;">사이버연수원 위탁운영</p></td>
-							</tr>
-							<tr>
-								<td><p style="text-align:center; font-size:80%">9</p></td>
-								<td><p style="text-align:center; font-size:80%;">한국교통안전공단 고객소통처</p></td>
-								<td><p style="text-align:center; font-size:80%;">한국능률협회컨설팅</p></td>
-								<td><p style="text-align:center; font-size:80%;">㈜코리아리서치인터내셔널</p></td>
-								<td><p style="text-align:center; font-size:80%;">2024년도 공공기관 고객만족도 조사</p></td>
-							</tr>
-							<tr>
-								<td><p style="text-align:center; font-size:80%">10</p></td>
-								<td><p style="text-align:center; font-size:80%;">한국교통안전공단 검사운영처</p></td>
-								<td colspan="2"><p style="text-align:center; font-size:80%;">(주)카카오페이</p></td>
-								<td colspan="2"><p style="text-align:center; font-size:80%;">모바일공인전자 안내(자동차검사 사전안내 전자문서)</p></td>
-							</tr>
-							<tr>
-								<td><p style="text-align:center; font-size:80%">11</p></td>
-								<td><p style="text-align:center; font-size:80%;">한국교통안전공단 검사운영처</p></td>
-								<td colspan="2"><p style="text-align:center; font-size:80%;">장애인자립지원단</p></td>
-								<td colspan="2"><p style="text-align:center; font-size:80%;">자동차검사 사전안내문(우편) 제작 용역</p></td>
-							</tr>
-							<tr>
-								<td><p style="text-align:center; font-size:80%">12</p></td>
 								<td><p style="text-align:center; font-size:80%;">한국교통안전공단 모빌리티플랫폼처</p></td>
-								<td colspan="2"><p style="text-align:center; font-size:80%;">네이버시스템즈</p></td>
-								<td colspan="2"><p style="text-align:center; font-size:80%;">운전자격확인시스템 관리</p></td>
+								<td colspan="2"><p style="text-align:center; font-size:80%;">네이버시스템</p></td>
+								<td><p style="text-align:center; font-size:80%;">운전자격확인시스템 관리</p></td>
 							</tr>
-							<tr>
-								<td><p style="text-align:center; font-size:80%">13</p></td>
-								<td><p style="text-align:center; font-size:80%;">한국교통안전공단 리콜센터</p></td>
-								<td colspan="2"><p style="text-align:center; font-size:80%;">(주)포스토피아</p></td>
-								<td colspan="2"><p style="text-align:center; font-size:80%;">리콜통지문 및 창봉투 제작·발송</p></td>
-							</tr>							
 						</tbody>
 					</table>
-				</div>
-			</div>				
 			<p>② 한국교통안전공단은 개인정보의 처리업무를 위탁하는 경우 아래의 내용이 포함된 문서 에 의하여 처리하고 있으며, 수탁자가 개인정보를 안전하게 처리하는지를 감독하고 있습니다.</p>
 			<ul>
 				<li>- 위탁업무 수행 목적 외 개인정보의 처리 금지에 관한 사항</li>
@@ -1356,83 +868,7 @@ $(function(){
 			<h5 class="mt0" id="next12">제12조 (가명정보 처리에 관한 사항)
 				<img src="/images/privacy/privacyPolicy_icon20.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
-			<p>① 한국교통안전공단은 수집한 개인정보를 개인정보 보호법 제28조의2에 따라 통계작성, 과학적 연구, 공익적 기록보존 등을 위하여 특정 개인을 알아볼 수 없도록 가명처리하여 다음과 같이 활용하고 있습니다.</p>
-			<ul>
-				<li>- 가명정보의 처리에 관한 사항</li>
-			</ul>	
-			<div class="toggle-table">
-				<a class="button blue toggle-button" id="btn_11">가명정보의 처리에 관한 사항 ▼</a>
-				<div>
-					<table style="width:100%; table-layout:fixed;" class="table" id="table11">
-						<caption>가명정보의 처리에 관한 사항</caption>
-						<colgroup>
-							<col style="width: 25%;">
-							<col style="width: 25%;">
-							<col style="width: 25%;">
-							<col style="width: 25%;">
-						</colgroup>				
-						<thead>
-							<tr>
-								<th>구분</th>
-								<th>처리 목적</th>
-								<th>처리 항목</th>
-								<th>처리 기간</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td><p style="text-align:center; font-size:80%">GTX-A 노선 개통에 따른 대중교통 통행패턴변화 연구</p></td>
-								<td><p style="text-align:center; font-size:80%">GTX-A 노선 개통에 따른 대중교통 통행패턴변화 분석</p></td>
-								<td><p style="text-align:center; font-size:80%">카드번호, 차량번호, 승⋅하차 시간</p></td>
-								<td><p style="text-align:center; font-size:80%">2024.09.19.~2024.09.30.</p></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<ul>
-				<li>- 가명정보의 제3자 제공에 관한 사항</li>
-			</ul>
-			<div class="toggle-table">
-				<a class="button blue toggle-button" id="btn_12">가명정보의 제3자 제공에 관한 사항 ▼</a>
-				<div>
-					<table style="width:100%; table-layout:fixed;" class="table" id="table12">
-					<caption>가명정보의 제3자 제공에 관한 사항</caption>
-						<colgroup>
-							<col style="width: 25%;">
-							<col style="width: 25%;">
-							<col style="width: 25%;">
-							<col style="width: 25%;">
-						</colgroup>				
-						<thead>
-							<tr>
-								<th>제공받는 자</th>
-								<th>제공받는 자의 이용 목적</th>
-								<th>제공하는 항목</th>
-								<th>제공받는 자의 보유 및 이용기간</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td><p style="text-align:center; font-size:80%">경기도 성남시</p></td>
-								<td><p style="text-align:center; font-size:80%">GTX-A 노선 개통에 따른 대중교통 통행패턴변화 분석</p></td>
-								<td><p style="text-align:center; font-size:80%">카드번호, 차량번호, 승⋅하차 시간</p></td>
-								<td><p style="text-align:center; font-size:80%">2024.09.23.~2024.09.30.</p></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>		
-			<ul>
-				<li>- 가명정보 처리의 위탁을 하고 있지 않습니다.</li>
-				<li>- 법 제28조의4(가명정보에 대한 안전조치 의무 등)에 따른 가명정보의 안전성 확보조치에 관한 사항
-					<ul>
-						<li>• 관리적 조치 : 내부관리계획 수립・시행, 정기적 직원 교육</li>
-						<li>• 기술적 조치 : 가명정보 처리자 및 추가정보 처리자 접근권한 관리, 접근통제시스템 설치, 보안프로그램 설치 및 운영, 공단 망분리 통한 인터넷 연결 원천 차단 등</li>
-						<li>• 물리적 조치 : 정보통신실 등의 접근통제 실시</li>
-					</ul>
-				</li>
-			</ul>			
+			<p>① 한국교통안전공단은 가명정보를 처리하지 않고 있습니다.</p>
 				
 			<br>
 				
@@ -1496,17 +932,11 @@ $(function(){
 						</ul>
 					</li>
 				</ul>			
-				<div class="mt10">
-					<a title="새창열림" class="button ico right down" href="/resources/upload/weblink/개인정보(열람, 정정ㆍ삭제, 처리정지, 동의철회) 요구서.hwp" target="_blank">개인정보 열람 요구서</a>
-				</div>			
 				<ul>
 					<li>< 개인정보 정정·삭제 요구 >
 						<p>한국교통안전공단에서 보유하고 있는 개인정보파일은 「개인정보보호법」 제36조(개인 정보의 정정·삭제)에 따라 정정·삭제를 요구할 수 있습니다. 다만, 다른 법령에서 그 개인정보가 수집 대상으로 명시되어 있는 경우에는 그 삭제를 요구할 수 없습니다. 정보주체가 개인정보의 오류 등에 대한 정정 또는 삭제를 요구한 경우에는 정정 또는 삭제를 완료할 때까지 당해 개인정보를 이용하거나 제공하지 않습니다.</p>
 					</li>
 				</ul>
-				<div class="mt10">
-					<a title="새창열림" class="button ico right down" href="/resources/upload/weblink/개인정보(열람, 정정ㆍ삭제, 처리정지, 동의철회) 요구서.hwp" target="_blank">개인정보 정정ㆍ삭제 요구서</a>
-				</div>	
 				<ul>
 					<li>< 개인정보 처리정지 등 요구 >
 						<p>한국교통안전공단에서 보유하고 있는 개인정보파일은 「개인정보보호법」 제37조(개인 정보의 처리정지 등)에 따라 처리정지 또는 동의철회를 요구할 수 있습니다. 다만, 개인정보 처리정 지 요구 시 법 제37조 2항에 의하여 처리정지 또는 동의철회 요구가 거절될 수 있습니다.</p>
@@ -1522,21 +952,12 @@ $(function(){
 				한국교통안전공단은 「개인정보 보호법」 제37조제2항 단서에 따라 처리정지 요구를 거절하거나 제3항 단서에 따라 동의 철회에 따른 조치를 하지 않았을 때에는 정보주체에게 지체없이 그 사유를 알려드립니다.
 				한국교통안전공단은 정보주체의 요구에 따라 처리가 정지된 개인정보에 대하여 지체없이 해당 개인정보의 파기등 필요한 조치를 합니다.
 				</p>
-				<div class="mt10">
-					<a title="새창열림" class="button ico right down" href="/resources/upload/weblink/개인정보(열람, 정정ㆍ삭제, 처리정지, 동의철회) 요구서.hwp" target="_blank">개인정보 처리정지·동의철회 요구서</a>
-				</div>		
 				<ul>
 					<li>< 정보주체의 권리행사 요구 거절 시 불복을 위한 이의제기 절차 >
 						<p>개인정보 관리책임자는 열람 등 요구에 대한 연기 또는 거절 시, 요구 받은 날로부터 10일 이내에 연기 또는 거절의 정당한 사유 및 이의제기 방법 등을 통지합니다. 정 보주체는 열람등 요구에 대한 거절 등 조치에 대하여 불복이 있는 경우 개인정보 열 람등 요구 결정 이의신청서 서식으로 이의신청할 수 있습니다.</p>
 					</li>
 				</ul>				
-				<div class="mt10">
-					<a title="새창열림" class="button ico right down" href="/resources/upload/weblink/개인정보 열람등 요구결정 이의신청서.hwp" target="_blank">개인정보 열람등 요구 결정 이의신청서</a>
-				</div>
 			<p>③ 권리행사는 정보주체의 법정대리인이나 위임을 받은 자 등 대리인을 통하여 하실 수 있습니다. 이 경우 개인정보 보호법 시행규칙 별지 제11호 서식에 따른 위임장을 제출하셔야 합니다.</p>	
-				<div class="mt10">
-					<a title="새창열림" class="button ico right down" href="/resources/upload/weblink/위임장.hwp" target="_blank">위임장</a>
-				</div>
 			<p>④ 정보주체가 개인정보 열람 및 처리 정지를 요구할 권리는 「개인정보 보호법」 제35조 제4항 및 제37조 제2항에 의하여 제한될 수 있습니다.</p>
 			<p>⑤ 다른 법령에서 그 개인정보가 수집 대상으로 명시되어 있는 경우에는 해당 개인정보의 삭제를 요구할 수 없습니다.</p>		
 			<p>⑥ 자동화된 결정이 이루어진다는 사실에 대해 정보주체의 동의를 받았거나, 계약 등을 통해 미리 알린 경우, 법률에 명확히 규정이 있는 경우에는 자동화된 결정에 대한 거부는 인정되지 않으며 설명 및 검토 요구만 가능합니다.</p>		
@@ -1569,9 +990,6 @@ $(function(){
 							</li>
 							<li>※ 개인정보파일별 운영담당자</li>
 						</ul>		
-					<div class="toggle-table">
-						<a class="button blue toggle-button" id="btn_07">개인정보파일별 운영담당자▼</a>
-					<div>
 						<table style="width:100%; table-layout:fixed;" class="table" id="table07">
 							<caption>개인정보파일별 운영담당자</caption>
 							<colgroup>
@@ -1594,274 +1012,6 @@ $(function(){
 							</thead>
 							<tbody>
 								<tr>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">대표 홈페이지</p></td>
-								<td><p style="text-align:center; font-size:80%">홈페이지 회원정보(개인회원, 외국인회원)</p></td>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">대외협력실</p></td>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">054-459-7032</p></td>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">0502-384-5320</p></td>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">kym5318@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">홈페이지 회원정보(기업회원)</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">뉴스레터</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">통합회원포털</p></td>
-								<td><p style="text-align:center; font-size:80%">통합회원정보</p></td>
-								<td><p style="text-align:center; font-size:80%">정보운영처</p></td>
-								<td><p style="text-align:center; font-size:80%">054-459-7477</p></td>
-								<td><p style="text-align:center; font-size:80%">0502-384-5457</p></td>
-								<td><p style="text-align:center; font-size:80%">smllem1678@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">VOC(고객의소리)통합관리</p></td>
-								<td><p style="text-align:center; font-size:80%">VOC(고객의소리) 신고자 정보</p></td>
-								<td><p style="text-align:center; font-size:80%">고객소통처</p></td>
-								<td><p style="text-align:center; font-size:80%">054-459-7179</p></td>
-								<td><p style="text-align:center; font-size:80%">0502-384-5397</p></td>
-								<td><p style="text-align:center; font-size:80%">purewhite79@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">고객콜센터</p></td>
-								<td><p style="text-align:center; font-size:80%">콜센터 상담정보</p></td>
-								<td><p style="text-align:center; font-size:80%">고객소통처</p></td>
-								<td><p style="text-align:center; font-size:80%">054-459-7899</p></td>
-								<td><p style="text-align:center; font-size:80%">0502-384-5397</p></td>
-								<td><p style="text-align:center; font-size:80%">kimhj0118@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">운수종사자관리</p></td>
-								<td><p style="text-align:center; font-size:80%">기관사용자 정보</p></td>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">교통안전처</p></td>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">054-459-7276</p></td>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">0502-384-5420</p></td>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">uh01083@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">운수종사자 정보</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">운수회사담당자 정보</p></td>
-								</tr>
-								<tr>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">안전운전체험교육</p></td>
-								<td><p style="text-align:center; font-size:80%">홈페이지 회원정보</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">교통안전교육처</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">054-459-7653</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">0502-384-5370</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">hwang2351@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">체험교육 학사관리 정보</p></td>
-								</tr>
-								<tr>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">온라인 교통안전교육 통합플랫폼</p></td>
-								<td><p style="text-align:center; font-size:80%">회원정보</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">교통안전교육처</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">054-459-7658</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">0502-384-5370</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">jiyukwon@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">교육신청정보</p></td>
-								</tr>
-								<tr>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">건설기계조종사경력관리</p></td>
-								<td><p style="text-align:center; font-size:80%">건설기계 경력관리정보</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">자격관리처</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">054-459-7286</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">0502-384-5440</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">ljk1206@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">건설기계소유자정보</p></td>
-								</tr>
-								<tr>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">국가자격시험통합(도로)</p></td>
-								<td><p style="text-align:center; font-size:80%">도로분야(화물, 버스, 택시) 자격시험 응시자·소유자 및 체험교육자 정보</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">자격관리처</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">054-459-7273</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">0502-384-5440</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">seowj@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">교통안전관리자 자격시험 응시자·소유자 및 일부과목 면제자 정보</p></td>
-								</tr>
-								<tr>
-								<td rowspan="4"><p style="text-align:center; font-size:80%">운전적성정밀검사</p></td>
-								<td><p style="text-align:center; font-size:80%">검사결과 정보</p></td>
-								<td rowspan="4"><p style="text-align:center; font-size:80%">자격관리처</p></td>
-								<td rowspan="4"><p style="text-align:center; font-size:80%">054-459-7278</p></td>
-								<td rowspan="4"><p style="text-align:center; font-size:80%">0502-384-5440</p></td>
-								<td rowspan="4"><p style="text-align:center; font-size:80%">higudwns@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">홈페이지 예약정보</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">알림문자 서비스 정보</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">사용자정보</p></td>
-								</tr>
-								<tr>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">위험물질 운송안전 관리</p></td>
-								<td><p style="text-align:center; font-size:80%">운전자정보</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">교통물류정책처</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">054-459-7435</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">0502-384-5468</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">sundance@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">회원정보</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">지원사업정보</p></td>
-								<td><p style="text-align:center; font-size:80%">자동차사고 피해지원자파일</p></td>
-								<td><p style="text-align:center; font-size:80%">교통복지처</p></td>
-								<td><p style="text-align:center; font-size:80%">054-459-7368</p></td>
-								<td><p style="text-align:center; font-size:80%">0502-384-5450</p></td>
-								<td><p style="text-align:center; font-size:80%">ujinee@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">국가자격시험통합(철도)</p></td>
-								<td><p style="text-align:center; font-size:80%">홈페이지 회원정보</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">철도안전처</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">054-459-7331</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">0502-384-5479</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">wckim1977@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">자격시험응시</p></td>
-								</tr>
-								<tr>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">항공교육훈련 통합관리</p></td>
-								<td><p style="text-align:center; font-size:80%">입과자격 신청정보</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">항공안전처</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">054-459-7396</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">0502-384-5452</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">kmin.k@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">홈페이지 회원정보</p></td>
-								</tr>
-								<tr>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">항공안전정보 통합관리</p></td>
-								<td><p style="text-align:center; font-size:80%">항공안전정보지 구독 정보</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">항공안전처</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">054-459-7396</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">0502-384-5452</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">kmin.k@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">항공자율보고 신고접수현황</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">국가자격시험통합(항공)</p></td>
-								<td><p style="text-align:center; font-size:80%">항공종사자 자격시험 응시자 정보</p></td>
-								<td><p style="text-align:center; font-size:80%">항공자격처</p></td>
-								<td><p style="text-align:center; font-size:80%">02-3151-1514</p></td>
-								<td><p style="text-align:center; font-size:80%">0502-384-5452</p></td>
-								<td><p style="text-align:center; font-size:80%">p01648@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">드론 비행경력(전자출결)</p></td>
-								<td><p style="text-align:center; font-size:80%">교육기관 정보</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">드론관리처</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">054-459-7937</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">0502-384-5453</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">cjy4493@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">일반회원</p></td>
-								</tr>
-								<tr>
-								<td rowspan="5"><p style="text-align:center; font-size:80%">드론 정보통합</p></td>
-								<td><p style="text-align:center; font-size:80%">기체신고정보</p></td>
-								<td rowspan="5"><p style="text-align:center; font-size:80%">드론관리처</p></td>
-								<td rowspan="5"><p style="text-align:center; font-size:80%">054-459-7937</p></td>
-								<td rowspan="5"><p style="text-align:center; font-size:80%">0502-384-5453</p></td>
-								<td rowspan="5"><p style="text-align:center; font-size:80%">cjy4493@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">사용사업체정보</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">자격정보</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">보험가입정보</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">비행승인</p></td>
-								</tr>
-								<tr>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">자동차검사관리</p></td>
-								<td><p style="text-align:center; font-size:80%">기관 사용자 정보</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">검사운영처</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">054-440-3097</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">0502-384-5495</p></td>
-								<td rowspan="2"><p style="text-align:center; font-size:80%">pipa9402@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">자동차 소유자 정보</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">TS 튜닝 알리고</p></td>
-								<td><p style="text-align:center; font-size:80%">자동차튜닝 기술 업체 담당자</p></td>
-								<td><p style="text-align:center; font-size:80%">기술안전처</p></td>
-								<td><p style="text-align:center; font-size:80%">054-429-3524</p></td>
-								<td><p style="text-align:center; font-size:80%">0502-384-5365</p></td>
-								<td><p style="text-align:center; font-size:80%">dolabwa@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td rowspan="4"><p style="text-align:center; font-size:80%">사이버검사소</p></td>
-								<td><p style="text-align:center; font-size:80%">자동차 소유자 정보</p></td>
-								<td rowspan="4"><p style="text-align:center; font-size:80%">기술승인처</p></td>
-								<td rowspan="4"><p style="text-align:center; font-size:80%">054-429-3555</p></td>
-								<td rowspan="4"><p style="text-align:center; font-size:80%">0502-384-5497</p></td>
-								<td rowspan="4"><p style="text-align:center; font-size:80%">kwonjt@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">홈페이지 회원정보</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">교육신청자 정보</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">교육신청자 환불 계좌정보</p></td>
-								</tr>
-								<tr>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">특수검사관리</p></td>
-								<td><p style="text-align:center; font-size:80%">궤도운영자 및 종사자</p></td>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">특수검사처</p></td>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">054-440-3067</p></td>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">0502-384-5463</p></td>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">hdlee@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">특수검사 대상 업체정보</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">궤도종사자 교육정보</p></td>
-								</tr>
-								<tr>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">기계식주차장 정보</p></td>
-								<td><p style="text-align:center; font-size:80%">기계식 주차장 관리인 교육생 정보</p></td>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">주차안전처</p></td>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">054-440-3076</p></td>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">0502-384-5465</p></td>
-								<td rowspan="3"><p style="text-align:center; font-size:80%">tmvksh@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">기계식 주차장 관리자 정보</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">기계식주차장 사고조사 정보</p></td>
-								</tr>
-								<tr>
 								<td rowspan="5"><p style="text-align:center; font-size:80%">운전자격확인</p></td>
 								<td><p style="text-align:center; font-size:80%">사용자(내부)</p></td>
 								<td rowspan="5"><p style="text-align:center; font-size:80%">모빌리티플랫폼처</p></td>
@@ -1881,35 +1031,8 @@ $(function(){
 								<tr>
 								<td><p style="text-align:center; font-size:80%">API 이용이력</p></td>
 								</tr>
-								<tr>
-								<td rowspan="4"><p style="text-align:center; font-size:80%">자동차제작결함</p></td>
-								<td><p style="text-align:center; font-size:80%">자동차 결함정보 수집파일(결함신고)</p></td>
-								<td rowspan="4"><p style="text-align:center; font-size:80%">리콜센터</p></td>
-								<td rowspan="4"><p style="text-align:center; font-size:80%">031-369-0443</p></td>
-								<td rowspan="4"><p style="text-align:center; font-size:80%">0502-384-5327</p></td>
-								<td rowspan="4"><p style="text-align:center; font-size:80%">safetysin@kotsa.or.kr</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">자동차 결함정보수집 파일(리콜불만신고)</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">자동차리콜센터 리콜알리미 서비스</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">자동차리콜센터 온라인상담 서비스</p></td>
-								</tr>
-								<tr>
-								<td><p style="text-align:center; font-size:80%">자동차안전하자관리</p></td>
-								<td><p style="text-align:center; font-size:80%">자동차 교환·환불 신청서 및 판정문</p></td>
-								<td><p style="text-align:center; font-size:80%">자동차안전하자 심의위원회사무국</p></td>
-								<td><p style="text-align:center; font-size:80%">031-369-0392</p></td>
-								<td><p style="text-align:center; font-size:80%">0502-384-5498</p></td>
-								<td><p style="text-align:center; font-size:80%">chlwnstlr100@kotsa.or.kr</p></td>
-								</tr>
 							</tbody>
 						</table>
-					</div>	
-				</div>	
 			</div>
 			<h6 class="title_none">② 개인정보보호위원회 개인정보보호종합포털 웹사이트(www.privacy.go.kr) → 개인서비스 → 정보주체 권리행사 → 개인정보 열람등요구 → 열람등요구(본인인증 필요)</h6>		
 			<br>
@@ -1924,6 +1047,12 @@ $(function(){
 						<ul>
 							<li>- 이메일 : <a class="txt_blue" href="mailto:chjeong@kotsa.or.kr">chjeong@kotsa.or.kr</a></li>
 							<li>- 전화번호 : <a href="tel:0544597480">054-459-7480</a></li>
+						</ul>
+					</li>
+					<li><strong>※ 개인정보 보호책임자 : 모빌리티플랫폼처장 김현진</strong>
+						<ul>
+							<li>- 이메일 : <a class="txt_blue" href="mailto:khj2047@kotsa.or.kr">chjeong@kotsa.or.kr</a></li>
+							<li>- 전화번호 : <a href="tel:0544597480">054-459-7269</a></li>
 						</ul>
 					</li>
 					<li class="mt20"><strong>※ 개인정보보호 및 고충처리 담당자 : 정보보안처 양륜겸, 장지혜</strong>
@@ -2019,225 +1148,9 @@ $(function(){
 							<p style="text-align:center; font-size:80%">2024.10.10.~현재 적용</p>
 						</td>						
 					</tr>
-					<tr>
-						<td rowspan="4">
-							<p style="text-align:center; font-size:80%">2024.10.02.~2024.10.09</p>
-						</td>
-						<td>
-							<p style="text-align:center; font-size:80%">개인정보의 처리 항목</p>
-						</td>				
-						<td>
-							<p style="text-align:center; font-size:80%">정보주체의 동의를 받아 처리하는 개인정보와 정보주체의 동의 없이 처리할 수 있는 개인정보의 항목 및 법적 근거 구분</p>
-						</td>
-						<td rowspan="4">
-							<p style="text-align:center; font-size:80%"><a title="새창열림" onclick="window.open('/portal/contents.do?bbscCode=privhist&amp;ctntVers=38&amp;menuCode=07020200')">2024.10.02.~2024.10.09<br/>적용 ☞ 바로가기</a></p>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<p style="text-align:center; font-size:80%">개인정보의 제3자 제공</p>
-						</td>				
-						<td>
-							<p style="text-align:center; font-size:80%">제공 기관·업체 추가 1개</p>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<p style="text-align:center; font-size:80%">개인정보 처리의 위탁</p>
-						</td>				
-						<td>
-							<p style="text-align:center; font-size:80%">위탁 기관·업체 추가 1개</p>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<p style="text-align:center; font-size:80%">가명정보의 처리</p>
-						</td>				
-						<td>
-							<p style="text-align:center; font-size:80%">신설(제12조)</p>
-						</td>
-					</tr>
-					<tr>
-						<td rowspan="2">
-							<p style="text-align:center; font-size:80%">2024.09.13.~2024.10.01.</p>
-						</td>
-						<td>
-							<p style="text-align:center; font-size:80%">개인정보파일의 등록</p>
-						</td>				
-						<td>
-							<p style="text-align:center; font-size:80%">개인정보파일 73개→69개</p>
-						</td>
-						<td rowspan="2">
-							<p style="text-align:center; font-size:80%"><a title="새창열림" onclick="window.open('/portal/contents.do?bbscCode=privhist&amp;ctntVers=36&amp;menuCode=07020200')">2024.09.13.~2024.10.03.<br/>적용 ☞ 바로가기</a></p>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<p style="text-align:center; font-size:80%">개인정보의 제3자 제공</p>
-						</td>				
-						<td>
-							<p style="text-align:center; font-size:80%">제공 기관 추가 1개</p>
-						</td>
-					</tr>
-					<tr>
-						<td rowspan="5">
-							<p style="text-align:center; font-size:80%">2024.08.20.~2024.09.12.</p>
-						</td>
-						<td>
-							<p style="text-align:center; font-size:80%">목차 신설 및 순서 변경</p>
-						</td>				
-						<td>
-							<p style="text-align:center; font-size:80%">목차 신설(제3조)
-							<br/>목차 변경
-							<br/>(제15조→제4조, 제11조→제6조, 제14조→제7조, 제12조→제8조, 제6조→제9조, 제13조→제11조, 제8조→제13조, 제7조→제14조, 제9조→제15조로 변경)</p>
-						</td>
-						<td rowspan="5">
-							<p style="text-align:center; font-size:80%"><a title="새창열림" onclick="window.open('/portal/contents.do?bbscCode=privhist&amp;ctntVers=34&amp;menuCode=07020200')">2024.08.20.~2024.09.12.<br/>적용 ☞ 바로가기</a></p>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<p style="text-align:center; font-size:80%">제목 변경</p>
-						</td>
-						<td>
-							<p style="text-align:center; font-size:80%">제16조(개인정보 관리수준 진단 결과→개인정보 보호수준 평가 결과)</p>
-						</td>				
-					</tr>			
-					<tr>
-						<td>
-							<p style="text-align:center; font-size:80%">개인정보파일 등 자동 표출 기능 개선</p>
-						</td>
-						<td>
-							<p style="text-align:center; font-size:80%">제1조, 제2조, 제4조, 제6조, 제8조, 제13조</p>
-						</td>				
-					</tr>
-					<tr>			
-						<td>
-							<p style="text-align:center; font-size:80%">이전 개인정보처리방침 자동 표출 기능 개선</p>
-						</td>
-						<td>
-							<p style="text-align:center; font-size:80%">제18조</p>
-						</td>				
-					</tr>
-					<tr>
-						<td>
-							<p style="text-align:center; font-size:80%">정보주체 권리행사 등 내용 현행화</p>
-						</td>				
-						<td>
-							<p style="text-align:center; font-size:80%">제8조, 제11조, 제12조, 제14조, 제15조</p>
-						</td>				
-					</tr>
-					<tr>
-						<td rowspan="3">
-							<p style="text-align:center; font-size:80%">2024.04.30.~2024.08.19.</p>
-						</td>
-						<td>
-							<p style="text-align:center; font-size:80%">개인정보파일의 등록</p>
-						</td>				
-						<td>
-							<p style="text-align:center; font-size:80%">개인정보파일 72개→73개</p>
-						</td>
-						<td rowspan="3">
-							<p style="text-align:center; font-size:80%"><a title="새창열림" onclick="window.open('/portal/contents.do?bbscCode=privhist&amp;ctntVers=31&amp;menuCode=07020200')">2024.04.30.~2024.08.19.<br/>적용 ☞ 바로가기</a></p>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<p style="text-align:center; font-size:80%">개인정보 처리의 위탁</p>
-						</td>		
-						<td>
-							<p style="text-align:center; font-size:80%">수탁 기관·업체 15개→12개</p>
-						</td>					
-					</tr>
-					<tr>
-						<td>
-							<p style="text-align:center; font-size:80%">개인정보의 제3자 제공</p>
-						</td>		
-						<td>
-							<p style="text-align:center; font-size:80%">제공 기관·업체 37개→40개</p>
-						</td>					
-					</tr>
-					<tr>
-						<td rowspan="2">
-							<p style="text-align:center; font-size:80%">2024.02.06.~2024.04.29.</p>
-						</td>
-						<td>
-							<p style="text-align:center; font-size:80%">개인정보파일의 등록</p>
-						</td>
-						<td>
-							<p style="text-align:center; font-size:80%">개인정보처리시스템 27개→28개, 개인정보파일 67개→72개</p>
-						</td>
-						<td rowspan="2">
-							<p style="text-align:center; font-size:80%"><a title="새창열림" onclick="window.open('/portal/contents.do?bbscCode=privhist&amp;ctntVers=30&amp;menuCode=07020200')">2024.02.06.~2024.04.29.<br/>적용 ☞ 바로가기</a></p>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<p style="text-align:center; font-size:80%">개인정보 영향평가 수행</p>
-						</td>
-						<td>
-							<p style="text-align:center; font-size:80%">개인정보 영향평가 33개→34개</p>
-						</td>			
-					</tr>
 				</tbody>
 			</table>		
-			<p>③ 이전의 개인정보 처리방침은 아래에서 확인하실 수 있습니다.</p>
-			<div class="toggle-table">
-				<a class="button blue toggle-button" id="btn_08">2024~ 개인정보 처리방침▼</a>			
-				<div id="table08">
-					<ul>
-						<li><a title="새창열림" onclick="window.open('/portal/contents.do?bbscCode=privhist&amp;ctntVers=38&amp;menuCode=07020200')">· 2024.10.02 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/contents.do?bbscCode=privhist&amp;ctntVers=36&amp;menuCode=07020200')">· 2024.09.13 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/contents.do?bbscCode=privhist&amp;ctntVers=34&amp;menuCode=07020200')">· 2024.08.20 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/contents.do?bbscCode=privhist&amp;ctntVers=31&amp;menuCode=07020200')">· 2024.04.30 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/contents.do?bbscCode=privhist&amp;ctntVers=30&amp;menuCode=07020200')">· 2024.02.06 자 개인정보처리방침(클릭)</a></li>
-					</ul>
-				</div>
-			</div>	
-			<div class="toggle-table">
-				<a class="button blue toggle-button" id="btn_09">2020~2023 개인정보 처리방침▼</a>			
-				<div id="table09">
-					<ul>
-						<li><a title="새창열림" onclick="window.open('/portal/contents.do?bbscCode=privhist&amp;ctntVers=27&amp;menuCode=07020200')">· 2023.09.25 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/contents.do?bbscCode=privhist&amp;ctntVers=24&amp;menuCode=07020200')">· 2023.08.10 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=24&amp;menuCode=07020200')">· 2023.03.02 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/contents.do?bbscCode=privhist&amp;ctntVers=20&amp;menuCode=07020200')">· 2023.02.10 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/contents.do?bbscCode=privhist&amp;ctntVers=18&amp;menuCode=07020200')">· 2022.08.03 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/contents.do?bbscCode=privhist&amp;ctntVers=9&amp;menuCode=07020200')">· 2022.02.07 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/contents.do?bbscCode=privhist&amp;ctntVers=2&amp;menuCode=07020200')">· 2022.01.03 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=19&amp;menuCode=07020200')">· 2021.10.12 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=18&amp;menuCode=07020200')">· 2021.06.21 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=17&amp;menuCode=07020200')">· 2021.02.03 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=16&amp;menuCode=07020200')">· 2021.01.05 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=15&amp;menuCode=07020200')">· 2020.03.17 자 개인정보처리방침(클릭)</a></li>
-					</ul>
-				</div>
-			</div>		
-			<div class="toggle-table">
-				<a class="button blue toggle-button" id="btn_10">2011~2019 개인정보 처리방침▼</a>			
-				<div id="table10">
-					<ul>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=14&amp;menuCode=07020200')">· 2019.12.03 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=13&amp;menuCode=07020200')">· 2019.11.25 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=11&amp;menuCode=07020200')">· 2018.04.16 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=10&amp;menuCode=07020200')">· 2016.12.31 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=9&amp;menuCode=07020200')">· 2015.11.17 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=8&amp;menuCode=07020200')">· 2015.11.09 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=7&amp;menuCode=07020200')">· 2015.10.28 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=6&amp;menuCode=07020200')">· 2015.07.08 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=5&amp;menuCode=07020200')">· 2015.05.15 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=4&amp;menuCode=07020200')">· 2014.10.23 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=3&amp;menuCode=07020200')">· 2013.07.26 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=2&amp;menuCode=07020200')">· 2013.06.18 자 개인정보처리방침(클릭)</a></li>
-						<li><a title="새창열림" onclick="window.open('/portal/bbs/privhist_view.do?bbscCode=privhist&amp;bbscSeqn=1&amp;menuCode=07020200')">· 2011 자 개인정보처리방침(클릭)</a></li>
-					</ul>
-				</div>
-			</div>		
 		</div>
 	</article>
-	
-	<div class="area_btnbox">
-		<a class="button" href="/portal/bbs/privhist_list.do?menuCode=07020200" target="_blank">이전 개인정보 처리방침 보기</a>
-	</div>
 </div>
 <!--//본문 끝--></div></div></div></div></div>
