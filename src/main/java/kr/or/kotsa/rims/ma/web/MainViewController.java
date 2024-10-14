@@ -167,17 +167,16 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 	        return IS_PC;
 	    }
 	}
-	
+
 	public static boolean isAccMthd(HttpServletRequest req) {
 		String userAgent = req.getHeader("User-Agent").toUpperCase();
+		System.out.println("뭐야"+userAgent);
 		if(userAgent.contains("INRIMSAPP")) {
-			return IS_MW;
-		} else if(userAgent.contains("IPHONE") && !userAgent.contains("SAFARI")) {
 			return IS_MW;
 		} else {
 			return true;
 		}
-	}
+	}	
 	
 	/**
 	 * 회원가입 화면
