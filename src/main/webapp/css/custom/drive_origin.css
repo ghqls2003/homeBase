@@ -1,0 +1,136 @@
+@charset "UTF-8";
+table.tb td .k-picker-solid {
+	text-align: center;
+    width: 155px;
+}
+
+@media (max-width: 950px) {
+	table.tb td .k-picker-solid {
+		text-align: center;
+	    width: 115px;
+	}
+}
+
+/* 면허종별 간격 */
+.sub02_03 table.license_tb .chk-wrap .category {
+    width: 155px;
+}
+
+@media (min-width: 900px){
+	.sub02_03 .license_bg {
+		width: 690px;
+		height: 430px;
+	}
+}
+
+@media (max-width: 640px){
+	.sub02_03 .license_bg .upload_box {
+		display: none;
+	}
+
+	.sub02_03 .license_bg .k-dropdownlist {
+		width: 95px !important;
+	}
+
+	.rental_tb02 .no_line {
+		display: none !important;;
+	}
+}
+
+.qrCfm {
+	width: 152px;
+    height: 54px;
+    background-color: #DEDEDE;
+    border-radius: 8px;
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: #000;
+    margin-right: 10px;
+}
+
+/* 업로드 팝업관련 추가 */
+#uploadFlex {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.qrCfmUpload {
+	width: 152px;
+    height: 54px;
+    background-color: #DEDEDE;
+    border-radius: 8px;
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: #000;
+    margin-right: 10px;
+}
+.k-loading-mask {
+    z-index: 9999;
+}
+.container{
+	padding: 100px 0 54px;
+	min-height: calc(100vh - 118px);
+	outline: none;
+}
+.bookmark {
+		display: flex;
+        justify-content: center; 
+        align-items: center; 
+        }
+.bookmark img {
+		width: 20px;
+        max-width: 100%; 
+        max-height: 100%; 
+    }
+
+
+/* 팝업 관련 */
+.popup.result_popup .box{height: 640px;}
+
+@media (max-width:768px) {
+    .popup.drvie_popup .box{width: 540px;}
+    .bookmark img {width: 20px !important;}
+}
+
+@media (max-width:550px) {
+    .popup.drvie_popup .box{width: 390px;}
+    .popup.drvie_popup .box .content h2 {display: inline-block; text-align: center;  margin-bottom: 30px; white-space: pre-wrap; width: 100%;   }
+}
+
+@media (max-width:480px) {
+    .popup.drvie_popup .box{width: 380px;height: 469px;}
+}
+
+@media (max-width:420px) {
+    .popup.drvie_popup .box{height: 445px;}
+    .popup.drvie_popup .box .content h2 {display: inline-block; text-align: center;  margin-bottom: 30px; white-space: pre-wrap; width: 100%;   }
+
+}
+
+/* 팝업추가 코드 24.07.26 */
+.popupSpan{
+    color:red ;
+    text-decoration:underline;
+}
+.popupSpan:hover{
+    color:red ;
+    background:silver;
+    text-decoration:underline;
+}
+
+
+
+
+/* 차량결함 상세팝업 24.08.01 */
+
+.popup .box {
+    width: 900px;
+    height: 621px;
+    background-color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    border-radius: 8px;
+}
