@@ -18,7 +18,9 @@ public class drvRsvMagDao extends CmmnAbstractMapper {
 	public int selectRsvListCnt(Map<String, Object> paramsMap) {
 		return selectOne("vfc.drvRsvMag.RentalHistListCnt", paramsMap);
 	}
-
+	public String selectBzmnSeCd(Map<String, Object> paramsMap) {
+		return selectOne("vfc.rentalHistManage.BzmnSeCd", paramsMap);
+	}
 	public int insertRsv(Map<String, Object> paramsMap) {
 		return insert("vfc.drvRsvMag.insertRsv", paramsMap);
 	}

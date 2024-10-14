@@ -23,9 +23,9 @@ public class drvRsvMagServiceImpl extends CmmnAbstractServiceImpl implements drv
 	public Object selectRsvList(Map<String, Object> paramsMap){
 		Map<String, Object> result = new HashMap<>();
 		
-//		String bzauthCd =  rentalHistManageDao.selectBzmnSeCd(paramsMap);
+		String bzauthCd =  rentalHistManageDao.selectBzmnSeCd(paramsMap);
 		
-//		paramsMap.put("bzauthCd", bzauthCd);
+		paramsMap.put("bzauthCd", bzauthCd);
 		
 		List<Map<String, Object>> list = rentalHistManageDao.selectRsvList(paramsMap);
 		int total = rentalHistManageDao.selectRsvListCnt(paramsMap);
@@ -37,7 +37,9 @@ public class drvRsvMagServiceImpl extends CmmnAbstractServiceImpl implements drv
 	@Override
 	public Object selectRsvNoList(Map<String, Object> paramsMap) {
 		Map<String, Object> result = new HashMap<>();
+		String bzauthCd =  rentalHistManageDao.selectBzmnSeCd(paramsMap);
 		
+		paramsMap.put("bzauthCd", bzauthCd);
 		List<Map<String, Object>> list = rentalHistManageDao.selectRsvNoList(paramsMap);
 		int total = rentalHistManageDao.selectRsvNoListCnt(paramsMap);
 		

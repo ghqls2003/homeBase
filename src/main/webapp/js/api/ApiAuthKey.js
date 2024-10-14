@@ -180,13 +180,11 @@
 				        }
 				    } 
 
-				    // operSeCd == '1'이 없을 때의 기본 처리
 				    if (!found) {
 				        if (apiData.data.length == 0) {
 				            $(".apply").show();
 				        } else {
 				            const sttsCd = apiData.data[0].sttsCd;
-				            // sttsCd 값에 따라 hide, show 처리
 				            if (sttsCd == '1') {
 				                $(".Applying").show();
 				                $(".extend").hide();

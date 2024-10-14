@@ -47,9 +47,29 @@
 		<if test="searchWrd != '' and searchWrd != null">
 			and car.rent_no like '%' || #{searchWrd} || '%'
 		</if>
-		<if test="bzmnSn != '' and bzmnSn != null">
-			 and car.bzmn_sn = #{bzmnSn}
-		</if>
+		<choose>
+	        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
+				AND (car.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
+				OR car.bzmn_sn = #{bzmnSn})
+	        </when>
+	        <when test='authrtCd.equals("S02")'> <!-- 영업소관리자 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시  -->
+				AND car.bzmn_sn = #{bzmnSn}
+	        </when>
+	        <when test='authrtCd.equals("S03")'> <!-- 주사무소 일반회원, 영업소 일반회원에 따라 조건처리  -->
+	            <if test="bzauthCd == 1">
+	                AND (car.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno = #{bzmnSn})
+	                OR car.bzmn_sn = #{bzmnSn})
+	            </if>
+	            <if test="bzauthCd == 2">
+	                AND car.bzmn_sn = #{bzmnSn}
+	            </if>
+	        </when>
+	        <otherwise> <!-- 그 외는 소속 회사의 대여 건만 표시 -->
+				<if test="bzmnSn != '' and bzmnSn != null">
+                	AND car.bzmn_sn = #{bzmnSn}
+				</if>
+	        </otherwise>
+		</choose>
 		) T
 		WHERE 1 = 1
 		<if test="take != '' and take != null">

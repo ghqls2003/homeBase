@@ -155,6 +155,26 @@ public class drvRsvMagController extends CmmnAbstractServiceImpl {
 	@RequestMapping("drvRsvMag/selectRsvNoList")
 	@ResponseBody
 	public Object CarList(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		paramsMap.put("authrtCd", getAuthrtCd());
+		author = getAuthrtCd();
+		char firstChar = author.charAt(0);
+		if(firstChar == 'G') {
+			if(paramsMap.get("vhclRegNo") != "" && paramsMap.get("vhclRegNo") != null) {paramsMap.put("authrtCd", "K01");}
+			else {
+				String cmptncZoneCd = getCmptncZoneCd();
+				if(cmptncZoneCd.matches("..00000000"))
+					paramsMap.put("cmptncZoneCd", cmptncZoneCd.substring(0,2));
+				else
+					paramsMap.put("cmptncZoneCd", cmptncZoneCd);
+			}
+		} else if(firstChar == 'S') {
+			paramsMap.put("cmptncZoneCd", getCmptncZoneCd());
+			paramsMap.put("bzmnSn", getBzmnSn());
+			paramsMap.put("upBzmnSn", getUpBzmnSn());
+			paramsMap.put("Sauth", "S");
+		}
+		
+		
 		if(getAuthrtCd().equals("S01") || getAuthrtCd().equals("S02") || getAuthrtCd().equals("S03")) {
 			paramsMap.put("bzmnSn", getBzmnSn());
 			return DrvRsvMagService.selectRsvNoList(paramsMap);

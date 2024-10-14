@@ -28,7 +28,10 @@
 
 	$drvRsvMag.ui = {
 		pageLoad: function() {
-
+			
+			if (authrtCd.includes("Z") || authrtCd.includes("K")) {
+				$('.register_btn').hide();
+			}
 			var nowYear = new Date().getFullYear();
 			var nowMonth = new Date().getMonth();
 			var nowDate = new Date().getDate();
