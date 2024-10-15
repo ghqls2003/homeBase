@@ -68,12 +68,12 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			}
 			
 			var modal_background = document.querySelector('.similarity_pop')
-			window.addEventListener('click', (e) => {
-			    if (e.target === modal_background) {
-			         $(".similarity_pop").css("display", "none");
-			    }
+			window.addEventListener('touchstart', (e) => {
+				if (e.target === modal_background) {
+					$(".similarity_pop").css("display", "none");
+				}
 			});
-			
+
 		},
 		
 		search: function(element){
