@@ -26,7 +26,6 @@
 <head>
 <script type="text/javascript">
 $(function(){
-	
 	$('#label_layer_0a').hover(function(){
 		$('#label_layer_0').show();
 	}, function(){
@@ -57,40 +56,6 @@ $(function(){
 	}, function(){
 		$('#label_layer_5').hide();
 	});
-	
-	var tmp = "";
-	document.getElementById("table08").style.display = "none";
-	// 표 펼치기/접기
-	$(".toggle-table").on("click", ".toggle-button", function(){
-		var button = $(this);
-		
-		if(button.attr("id") == "btn_08") {
-			tmp = document.getElementById("table08");
-		}
-		
-		if (button.hasClass("on")){ //접었을 때
-		
-			var table = button.removeClass("on").next();
-			table.stop().animate({height: 0}, 300);
-			
-			tmp.style.display = "none";
-		} else { //펼쳤을 때
-			
-			var table = button.addClass("on").next().stop();
-			
-			var beginHeight = table.height();
-			
-			tmp.style.display = "";
-			
-			table.css({height: "auto"});
-			var targetHeight = table.height();
-			
-			//애니메이션
-			table.css({height: beginHeight}).animate({height: targetHeight}, 300);
-			
-		}
-	});
-
 }); 
 </script>
 </head>
@@ -100,7 +65,7 @@ $(function(){
 <div data-summary="default">
 	<div>
 		<i><img alt="" src="/images/privacy/tenju.png" style="vertical-align:middle;"></i>
-		<em>한국교통안전공단 개인정보처리방침</em>
+		<em>한국교통안전공단 이전 개인정보처리방침</em>
 		<p>한국교통안전공단은 개인정보 보호법에 따라 정보주체의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 아래와 같이 개인정보 처리방침을 두고 있습니다. 본 방침은 별도의 설명이 없는 한 한국교통안전공단에서 운영하는 모든 웹사이트의 개인정보 처리에도 적용됨을 알려드립니다.</p>
 		
 <!-- 주요 개인정보 처리 표시(라벨링) 시작 -->
@@ -244,13 +209,13 @@ $(function(){
 						</div>
 					</div>
 				</a>
-				<a href="#next18" id="label_layer_3a" class="label_box" title="개인정보 보호수준 평가 결과">
-				<img src="/images/privacy/privacyPolicy_icon16.png" alt="개인정보 보호수준 평가 결과" style="width:85px; height:85px;">
-				<p class="label_cnt">개인정보 보호수준 평가 결과</p>
+				<a href="#next18" id="label_layer_3a" class="label_box" title="개인정보 관리수준 평가 결과">
+				<img src="/images/privacy/privacyPolicy_icon16.png" alt="개인정보 관리수준 평가 결과" style="width:85px; height:85px;">
+				<p class="label_cnt">개인정보 관리수준 평가 결과</p>
 				<div id="label_layer_3" class="label_layer num3" style="display: none;">
 				<div class="label_desc_top">
 					<p style="color:#fff;">
-						<strong>개인정보 보호수준 평가 결과</strong>
+						<strong>개인정보 관리수준 평가 결과</strong>
 					</p>
 				</div>
 				<div class="label_desc_btm">
@@ -259,7 +224,7 @@ $(function(){
 						<figurecaption>
 							<div id="label_layer_0" class="label_layer num4">
 								<div class="label_desc_top">
-									<p><strong>개인정보 보호수준 평가 결과</strong></p>
+									<p><strong>개인정보 관리수준 평가 결과</strong></p>
 								</div>
 					
 							</div>
@@ -613,7 +578,7 @@ $(function(){
 						<p style="text-align:center; font-size:80%"> 운전자격확인이력</p>
 					</td>
 					<td style="word-break:break-all">
-						<p style="text-align:center; font-size:80%">「개인정보 보호법」 제15조제1항제3호, 「여객자동차 운수사업법」 제34조의2제2항, 제34조의3제1항, 같은 법 시행령 제38조제3항제9의2호 및 제45조의2</p>
+						<p style="text-align:center; font-size:80%">「여객자동차 운수사업법」 제34조의2(자동차대여사업자의 준수사항)</p>
 					</td>
 					<td style="word-break:break-all">
 						<p style="text-align:center; font-size:80%">운전자격확인 관리</p>
@@ -709,8 +674,8 @@ $(function(){
 							
 							<td><p style="text-align:center; font-size:80%">운전자격확인시스템</p></td>
 							<td><p style="text-align:center; font-size:80%"> 사용자</p></td>
-							<td><p style="text-align:center; font-size:80%">이름, IP주소, (주사무소⋅영업소(예약소)) 소속 회사, 핸드폰, 전화번호, (공공기관) 기관명, 소속부서명, (지자체 담당자) 등록 지자체</p></td>
-							<td><p style="text-align:center; font-size:80%">보조 연락처</p></td>
+							<td><p style="text-align:center; font-size:80%">이름, ID, 권한</p></td>
+							<td><p style="text-align:center; font-size:80%">핸드폰, E-Mail, 보조전화번호, 소속, 부서</p></td>
 							<td><p style="text-align:center; font-size:80%">「개인정보 보호법」 제15조제1항제1호에 따른 정보주체의 동의</p></td>
 							<td><p style="text-align:center; font-size:80%">회원탈퇴시까지</p></td>
 							</tr>
@@ -1126,11 +1091,11 @@ $(function(){
 			
 			<br>
 			
-			<h5 class="mt0" id="next18">제18조 (개인정보 보호수준 평가 결과)
+			<h5 class="mt0" id="next18">제18조 (개인정보 관리수준 평가 결과)
 				<img src="/web/images/privacy/privacyPolicy_icon16.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
-			<p>① 한국교통안전공단은 개인정보를 안전하게 관리하기 위해 「개인정보 보호법」 제11조의2에 따라 매년 개인정보위에서 실시하는 “개인정보 보호수준 평가”를 받고 있습니다.</p>
-			<p>② 한국교통안전공단은 2023년 개인정보 보호수준 평가 결과 ‘A’ 등급을 획득하였습니다.</p>
+			<p>① 한국교통안전공단은 개인정보를 안전하게 관리하기 위해 ｢개인정보 보호법｣ 제11조에 따라 매년 개인정보위에서 실시하는 “공공기관 개인정보 관리수준 진단”을 받고 있습니다.</p>
+			<p>② 한국교통안전공단은 2023년 개인정보 관리수준 진단 평가 결과 ‘A’ 등급을 획득하였습니다.</p>
 			<p>③ 한국교통안전공단은 개인정보 처리절차 개선, 시스템 보안(개인정보 암호화 등) 강화 등을 추진하여 개인정보 유출 방지를 위해 노력하고 있습니다.</p>
 			
 			<br>
@@ -1138,10 +1103,10 @@ $(function(){
 			<h5 class="mt0" id="next19">제19조 (고정형·이동형 영상정보처리기기 운영·관리에 관한 사항)
 				<img src="/web/images/privacy/privacyPolicy_icon17.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
-			<p>① 한국교통안전공단은 ｢개인정보 보호법｣ 제25조제1항에 따라 시설안전 및 화재, 범죄 예방을 목적으로 고정형⋅이동형 영상정보처리기기를 설치·운영하고 있으며, 자세한 내용은 "고정형⋅이동형 영상정보처리기기 운영·관리 방침"을 통해 확인하시기 바랍니다.</p>
-			<p>※ 보다 상세한 <한국교통안전공단>의 영상정보처기기기 운영·관리 방침에 관한 사항은 공단 홈페이지(www.kotsa.or.kr)의 이용안내 → 개인정보처리방침 → 고정형⋅이동형 영상정보처기기기 운영·관리 방침 게시판에서 조회 및 확인하실 수 있습니다.</p>
+			<p>① 한국교통안전공단은 ｢개인정보 보호법｣ 제25조제1항에 따라 시설안전 및 화재, 범죄 예방을 목적으로 고정형 영상정보처리기기를 설치·운영하고 있으며, 자세한 내용은 "영상정보처리기기 운영·관리 방침"을 통해 확인하시기 바랍니다.</p>
+			<p>※ 보다 상세한 <한국교통안전공단>의 영상정보처기기기 운영·관리 방침에 관한 사항은 공단 홈페이지(www.kotsa.or.kr)의 이용안내 → 개인정보처리방침 → 영상정보처기기기 운영·관리 방침 게시판에서 조회 및 확인하실 수 있습니다.</p>
 			<div class="btn">
-				<a class="button blue" href="https://www.kotsa.or.kr/portal/contents.do?menuCode=07030000" target="_blank">고정형⋅이동형 영상정보처리기기 운영·관리 방침</a>
+				<a class="button blue" href="https://www.kotsa.or.kr/portal/contents.do?menuCode=07030000" target="_blank">영상정보처리기기 운영·관리 방침</a>
 			</div>
 			
 			<br>
@@ -1149,15 +1114,15 @@ $(function(){
 			<h5 class="mt0" id="next20">제20조 (개인정보 처리방침의 변경)
 				<img src="/images/privacy/privacyPolicy_icon18.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
-			<p>이 개인정보 처리방침은 2024. 10. 14 부터 적용됩니다.</p>
+			<p>이 개인정보 처리방침은 2024. 10. 2 부터 적용됩니다.</p>
 			<p>정보주체는 개인정보 처리방침 신·구 대비표를 통해 개정된 내용을 확인하실 수 있습니다.</p>
 			
 			<div data-indent="box">
-				<table style="width:100%;" class="table">
+				<table style="width:85%;" class="table">
 				<colgroup>
 					<col style="width: 25%;">
-					<col style="width: 15%;">
-					<col style="width: 30%;">
+					<col style="width: 25%;">
+					<col style="width: 25%;">
 					<col style="width: 25%;">
 				</colgroup>
 				<thead>
@@ -1170,22 +1135,8 @@ $(function(){
 				</thead>
 				<tbody>
 					<tr>
-						<td>
-							<p style="text-align:center; font-size:80%">2024.10.14.~현재</p>
-						</td>
-						<td>
-							<p style="text-align:center; font-size:80%">개인정보 처리 항목 및 근거</p>
-						</td>
-						<td>
-							<p style="text-align:center; font-size:80%">개인정보 처리 항목, 근거 명확화</p>
-						</td>
-						<td>
-							<p style="text-align:center; font-size:80%">2024.10.14.~현재 적용</p>
-						</td>						
-					</tr>
-					<tr>
 						<td rowspan="4">
-							<p style="text-align:center; font-size:80%">2024.10.02.~2024.10.13</p>
+							<p style="text-align:center; font-size:80%">2024.10.02.<br>~현재</p>
 						</td>
 						<td>
 							<p style="text-align:center; font-size:80%">개인정보의 처리 항목</p>
@@ -1194,20 +1145,11 @@ $(function(){
 							<p style="text-align:center; font-size:80%">정보주체의 동의를 받아 처리하는 개인정보와 정보주체의 동의 없이 처리할 수 있는 개인정보의 항목 및 법적 근거 구분</p>
 						</td>
 						<td rowspan="4">
-							<p style="text-align:center; font-size:80%">2024.10.02.~2024.10.13<br/>적용</p>
+							<p style="text-align:center; font-size:80%">2024.10.02.</br>~현재적용</p>
 						</td>
 					</tr>
 				</tbody>
-			</table>
-			<p>③ 이전의 개인정보 처리방침은 아래에서 확인하실 수 있습니다.</p>
-			<div class="toggle-table">
-				<a class="button blue toggle-button" id="btn_08">2024~ 개인정보 처리방침▼</a>			
-				<div id="table08">
-					<ul>
-						<li><a title="새창열림" onclick="window.open('/ma/privacy_241002')">· 2024.10.02 자 개인정보처리방침(클릭)</a></li>
-					</ul>
-				</div>
-			</div>		
+			</table>	
 		</div>
 	</article>
 </div>
