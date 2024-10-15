@@ -103,30 +103,28 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 	$drive.ui = {
 		pageLoad : function() {
 			
-			if(userType=="PC"){
+//			if(userType=="PC"){  // 신규 앱 배포 시 주석 해제
+//				$(".similarityChkBox").css("display", "none");  // 신규 앱 배포 시 주석 해제
+//				$("#similarity_tb_top").css("display", "none");  // 신규 앱 배포 시 주석 해제
+//			} else if(userType == "MOBI" && userTypeDetail) {  // 신규 앱 배포 시 주석 해제
 				$(".similarityChkBox").css("display", "none");
 				$("#similarity_tb_top").css("display", "none");
-			} else if(userType == "MOBI" && userTypeDetail) {
-				$(".similarityChkBox").css("display", "none");
-				$("#similarity_tb_top").css("display", "none");
-			}
+//			}  // 신규 앱 배포 시 주석 해제
 			
 			$drive.ui.kendoGrid();
 			$drive.ui.detailDefectGrid();
 			
 			if(userTypeBool){
 				$(".photo_btn").remove();
-				$(".verify-btn-app").remove();
 				$(".verify-btn").css("display", "block");
 			} else {
 				if(userType == "MOBI" && userTypeDetail) {
 					$(".photo_btn").remove();
-					$(".verify-btn-app").remove();
 					$(".verify-btn").css("display", "block");
 				} else {
 					$(".upload_btn").remove();
-					$(".verify-btn").remove();
-					$(".verify-btn-app").css("display", "block");
+					$(".verify-btn").css("display", "block");  // 신규 앱 배포 시 삭제
+//					$(".verify-btn-app").css("display", "block");  // 신규 앱 배포 시 주석 해제
 				}
 			}
 
@@ -188,9 +186,9 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			});*/
 			
 			
-			if(userType=="MOBI" && userTypeDetail==true){
-				$("#versionNotice").css("display", "block");
-			}
+//			if(userType=="MOBI" && userTypeDetail==true){  // 신규 앱 배포 시 주석 해제
+//				$("#versionNotice").css("display", "block");  // 신규 앱 배포 시 주석 해제
+//			}  // 신규 앱 배포 시 주석 해제
 			
 			var modal_background = document.querySelector('.similarity_pop')
 			window.addEventListener('touchstart', (e) => {
@@ -727,7 +725,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			$('.verify-btn').click(function(){
 				$drive.event.verifyLicense();
 			});
-			$('.verify-btn-app').click(function(){  // 앱테스트중
+			$('.verify-btn-app').click(function(){
 				if($('#car_num').val() == '') {
 					alert("차량번호를 입력해 주십시오.");
 				} else if(($('#num01').val()!='' && $('#num02').val()!='' && $('#num03').val()!='' && $('#num04').val()!='' &&

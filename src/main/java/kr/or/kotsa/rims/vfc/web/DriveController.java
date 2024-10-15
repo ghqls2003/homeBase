@@ -127,6 +127,8 @@ public class DriveController extends CmmnAbstractServiceImpl {
 		System.out.println("뭐야"+userAgent);
 		if(userAgent.contains("INRIMSAPP")) {
 			return IS_MW;
+		} else if(userAgent.contains("IPHONE") && !userAgent.contains("SAFARI")) {
+			return IS_MW;
 		} else {
 			return true;
 		}

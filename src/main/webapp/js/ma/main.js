@@ -67,7 +67,7 @@
 				$main.ui.creatTopNotice(data);
 			});
 			if(pcType == "MOBI" && !userTypeDetail && guest){
-				$('#myButton').removeAttr("hidden");
+//				$('#myButton').removeAttr("hidden");  // 신규 앱 배포 시 주석 해제
 			};
 
         },
