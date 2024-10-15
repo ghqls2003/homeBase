@@ -192,12 +192,11 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 				$("#versionNotice").css("display", "block");
 			}
 			
-			
 			var modal_background = document.querySelector('.similarity_pop')
-			window.addEventListener('click', (e) => {
-			    if (e.target === modal_background) {
-			         $(".similarity_pop").css("display", "none");
-			    }
+			window.addEventListener('touchstart', (e) => {
+				if (e.target === modal_background) {
+					$(".similarity_pop").css("display", "none");
+				}
 			});
 
 
