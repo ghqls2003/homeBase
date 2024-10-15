@@ -896,12 +896,12 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 									}
 
 									$('input[type=radio][value='+asort+']').prop("checked", true);
-									$("#name").attr('disabled', true);
-									$("#num01").data("kendoDropDownList").readonly();
-									$("#num02").attr('disabled', true);
-									$("#num03").attr('disabled', true);
-									$("#num04").attr('disabled', true);
-									$('input[type=radio]').attr("disabled", true);
+//									$("#name").attr('disabled', true);
+//									$("#num01").data("kendoDropDownList").readonly();
+//									$("#num02").attr('disabled', true);
+//									$("#num03").attr('disabled', true);
+//									$("#num04").attr('disabled', true);
+//									$('input[type=radio]').attr("disabled", true);
 
 									vrfcMthd = 2;
 
