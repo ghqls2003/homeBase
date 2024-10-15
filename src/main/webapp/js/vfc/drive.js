@@ -1408,7 +1408,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 						                    </p><br>`;
 											$('#result').prepend(html);
 										}
-										if(Object.keys(similarityData).length != 0){
+										if(userType == "MOBI" && userTypeDetail == false && Object.keys(similarityData).length != 0){
 											var similarityConfidence = parseFloat(similarityData.similarityConfidence);
 											var livenessConfidence = parseFloat(similarityData.livenessConfidence);
 
