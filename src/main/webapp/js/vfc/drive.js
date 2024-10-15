@@ -1280,7 +1280,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			}
 		},
 		
-		verifyLicense : function(similarityData = {}) {
+		verifyLicense : function(similarityData = {similarityConfidence: null, livenessConfidence: null}) {
 			if(userType == "MOBI" && !userTypeDetail){
 				if(userOperSystemBool){
 					ocrInterface.deleteLicenseImageFile();
