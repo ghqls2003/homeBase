@@ -1092,7 +1092,7 @@ $(function(){
 			<br>
 			
 			<h5 class="mt0" id="next18">제18조 (개인정보 관리수준 평가 결과)
-				<img src="/web/images/privacy/privacyPolicy_icon16.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon16.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 한국교통안전공단은 개인정보를 안전하게 관리하기 위해 ｢개인정보 보호법｣ 제11조에 따라 매년 개인정보위에서 실시하는 “공공기관 개인정보 관리수준 진단”을 받고 있습니다.</p>
 			<p>② 한국교통안전공단은 2023년 개인정보 관리수준 진단 평가 결과 ‘A’ 등급을 획득하였습니다.</p>
@@ -1101,7 +1101,7 @@ $(function(){
 			<br>
 			
 			<h5 class="mt0" id="next19">제19조 (고정형·이동형 영상정보처리기기 운영·관리에 관한 사항)
-				<img src="/web/images/privacy/privacyPolicy_icon17.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon17.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 한국교통안전공단은 ｢개인정보 보호법｣ 제25조제1항에 따라 시설안전 및 화재, 범죄 예방을 목적으로 고정형 영상정보처리기기를 설치·운영하고 있으며, 자세한 내용은 "영상정보처리기기 운영·관리 방침"을 통해 확인하시기 바랍니다.</p>
 			<p>※ 보다 상세한 <한국교통안전공단>의 영상정보처기기기 운영·관리 방침에 관한 사항은 공단 홈페이지(www.kotsa.or.kr)의 이용안내 → 개인정보처리방침 → 영상정보처기기기 운영·관리 방침 게시판에서 조회 및 확인하실 수 있습니다.</p>
