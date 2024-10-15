@@ -1407,7 +1407,8 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 						                    </p><br>`;
 											$('#result').prepend(html);
 										}
-										if(userType == "MOBI" && userTypeDetail == false && Object.keys(similarityData).length != 0){
+										
+										if(userType == "MOBI" && userTypeDetail == false && similarityData.similarityConfidence != null && similarityData.livenessConfidence != null){
 											var similarityConfidence = parseFloat(similarityData.similarityConfidence);
 											var livenessConfidence = parseFloat(similarityData.livenessConfidence);
 
@@ -1533,6 +1534,9 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			$("#num04").attr('disabled', false);
 			$('input[type=radio]').attr("disabled", false);
 			vrfcMthd = 1;
+			if($("#similarityChk").is(":checked")) {
+				$("#similarityChk").prop("checked", false);
+			}
 		},
 
 	};
