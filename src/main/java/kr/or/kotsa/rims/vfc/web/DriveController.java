@@ -9,6 +9,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.util.*;
 
 import javax.net.ssl.HostnameVerifier;
@@ -260,10 +261,30 @@ public class DriveController extends CmmnAbstractServiceImpl {
 			System.out.println("운전자격 검증 중 예상치 못한 예외가 발생했습니다.");
 		}
 
+		// 유사도, 라이브 파라미터 가공
+		String simil = null;
+		String live = null;
+		DecimalFormat df = new DecimalFormat("#.##");
+		if(paramsMap.get("similarityConfidence") != null && paramsMap.get("livenessConfidence") != null) {
+			Object similValue = paramsMap.get("similarityConfidence");
+		    Object liveValue = paramsMap.get("livenessConfidence");
+		    if (similValue instanceof Number) {
+		        double similDouble = ((Number) similValue).doubleValue();
+		        if(similDouble % 1 != 0) {simil = df.format(similDouble*100);} 
+		        else {simil = String.valueOf((int) similDouble*100);}
+		    }
+		    if (liveValue instanceof Number) {
+		        double liveDouble = ((Number) liveValue).doubleValue();
+		        if(liveDouble % 1 != 0) {live = df.format(liveDouble*100).toString();} 
+		        else {live = String.valueOf((int) liveDouble*100);}
+		    }
+		}
+		
 		String verifyUrl = verifyLicense + "/drvAuth?f_license_no=" + paramsMap.get("num").toString() +
 				"&f_resident_name=" + encodeName + "&f_licn_con_code=" + paramsMap.get("type").toString() +
 				"&f_vrfc_mthd=" + paramsMap.get("vrfcMthd").toString() +
 				"&f_from_date=" + paramsMap.get("startDt").toString() + "&f_to_date=" + paramsMap.get("endDt").toString() +
+				"&face_liveness=" + live + "&face_similarity=" + simil +
 				"&user_sn=" + getUserSn() + "&userType=" + encoded;
 
 		HttpURLConnection connection = null;
