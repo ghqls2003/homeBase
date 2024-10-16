@@ -14,52 +14,102 @@
 
 <style>
 .popup .k-picker-solid {
-    width: 100% !important;
-    padding-left : 0px;
+	width: 100% !important;
+	padding-left: 0px;
 }
 
 button.red_btn:hover {
-    background-color: #fff;
-    color: #364BC6;
-    border: 1px solid #364BC6;
+	background-color: #fff;
+	color: #364BC6;
+	border: 1px solid #364BC6;
 }
 
 .btn_flex button.red_btn {
-    margin-right: 10px;
+	margin-right: 10px;
 }
 
 button.red_btn {
-    width: 152px;
-    height: 54px;
-    background-color: red;
-    border-radius: 8px;
-    font-size: 1.8rem;
-    line-height: 26px;
-    color: #fff;
+	width: 152px;
+	height: 54px;
+	background-color: red;
+	border-radius: 8px;
+	font-size: 1.8rem;
+	line-height: 26px;
+	color: #fff;
 }
 
 .readOnlyGrayBtn {
-    background-color: #f5f5f5;
+	background-color: #f5f5f5;
 }
 
 .sm_popup .sm_box {
-    width: 1100px;
-    height: 500px;
+	width: 1100px;
+	height: 500px;
 }
 
-.noteBox{
-    height: 142px !important;
-    border-radius: 8px;
-    border: 1px solid #DBE0EC;
-    padding: 15px;
-  }
-  
+.noteBox {
+	height: 142px !important;
+	border-radius: 8px;
+	border: 1px solid #DBE0EC;
+	padding: 15px;
+}
+
 .note_name {
-    vertical-align: top;
-    padding-top: 10px;
+	vertical-align: top;
+	padding-top: 10px;
 }
-  
 
+.regiBox {
+	width: 1000px;
+	height: 370px;
+}
+
+@media ( max-width :1500px) {
+	.popup .box {
+		width: 800px;
+		height: 720px;
+	}
+}
+
+@media ( max-width :1024px) {
+	.popup .box {
+		width: 800px;
+		height: 770px;
+	}
+}
+
+@media ( max-width :1023px) {
+	.popup .box {
+		width: 550px;
+		height: 700px;
+	}
+	.sm_popup .sm_box {
+		width: 320px;
+		height: 500px;
+	}
+}
+
+@media ( max-width :764px) {
+	.popup .box {
+		width: 410px;
+		height: 500px;
+	}
+}
+
+@media ( max-width :539px) {
+	#carPopupBox {
+		width: 320px;
+		height: 500px;
+	}
+	.regiBox {
+		width: 320px;
+		height: 500px;
+	}
+	.popup .box {
+		width: 320px;
+		height: 500px;
+	}
+}
 </style>
 
 <div class="subPage sub04">
@@ -156,7 +206,7 @@ button.red_btn {
 	        <!-- 팝업 -->
 			<!-- 시정조치 결과 등록 팝업 -->
 		 <div class="regPopup popup sub04_popup  popup_type02">
-			            <div class="box" style="width:1000px; height:370px;">
+			            <div class="box regiBox" >
 			                <div class="popup_top">
 			                    <h4>시정조치 결과 등록</h4>
 			                    <div class="close" id="close">
