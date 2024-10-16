@@ -245,7 +245,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 			$("#cancelAndInit").on("click",function(){
 				$('.result_popup').css('display', 'none');
 			    $(".result_popup").removeClass("view");
-				location.reload();
+				window.location.href = `${contextPath}/`;
 			});
 
 			$('.result_popup .close').click(function(){
