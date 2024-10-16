@@ -211,7 +211,25 @@ public class drvRsvMagController extends CmmnAbstractServiceImpl {
 	@PostMapping("drvRsvMag/listexcel")
 	public GenericExcelView excelloginViewExcel(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
 												HttpServletResponse response) throws RimsException {
-
+		paramsMap.put("authrtCd", getAuthrtCd());
+		author = getAuthrtCd();
+		char firstChar = author.charAt(0);
+		if(firstChar == 'G') {
+			if(paramsMap.get("vhclRegNo") != "" && paramsMap.get("vhclRegNo") != null) {paramsMap.put("authrtCd", "K01");}
+			else {
+				String cmptncZoneCd = getCmptncZoneCd();
+				if(cmptncZoneCd.matches("..00000000"))
+					paramsMap.put("cmptncZoneCd", cmptncZoneCd.substring(0,2));
+				else
+					paramsMap.put("cmptncZoneCd", cmptncZoneCd);
+			}
+		} else if(firstChar == 'S') {
+			paramsMap.put("cmptncZoneCd", getCmptncZoneCd());
+			paramsMap.put("bzmnSn", getBzmnSn());
+			paramsMap.put("upBzmnSn", getUpBzmnSn());
+			paramsMap.put("userSn", getUserSn());
+			paramsMap.put("Sauth", "S");
+		}
 		List<Map<String, Object>> colValue = drvRsvMagDao.selectRsvList(paramsMap);
 		modelMap.put("colValue", colValue);
 		int total = drvRsvMagDao.selectRsvListCnt(paramsMap);
