@@ -137,7 +137,7 @@
 			<div class="contBox lastBox lastBox02">
 			    <div class="nameBox nameBox-flex">
 			        <div style="display: flex; align-items: center;">
-                       <h4 class="name" id = "pageName">소화물배송운전자격검증 이력</h4>&emsp;
+                       <h4 class="name" id = "pageName">자격확인 이력</h4>&emsp;
                     	총&nbsp;<span id="totalRowCnt" style="font-weight: bold;"></span>건
 			        </div>
  			        <button class="download-btn excelDownBtn" type="button">
