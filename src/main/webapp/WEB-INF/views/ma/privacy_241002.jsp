@@ -1149,7 +1149,10 @@ $(function(){
 						</td>
 					</tr>
 				</tbody>
-			</table>	
+			</table>
+			<div class="area_btnbox">
+				<a class="button" href="/ma/privacy" target="_blank">현재 개인정보 처리방침 보기</a>
+			</div>
 		</div>
 	</article>
 </div>

@@ -62,6 +62,27 @@ button.red_btn:hover {
 #insertPopup > div.info_wr > div > div:nth-child(1) > table:nth-child(1) > tbody > tr:nth-child(1) > td > div > span {
 	padding: 0px;
 }
+@media (max-width: 480px) {
+    #mdAppC {
+    	display: block !important;
+    }
+    #areaGrid > div.nameBox {
+    	height: 57px;
+    }
+    #multi-chart {
+    	width: 550px !important;
+    }
+    #gvAccession > div.search_top > div {
+    	height: 100px !important;
+    }
+    #gvAccession > div.search_top > div > button {
+    	margin-top: 0px !important;
+    }
+    .deleteConfirmBtn {
+    	height: 42px !important;
+    	width: 123px !important;
+    }
+}
 </style>
 
 <script>
@@ -96,7 +117,7 @@ button.red_btn:hover {
 	            	<div id="areaGrid"  class="contBox flex-box">
 	                	<div class="nameBox" style="display: flex; justify-content: space-between;">
 	                    	<h4 class="name">대여사업자 현황</h4>
-	                    	<div style="display: flex;  align-items: center;">
+	                    	<div id="mdAppC" style="display: flex;  align-items: center;">
 	                    		기준일자 ： <span id="nowTime"></span>&nbsp;
 		                    	<button class="download-btn" onClick="javaScript:$statistics.event.excelDown(event);">
 				                	<img src="${contextPath}/images/sub/ico_down.png" alt="다운로드아이콘">다운로드
@@ -178,7 +199,7 @@ button.red_btn:hover {
 			</div>
 			
 			<!-- 카쉐어링 등록 팝업 -->
-			<div class="popup insert_popup" style="z-index: 999">
+			<div class="popup register_popup popup_type02" style="z-index: 999">
 		        <div id="insertPopup" class="box">
 		            <div class="popup_top">
 		                <h4>카쉐어링 업체 등록</h4>
@@ -187,7 +208,7 @@ button.red_btn:hover {
 		                    <span></span>
 		                </div>
 		            </div>
-					<div class="info_wr">
+					<div class="info_wr" style="height: 455px; overflow: auto;">
 						<div class="contBox" style="margin-top: 0px;">
 						    <div class="cont cont-flex">
 						        <table class="tb rental_tb01">
@@ -276,7 +297,7 @@ button.red_btn:hover {
 	    	</div>		
 	    	
 	    	<!-- 카쉐어링 상세팝업 -->
-			<div class="popup update_popup" style="z-index: 999">
+			<div class="popup detail_popup popup_type02 modifiable" style="z-index: 999">
 		        <div id="detailPopup" class="box">
 		            <div class="popup_top">
 		                <h4>카쉐어링 업체 상세 내용</h4>
@@ -285,7 +306,7 @@ button.red_btn:hover {
 		                    <span></span>
 		                </div>
 		            </div>
-					<div class="info_wr">
+					<div class="info_wr" style="height: 455px; overflow: auto;">
 						<div class="contBox" style="margin-top: 0px;">
 						    <div class="cont cont-flex">
 						        <table class="tb rental_tb01">

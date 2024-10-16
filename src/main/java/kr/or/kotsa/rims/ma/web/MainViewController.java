@@ -81,6 +81,7 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 		Boolean busine = false;
 		Boolean admstt = false;
 		String auth = getAuthrtCd(); 
+		String old_new = isOldNew(request);
 		
 		
 //		char firstChar = auth.charAt(0);
@@ -154,6 +155,7 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 		mav.addObject("type", userType);
 		mav.addObject("userTypeDetail", userTypeDetail);
 		mav.addObject("guest", guest);
+		mav.addObject("old_new", old_new);
 		mav.addObject("error", request.getAttribute("error"));
 		return mav;
 	}
@@ -173,8 +175,27 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 		System.out.println("뭐야"+userAgent);
 		if(userAgent.contains("INRIMSAPP")) {
 			return IS_MW;
+		} else if(userAgent.contains("WV")) {
+			return IS_MW;
+		} else if(userAgent.contains("IPHONE") && !userAgent.contains("SAFARI")) {
+			return IS_MW;
 		} else {
 			return true;
+		}
+	}
+	
+	public static String isOldNew(HttpServletRequest req) {
+		String userAgent = req.getHeader("User-Agent").toUpperCase();
+		if(userAgent.contains("INRIMSAPP") && userAgent.contains("WV")) {
+			return "NEW";
+		} else if(!userAgent.contains("INRIMSAPP") && userAgent.contains("WV")) {
+			return "OLD";
+		} else if(userAgent.contains("INRIMSAPP") && userAgent.contains("IPHONE") && !userAgent.contains("SAFARI")) {
+			return "NEW";
+		} else if(!userAgent.contains("INRIMSAPP") && userAgent.contains("IPHONE") && !userAgent.contains("SAFARI")) {
+			return "OLD";
+		} else {
+			return "";
 		}
 	}	
 	

@@ -451,7 +451,7 @@
 						$("#rmrkDetail").val(data.rmrk);
 					});
 					
-					$(".update_popup").addClass("view");
+					$(".detail_popup").addClass("view");
 					$("body").css("overflow", "hidden");
 				},
                 excel: { allPages: true },
@@ -543,7 +543,7 @@
 			// 등록 버튼
 			$(".insertBtn").on("click", function() {
 				$statistics.event.autoCompleteCoNm();
-				$(".insert_popup").addClass("view");
+				$(".register_popup").addClass("view");
 				$("body").css("overflow", "hidden");
 			});
 			
@@ -553,14 +553,14 @@
 				$("#areaDrop, #cmpNm, #bsnOffc, #rsrvtnOffc, #insertRmrk").val("");
 				$("#regCar, #userCnt, #bsnOffcCnt, #rsrvtnOffcCnt").val(0);
 				
-				$(".insert_popup").removeClass("view");
+				$(".register_popup").removeClass("view");
 				$("body").css("overflow", "auto");
 			});
 			// 상세 팝업
 			$(".detailClose").on("click", function() {
 				$("#carShareGrid").data("kendoGrid").clearSelection();
 				
-				$(".update_popup").removeClass("view");
+				$(".detail_popup").removeClass("view");
 				$("body").css("overflow", "auto");
 			});
 		},
@@ -625,7 +625,7 @@
 				ajax(true, contextPath + '/stts/totStts/insertCarShare', 'body', '조회중입니다', params, function(data) {
 					if(data == 1) {
 						alert("등록이 완료되었습니다.");
-						$(".insert_popup").removeClass("view");
+						$(".register_popup").removeClass("view");
 						$("body").css("overflow", "auto");
 						$("#carShareGrid").data("kendoGrid").dataSource.read();
 					} else {
@@ -663,7 +663,7 @@
 					ajax(true, contextPath + '/stts/totStts/updateCarShare', 'body', '조회중입니다', detailParams, function(data) {
 						if(data == 1) {
 							alert("수정이 완료되었습니다.");
-							$(".update_popup").removeClass("view");
+							$(".detail_popup").removeClass("view");
 							$("body").css("overflow", "auto");
 							$("#carShareGrid").data("kendoGrid").dataSource.read();
 						} else {
@@ -679,7 +679,7 @@
 				ajax(true, contextPath + '/stts/totStts/deleteCarShare', 'body', '조회중입니다', detailParams, function(data) {
 					if(data ==1) {
 						alert("삭제가 완료되었습니다.");
-						$(".update_popup").removeClass("view");
+						$(".detail_popup").removeClass("view");
 						$("body").css("overflow", "auto");
 						$("#carShareGrid").data("kendoGrid").dataSource.read();
 					} else {
