@@ -29,25 +29,116 @@ ul.yearBox li label {
 	display: block;
 }
 
-button.red_btn{width: 152px;height: 54px;background-color: #ff3838;border-radius: 8px;font-size: 1.8rem;line-height: 26px;color: #fff;}
-button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff3838;}
+button.red_btn {
+	width: 152px;
+	height: 54px;
+	background-color: #ff3838;
+	border-radius: 8px;
+	font-size: 1.8rem;
+	line-height: 26px;
+	color: #fff;
+}
 
-.sm_popup .sm_box {width: 1100px; height: 500px;}
+button.red_btn:hover {
+	background-color: #fff;
+	color: #ff3838;
+	border: 1px solid #ff3838;
+}
 
-.sm_popup .global_lc_box {width: 600px; height: 800px;}
+.sm_popup .sm_box {
+	width: 1100px;
+	height: 500px;
+}
 
-#globalLicense .content div { padding : 20px 10px; line-height:30px }
-#globalLicense .content img { margin: auto; width: 90%; }
-#globalLicense .content .scrollBar02 { height: 100%; padding-right: 12px; }
-#globalLicense .content .btn_flex { margin-top : 0px; }
-.btn_flex { margin-top: 65px; }
+.sm_popup .global_lc_box {
+	width: 600px;
+	height: 800px;
+}
 
-.k-datetimepicker{background-color: #fff !important;border-radius: 8px;border: 1px solid #DBE0EC !important;}
-.k-datetimepicker .k-input-button{color: #F09F3C;}
-.k-datetimepicker .k-input-button:nth-child(2){background: none !important;}
-.k-datetimepicker .k-input-button:nth-child(4){background: url('/images/sub/ico_calender.png') no-repeat 0 50%;}
+#globalLicense .content div {
+	padding: 20px 10px;
+	line-height: 30px
+}
 
-.sub03 .contBox { margin: 2px 0px 15px 0px;}
+#globalLicense .content img {
+	margin: auto;
+	width: 90%;
+}
+
+#globalLicense .content .scrollBar02 {
+	height: 100%;
+	padding-right: 12px;
+}
+
+#globalLicense .content .btn_flex {
+	margin-top: 0px;
+}
+
+.btn_flex {
+	margin-top: 65px;
+}
+
+.k-datetimepicker {
+	background-color: #fff !important;
+	border-radius: 8px;
+	border: 1px solid #DBE0EC !important;
+}
+
+.k-datetimepicker .k-input-button {
+	color: #F09F3C;
+}
+
+.k-datetimepicker .k-input-button:nth-child(2) {
+	background: none !important;
+}
+
+.k-datetimepicker .k-input-button:nth-child(4) {
+	background: url('/images/sub/ico_calender.png') no-repeat 0 50%;
+}
+
+.sub03 .contBox {
+	margin: 2px 0px 15px 0px;
+}
+
+.name_box {
+	display: flex;
+	align-items: center;
+}
+
+.search_regNo {
+	font-size: 1.4rem;
+	margin-right: 13px;
+	width: 33px;
+}
+
+.detail_regNo {
+	width: 30px
+}
+
+@media ( max-width :1500px) {
+	.sm_popup .sm_box {
+		width: 320px;
+		height: 520px;
+	}
+	.sm_popup .sm_box .content {
+		height: 400px;
+	}
+	button.red_btn {
+		width: 134px;
+		height: 42px;
+	}
+	.name_box {
+		display: block
+	}
+	;
+}
+
+@media ( max-width :1024px) {
+	.sm_popup .sm_box {
+		width: 320px;
+		height: 510px;
+	}
+}
 </style>
 
 <div class="subPage sub03">
@@ -75,7 +166,7 @@ button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff
                     <div class="mo_flex">
                         <div class="year_picker">
                             <ul class="yearBox">
-                                <li class="mo_li" style="display:flex;align-items:center;">
+                                <li class="mo_li" >
                                 	<label for="rent-picker" style="margin-right:5px;">대여일자</label>
                                     <input id="rent-picker" title="datepicker"
                                     	aria-label="대여일자조회">
@@ -106,7 +197,7 @@ button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff
             </div>
             <div class="contBox lastBox lastBox02">
                 <div class="nameBox nameBox-flex">
-                    <div style="display: flex; align-items: center;">
+                    <div class="name_box">
                     	<h4 class="name">국제면허 대여이력 관리 현황</h4>&emsp;
                     	총&nbsp;<span id="totCnt" style="font-weight: bold;"></span>건
                     </div>
@@ -738,7 +829,7 @@ button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff
 	    <div class="content">
 		    <div class="search_wr">
 	        	<div class="search_flex" style="display: flex; align-items: center;">
-		         	<span style="font-size: 1.4rem;">차량번호</span>
+		         	<span  class="detail_regNo" style="font-size: 1.4rem;">차량번호</span>
 		          	<label for="popupSearchWrd" style="display: none">검색조건</label>
 		          	<input id="popupSearchWrd" class="input com_input" aria-label="검색조건 입력" placeholder="차량등록 번호를 입력하세요">
 		          	<button class="yellow_btn" id="popupSearchBtn">
@@ -772,7 +863,7 @@ button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff
 		<div class="content">
 			<div class="search_wr">
 				<div class="search_flex" style="display: flex; align-items: center;margin-bottom:13px;">
-					<span style="font-size: 1.4rem;margin-right:13px;">차량번호</span>
+					<span class="search_regNo">차량번호</span>
 					<label for="carSearchWrd" style="display: none">검색조건</label>
 					<input id="carSearchWrd" class="input com_input" aria-label="검색조건 입력" placeholder="차량등록 번호를 입력하세요">
 					<button class="yellow_btn" id="carPopupSearchBtn">
