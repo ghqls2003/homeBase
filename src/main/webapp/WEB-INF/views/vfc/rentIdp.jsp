@@ -130,13 +130,21 @@ button.red_btn:hover {
 	.name_box {
 		display: block
 	}
-	;
+	.contBox h4.name {
+		font-size: 2.0rem;
+	}
 }
 
 @media ( max-width :1024px) {
 	.sm_popup .sm_box {
 		width: 320px;
 		height: 510px;
+	}
+}
+
+@media ( max-width :767px) {
+	 .rentIdprentPicker {
+		margin-right: 40px;
 	}
 }
 </style>
@@ -196,7 +204,7 @@ button.red_btn:hover {
                 </div>
             </div>
             <div class="contBox lastBox lastBox02">
-                <div class="nameBox nameBox-flex">
+                <div class="nameBox nameBox-flex" style="height:auto;">
                     <div class="name_box">
                     	<h4 class="name">국제면허 대여이력 관리 현황</h4>&emsp;
                     	총&nbsp;<span id="totCnt" style="font-weight: bold;"></span>건
