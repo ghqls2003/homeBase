@@ -394,8 +394,6 @@
 
 			$("#searchBtn").on("click",function(){
 				// 엑셀 다운로드 및 데이터 유지용 파라미터
-				searchParamsArc.startDt = $("#start-picker01").val();
-				searchParamsArc.endDt = $("#end-picker01").val();
 				searchParamsArc.rentDt = $("#rent-picker").val();
 				searchParamsArc.vhclRegNo = $("#searchWrd").val();
 				searchParamsArc.coNm = $("#searchCoNm").val();
@@ -410,14 +408,13 @@
 				if(end > new Date(new Date(start).setDate(start.getDate() + 7))){
 					alert("일주일 이상으로 선택할 수 없습니다.");
 					$('#start-picker01').data("kendoDatePicker").value(new Date(new Date(end).setDate(end.getDate() - 7)));
-					return;
 				}
 				
 				if(new Date($('#start-picker01').val()) > new Date($('#end-picker01').val())){
 					alert("시작일은 종료일보다 늦을 수 없습니다.");
-					return;
 				}
-
+				searchParamsArc.startDt = $("#start-picker01").val();
+				searchParamsArc.endDt = $("#end-picker01").val();
 				$("#rentalHistGrid").data("kendoGrid").dataSource.page(1);
 			});
 
