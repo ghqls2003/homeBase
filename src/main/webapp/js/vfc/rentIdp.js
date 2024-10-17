@@ -115,6 +115,33 @@
 				value: new Date(nowYear, nowMonth, nowDate, nowHours, nowMinutes)
 			});
 			
+			$('#start-picker02').on('change', function(){
+				if(new Date($('#start-picker02').val()) > new Date($('#end-picker02').val())){
+					alert("시작일은 종료일보다 늦을 수 없습니다.");
+						$('#start-picker02').data("kendoDateTimePicker").value(new Date($('#end-picker02').val()));
+				}
+			});
+			
+			$('#end-picker02').on('change', function(){
+				if(new Date($('#end-picker02').val()) < new Date($('#start-picker02').val())){
+					alert("종료일은 시작일보다 빠를 수 없습니다.");
+						$('#end-picker02').data("kendoDateTimePicker").value(new Date($('#start-picker02').val()));
+				}
+			});
+			$('#start-picker03').on('change', function(){
+				if(new Date($('#start-picker03').val()) > new Date($('#end-picker03').val())){
+					alert("시작일은 종료일보다 늦을 수 없습니다.");
+						$('#start-picker03').data("kendoDateTimePicker").value(new Date($('#end-picker03').val()));
+				}
+			});
+			
+			$('#end-picker03').on('change', function(){
+				if(new Date($('#end-picker03').val()) < new Date($('#start-picker03').val())){
+					alert("종료일은 시작일보다 빠를 수 없습니다.");
+						$('#end-picker03').data("kendoDateTimePicker").value(new Date($('#start-picker03').val()));
+				}
+			});
+			
 			$rentIdp.event.setData();
 			$rentIdp.ui.rentIdpGrid();
 			
@@ -187,9 +214,9 @@
 						{title: "대여번호", field: "rentNo", template: "#: rentNo #", width : "100px"},
 						{title: "회사명", field: "coNm", template: "#: nvl(coNm, '-') #", width : "100px"},
 						{title: "차량번호", field: "vhclRegNo", template: "#: vhclRegNo #", width : "100px"},
-						{title: "요청일시", field: "regDt", template:  "#: $rentIdp.event.dateFomat(regDt) #", width : "100px"},
-						{title: "대여 시작일시", field: "rentBgngDt",template: "#: $rentIdp.event.dateFomat(rentBgngDt) #", width : "100px"},
-						{title: "대여 종료일시", field: "rentEndDt", template: "#: $rentIdp.event.dateFomat(rentEndDt) #", width : "100px"},
+						{title: "요청일시", field: "regDt", template:  "#: regDt#", width : "100px"},
+						{title: "대여 시작일시", field: "rentBgngDt",template: "#: rentBgngDt#", width : "100px"},
+						{title: "대여 종료일시", field: "rentEndDt", template: "#: rentEndDt#", width : "100px"},
 						//{title: "면허 종류", field: "lcnsIdntfCd", template: "#: lcnsIdntfCd #"},
 						{title: "대여상태", field: "rentSttsNm", template: "#: rentSttsNm #", width : "100px"},
 						{field: "대여 확인증", exportable: false, width : "100px", template: "<button class='gray_btn' style='width: 70px;height: 30px;' onclick='javascript:$rentIdp.event.issued(`#:rentNo#`, `#:rentSttsNm#`);'>발급</button>" }
