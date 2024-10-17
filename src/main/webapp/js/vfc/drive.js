@@ -115,7 +115,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 //			}  // 신규 앱 배포 시 주석 해제
 			
 			
-			//$drive.ui.detailDefectGrid();
+			$drive.ui.detailDefectGrid();
 			
 			if(userTypeBool){
 				$(".photo_btn").remove();
@@ -1371,7 +1371,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                                         $drive.event.popupRntlHsList();
 										if(result.data != undefined && result.total != 0){
 											var html = `<p class="current_info" >
-						                        차량 결함 정보는
+						                        차량 결함 정보가
 						                        <span class = "popupSpan" id ="rslt_vehicleDefect" onclick =$drive.event.popupVhclDfctListClick()>존재</span> 합니다.
 						                    </p>`;
 											$('#result').prepend(html);
