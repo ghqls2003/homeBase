@@ -28,6 +28,10 @@
 .scrollBar02 {
 	overflow-y: auto;
 }
+.popup .content {
+    max-height: 80vh;
+    overflow-y: auto;
+}
 
 .popup .box {
 	width: 850px;
@@ -50,27 +54,6 @@
 	border-radius: 10px;
 }
 
-/* @media ( max-width : 640px) { */
-/* .sub03 ul.yearBox  { */
-/*     display: ruby; */
-/* } */
-/* 	.popup .k-picker-solid { */
-/* 		width: 100% !important; */
-/* 		border-radius: 10px; */
-/* 	} */
-/* 	.popup.detail_popup .box { */
-/* 		width: 100%; */
-/* 		height: auto; */
-/* 	} */
-/* 	.popup.detail_popup .info_wr { */
-/* 		height: auto; */
-/* 		padding: 20px; */
-/* 	} */
-/* 	.popup.detail_popup .tb_flex { */
-/* 		flex-direction: column; */
-/* 		align-items: flex-start; */
-/* 	} */
-/* } */
 @media ( max-width : 376px) {
 	.sub03 ul.yearBox {
 		display: ruby;
@@ -134,7 +117,7 @@
 		flex-direction: column;
 	}
 	.popup.detail_popup .btn_flex {
-		flex-direction: column;
+		/* 		flex-direction: column; */
 		align-items: center;
 	}
 }
@@ -558,7 +541,7 @@ table.tb .tb_flex23 {
 									<th scope="col">차량번호</th>
 									<td style='width: 200px;'>
 										<div class="tb_flex">
-											<label for="regVhclRegNo">차량번호</label> <input  type="text"
+											<label for="regVhclRegNo">차량번호</label> <input type="text"
 												id="regVhclRegNo" name="regVhclRegNo" class="input" readonly />
 										</div>
 									</td>
@@ -726,128 +709,131 @@ table.tb .tb_flex23 {
 				<span></span> <span></span>
 			</div>
 		</div>
-		<div class="info_text">
-			<p>* 반복조회는 대여 종료 시기까지 반복됩니다.</p>
-			<p>* 예약 종료일은 대여 종료일입니다.</p>
-		</div>
 		<div class="content">
 			<div class="scrollBar02">
-				<div class="info_wr">
-					<div class="contBox">
-						<div class="nameBox nameBox-flex">
-							<h4 class="name">반복예약 상세</h4>
-						</div>
-						<div class="cont cont-flex">
-							<table class="tb rental_tb01">
-								<tr>
-									<th scope="col">대여번호</th>
-									<td style='width: 200px;'>
-										<div class="tb_flex">
-											<label for="rsvedRentNo">대여번호</label> <input style='border-radius: 0px; border: 0px solid;' type="text"
-												id="rsvedRentNo" name="rsvedRentNo" class="input" readonly />
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th scope="col">차량번호</th>
-									<td>
-										<div class="tb_flex">
-											<label for="rsvedCar">차량번호</label> <input style='border-radius: 0px; border: 0px solid;' type="text"
-												id="rsvedCar" name="regCarmdl" class="input" readonly />
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th scope="col">면허증</th>
-									<td>
-										<div class="tb_flex">
-											<label for="rsvedDln">면허증</label> <input style='border-radius: 0px; border: 0px solid;' type="text"
-												id="rsvedDln" name="rsvedDln" class="input" readonly />
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th scope="col">면허종별</th>
-									<td>
-										<div class="tb_flex">
-											<label for="rsvedModelYear">면허종별</label> <input style='border-radius: 0px; border: 0px solid;' type="text"
-												id="rsvedModelYear" name="rsvedModelYear" class="input"
-												readonly />
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th scope="col">면허성명</th>
-									<td>
-										<div class="tb_flex">
-											<label for="RsvedlcnsFlnm">면허성명</label> <input style='border-radius: 0px; border: 0px solid;' type="text"
-												id="RsvedlcnsFlnm" name="RsvedlcnsFlnm" class="input"
-												readonly />
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th scope="col">최종검증결과</th>
-									<td>
-										<div class="tb_flex">
-											<label for="RsvedlastRst">최종 검증결과</label> <input style='border-radius: 0px; border: 0px solid;' type="text"
-												id="RsvedlastRst" name="RsvedlastRst" class="input" readonly />
-										</div>
-									</td>
-								</tr>
+				<div class="contBox">
+					<div class="nameBox nameBox-flex">
+						<h4 class="name">반복예약 상세</h4>
+					</div>
+					<div class="cont cont-flex">
+						<table class="tb rental_tb01">
+							<tr>
+								<th scope="col">대여번호</th>
+								<td style='width: 200px;'>
+									<div class="tb_flex">
+										<label for="rsvedRentNo">대여번호</label> <input
+											style='border-radius: 0px; border: 0px solid;' type="text"
+											id="rsvedRentNo" name="rsvedRentNo" class="input" readonly />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th scope="col">차량번호</th>
+								<td>
+									<div class="tb_flex">
+										<label for="rsvedCar">차량번호</label> <input
+											style='border-radius: 0px; border: 0px solid;' type="text"
+											id="rsvedCar" name="regCarmdl" class="input" readonly />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th scope="col">면허증</th>
+								<td>
+									<div class="tb_flex">
+										<label for="rsvedDln">면허증</label> <input
+											style='border-radius: 0px; border: 0px solid;' type="text"
+											id="rsvedDln" name="rsvedDln" class="input" readonly />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th scope="col">면허종별</th>
+								<td>
+									<div class="tb_flex">
+										<label for="rsvedModelYear">면허종별</label> <input
+											style='border-radius: 0px; border: 0px solid;' type="text"
+											id="rsvedModelYear" name="rsvedModelYear" class="input"
+											readonly />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th scope="col">면허성명</th>
+								<td>
+									<div class="tb_flex">
+										<label for="RsvedlcnsFlnm">면허성명</label> <input
+											style='border-radius: 0px; border: 0px solid;' type="text"
+											id="RsvedlcnsFlnm" name="RsvedlcnsFlnm" class="input"
+											readonly />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th scope="col">최종검증결과</th>
+								<td>
+									<div class="tb_flex">
+										<label for="RsvedlastRst">최종 검증결과</label> <input
+											style='border-radius: 0px; border: 0px solid;' type="text"
+											id="RsvedlastRst" name="RsvedlastRst" class="input" readonly />
+									</div>
+								</td>
+							</tr>
 
-							</table>
-							<table class="tb rental_tb01">
-								<tr>
-									<th scope="col">예약 시작일 <span class="asterisk">*</span>
-									</th>
-									<td style='width: 200px;'>
-										<div class="tb_flex">
-											<label for="start-picker03">예약 시작일시</label> <input
-												id="start-picker03" class="date" title="datepicker"
-												aria-label="시작기간검색">
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th scope="col">예약 종료일</th>
-									<td>
-										<div class="tb_flex">
-											<label for="rsvedEndTime">예약 종료일</label> <input style='border-radius: 0px; border: 0px solid;' type="text"
-												id="rsvedEndTime" name="rsvedEndTime" class="input" readonly />
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th scope="col">예약 주기</th>
-									<td>
-										<div class="tb_flex">
-											<label for="rsvedPeriod"></label> <input id="rsvedPeriod"
-												style="left:;">
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th scope="col">다음 검증일시</th>
-									<td>
-										<div class="tb_flex">
-											<label for="RsvedNtCfDt">다음 검증일자</label> <input  style='border-radius: 0px; border: 0px solid;' type="text"
-												id="RsvedNtCfDt" name="RsvedNtCfDt" class="input" readonly />
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th scope="col">최종검증일자</th>
-									<td>
-										<div class="tb_flex">
-											<label for="RsvedlastCfDt">최종 검증일자</label> <input style='border-radius: 0px; border: 0px solid;' type="text"
-												id="RsvedlastCfDt" name="RsvedlastCfDt" class="input"
-												readonly />
-										</div>
-									</td>
-								</tr>
-							</table>
-						</div>
+						</table>
+						<table class="tb rental_tb01">
+							<tr>
+								<th scope="col">예약 시작일 <span class="asterisk">*</span>
+								</th>
+								<td style='width: 200px;'>
+									<div class="tb_flex">
+										<label for="start-picker03">예약 시작일시</label> <input
+											id="start-picker03" class="date" title="datepicker"
+											aria-label="시작기간검색">
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th scope="col">예약 종료일</th>
+								<td>
+									<div class="tb_flex">
+										<label for="rsvedEndTime">예약 종료일</label> <input
+											style='border-radius: 0px; border: 0px solid;' type="text"
+											id="rsvedEndTime" name="rsvedEndTime" class="input" readonly />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th scope="col">예약 주기</th>
+								<td>
+									<div class="tb_flex">
+										<label for="rsvedPeriod"></label> <input id="rsvedPeriod"
+											style="left:;">
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th scope="col">다음 검증일시</th>
+								<td>
+									<div class="tb_flex">
+										<label for="RsvedNtCfDt">다음 검증일자</label> <input
+											style='border-radius: 0px; border: 0px solid;' type="text"
+											id="RsvedNtCfDt" name="RsvedNtCfDt" class="input" readonly />
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th scope="col">최종검증일자</th>
+								<td>
+									<div class="tb_flex">
+										<label for="RsvedlastCfDt">최종 검증일자</label> <input
+											style='border-radius: 0px; border: 0px solid;' type="text"
+											id="RsvedlastCfDt" name="RsvedlastCfDt" class="input"
+											readonly />
+									</div>
+								</td>
+							</tr>
+						</table>
 					</div>
 				</div>
 			</div>
@@ -861,3 +847,6 @@ table.tb .tb_flex23 {
 		</div>
 	</div>
 </div>
+
+
+

@@ -114,8 +114,8 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 				$("#similarity_tb_top").css("display", "none");  // 신규 앱 배포 시 주석 해제
 			}  // 신규 앱 배포 시 주석 해제
 			
-			$drive.ui.kendoGrid();
-			$drive.ui.detailDefectGrid();
+			
+			//$drive.ui.detailDefectGrid();
 			
 			if(userTypeBool){
 				$(".photo_btn").remove();
@@ -794,6 +794,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 
 
 			$('.carNum_btn').click(function(){
+				$drive.ui.kendoGrid();
 				$('#car_num_pop').val('');
 				$("#carNum_grid").data("kendoGrid").dataSource.page(1);
 			});

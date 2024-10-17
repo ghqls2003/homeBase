@@ -106,6 +106,7 @@ public class drvRsvMagController extends CmmnAbstractServiceImpl {
 			paramsMap.put("cmptncZoneCd", getCmptncZoneCd());
 			paramsMap.put("bzmnSn", getBzmnSn());
 			paramsMap.put("upBzmnSn", getUpBzmnSn());
+			paramsMap.put("userSn", getUserSn());
 			paramsMap.put("Sauth", "S");
 		}
 

@@ -5,7 +5,10 @@
 
 	$(document).ready(function() {
 		//		kendo.ui.progress($(document.body), true);
-
+		if (authrtCd.includes("Z") || authrtCd.includes("K")) {
+			$('.register_btn').hide();
+			$('#insertRsvInfo').hide();
+		}
 		$drvRsvMag.ui.pageLoad();		//최초 페이지 로드 시
 		$drvRsvMag.event.setUIEvent();
 	});
@@ -29,9 +32,7 @@
 	$drvRsvMag.ui = {
 		pageLoad: function() {
 			
-			if (authrtCd.includes("Z") || authrtCd.includes("K")) {
-				$('.register_btn').hide();
-			}
+
 			var nowYear = new Date().getFullYear();
 			var nowMonth = new Date().getMonth();
 			var nowDate = new Date().getDate();
