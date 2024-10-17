@@ -25,7 +25,6 @@
     var auth='';
 	var excelParams = '';
     $(document).ready(function() {
-		kendo.ui.progress($(document.body), true);
 		$defect.ui.pageLoad();		//최초 페이지 로드 시
 		$defect.ui.defectInfo();  // 대여차량 결함정보 그리드
 		$defect.event.setUIEvent();
@@ -49,11 +48,9 @@
 							url: contextPath + '/sys/defect/selectDefectInfo',
 							type: "POST",
 							beforeSend: function(xhr) {
-								kendo.ui.progress($(document.body), true); // 프로그레스 인디케이터 표시
 								xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
 							},
 							complete: function() {
-								kendo.ui.progress($(document.body), false); // 프로그레스 인디케이터 숨김
 							}
 						},
 						parameterMap: function(options) {
@@ -111,7 +108,6 @@
 		},
 		
 		rowClickEvent: function(e) {
-			kendo.ui.progress($("#defectGrid"), true);
 			var rows = e.sender.select();
 			var dataItem = null;
 			
@@ -446,7 +442,8 @@
 			
 			// 등록 팝업 X, 닫기 버튼
 			$("#close, .cancle_btn").on("click", function() {
-				location.reload();
+//				location.reload();
+				$(".viewDefect_popup").removeClass("view");
 			});
 			
 			$("#btnDirectInput").on("click", function() {
