@@ -75,6 +75,10 @@ button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff
     #searchWrd {
         width: 100%;
     }
+    .popup .box {
+    	width: 350px;
+    	height: 280px;
+    }
 }
 
 @media (max-width: 950px) {
