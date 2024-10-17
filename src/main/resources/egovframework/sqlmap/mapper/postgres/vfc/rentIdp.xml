@@ -16,7 +16,9 @@
 		rent_no,
 <!-- 		dln, -->
 		t1.mdfcn_dt,
-		vrfc_hstry_sn
+		vrfc_hstry_sn,
+		t2.reg_cmptnc_cd,
+		t1.bzmn_sn
 	from (
 		select 			
 			rent_no,
@@ -43,17 +45,38 @@
 		from dvs_dqv_mt_rent_idp 
 	) t1 left outer join dvs_rac_mt_agency t2 on t1.bzmn_sn = t2.bzmn_sn
 	where 1=1
-				and t1.del_yn = 'N'
-			<if test="coNm != '' and coNm != null">
-	           	and co_nm like '%' || #{coNm} ||'%'
+			<if test='authrtCd.indexOf("Z") == -1 and authrtCd.indexOf("M") == -1 and authrtCd.indexOf("K") == -1'>
+				AND t1.del_yn = 'N'
 			</if>
 			<if test="vhclRegNo != '' and vhclRegNo != null">
-	           	and vhcl_reg_no like '%' || #{vhclRegNo} ||'%'
+	           	AND vhcl_reg_no like '%' || #{vhclRegNo} ||'%'
+			</if>
+			<if test="coNm != '' and coNm != null">
+	           	and co_nm like '%' || #{coNm} ||'%'
 			</if>
 			<if test ='rentDt != null and rentDt != ""'>
 		 		and rent_bgng_dt::DATE <![CDATA[<=]]> #{rentDt}::DATE AND rent_end_dt::DATE <![CDATA[>=]]> #{rentDt}::DATE
 		    </if>
-
+			<choose>
+		        <when test='authrtCd.indexOf("Z") != -1 or authrtCd.indexOf("M") != -1 or authrtCd.indexOf("K") != -1'> <!-- 관리자/공단/국토부 : 전체목록 -->
+		       		AND 1=1
+		        </when>
+		        <when test='authrtCd.indexOf("G") != -1'> <!-- 지자체 : 관할지역 내 사업자의 대여이력 -->
+		        	AND t2.reg_cmptnc_cd LIKE #{cmptncZoneCd} || '%'
+		        </when>
+		        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
+					AND (t1.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
+					OR t1.bzmn_sn = #{bzmnSn})
+		        </when>
+		        <when test='authrtCd.equals("S02")'> <!-- 영업소관리자 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시  -->
+					AND t1.bzmn_sn = #{bzmnSn}
+		        </when>
+		        <otherwise> <!-- 그 외는 소속 회사의 대여 건만 표시 -->
+					<if test="bzmnSn != '' and bzmnSn != null">
+	                	AND t1.bzmn_sn = #{bzmnSn}
+					</if>
+		        </otherwise>
+			</choose>
 	) as t0	
 	</sql>
 	
