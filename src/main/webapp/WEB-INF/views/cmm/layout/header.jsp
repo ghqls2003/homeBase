@@ -383,18 +383,18 @@ if (authrtCd != null && !authrtCd.isEmpty() && authrtCd.equals("K01")) {
 					aria-label="사용자 전환 페이지로 이동">사용자 전환</a>
 			</div>
 		</div>
-		<div class="server_alarm_wrap">
-			<div class="server_alarm_icon off">
-				<audio id="sirenAd" src="${contextPath}/audio/siren_01.mp3"></audio>
-				<div id="if-siren"></div>
-			</div>
-			<div class="switch_wrap">
-				<p>알림설정</p>
-				<label class="switch" aria-label="서버 상태 알림 설정"> <input
-					type="checkbox"> <span></span>
-				</label>
-			</div>
-		</div>
+<!-- 		<div class="server_alarm_wrap"> -->
+<!-- 			<div class="server_alarm_icon off"> -->
+<%-- 				<audio id="sirenAd" src="${contextPath}/audio/siren_01.mp3"></audio> --%>
+<!-- 				<div id="if-siren"></div> -->
+<!-- 			</div> -->
+<!-- 			<div class="switch_wrap"> -->
+<!-- 				<p>알림설정</p> -->
+<!-- 				<label class="switch" aria-label="서버 상태 알림 설정"> <input -->
+<!-- 					type="checkbox"> <span></span> -->
+<!-- 				</label> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
 	</div>
 	<%--             </c:if> --%>
 </div>
