@@ -211,7 +211,25 @@ public class drvRsvMagController extends CmmnAbstractServiceImpl {
 	@PostMapping("drvRsvMag/listexcel")
 	public GenericExcelView excelloginViewExcel(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
 												HttpServletResponse response) throws RimsException {
-
+		paramsMap.put("authrtCd", getAuthrtCd());
+		author = getAuthrtCd();
+		char firstChar = author.charAt(0);
+		if(firstChar == 'G') {
+			if(paramsMap.get("vhclRegNo") != "" && paramsMap.get("vhclRegNo") != null) {paramsMap.put("authrtCd", "K01");}
+			else {
+				String cmptncZoneCd = getCmptncZoneCd();
+				if(cmptncZoneCd.matches("..00000000"))
+					paramsMap.put("cmptncZoneCd", cmptncZoneCd.substring(0,2));
+				else
+					paramsMap.put("cmptncZoneCd", cmptncZoneCd);
+			}
+		} else if(firstChar == 'S') {
+			paramsMap.put("cmptncZoneCd", getCmptncZoneCd());
+			paramsMap.put("bzmnSn", getBzmnSn());
+			paramsMap.put("upBzmnSn", getUpBzmnSn());
+			paramsMap.put("userSn", getUserSn());
+			paramsMap.put("Sauth", "S");
+		}
 		List<Map<String, Object>> colValue = drvRsvMagDao.selectRsvList(paramsMap);
 		modelMap.put("colValue", colValue);
 		int total = drvRsvMagDao.selectRsvListCnt(paramsMap);
@@ -220,7 +238,7 @@ public class drvRsvMagController extends CmmnAbstractServiceImpl {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		Date todayDate = new Date();
 		String today = dateFormat.format(todayDate);
-		String fileName = "자격확인반복예약_일시" + today;
+		String fileName = "자격확인반복예약" + today;
 
 		String colName[] = { "번호", "대여번호", "면허번호", "면허 소유자", "면허종별", "회사명", "예약자", "예약 지정일","수정자","수정일"};
 		String valName[] = { "rn", "rentNo", "dln2", "lcnsFlnm", "lcnsAsortCd", "coNm",

@@ -494,7 +494,7 @@
 			options.lncdDrop = $('#lncdDrop').val();
 			options.searchWrd = $('#searchWrd').val();
 
-			var filename = "자격확인반복예약_일시";
+			var filename = "자격확인반복예약";
 
 			//			excelDown("/os/OPSuseSttus/historylistexcelDown", options, filename, totalRowCount);
 			excelDown("/vfc/drvRsvMag/listexcel", options, filename);

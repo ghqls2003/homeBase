@@ -27,6 +27,7 @@
 
 .scrollBar02 {
 	overflow-y: auto;
+	max-height: calc(90vh - 40px); /* 내용이 넘칠 경우 스크롤 처리 */
 }
 .popup .content {
     max-height: 80vh;
@@ -36,6 +37,8 @@
 .popup .box {
 	width: 850px;
 	height: 621px;
+	max-width: 90vw; /* 반응형을 위해 최대 너비 설정 */
+	max-height: 90vh; /* 반응형을 위해 최대 높이 설정 */
 	background-color: #fff;
 	position: absolute;
 	top: 50%;
@@ -43,6 +46,8 @@
 	transform: translate(-50%, -50%);
 	z-index: 2;
 	border-radius: 8px;
+	overflow: hidden; /* box 밖으로 내용이 나가지 않도록 설정 */
+}
 }
 
 #start-timePicker04+.k-input-button {
