@@ -66,9 +66,9 @@
 			ajax(true, contextPath + '/ma/main/topNotice', 'body', '조회 중입니다', null, function(data) {
 				$main.ui.creatTopNotice(data);
 			});
-			if(pcType == "MOBI" && !userTypeDetail && guest && old_new == "NEW"){  // 신규 앱 배포 시 주석 해제
-				$('#myButton').removeAttr("hidden");  // 신규 앱 배포 시 주석 해제
-			};  // 신규 앱 배포 시 주석 해제
+//			if(pcType == "MOBI" && !userTypeDetail && guest && old_new == "NEW"){  // 신규 앱 배포 시 주석 해제
+//				$('#myButton').removeAttr("hidden");  // 신규 앱 배포 시 주석 해제
+//			};  // 신규 앱 배포 시 주석 해제
 
         },
 	

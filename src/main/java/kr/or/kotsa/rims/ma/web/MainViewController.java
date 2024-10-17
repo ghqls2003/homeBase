@@ -172,7 +172,7 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 
 	public static boolean isAccMthd(HttpServletRequest req) {
 		String userAgent = req.getHeader("User-Agent").toUpperCase();
-		System.out.println("뭐야"+userAgent);
+//		System.out.println("뭐야"+userAgent);
 		if(userAgent.contains("INRIMSAPP")) {
 			return IS_MW;
 		} else if(userAgent.contains("WV")) {
