@@ -19,7 +19,7 @@
 		$serverStat.ui.pageLoad();		//최초 페이지 로드 시
 		$serverStat.event.setUIEvent();
 		if(admstt){
-		$serverStat.event.svrStatLoad();
+		$serverStat.event.svrStatLoad(); 
 		}
 	});
 	$serverStat.ui = {

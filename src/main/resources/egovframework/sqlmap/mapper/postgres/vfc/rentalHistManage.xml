@@ -41,9 +41,6 @@
 				<if test="startDt != '' and startDt != null and endDt != '' and endDt != null">  <!-- 넣을지 고민... -->
 	            	AND (base.reg_dt BETWEEN #{startDt}::TIMESTAMP AND #{endDt}::DATE + '23:59:59'::INTERVAL)
 				</if>
-				<if test="rentDt != '' and rentDt != null">
-					AND (#{rentDt}::TIMESTAMP BETWEEN base.rent_bgng_dt AND base.rent_end_dt)
-				</if>
 				<if test="rentSttsCd != '' and rentSttsCd != null">
 	            	AND base.rent_stts_cd = #{rentSttsCd}
 				</if>
