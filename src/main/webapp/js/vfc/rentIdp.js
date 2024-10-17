@@ -115,6 +115,33 @@
 				value: new Date(nowYear, nowMonth, nowDate, nowHours, nowMinutes)
 			});
 			
+			$('#start-picker02').on('change', function(){
+				if(new Date($('#start-picker02').val()) > new Date($('#end-picker02').val())){
+					alert("시작일은 종료일보다 늦을 수 없습니다.");
+						$('#start-picker02').data("kendoDateTimePicker").value(new Date($('#end-picker02').val()));
+				}
+			});
+			
+			$('#end-picker02').on('change', function(){
+				if(new Date($('#end-picker02').val()) < new Date($('#start-picker02').val())){
+					alert("종료일은 시작일보다 빠를 수 없습니다.");
+						$('#end-picker02').data("kendoDateTimePicker").value(new Date($('#start-picker02').val()));
+				}
+			});
+			$('#start-picker03').on('change', function(){
+				if(new Date($('#start-picker03').val()) > new Date($('#end-picker03').val())){
+					alert("시작일은 종료일보다 늦을 수 없습니다.");
+						$('#start-picker03').data("kendoDateTimePicker").value(new Date($('#end-picker03').val()));
+				}
+			});
+			
+			$('#end-picker03').on('change', function(){
+				if(new Date($('#end-picker03').val()) < new Date($('#start-picker03').val())){
+					alert("종료일은 시작일보다 빠를 수 없습니다.");
+						$('#end-picker03').data("kendoDateTimePicker").value(new Date($('#start-picker03').val()));
+				}
+			});
+			
 			$rentIdp.event.setData();
 			$rentIdp.ui.rentIdpGrid();
 			
