@@ -214,7 +214,6 @@
 							options.vhclRegNo		= searchParamsArc.vhclRegNo;
 							options.coNm				= searchParamsArc.coNm;
 							options.dln					= searchParamsArc.dln;
-							console.log(options)
 							return JSON.stringify(options);
 						}
 					},
