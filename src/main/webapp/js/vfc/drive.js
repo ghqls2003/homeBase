@@ -755,7 +755,13 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 				$drive.event.resetInput();
 			});
 
-			$('.blue_btn').click(function(){
+			$('.carNum_popup .blue_btn').click(function(){
+				$(".carNum_popup .k-grid-display-block").remove();
+				$("#carNum_grid").remove();
+				$(".carNum_popup .cont").append(
+					`<table id="carNum_grid">
+			            <caption>대여차량 조회</caption>
+			        </table>`); 
 				$('.carNum_popup').removeClass("view");
 			});
 
