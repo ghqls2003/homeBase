@@ -36,7 +36,7 @@
 			        , base.rent_stts_cd, base.vrfc_hstry_sn, base.del_yn, base.rgtr_sn, base.reg_dt, base.mdfcn_dt, base.dln
 				FROM
 					dqvs.dvs_dqv_mt_rent base
-				WHERE (#{rentDt}::TIMESTAMP  BETWEEN base.rent_bgng_dt AND base.rent_end_dt)
+				WHERE (#{rentDt}::DATE  BETWEEN base.rent_bgng_dt::DATE AND base.rent_end_dt::DATE)
 					AND base.reg_dt <![CDATA[ <= ]]> NOW()
 				<if test="startDt != '' and startDt != null and endDt != '' and endDt != null">  <!-- 넣을지 고민... -->
 	            	AND (base.reg_dt BETWEEN #{startDt}::TIMESTAMP AND #{endDt}::DATE + '23:59:59'::INTERVAL)
