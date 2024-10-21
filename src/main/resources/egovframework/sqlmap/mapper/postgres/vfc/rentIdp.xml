@@ -16,7 +16,6 @@
 		rent_no,
 <!-- 		dln, -->
 		t1.mdfcn_dt,
-		vrfc_hstry_sn,
 		t2.reg_cmptnc_cd,
 		t1.bzmn_sn
 	from (
@@ -39,8 +38,7 @@
 			reg_ip,
 			mdfr_sn,
 			mdfcn_dt,
-			mdfcn_ip,
-			vrfc_hstry_sn
+			mdfcn_ip
 <!-- 			dln -->
 		from dvs_dqv_mt_rent_idp 
 	) t1 left outer join dvs_rac_mt_agency t2 on t1.bzmn_sn = t2.bzmn_sn
@@ -239,12 +237,6 @@
 		SELECT rent.rent_hstry_no,
 			rent.rent_no,
 			rent.vhcl_reg_no,
-			CASE rent.lcns_idntf_cd
-				when '1' then '국내 면허'
-				when '2' then '국제 면허'
-				else '국내면허'
-				end as lcns_idntf_nm,
-			rent.lcns_idntf_cd,
 			rent.atch_file_sn,
 			coalesce(dcmi.atch_file_nm, '-') atch_file_nm,
 			to_char(rent.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt,
@@ -276,12 +268,6 @@
 				rent.rent_hstry_no,
 				rent.rent_no,
 				rent.vhcl_reg_no,
-				CASE rent.lcns_idntf_cd
-					when '1' then '국내 면허'
-					when '2' then '국제 면허'
-					else '국내면허'
-					end as lcns_idntf_nm,
-				rent.lcns_idntf_cd,
 				rent.atch_file_sn,
 				coalesce(dcmi.atch_file_nm, '-') atch_file_nm,
 				to_char(rent.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt,
@@ -403,7 +389,6 @@
 			 , use_yn
 			 , sgg_cd
 			 , dqvs.pca_decrypt(dln, '150') dln
-			 , vrfc_hstry_sn
 			 , rmrk
 			 , rent_bgng_dt
 			 , rent_end_dt
@@ -416,7 +401,6 @@
 			 , mdfcn_dt
 			 , mdfcn_ip
 			 , atch_file_sn
-			 , lcns_idntf_cd
 			 , del_yn
 			 , vhcl_idnty_cd
 		from dqvs.dvs_dqv_hs_rent_new
@@ -465,12 +449,8 @@
 				reg_dt,
 				<choose>
 					<when test="atchFileSn != '' and atchFileSn != null">
-						lcns_idntf_cd,
 						atch_file_sn,
 					</when>
-					<otherwise>
-						lcns_idntf_cd,
-					</otherwise>
 				</choose>
 				reg_ip
 				)
@@ -535,7 +515,6 @@
 				reg_dt,
 				<choose>
 					<when test="atchFileSn != '' and atchFileSn != null">
-<!-- 						lcns_idntf_cd, -->
 						atch_file_sn,
 					</when>
 					<otherwise>
@@ -603,8 +582,6 @@
 			mdfr_sn,
 			mdfcn_dt,
 			mdfcn_ip,
-			vrfc_hstry_sn,
-			lcns_idntf_cd,
 			mdlyr,
 			vhcl_nm,
 			carmdl,
@@ -628,7 +605,6 @@
 				#{userSn}::numeric,
 				now()::timestamp,
 				#{clientIP},
-				vrfc_hstry_sn,
 				2,
 			  	car_info.mdlyr,
 			    car_info.vhcl_nm,

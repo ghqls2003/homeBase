@@ -24,7 +24,6 @@
 		},
 		{title: "대여 시작일시", field: "rentBgngDt",template: "#: rentBgngDt #"},
 		{title: "대여 종료일시", field: "rentEndDt", template: "#: rentEndDt #"},
-		{title: "면허 종류", field: "lcnsIdntfNm", template: "#: lcnsIdntfNm #"},
 		{title: "대여상태", field: "rentSttsNm", template: "#: rentSttsNm #"},
 		{field: "대여 확인증", exportable: false, template: "<button class='gray_btn' style='width: 70px;height: 30px;' onclick='javascript:$rentalHistManage.event.issued(`#:rentNo#`, `#:rentSttsNm#`);'>발급</button>"}
 	];
@@ -36,7 +35,6 @@
 		{title: "차량번호", field: "vhclRegNo", width: "120px", template: "#: vhclRegNo #"},
 		{title: "대여 시작일시", field: "rentBgngDt", width: "180px", template: "#: rentBgngDt #"},
 		{title: "대여 종료일시", field: "rentEndDt", width: "180px", template: "#: rentEndDt #"},
-		{title: "면허 종류", field: "lcnsIdntfNm", width: "120px", template: "#: lcnsIdntfNm #"},
 		{title: "대여상태", field: "rentSttsNm", width: "80px", template: "#: rentSttsNm #"},
 		{field: "대여 확인증", width: "90px", exportable: false, template: "<button class='gray_btn' style='width: 70px;height: 30px;' onclick='javascript:$rentalHistManage.event.issued(`#:rentNo#`, `#:rentSttsNm#`);'>발급</button>"}
 	];
@@ -628,7 +626,6 @@
 //				$("#verfRslt").val('');
 
 				$("#detailRentNo").val(data[0].rentNo);
-				$("#detailLcnsIdntfNm").val(data[0].lcnsIdntfNm);
 				$("#detailVhclRegNo").val(data[0].vhclRegNo);
 				$("#detailRentSttsNm").val(data[0].rentSttsNm);
 				$("#detailRentHstryNo").val(data[0].rentHstryNo);
@@ -756,15 +753,6 @@
 					html += '					<div class="tb_flex">';
 					html += '						<label for="detailRentNo">대여번호</label>';
 					html += '						<input type="text" id="" name="detailRentNo" class="input no_line" value="'+nvl(data[i].rentNo,' ')+'" readonly/>';
-					html += '					</div>';
-					html += '				</td>';
-					html += '			</tr>';
-					html += '			<tr>';
-					html += '				<th scope="col">면허종류</th>';
-					html += '				<td>';
-					html += '					<div class="tb_flex">';
-					html += '						<label for="detailLcnsIdntfNm">면허종류</label>';
-					html += '						<input type="text" id="" name="detailLcnsIdntfNm" class="input no_line" value="'+nvl(data[i].lcnsIdntfNm,' ')+'" readonly/>';
 					html += '					</div>';
 					html += '				</td>';
 					html += '			</tr>';

@@ -108,8 +108,8 @@
 
 	<insert id="insertRentInfo">
 		INSERT INTO dqvs.dvs_dqv_mt_rent_new
-		(rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, dln, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip)
-		VALUES(#{rentno}, #{vin}, #{carNum}, #{carmdl}, #{modelYear}, #{vhclNm}, #{bzmnSn}, #{engineType}, #{useYn}, #{signguCd}, dqvs.pca_encrypt(#{num}, '150'), #{sn}, to_timestamp(#{startDt}, 'yyyymmdd'), to_timestamp(#{endDt}, 'yyyymmdd'), '1', '1', #{rgtrSn}::numeric, now()::timestamp, #{regIp})
+		(rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip)
+		VALUES(#{rentno}, #{vin}, #{carNum}, #{carmdl}, #{modelYear}, #{vhclNm}, #{bzmnSn}, #{engineType}, #{useYn}, #{signguCd}, #{sn}, to_timestamp(#{startDt}, 'yyyymmdd'), to_timestamp(#{endDt}, 'yyyymmdd'), '1', '1', #{rgtrSn}::numeric, now()::timestamp, #{regIp})
 	</insert>
 
 	<insert id="insertRentHstryInfo">
@@ -117,12 +117,12 @@
 				INSERT INTO dqvs.dvs_dqv_hs_rent_new
 			<choose>
 				<when test="rgtrSn != null and rgtrSn != ''">
-					(rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, dln, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip)
-					select rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, dln, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip from dqvs.dvs_dqv_mt_rent_new
+					(rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip)
+					select rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip from dqvs.dvs_dqv_mt_rent_new
 				</when>
 				<otherwise>
-					(rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, dln, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip, rent_prcs_dt, mdfr_sn, mdfcn_dt, mdfcn_ip)
-					select rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, dln, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip, rent_prcs_dt, mdfr_sn, mdfcn_dt, mdfcn_ip from dqvs.dvs_dqv_mt_rent_new
+					(rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip, rent_prcs_dt, mdfr_sn, mdfcn_dt, mdfcn_ip)
+					select rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip, rent_prcs_dt, mdfr_sn, mdfcn_dt, mdfcn_ip from dqvs.dvs_dqv_mt_rent_new
 				</otherwise>
 			</choose>
 				WHERE rent_no = #{rentno}
