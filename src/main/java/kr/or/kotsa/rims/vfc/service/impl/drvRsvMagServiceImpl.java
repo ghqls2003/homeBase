@@ -122,4 +122,8 @@ public class drvRsvMagServiceImpl extends CmmnAbstractServiceImpl implements drv
 	public List<Map<String, Object>> selectCheckRentNo(Map<String, Object> paramsMap) {
 		return rentalHistManageDao.selectCheckRentNo(paramsMap);
 	}
+	@Override
+	public List<Map<String, Object>> selectCheckRentRsvf(Map<String, Object> paramsMap) {
+		return rentalHistManageDao.selectCheckRentRsvf(paramsMap);
+	}
 }

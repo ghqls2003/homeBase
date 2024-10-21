@@ -207,6 +207,11 @@ public class drvRsvMagController extends CmmnAbstractServiceImpl {
 	public List<Map<String, Object>> selectCheckRentNo(@RequestBody Map<String, Object> paramsMap) throws RimsException {
 		return DrvRsvMagService.selectCheckRentNo(paramsMap);
 	}
+	@RequestMapping("/drvRsvMag/selectCheckRentRsvf")
+	@ResponseBody
+	public List<Map<String, Object>> selectCheckRentRsvf(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		return DrvRsvMagService.selectCheckRentRsvf(paramsMap);
+	}
 
 	@PostMapping("drvRsvMag/listexcel")
 	public GenericExcelView excelloginViewExcel(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,

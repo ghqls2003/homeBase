@@ -18,5 +18,6 @@ public interface drvRsvMagService {
 
 	List<Map<String, Object>> selectdetailRsv(Map<String, Object> paramsMap);
 	List<Map<String, Object>> selectCheckRentNo(Map<String, Object> paramsMap);
+	List<Map<String, Object>> selectCheckRentRsvf(Map<String, Object> paramsMap);
 
 }
