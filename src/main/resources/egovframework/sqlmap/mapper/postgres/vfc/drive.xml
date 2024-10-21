@@ -103,26 +103,26 @@
 	</select>
 
 	<select id="selectRentNo" resultType="resultMap">
-		select (((('R'::text || to_char(now(), 'YY'::text)) || '-'::text) || lpad(nextval(('seq_dvs_dqv_mt_rent_'::text || to_char(now(), 'YY'::text))::regclass)::text, 9, '0'::text))) as rentNo
+		select (((('R'::text || to_char(now(), 'YY'::text)) || '-'::text) || lpad(nextval(('seq_dvs_dqv_mt_rent_new_'::text || to_char(now(), 'YY'::text))::regclass)::text, 9, '0'::text))) as rentNo
 	</select>
 
 	<insert id="insertRentInfo">
-		INSERT INTO dqvs.dvs_dqv_mt_rent
+		INSERT INTO dqvs.dvs_dqv_mt_rent_new
 		(rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, dln, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip)
 		VALUES(#{rentno}, #{vin}, #{carNum}, #{carmdl}, #{modelYear}, #{vhclNm}, #{bzmnSn}, #{engineType}, #{useYn}, #{signguCd}, dqvs.pca_encrypt(#{num}, '150'), #{sn}, to_timestamp(#{startDt}, 'yyyymmdd'), to_timestamp(#{endDt}, 'yyyymmdd'), '1', '1', #{rgtrSn}::numeric, now()::timestamp, #{regIp})
 	</insert>
 
 	<insert id="insertRentHstryInfo">
 		<if test="rentno != null and rentno != ''">
-				INSERT INTO dqvs.dvs_dqv_hs_rent
+				INSERT INTO dqvs.dvs_dqv_hs_rent_new
 			<choose>
 				<when test="rgtrSn != null and rgtrSn != ''">
 					(rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, dln, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip)
-					select rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, dln, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip from dqvs.dvs_dqv_mt_rent
+					select rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, dln, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip from dqvs.dvs_dqv_mt_rent_new
 				</when>
 				<otherwise>
 					(rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, dln, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip, rent_prcs_dt, mdfr_sn, mdfcn_dt, mdfcn_ip)
-					select rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, dln, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip, rent_prcs_dt, mdfr_sn, mdfcn_dt, mdfcn_ip from dqvs.dvs_dqv_mt_rent
+					select rent_no, vin, vhcl_reg_no, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, dln, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, lcns_idntf_cd, rgtr_sn, reg_dt, reg_ip, rent_prcs_dt, mdfr_sn, mdfcn_dt, mdfcn_ip from dqvs.dvs_dqv_mt_rent_new
 				</otherwise>
 			</choose>
 				WHERE rent_no = #{rentno}
@@ -132,7 +132,7 @@
 	<!-- 대여정보 대여확정 처리  -->
 	<update id="updateRentSttsCd">
         <if test="rentno != null and rentno != ''">
-	        UPDATE dqvs.dvs_dqv_mt_rent
+	        UPDATE dqvs.dvs_dqv_mt_rent_new
 			SET rent_prcs_dt=now()::timestamp, rent_stts_cd='2', mdfr_sn=#{mdfrSn}::numeric, mdfcn_dt=now()::timestamp, mdfcn_ip=#{mdfcnIp}
 			WHERE rent_no = #{rentno}
 		</if>
@@ -143,7 +143,7 @@
 		select
 			count(*)
 		from
-			dqvs.dvs_dqv_mt_rent, encDln
+			dqvs.dvs_dqv_mt_rent_new, encDln
 		where
 			rent_prcs_dt <![CDATA[>]]> now()::timestamp + '-7 days'
 			and rent_stts_cd = '2'
@@ -237,7 +237,7 @@
 	<!-- 운전자격이력 건수 -->
 	<select id="selectVfcHistCnt" parameterType="paraMap" resultType="int">
 	SELECT count(1) AS cnt
-	FROM dqvs.dvs_dqv_hs_verf AS ddhv
+	FROM dqvs.dvs_dqv_hs_verf_new AS ddhv
 	LEFT OUTER JOIN dqvs.v_intg_user_info AS viui  ON ddhv.rqstr_sn = viui.user_sn
 	LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn
 	where
@@ -254,7 +254,7 @@
 
 <!--	&lt;!&ndash; 대여처리시 운전자격이력에 대여유형 업데이트 20240822 운전자격이력테이블에서 대여유형컬럼삭제되어 불필요시 삭제요망 &ndash;&gt;-->
 <!--	<update id="updateRentType" parameterType="paraMap" >-->
-<!--		UPDATE dqvs.dvs_dqv_hs_verf-->
+<!--		UPDATE dqvs.dvs_dqv_hs_verf_new-->
 <!--		SET oneway_yn= #{onewayYn}-->
 <!--		WHERE vrfc_hstry_sn = #{vrfcHstrySn}-->
 <!--	</update>-->

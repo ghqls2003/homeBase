@@ -48,7 +48,7 @@
         , ddhv.vrfc_rslt as vrfc_rslt_cd
         , prcs_se
         , drma.bzmn_sn
-        FROM dqvs.dvs_dqv_hs_verf AS ddhv
+        FROM dqvs.dvs_dqv_hs_verf_new AS ddhv
         LEFT OUTER JOIN dqvs.v_intg_user_info AS viui  ON ddhv.rqstr_sn = viui.user_sn
         LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn
         <!-- 권한처리 -->
@@ -133,7 +133,7 @@
     <!-- 자격확인이력 건수 조회 -->
     <select id="listViewCnt" resultType="int">
         SELECT count(1) AS cnt
-        FROM dqvs.dvs_dqv_hs_verf AS ddhv
+        FROM dqvs.dvs_dqv_hs_verf_new AS ddhv
         LEFT OUTER JOIN dqvs.v_intg_user_info AS viui  ON ddhv.rqstr_sn = viui.user_sn
         LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn
         <!-- 권한처리 -->

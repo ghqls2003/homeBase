@@ -99,7 +99,7 @@
 		           vrfc_rslt,
 		           vrfc_cn,
 		           prcs_se
-			    FROM dqvs.dvs_dqv_hs_verf TI
+			    FROM dqvs.dvs_dqv_hs_verf_new TI
 			    where 1=1
 			    <if test="dt != '' and dt != null">
 					and vrfc_dmnd_dt <![CDATA[>=]]> to_date(#{dt}, 'yyyy-mm-dd') and vrfc_dmnd_dt <![CDATA[<=]]> to_date(#{dt}, 'yyyy-mm-dd')+1
@@ -121,7 +121,7 @@
     <select id="listViewCnt" resultType="int">
 	    /* 검증이력 건수 조회 */
 		SELECT count(*) AS cnt
-		FROM dqvs.dvs_dqv_hs_verf TI
+		FROM dqvs.dvs_dqv_hs_verf_new TI
 		where rqstr_sn = #{userSn}::numeric
 		<if test="dt != '' and dt != null">
 			and vrfc_dmnd_dt <![CDATA[>=]]> to_date(#{dt}, 'yyyy-mm-dd') and vrfc_dmnd_dt <![CDATA[<=]]> to_date(#{dt}, 'yyyy-mm-dd')+1
