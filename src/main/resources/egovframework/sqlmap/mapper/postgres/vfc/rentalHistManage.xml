@@ -334,7 +334,7 @@
 				reg_ip
 				)
 			VALUES
-				((((('R'::text || to_char(now(), 'YY'::text)) || '-'::text) || lpad(nextval(('seq_dvs_dqv_mt_rent_new_'::text || to_char(now(), 'YY'::text))::regclass)::text, 9, '0'::text))),
+				((((('R'::text || to_char(now(), 'YY'::text)) || '-'::text) || lpad(nextval(('seq_dvs_dqv_mt_rent_'::text || to_char(now(), 'YY'::text))::regclass)::text, 9, '0'::text))),
 				#{vin},
 				#{vhclRegNo},
 				<if test="modelYear != '' and modelYear != null">
@@ -402,8 +402,8 @@
 				reg_ip
 				)
 			VALUES
-				((((('R'::text || to_char(now(), 'YY'::text)) || '-'::text) || lpad(nextval(('seq_dvs_dqv_mt_rent_new_'::text || to_char(now(), 'YY'::text))::regclass)::text, 9, '0'::text))),
-				nextval('dqvs.seq_dvs_dqv_hs_rent_new'::regclass),
+				((((('R'::text || to_char(now(), 'YY'::text)) || '-'::text) || lpad(nextval(('seq_dvs_dqv_mt_rent_'::text || to_char(now(), 'YY'::text))::regclass)::text, 9, '0'::text))),
+				nextval('dqvs.seq_dvs_dqv_hs_rent'::regclass),
 				#{vin},
 				#{vhclRegNo},
 				<if test="modelYear != '' and modelYear != null">
@@ -578,7 +578,7 @@
 			mdfcn_ip)
 			select
 			rent_no,
-			nextval('dqvs.seq_dvs_dqv_hs_rent_new'::regclass),
+			nextval('dqvs.seq_dvs_dqv_hs_rent'::regclass),
 			vin,
 			vhcl_reg_no,
 			bzmn_sn,
