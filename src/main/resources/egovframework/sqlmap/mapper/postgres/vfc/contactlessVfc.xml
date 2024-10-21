@@ -21,7 +21,7 @@
 			, car.sgg_cd
 			, car.ownr_nm
 			, to_char(car.reg_dt, 'yyyy-mm-dd') as reg_dt
-		from dqvs.dvs_dqv_mt_rent rent
+		from dqvs.dvs_dqv_mt_rent_new rent
 		left join dqvs.dvs_rac_mt_car car
 		on rent.vhcl_reg_no = car.vhcl_reg_no 
 		where 1=1

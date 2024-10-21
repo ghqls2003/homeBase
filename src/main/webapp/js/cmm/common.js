@@ -158,9 +158,21 @@
     $(".carNum_popup").addClass("view");
   });
   $(".carNum_popup .cancel_btn").on("click",function(){
+	$(".carNum_popup .k-grid-display-block").remove();
+	$("#carNum_grid").remove();
+	$(".carNum_popup .cont").append(
+		`<table id="carNum_grid">
+            <caption>대여차량 조회</caption>
+        </table>`); 
     $(".carNum_popup").removeClass("view");
   });
   $(".carNum_popup .close").on("click",function(){
+	$(".carNum_popup .k-grid-display-block").remove();
+	$("#carNum_grid").remove();
+	$(".carNum_popup .cont").append(
+		`<table id="carNum_grid">
+            <caption>대여차량 조회</caption>
+        </table>`); 
     $(".carNum_popup").removeClass("view");
   });
 
