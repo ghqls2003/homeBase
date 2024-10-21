@@ -146,7 +146,7 @@
 				dqvs.dvs_dqv_hs_conf conf
 			left join dqvs.dvs_rac_mt_agency agency on
 				conf.bzmn_sn = agency.bzmn_sn
-			left join dqvs.dvs_dqv_mt_rent rent on
+			left join dqvs.dvs_dqv_mt_rent_new rent on
 				conf.rent_no = rent.rent_no
 		) T
 		where

@@ -361,7 +361,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 									if(data.body.f_rtn_code == '00'){
 										if(result.data != undefined && result.total != 0){
 											var html = `<p class="current_info" >
-						                        차량 결함 정보는
+						                        차량 결함 정보가
 						                        <span class = "popupSpan" id ="rslt_vehicleDefect">존재</span> 합니다.
 						                    </p>`;
 											$('#result').prepend(html);

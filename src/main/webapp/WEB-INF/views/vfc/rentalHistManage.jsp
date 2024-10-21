@@ -322,16 +322,6 @@
                                                    </td>
                                                </tr>
                                                <tr>
-                                                   <th scope="col">면허종류</th>
-                                                   <td>
-                                                   <div class="tb_flex">
-                                                       <label for="detailLcnsIdntfNm">면허종류</label>
-                                                       <input type="text" id="detailLcnsIdntfNm" name="detailLcnsIdntfNm" class="input no_line"
-                                                           readonly/>
-                                                   </div>
-                                                   </td>
-                                               </tr>
-                                               <tr>
                                                    <th scope="col">대여시작일</th>
                                                    <td>
                                                    <div class="tb_flex">
