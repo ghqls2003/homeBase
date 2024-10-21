@@ -15,34 +15,6 @@ var userOperSystemBool = '${userOperSystemBool}' === 'true';
 var old_new = '${old_new}';
 var authrtCd = '${authrtCd}'
 </script>
-<style>
-@media (max-width: 480px) {
-    .sub03 .popup.detail_popup .box {
-        width: 380px;
-    }
-}
-
-.center-message {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.7);
-    color: #fff;
-    padding: 10px 10px;
-    border-radius: 5px;
-    z-index: 9999;
-    font-size: 16px;
-}
-
-@media (max-width: 480px) {
-    .center-message {
-        font-size: 11px;
-    }
-}
-
-</style>
-
 
 <div class="subPage sub02_03">
 	<!-- 콘텐츠 시작 -->

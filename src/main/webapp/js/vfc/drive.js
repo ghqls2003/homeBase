@@ -4,7 +4,7 @@ var vrfcMthd=1;
 var popupinPopupType = '';
 var choiceVin = '';
 var choiceVhclRegNo = '';
-var tempHtml = ''; // 팝업 그리드 동적 html
+//var tempHtml = ''; // 팝업 그리드 동적 html
 var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
 var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 var similarityChk = false; // 유사도 검증 체크박스 전역변수
@@ -448,8 +448,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 
 
         popupRowClickEvent : function(e) {
-//            $('#popup_drvVfcHist_box').css('display', 'none');
-//            $("#popup_drvVfcHist_box").removeClass("view");
 
             $(".detail input").val('');
             $(".scrollBar02").scrollTop(0);
@@ -461,8 +459,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                    var grid = $("#rentalHistManage_grid").data("kendoGrid");
                 }else{
                     var grid = $("#mobiDefect_grid").data("kendoGrid");
-//                    var dataItem = grid.dataItem(this);
-//                    detailMobiDefectData = dataItem;
                 }
                 var dataItem = grid.dataItem(this);
                 detailMobiDefectData = dataItem;
@@ -825,7 +821,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 				$drive.event.resetInput();
 			});
 
-            // 대여유형 포함 코드 =======================================
+            // 대여유형 포함 코드 추후 대여유형 포함 코드로 변경 가능성 있어 주석처리함 ====
 //			$('#rentCfm').click(function(){
 //			    var onewayYn = $("input[type=radio][name=category02]:checked").val();
 //			    var vrfcHstrySn1 = vrfcHstrySn;
@@ -1163,11 +1159,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
              $(".result_popup").addClass("view");
 
              $('.result_popup_in_popup').empty();
-             $(".result_popup_in_popup").removeClass("view").css('display', 'none'); // Hide the inner popup
-
- //            $('#popup_mobiDefect_box').empty(); // Make sure you're targeting the correct ID
- //            $('#popup_mobiDefect_box').removeClass("view").css('display', 'none'); // Also hide the popup
-
+             $(".result_popup_in_popup").removeClass("view").css('display', 'none');
              $('#detail_popup_mobiDefect_box').removeClass("view").css('display', 'none');
          },
 
@@ -1530,8 +1522,8 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 //				userTel: $("#user_tel").val().replace(/-/g, ''),
 				startDt: $('#start-picker02').val().replace(/-/g, ''),
 				endDt: $("#end-picker02").val().replace(/-/g, ''),
-                startDtTm : startDtTm , //이건 체크하기
-                endDtTm : endDtTm , // 이건 체크하기
+                startDtTm : startDtTm ,
+                endDtTm : endDtTm ,
 				vin: $('#vin').val(),
 				carmdl: $("#carmdl").val(),
 				modelYear: $('#modelYear').val(),
