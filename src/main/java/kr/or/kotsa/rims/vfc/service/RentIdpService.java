@@ -15,7 +15,7 @@ public interface RentIdpService {
 	
 	Map<String, Object> selectHisDetailRentInfo(Map<String, Object> paramsMap);
 	
-	int insertRentHisInfo(Map<String, Object> paramsMap);
+//	int insertRentHisInfo(Map<String, Object> paramsMap);
 	
 	int updateDeleteYn(Map<String, Object> paramsMap);
 	

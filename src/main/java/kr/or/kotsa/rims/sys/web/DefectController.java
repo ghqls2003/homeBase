@@ -61,6 +61,10 @@ public class DefectController extends CmmnAbstractServiceImpl{
 	@PostMapping("/defect/selectDefectInfo")
 	@ResponseBody
 	public Map<String, Object> selectDefectInfo(@RequestBody Map<String, Object> paramsMap){
+		paramsMap.put("authrtCd", getAuthrtCd());
+		paramsMap.put("cmptncZoneCd", getCmptncZoneCd());
+		paramsMap.put("bzmnSn", getBzmnSn());
+		
 		return defectService.selectDefectInfo(paramsMap);
 	}
 	

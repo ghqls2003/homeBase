@@ -70,7 +70,7 @@ public class RentIdpController extends CmmnAbstractServiceImpl{
 	@ResponseBody
 	public ModelAndView updateRentInfo(@RequestBody Map<String, Object> paramsMap) throws RimsException {
 		//대여이력 수정시 이전데이터 hs테이블 insert
-		insertRentHisInfo(paramsMap);
+//		insertRentHisInfo(paramsMap);
 		int ret = 0;
 		String resultMsg = "";
 		ModelAndView mav = new ModelAndView("jsonView");
@@ -84,9 +84,9 @@ public class RentIdpController extends CmmnAbstractServiceImpl{
 		return mav;
 	}
 	
-	public int insertRentHisInfo(Map<String, Object> paramsMap) throws RimsException {
-		return rentIdpService.insertRentHisInfo(paramsMap);
-	}
+//	public int insertRentHisInfo(Map<String, Object> paramsMap) throws RimsException {
+//		return rentIdpService.insertRentHisInfo(paramsMap);
+//	}
 	
 	@RequestMapping("/rentIdp/selectCarList")
 	@ResponseBody
@@ -110,7 +110,7 @@ public class RentIdpController extends CmmnAbstractServiceImpl{
 	@RequestMapping("/rentIdp/updateDeleteYn")
 	@ResponseBody
 	public int updateDeleteYn(@RequestBody Map<String, Object> paramsMap) throws RimsException {
-		insertRentHisInfo(paramsMap);
+		//insertRentHisInfo(paramsMap);
 
 		return rentIdpService.updateDeleteYn(paramsMap);
 	}
@@ -124,7 +124,7 @@ public class RentIdpController extends CmmnAbstractServiceImpl{
 		paramsMap.put("IP", getClientIP());
 		//추가
 		paramsMap.put("bzmnSn", getBzmnSn());
-		rentIdpService.insertRentRegHs(paramsMap);
+		//rentIdpService.insertRentRegHs(paramsMap);
 		return rentIdpService.insertRentReg(paramsMap);
 	}
 	

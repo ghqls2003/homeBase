@@ -13,7 +13,9 @@
 				defects_cn,
 				co_nm,
 				crrtvact_rslt,
-				case crrtvact_rslt when 'Y' then '조치' when 'N' then '미조치' else '-' end as crrtvact_rslt_nm
+				case crrtvact_rslt when 'Y' then '조치' when 'N' then '미조치' else '-' end as crrtvact_rslt_nm,
+				reg_cmptnc_cd,
+				bzmn_sn
 				from (
 					select 
 						t0.vin,
@@ -24,14 +26,22 @@
 						t1.prcs_stts_cd ,
 						coalesce(t1.defects_cn,'-') as  defects_cn,
 						t2.co_nm,
-						coalesce((select cmptn_yn from dvs_rac_mt_defect_actn where t1.vin = vin),'-') as crrtvact_rslt
+						coalesce((select cmptn_yn from dvs_rac_mt_defect_actn where t1.vin = vin),'-') as crrtvact_rslt,
+						reg_cmptnc_cd,
+						t2.bzmn_sn
 					from dvs_rac_mt_car t0 left join dvs_rac_mt_defect t1 on t0.vin = t1.vin
-					left join (select * from (
-						select crno, 
-							   co_nm ,
-							   ROW_NUMBER() OVER (PARTITION BY crno ORDER BY co_nm asc) AS RNK 	   
-						from dvs_rac_mt_agency 
-					) as ta where rnk ='1') t2 on t0.crno  = t2.crno 
+					left join (
+							select
+									distinct on (crno) bzmn_sn,		
+									crno,
+									co_nm,
+									up_brno,
+									reg_cmptnc_cd
+							from 
+									dvs_rac_mt_agency
+							where 
+									bzmn_se_cd = '1' and bzmn_sn like 'RCC' || '%'
+								) t2 on t0.crno  = t2.crno 
 				) Tm
 				where defects_type_cd is not null 
 			<if test="coNm != '' and coNm != null">
@@ -49,6 +59,26 @@
 		    <if test ='endDt != null and endDt != ""'>
 		        AND ocrn_dt::TIMESTAMP <![CDATA[<=]]> #{endDt}::TIMESTAMP
 		    </if>	
+		    <choose>
+		    	<when test='authrtCd.indexOf("K01") != -1'> <!-- 공단 : 전체목록 -->
+		       		AND 1=1
+		        </when>
+		        <when test='authrtCd.indexOf("G01") != -1'> <!-- 지자체 : 관할지역 내 사업자의 대여이력 -->
+		        	AND Tm.reg_cmptnc_cd LIKE #{cmptncZoneCd} || '%'
+		        </when>
+		        <when test='authrtCd.equals("S01")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
+					AND (Tm.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
+					OR Tm.bzmn_sn = #{bzmnSn})
+		        </when>
+		        <when test='authrtCd.equals("S02")'> <!-- 영업소관리자 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시  -->
+					AND Tm.bzmn_sn = #{bzmnSn}
+		        </when>
+		        <otherwise> <!-- 그 외는 소속 회사의 대여 건만 표시 -->
+					<if test="bzmnSn != '' and bzmnSn != null">
+	                	AND Tm.bzmn_sn = #{bzmnSn}
+					</if>
+		        </otherwise>
+		    </choose>
 		    ) as Ta
 	</sql>
 	

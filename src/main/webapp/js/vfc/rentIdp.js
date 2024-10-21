@@ -119,7 +119,7 @@
 			$rentIdp.ui.rentIdpGrid();
 			
 			if (authrtCd.startsWith('G')) {
-				var grid = $("#rentalHistGrid").data("kendoGrid");
+				var grid = $("#rentIdpGrid").data("kendoGrid");
 				grid.hideColumn("대여 확인증");
 
 				$("#rentUpdateBtn").remove();
@@ -476,7 +476,7 @@
 			var regDt = date.toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD 형식으로 변환
 			var mdfcnDt = date2.toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD 형식으로 변환
 			params.rentNo = param.rentNo;
-			params.vrfcHstrySn = param.vrfcHstrySn;
+			//params.vrfcHstrySn = param.vrfcHstrySn;
 			if(setParamTimeMdf == null){
 				params.DateMaker = regDt;
 			}else{
@@ -548,7 +548,7 @@
 
 		   });
 			//대여정보이력
-			$rentIdp.event.hsDetailRent(params);
+			//$rentIdp.event.hsDetailRent(params);
 			
 		   var ckInterval = setInterval(function() {
 			   if (detailCk >= 3) {
@@ -615,7 +615,7 @@
 					}
 					$rentIdp.event.detailDeleteBtn();
 					// 대여이력 갱신
-					$rentIdp.event.hsDetailRent(params);
+					//$rentIdp.event.hsDetailRent(params);
 					
 				});
 			}
@@ -903,7 +903,7 @@
 		   $("#regVhclRegNo").val('');
 		   $("#regRentNo").val('');
 		   $("#regRgtrSn").val('');
-		   $('#start-picker02').data("kendoDateTimePicker").value(new Date(2023, 5, 1));
+		   $('#start-picker02').data("kendoDateTimePicker").value(new Date(nowYear, nowMonth, nowDate, nowHours, nowMinutes))
 		   $('#end-picker02').data("kendoDateTimePicker").value(new Date(nowYear, nowMonth, nowDate, nowHours, nowMinutes));
 		   $('#rentIdpGrid').data('kendoGrid').dataSource.read();
 	   },

@@ -85,7 +85,7 @@
 				},
 				columns: [
 					{ field: "rn", title: "순번", width: "50px", template: "#:rn #", sortable: false },
-					//{ field: "co_nm", title: "회사명", width: "50px", template: "#:co_nm #", sortable: false },
+					{ field: "co_nm", title: "회사명", width: "75px", template: "#:co_nm #", sortable: false },
 					{ field: "vin", title: "차대번호", width: "100px", template: "#= vin != null ? vin : '-' #", sortable: true },
 					{ field: "vhcl_reg_no", title: "차량번호", width: "100px", template: "#= vhcl_reg_no != null ? vhcl_reg_no : '-' #", sortable: true },
 					{ field: "defects_sn", title: "결합일련번호", width: "100px", template: "#= defects_sn != null ? defects_sn : '-' #", sortable: true },
@@ -605,8 +605,13 @@
 				//$('#detailActnCn').data("kendoDropDownList").value(data.data[0].defectsCn); // 결함내용(시정조치 내용)
 				$('#detailActnCrrtvActYnNm').val(data.data[0].crrtvactYnNm); //조치여부
 				
-				$("#detailActnCrrTvActStrtDay").data("kendoDatePicker").value(new Date(data.data[0].crrtvactStrtDay ? data.data[0].crrtvactStrtDay : '')); //시정조치일
-				$("#detailActnCrrTvActStrtDay").data("kendoDatePicker").readonly(true);
+				const crrtvactStrtDay = data.data[0].crrtvactStrtDay;				
+				if (!crrtvactStrtDay) {
+					$("#detailActnCrrTvActStrtDay").data("kendoDatePicker").value(null);
+					$("#detailActnCrrTvActStrtDay").val('0000-00-00');
+				} else {
+					$("#detailActnCrrTvActStrtDay").data("kendoDatePicker").value(new Date(crrtvactStrtDay));
+				}
 				
 				$("#detailActnRegDt").data("kendoDatePicker").value(new Date(data.data[0].regDt)); //등록일자
 				$("#detailActnRegDt").data("kendoDatePicker").readonly(true);

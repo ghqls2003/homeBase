@@ -4,7 +4,7 @@
 	<sql id="rentIdpList">
 	(
 	select  
-		row_number() over ( order by rent_no desc) as rn,
+		row_number() over ( order by t1.reg_dt desc) as rn,
 		rent_no,
 		co_nm,
 		vhcl_reg_no,
@@ -16,7 +16,6 @@
 		rent_no,
 <!-- 		dln, -->
 		t1.mdfcn_dt,
-		vrfc_hstry_sn,
 		t2.reg_cmptnc_cd,
 		t1.bzmn_sn
 	from (
@@ -39,8 +38,7 @@
 			reg_ip,
 			mdfr_sn,
 			mdfcn_dt,
-			mdfcn_ip,
-			vrfc_hstry_sn
+			mdfcn_ip
 <!-- 			dln -->
 		from dvs_dqv_mt_rent_idp 
 	) t1 left outer join dvs_rac_mt_agency t2 on t1.bzmn_sn = t2.bzmn_sn
@@ -108,7 +106,6 @@
 		) T
 		WHERE 1 = 1
 		ORDER BY T.rn ASC
-		limit 100
 	) as t0
 	</sql>
 	
@@ -304,83 +301,83 @@
 	</select>
 	
 		<!--대여정보이력 테이블에 이전 데이터가 있는 경우-->
-	<insert id="insertRentHisInfo1">
-		with max_his_number as(
-			select
-				MAX(rent_hstry_no) AS max_num
-			from dqvs.dvs_dqv_hs_rent
-			where rent_no = #{rentNo}
-			group by rent_no
-		)
-		INSERT INTO dqvs.dvs_dqv_hs_rent
-		values
-		(
-		#{rentNo}
-		,CAST((SELECT max_num FROM max_his_number) AS numeric) + 1
-		,#{vin}
-		,#{vhclRegNo}
-		,#{carmdl}
-		,#{modelYear}
-		,#{vhclNm}
-		,#{bzmnSn}
-		,#{engineType}
-		,#{useYn}
-		,#{signguCd}
-		,dqvs.pca_encrypt(#{dln}, '150')
-		,#{vrfcHstrySn}
-		,#{rmrk}
-		,#{rentBgngDt}
-		,#{rentEndDt}
-		,#{rentPrcsDt}
-		,#{rentSttsCd}
-		,#{userSn}::numeric
-		,now()
-		,#{ip}
-		,null
-		,null
-		,null
-		,#{atchFileSn}
-		,'2'
-		,#{delYn}
-		,#{vhclIdntyCd}
-		)
-	</insert>
+<!-- 	<insert id="insertRentHisInfo1"> -->
+<!-- 		with max_his_number as( -->
+<!-- 			select -->
+<!-- 				MAX(rent_hstry_no) AS max_num -->
+<!-- 			from dqvs.dvs_dqv_hs_rent -->
+<!-- 			where rent_no = #{rentNo} -->
+<!-- 			group by rent_no -->
+<!-- 		) -->
+<!-- 		INSERT INTO dqvs.dvs_dqv_hs_rent -->
+<!-- 		values -->
+<!-- 		( -->
+<!-- 		#{rentNo} -->
+<!-- 		,CAST((SELECT max_num FROM max_his_number) AS numeric) + 1 -->
+<!-- 		,#{vin} -->
+<!-- 		,#{vhclRegNo} -->
+<!-- 		,#{carmdl} -->
+<!-- 		,#{modelYear} -->
+<!-- 		,#{vhclNm} -->
+<!-- 		,#{bzmnSn} -->
+<!-- 		,#{engineType} -->
+<!-- 		,#{useYn} -->
+<!-- 		,#{signguCd} -->
+<!-- 		,dqvs.pca_encrypt(#{dln}, '150') -->
+<!-- 		,#{vrfcHstrySn} -->
+<!-- 		,#{rmrk} -->
+<!-- 		,#{rentBgngDt} -->
+<!-- 		,#{rentEndDt} -->
+<!-- 		,#{rentPrcsDt} -->
+<!-- 		,#{rentSttsCd} -->
+<!-- 		,#{userSn}::numeric -->
+<!-- 		,now() -->
+<!-- 		,#{ip} -->
+<!-- 		,null -->
+<!-- 		,null -->
+<!-- 		,null -->
+<!-- 		,#{atchFileSn} -->
+<!-- 		,'2' -->
+<!-- 		,#{delYn} -->
+<!-- 		,#{vhclIdntyCd} -->
+<!-- 		) -->
+<!-- 	</insert> -->
 	
 		<!--대여정보이력 테이블에 이전 데이터가 없는 경우-->
-	<insert id="insertRentHisInfo2">
-		INSERT INTO dqvs.dvs_dqv_hs_rent
-		values
-		(
-			#{rentNo}
-			,'1'
-			,#{vin}
-			,#{vhclRegNo}
-			,#{carmdl}
-			,#{modelYear}
-			,#{vhclNm}
-			,#{bzmnSn}
-			,#{engineType}
-			,#{useYn}
-			,#{signguCd}
-			,dqvs.pca_encrypt(#{dln}, '150')
-			,#{vrfcHstrySn}
-			,#{rmrk}
-			,#{rentBgngDt}
-			,#{rentEndDt}
-			,#{rentPrcsDt}
-			,#{rentSttsCd}
-			,#{userSn}::integer
-			,now()
-			,#{ip}
-			,null
-			,null
-			,null
-			,#{atchFileSn}
-			,'2'
-			,#{delYn}
-			,#{vhclIdntyCd}
-		)
-	</insert>
+<!-- 	<insert id="insertRentHisInfo2"> -->
+<!-- 		INSERT INTO dqvs.dvs_dqv_hs_rent -->
+<!-- 		values -->
+<!-- 		( -->
+<!-- 			#{rentNo} -->
+<!-- 			,'1' -->
+<!-- 			,#{vin} -->
+<!-- 			,#{vhclRegNo} -->
+<!-- 			,#{carmdl} -->
+<!-- 			,#{modelYear} -->
+<!-- 			,#{vhclNm} -->
+<!-- 			,#{bzmnSn} -->
+<!-- 			,#{engineType} -->
+<!-- 			,#{useYn} -->
+<!-- 			,#{signguCd} -->
+<!-- 			,dqvs.pca_encrypt(#{dln}, '150') -->
+<!-- 			,#{vrfcHstrySn} -->
+<!-- 			,#{rmrk} -->
+<!-- 			,#{rentBgngDt} -->
+<!-- 			,#{rentEndDt} -->
+<!-- 			,#{rentPrcsDt} -->
+<!-- 			,#{rentSttsCd} -->
+<!-- 			,#{userSn}::integer -->
+<!-- 			,now() -->
+<!-- 			,#{ip} -->
+<!-- 			,null -->
+<!-- 			,null -->
+<!-- 			,null -->
+<!-- 			,#{atchFileSn} -->
+<!-- 			,'2' -->
+<!-- 			,#{delYn} -->
+<!-- 			,#{vhclIdntyCd} -->
+<!-- 		) -->
+<!-- 	</insert> -->
 	
 		<!--대여정보 테이블에서 대여번호로 조회-->
 	<select id="RentMtInfo" resultType="resultMap">
@@ -390,38 +387,38 @@
 	</select>
 	
 		<!--대여정보이력 테이블에서 대여번호로 조회-->
-	<select id="RentHsInfo" resultType="resultMap">
-		select rent_no
-			 , rent_hstry_no
-			 , vin
-			 , vhcl_reg_no
-			 , carmdl
-			 , mdlyr
-			 , vhcl_nm
-			 , bzmn_sn
-			 , engine_fom
-			 , use_yn
-			 , sgg_cd
-			 , dqvs.pca_decrypt(dln, '150') dln
-			 , vrfc_hstry_sn
-			 , rmrk
-			 , rent_bgng_dt
-			 , rent_end_dt
-			 , rent_prcs_dt
-			 , rent_stts_cd
-			 , rgtr_sn
-			 , reg_dt
-			 , reg_ip
-			 , mdfr_sn
-			 , mdfcn_dt
-			 , mdfcn_ip
-			 , atch_file_sn
-			 , lcns_idntf_cd
-			 , del_yn
-			 , vhcl_idnty_cd
-		from dqvs.dvs_dqv_hs_rent
-		where rent_no = #{rentNo}
-	</select>
+<!-- 	<select id="RentHsInfo" resultType="resultMap"> -->
+<!-- 		select rent_no -->
+<!-- 			 , rent_hstry_no -->
+<!-- 			 , vin -->
+<!-- 			 , vhcl_reg_no -->
+<!-- 			 , carmdl -->
+<!-- 			 , mdlyr -->
+<!-- 			 , vhcl_nm -->
+<!-- 			 , bzmn_sn -->
+<!-- 			 , engine_fom -->
+<!-- 			 , use_yn -->
+<!-- 			 , sgg_cd -->
+<!-- 			 , dqvs.pca_decrypt(dln, '150') dln -->
+<!-- 			 , vrfc_hstry_sn -->
+<!-- 			 , rmrk -->
+<!-- 			 , rent_bgng_dt -->
+<!-- 			 , rent_end_dt -->
+<!-- 			 , rent_prcs_dt -->
+<!-- 			 , rent_stts_cd -->
+<!-- 			 , rgtr_sn -->
+<!-- 			 , reg_dt -->
+<!-- 			 , reg_ip -->
+<!-- 			 , mdfr_sn -->
+<!-- 			 , mdfcn_dt -->
+<!-- 			 , mdfcn_ip -->
+<!-- 			 , atch_file_sn -->
+<!-- 			 , lcns_idntf_cd -->
+<!-- 			 , del_yn -->
+<!-- 			 , vhcl_idnty_cd -->
+<!-- 		from dqvs.dvs_dqv_hs_rent -->
+<!-- 		where rent_no = #{rentNo} -->
+<!-- 	</select> -->
 	
 	<update id="updateDeleteYn">
 			UPDATE dvs_dqv_mt_rent_idp
@@ -603,7 +600,6 @@
 			mdfr_sn,
 			mdfcn_dt,
 			mdfcn_ip,
-			vrfc_hstry_sn,
 			lcns_idntf_cd,
 			mdlyr,
 			vhcl_nm,
@@ -628,7 +624,6 @@
 				#{userSn}::numeric,
 				now()::timestamp,
 				#{clientIP},
-				vrfc_hstry_sn,
 				2,
 			  	car_info.mdlyr,
 			    car_info.vhcl_nm,

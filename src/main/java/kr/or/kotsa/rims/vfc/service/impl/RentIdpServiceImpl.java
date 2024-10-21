@@ -73,26 +73,26 @@ public class RentIdpServiceImpl extends CmmnAbstractServiceImpl implements RentI
 		return result;
 	}
 	
-	@Override
-	public int insertRentHisInfo(Map<String, Object> paramsMap) {
-
-		
-			
-		//이전 데이터 가지고 오기
-		Map<String, Object> beforeMtData = rentIdpDao.selectRentMtInfo((String) paramsMap.get("rentNo"));
-		//대여정보이력테이블에 그 전에 데이터가 있는지 확인
-		List<Map<String, Object>> beforeHsData = rentIdpDao.selectRentHsInfo((String) paramsMap.get("rentNo"));
-			
-		
-		beforeMtData.put("userSn", getUserSn());
-		beforeMtData.put("IP", getClientIP());
-
-		if(beforeHsData.size() != 0){
-			return rentIdpDao.insertRentHisInfo1(beforeMtData);
-		}else{
-			return  rentIdpDao.insertRentHisInfo2(beforeMtData);
-		}
-	}
+//	@Override
+//	public int insertRentHisInfo(Map<String, Object> paramsMap) {
+//
+//		
+//			
+//		//이전 데이터 가지고 오기
+//		Map<String, Object> beforeMtData = rentIdpDao.selectRentMtInfo((String) paramsMap.get("rentNo"));
+//		//대여정보이력테이블에 그 전에 데이터가 있는지 확인
+//		List<Map<String, Object>> beforeHsData = rentIdpDao.selectRentHsInfo((String) paramsMap.get("rentNo"));
+//			
+//		
+//		beforeMtData.put("userSn", getUserSn());
+//		beforeMtData.put("IP", getClientIP());
+//
+//		if(beforeHsData.size() != 0){
+//			return rentIdpDao.insertRentHisInfo1(beforeMtData);
+//		}else{
+//			return  rentIdpDao.insertRentHisInfo2(beforeMtData);
+//		}
+//	}
 	
 	@Override
 	public int updateDeleteYn(Map<String, Object> paramsMap) {
@@ -101,10 +101,10 @@ public class RentIdpServiceImpl extends CmmnAbstractServiceImpl implements RentI
 		return rentIdpDao.updateDeleteYn(paramsMap);
 	}
 	
-	@Override
-	public int insertRentRegHs(Map<String, Object> paramsMap) {
-		return rentIdpDao.insertRentRegHs(paramsMap);
-	}
+//	@Override
+//	public int insertRentRegHs(Map<String, Object> paramsMap) {
+//		return rentIdpDao.insertRentRegHs(paramsMap);
+//	}
 	
 	@Override
 	public int insertRentReg(Map<String, Object> paramsMap) {
