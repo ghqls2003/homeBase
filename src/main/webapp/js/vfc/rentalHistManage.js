@@ -861,7 +861,8 @@
 				ajax(true, contextPath + '/vfc/rentalHistManage/updateRentInfo', 'body', '확인인중입니다.', params, function (data) {
 					alert("대여를 취소하였습니다.");
 					$("#rentSttsCdUpdateBtn").remove();
-					$rentalHistManage.event.detailInfoPopup(params);
+					location.reload();
+					//$rentalHistManage.event.detailInfoPopup(params);
 				});
 			}
 		},
@@ -873,7 +874,8 @@
 				ajax(true, contextPath + '/vfc/rentalHistManage/updateRentInfo', 'body', '확인인중입니다.', params, function (data) {
 					alert("대여를 확정하였습니다.");
 					$("#rentSttsCdConfUpdateBtn").remove();
-					$rentalHistManage.event.detailInfoPopup(params);
+					location.reload();
+					//$rentalHistManage.event.detailInfoPopup(params);
 				});
 			}
 		},

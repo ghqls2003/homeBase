@@ -70,7 +70,7 @@
 		            ) uut
 		            WHERE uut.user_sn = TI.rqstr_sn
 		           ) AS rqstr_nm,
-		           '*******' || SUBSTRING(dqvs.pca_decrypt(dln, '150'), 8) AS dln,
+		           SUBSTRING(dln, 1, 6) || '******' AS dln,
 		           lcns_asort_cd,
 		           CASE lcns_asort_cd
 		               WHEN '11' THEN '1종대형'
