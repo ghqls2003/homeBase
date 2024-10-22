@@ -780,6 +780,7 @@
 			rent.rent_stts_cd,
 			rent.del_yn,
 			rent.rgtr_sn,
+			'국내면허' as lcns_idntf_nm,
 			(select user_nm	from dqvs.dvs_cmm_mt_sso where user_sn = rent.rgtr_sn) as user_nm,
 			to_char(rent.reg_dt,	'YYYY-MM-DD') as reg_dt,
 			CASE rent.rent_stts_cd
