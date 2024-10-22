@@ -7,6 +7,7 @@ var choiceVhclRegNo = '';
 var tempHtml = ''; // 팝업 그리드 동적 html
 var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
 var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
+var updateRentNo = "";
 (function (W, D, $) {
     // bjlee, IE 10 부터 지원하는 strict mode 선언. 안전하지 않은 액션들에 대해 예외를 발생시킴
     'use strict';
@@ -185,6 +186,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 					}else{
 						$(".similarity_pop").css("display", "flex");
 						$drive.ui.search(data);
+						updateRentNo = data[0].rentNo;
 					}
 				});
 				
@@ -353,6 +355,7 @@ var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
 
 							param.cd = data.body.f_rtn_code;
 							param.sn = data.vrfc_hstry_sn;
+							param.updateRentNo = updateRentNo;
 //							param.dln ='251301689481'; //✂️todo
 							param.dln = $('#num01').val() + $('#num02').val() + $('#num03').val() + $('#num04').val(); //✂️todo
 							ajax(true, contextPath+"/vfc/contactlessVfc/selectVerifyCd", 'body', '처리중입니다.', param, function(result) {

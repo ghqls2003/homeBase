@@ -30,5 +30,12 @@
 			AND rent.del_yn  = 'N'
 			AND rent.rent_no = #{rentNo}
 	</select>
+	
+	<!-- 대여번호 검증이력번호 업데이트 -->
+	<update id="updateVrfcSn">
+		UPDATE dqvs.dvs_dqv_mt_rent_new
+		SET vrfc_hstry_sn = #{sn}
+		WHERE rent_no = #{updateRentNo}
+    </update>
 
 </mapper>
