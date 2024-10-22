@@ -25,9 +25,10 @@
 				, agency.co_nm
 				, rent.vrfc_hstry_sn
 				, rent.rgtr_sn 
-				, rent.reg_dt
+				, TO_CHAR(rent.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
 				, rent.mdfcn_dt
 				, rent.dln
+				, '국내면허' as lcns_idntf_nm
 			FROM
 				(
 				SELECT base.rent_no, base.vhcl_reg_no, base.bzmn_sn, base.rent_bgng_dt, base.rent_end_dt
@@ -418,6 +419,7 @@
 			, rent.del_yn
 			, CASE rent.rent_stts_cd WHEN '1' THEN '미확정' WHEN '2' THEN '대여확정' WHEN '9' THEN '대여취소' 
 				ELSE rent.rent_stts_cd END rent_stts_nm
+			, '국내면허' as lcns_idntf_nm
 		FROM
 			dqvs.dvs_dqv_mt_rent_new rent
 		LEFT JOIN

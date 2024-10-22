@@ -326,7 +326,7 @@
                                                    <td>
                                                    <div class="tb_flex">
                                                        <label for="detailLcnsIdntfNm">면허종류</label>
-                                                       <input type="text" id="detailLcnsIdntfNm" name="detailLcnsIdntfNm" class="input no_line" value="국내면허"
+                                                       <input type="text" id="detailLcnsIdntfNm" name="detailLcnsIdntfNm" class="input no_line"
                                                            readonly/>
                                                    </div>
                                                    </td>
