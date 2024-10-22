@@ -41,8 +41,15 @@ public class ContactlessVfcServiceImpl extends CmmnAbstractServiceImpl implement
 			result.putAll(selectDefectList(paramsMap));
 		}
 		
+		updateVrfcSn(paramsMap);
+		
 		result.putAll(selectEtcInfo(paramsMap));
 		return result;
+	}
+	
+	// 대여정보 검증이력번호 업데이트
+	public void updateVrfcSn(Map<String, Object> paramsMap) {
+		contactlessVfcDao.updateVrfcSn(paramsMap);
 	}
 
 	//운전자격 확인 결과

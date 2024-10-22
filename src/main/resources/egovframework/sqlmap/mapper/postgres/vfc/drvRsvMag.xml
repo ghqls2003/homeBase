@@ -6,7 +6,7 @@
 	<select id="DlnFind" parameterType="map" resultType="string">
 		SELECT 
 			dln
-		FROM dqvs.dvs_dqv_mt_rent_new
+		FROM dqvs.dvs_dqv_mt_rent
 		WHERE rent_no = #{rentNo}
 	</select>
 	<!-- -->
@@ -37,9 +37,9 @@
         car.engine_fom,
         to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') as reg_dt
     from 
-        dqvs.dvs_dqv_mt_rent_new_dump car
+        dqvs.dvs_dqv_mt_rent car
     left join 
-        dqvs.dvs_dqv_hs_verf_new ddhv 
+        dqvs.dvs_dqv_hs_verf ddhv 
     on 
         ddhv.vrfc_hstry_sn = car.vrfc_hstry_sn
     left join 
@@ -106,8 +106,8 @@
 			car.bzmn_sn,
 			car.engine_fom,
 			to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
-			from dqvs.dvs_dqv_mt_rent_new_dump car
-			left outer join dqvs.dvs_dqv_hs_verf_new ddhv
+			from dqvs.dvs_dqv_mt_rent car
+			left outer join dqvs.dvs_dqv_hs_verf ddhv
 			on ddhv.vrfc_hstry_sn = car.vrfc_hstry_sn
 			LEFT JOIN dqvs.dvs_rac_mt_agency drma 
 			ON drma.bzmn_sn = car.bzmn_sn
@@ -175,7 +175,7 @@
 							rent.bzmn_sn,
 							ddvr.lcns_flnm,
 							ddvr.lcns_asort_cd
-						from dqvs.dvs_dqv_mt_rent_new rent
+						from dqvs.dvs_dqv_mt_rent rent
 						left outer join dqvs.dvs_rac_mt_agency agency on
 						rent.bzmn_sn = agency.bzmn_sn
 						inner join dqvs.dvs_dqv_vrfc_rsvt ddvr on
@@ -254,7 +254,7 @@
 							rent.bzmn_sn,
 							ddvr.lcns_flnm,
 							ddvr.lcns_asort_cd
-						from dqvs.dvs_dqv_mt_rent_new rent
+						from dqvs.dvs_dqv_mt_rent rent
 						left outer join dqvs.dvs_rac_mt_agency agency on
 						rent.bzmn_sn = agency.bzmn_sn
 						inner join dqvs.dvs_dqv_vrfc_rsvt ddvr on
@@ -305,7 +305,7 @@
 			carmdl,
 			rent_bgng_dt,
 			rent_end_dt
-			from dqvs.dvs_dqv_mt_rent_new
+			from dqvs.dvs_dqv_mt_rent
 			<if test="searchRentNo != '' and searchRentNo != null">
 				and LOWER(dcms.rent_no) like '%' || LOWER(#{searchRentNo}) || '%'
 			</if>
@@ -313,7 +313,7 @@
 		<select id="SearchRentNoCnt" resultType="int">
 			select
 			count(*)
-			from dqvs.dvs_dqv_mt_rent_new
+			from dqvs.dvs_dqv_mt_rent
 			<if test="searchRentNo != '' and searchRentNo != null">
 				and LOWER(dcms.rent_no) like '%' || LOWER(#{searchRentNo}) || '%'
 			</if>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="vfc.rentIdp">
-	<sql id="rentIdpList">
+	<sql id="rentIdpList1">
 	(
 	select  
 		row_number() over ( order by t1.reg_dt desc) as rn,
@@ -110,7 +110,7 @@
 	<select id="selectRentIdpList" resultType="resultMap">
 	<!-- 	 국제면허 대여정보 리스트 -->	
 	select * from 
-			<include refid="rentIdpList" />
+			<include refid="rentIdpList1" />
 	<if test="take != '' and take != null">
 		LIMIT #{take} OFFSET #{skip}
 	</if>	
@@ -121,7 +121,7 @@
     <!-- 	 국제면허 대여정보 리스트 Cnt-->
 		select count(*)
 		from 
-			<include refid="rentIdpList" />
+			<include refid="rentIdpList1" />
     </select>
     
     <select id="detailRentInfo" resultType="resultMap">
@@ -229,6 +229,9 @@
 		limit 100
 	) AS C
 	</select>
+
+
+	
 	
 		<!--대여정보 테이블에서 대여번호로 조회-->
 	<select id="RentMtInfo" resultType="resultMap">
@@ -236,6 +239,7 @@
 		from dvs_dqv_mt_rent_idp
 		where rent_no = #{rentNo}
 	</select>
+	
 	
 	<update id="updateDeleteYn">
 			UPDATE dvs_dqv_mt_rent_idp
