@@ -37,7 +37,7 @@
         car.engine_fom,
         to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') as reg_dt
     from 
-        dqvs.dvs_dqv_mt_rent_new_dump car
+        dqvs.dvs_dqv_mt_rent_new car
     left join 
         dqvs.dvs_dqv_hs_verf_new ddhv 
     on 
@@ -106,7 +106,7 @@
 			car.bzmn_sn,
 			car.engine_fom,
 			to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
-			from dqvs.dvs_dqv_mt_rent_new_dump car
+			from dqvs.dvs_dqv_mt_rent_new car
 			left outer join dqvs.dvs_dqv_hs_verf_new ddhv
 			on ddhv.vrfc_hstry_sn = car.vrfc_hstry_sn
 			LEFT JOIN dqvs.dvs_rac_mt_agency drma 

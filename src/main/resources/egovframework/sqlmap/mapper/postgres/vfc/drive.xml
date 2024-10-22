@@ -148,7 +148,7 @@
 			rent_prcs_dt <![CDATA[>]]> now()::timestamp + '-7 days'
 			and rent_stts_cd = '2'
 		<if test="num != '' and num != null">
-			and (SELECT dln FROM dqvs.dvs_dqv_hs_verf_new v WHERE v.vrfc_hstry_sn = n.vrfc_hstry_sn) = encDln.enc_d
+			and (SELECT dln_enc FROM dqvs.dvs_dqv_hs_verf_new v WHERE v.vrfc_hstry_sn = n.vrfc_hstry_sn) = encDln.enc_d
 		</if>
 	</select>
 
@@ -247,7 +247,7 @@
 		AND vrfc_dmnd_dt <![CDATA[>=]]> #{startDtTm}::timestamp AND vrfc_dmnd_dt <![CDATA[<=]]> #{endDtTm}::timestamp
 	</if>
 	<if test="dln != null and dln != ''">
-		AND dln = dqvs.pca_encrypt(#{dln},'150')
+		AND dln_enc = dqvs.pca_encrypt(#{dln},'150')
 	</if>
 	</select>
 
