@@ -757,9 +757,9 @@
 				rent.reg_ip,
 				rent.rent_prcs_dt,
 				rent.atch_file_sn,
-				rent.#{userSn}::numeric,
-				rent.now()::timestamp,
-				rent.#{clientIP}
+				#{userSn}::numeric,
+				now()::timestamp,
+				#{clientIP}
 			from dqvs.dvs_dqv_mt_rent_new rent
 			LEFT JOIN dqvs.dvs_dqv_hs_verf_new verf ON verf.vrfc_hstry_sn = rent.vrfc_hstry_sn
 			LEFT JOIN dqvs.dvs_rac_mt_car car ON car.vin = rent.vin
