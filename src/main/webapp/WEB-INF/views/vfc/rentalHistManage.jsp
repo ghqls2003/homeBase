@@ -322,6 +322,16 @@
                                                    </td>
                                                </tr>
                                                <tr>
+                                                   <th scope="col">면허종류</th>
+                                                   <td>
+                                                   <div class="tb_flex">
+                                                       <label for="detailLcnsIdntfNm">면허종류</label>
+                                                       <input type="text" id="detailLcnsIdntfNm" name="detailLcnsIdntfNm" class="input no_line"
+                                                           readonly/>
+                                                   </div>
+                                                   </td>
+                                               </tr>
+                                               <tr>
                                                    <th scope="col">대여시작일</th>
                                                    <td>
                                                    <div class="tb_flex">
@@ -402,46 +412,6 @@
                                                    <div class="tb_flex">
                                                        <label for="detailRgtrSn">사용자일련번호</label>
                                                        <input type="text" id="detailRgtrSn" name="detailRgtrSn" class="input"
-                                                           readonly/>
-                                                   </div>
-                                                   </td>
-                                               </tr>
-                                               <tr style="display: none;">
-                                                   <th scope="col">차종</th>
-                                                   <td>
-                                                   <div class="tb_flex">
-                                                       <label for="detailCarmdl">차종</label>
-                                                       <input type="text" id="detailCarmdl" name="detailCarmdl" class="input"
-                                                           readonly/>
-                                                   </div>
-                                                   </td>
-                                               </tr>
-                                               <tr style="display: none;">
-                                                   <th scope="col">차량명</th>
-                                                   <td>
-                                                   <div class="tb_flex">
-                                                       <label for="detailVhclNm">차량명</label>
-                                                       <input type="text" id="detailVhclNm" name="detailVhclNm" class="input"
-                                                           readonly/>
-                                                   </div>
-                                                   </td>
-                                               </tr>
-                                               <tr style="display: none;">
-                                                   <th scope="col">엔진형식</th>
-                                                   <td>
-                                                   <div class="tb_flex">
-                                                       <label for="detailEngineType">엔진형식</label>
-                                                       <input type="text" id="detailEngineType" name="detailEngineType" class="input"
-                                                           readonly/>
-                                                   </div>
-                                                   </td>
-                                               </tr>
-                                               <tr style="display: none;">
-                                                   <th scope="col">연식</th>
-                                                   <td>
-                                                   <div class="tb_flex">
-                                                       <label for="detailModelYear">연식</label>
-                                                       <input type="text" id="detailModelYear" name="detailModelYear" class="input"
                                                            readonly/>
                                                    </div>
                                                    </td>

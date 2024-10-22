@@ -210,7 +210,6 @@
 
 	<select id="IssuedData" resultType="resultMap">
 		SELECT
-			rent.vhcl_nm,
 			rent.rent_no,
 			rent.vrfc_hstry_sn,
 			to_char(rent.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt,
@@ -304,17 +303,8 @@
 				(rent_no,
 				vin,
 				vhcl_reg_no,
-				<if test="modelYear != '' and modelYear != null">
-				mdlyr,
-				</if>
-				<if test="vhclNm != '' and vhclNm != null">
-				vhcl_nm,
-				</if>
 				<if test="bzmnSn != '' and bzmnSn != null">
 				bzmn_sn,
-				</if>
-				<if test="engineType != '' and engineType != null">
-				engine_fom,
 				</if>
 				use_yn,
 				<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
@@ -337,17 +327,8 @@
 				((((('R'::text || to_char(now(), 'YY'::text)) || '-'::text) || lpad(nextval(('seq_dvs_dqv_mt_rent_'::text || to_char(now(), 'YY'::text))::regclass)::text, 9, '0'::text))),
 				#{vin},
 				#{vhclRegNo},
-				<if test="modelYear != '' and modelYear != null">
-				#{modelYear},
-				</if>
-				<if test="vhclNm != '' and vhclNm != null">
-				#{vhclNm},
-				</if>
 				<if test="bzmnSn != '' and bzmnSn != null">
 				#{bzmnSn},
-				</if>
-				<if test="engineType != '' and engineType != null">
-				#{engineType},
 				</if>
 				'Y',
 				<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
@@ -361,12 +342,8 @@
 				now()::timestamp,
 				<choose>
 					<when test="atchFileSn != '' and atchFileSn != null">
-						'1',
 						#{atchFileSn},
 					</when>
-					<otherwise>
-						'1',
-					</otherwise>
 				</choose>
 				#{IP}
 				)
@@ -376,13 +353,11 @@
 			INSERT INTO dqvs.dvs_dqv_hs_rent_new
 				(rent_no,
 				rent_hstry_no,
+				vrfc_hstry_sn,
 				vin,
 				vhcl_reg_no,
 				<if test="bzmnSn != '' and bzmnSn != null">
 				bzmn_sn,
-				</if>
-				<if test="engineType != '' and engineType != null">
-				engine_fom,
 				</if>
 				use_yn,
 				<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
@@ -404,19 +379,11 @@
 			VALUES
 				((((('R'::text || to_char(now(), 'YY'::text)) || '-'::text) || lpad(nextval(('seq_dvs_dqv_mt_rent_'::text || to_char(now(), 'YY'::text))::regclass)::text, 9, '0'::text))),
 				nextval('dqvs.seq_dvs_dqv_hs_rent'::regclass),
+				'9'::numeric,
 				#{vin},
 				#{vhclRegNo},
-				<if test="modelYear != '' and modelYear != null">
-				#{modelYear},
-				</if>
-				<if test="vhclNm != '' and vhclNm != null">
-				#{vhclNm},
-				</if>
 				<if test="bzmnSn != '' and bzmnSn != null">
 				#{bzmnSn},
-				</if>
-				<if test="engineType != '' and engineType != null">
-				#{engineType},
 				</if>
 				'Y',
 				<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
@@ -430,12 +397,8 @@
 				now()::timestamp,
 				<choose>
 					<when test="atchFileSn != '' and atchFileSn != null">
-						'1',
 						#{atchFileSn},
 					</when>
-					<otherwise>
-						'1',
-					</otherwise>
 				</choose>
 				#{IP}
 				)
@@ -504,15 +467,6 @@
 			</when>
 			<otherwise>
 				SET
-				<if test="modelYear != '' and modelYear != null">
-					mdlyr = #{modelYear},
-				</if>
-				<if test="vhclNm != '' and vhclNm != null">
-					vhcl_nm = #{vhclNm},
-				</if>
-				<if test="engineType != '' and engineType != null">
-					engine_fom = #{engineType},
-				</if>
 				<if test="vin != '' and vin != null">
 					vin = #{vin},
 				</if>
@@ -553,9 +507,6 @@
 			vin,
 			vhcl_reg_no,
 			bzmn_sn,
-			<if test="engineType != '' and engineType != null">
-				engine_fom,
-			</if>
 				use_yn,
 			<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
 				sgg_cd,
@@ -582,9 +533,6 @@
 			vin,
 			vhcl_reg_no,
 			bzmn_sn,
-			<if test="engineType != '' and engineType != null">
-				engine_fom,
-			</if>
 				use_yn,
 			<if test="cmptncZoneCd != '' and cmptncZoneCd != null">
 				sgg_cd,
@@ -619,25 +567,49 @@
 			group by rent_no
 		)
 		INSERT INTO dqvs.dvs_dqv_hs_rent_new
+		(
+			rent_no
+			, rent_hstry_no
+			, vin
+			, vhcl_reg_no
+			, rent_prcs_dt
+			, rent_bgng_dt
+			, rent_end_dt
+			, bzmn_sn
+			, sgg_cd
+			, vrfc_hstry_sn
+			, rent_stts_cd
+			, vhcl_idnty_cd
+			, oneway_yn
+			, use_yn
+			, del_yn
+			, rmrk
+			, rgtr_sn
+			, reg_dt
+			, reg_ip
+			, mdfr_sn
+			, mdfcn_dt
+			, mdfcn_ip
+			, atch_file_sn
+		)
 		values
 		(
 		#{rentNo}
 		,CAST((SELECT max_num FROM max_his_number) AS numeric) + 1
 		,#{vin}
 		,#{vhclRegNo}
-		,#{modelYear}
-		,#{vhclNm}
-		,#{bzmnSn}
-		,#{engineType}
-		,#{useYn}
-		,#{signguCd}
-		,dqvs.pca_encrypt(#{dln}, '150')
-		,#{vrfcHstrySn}
-		,#{rmrk}
+		,#{rentPrcsDt}
 		,#{rentBgngDt}
 		,#{rentEndDt}
-		,#{rentPrcsDt}
+		,#{bzmnSn}
+		,#{signguCd}
+		,'9'::numeric
 		,#{rentSttsCd}
+		,#{vhclIdntyCd}
+		,null
+		,#{useYn}
+		,#{delYn}
+		,#{rmrk}
 		,#{userSn}::numeric
 		,now()
 		,#{ip}
@@ -645,34 +617,55 @@
 		,null
 		,null
 		,#{atchFileSn}
-		,'1'
-		,#{delYn}
-		,#{vhclIdntyCd}
 		)
 	</insert>
 
 	<!--대여정보이력 테이블에 이전 데이터가 없는 경우-->
 	<insert id="insertRentHisInfo2">
 		INSERT INTO dqvs.dvs_dqv_hs_rent_new
+		(
+			rent_no
+			, rent_hstry_no
+			, vin
+			, vhcl_reg_no
+			, rent_prcs_dt
+			, rent_bgng_dt
+			, rent_end_dt
+			, bzmn_sn
+			, sgg_cd
+			, vrfc_hstry_sn
+			, rent_stts_cd
+			, vhcl_idnty_cd
+			, oneway_yn
+			, use_yn
+			, del_yn
+			, rmrk
+			, rgtr_sn
+			, reg_dt
+			, reg_ip
+			, mdfr_sn
+			, mdfcn_dt
+			, mdfcn_ip
+			, atch_file_sn
+		)
 		values
 		(
 			#{rentNo}
 			,'1'
 			,#{vin}
 			,#{vhclRegNo}
-			,#{modelYear}
-			,#{vhclNm}
-			,#{bzmnSn}
-			,#{engineType}
-			,#{useYn}
-			,#{signguCd}
-			,dqvs.pca_encrypt(#{dln}, '150')
-			,#{vrfcHstrySn}
-			,#{rmrk}
+			,#{rentPrcsDt}
 			,#{rentBgngDt}
 			,#{rentEndDt}
-			,#{rentPrcsDt}
+			,#{bzmnSn}
+			,#{signguCd}
+			, '9'::numeric
 			,#{rentSttsCd}
+			,#{vhclIdntyCd}
+			,#{oneway_yn}
+			,#{useYn}
+			,#{delYn}
+			,#{rmrk}
 			,#{userSn}::integer
 			,now()
 			,#{ip}
@@ -680,9 +673,6 @@
 			,null
 			,null
 			,#{atchFileSn}
-			,'1'
-			,#{delYn}
-			,#{vhclIdntyCd}
 		)
 	</insert>
 
@@ -699,10 +689,7 @@
 			 , rent_hstry_no
 			 , vin
 			 , vhcl_reg_no
-			 , mdlyr
-			 , vhcl_nm
 			 , bzmn_sn
-			 , engine_fom
 			 , use_yn
 			 , sgg_cd
 			 , vrfc_hstry_sn
@@ -755,10 +742,10 @@
 				rent.vin,
 				rent.vhcl_reg_no,
 				car.carmdl,
-				rent.mdlyr,
-				rent.vhcl_nm,
+				car.mdlyr,
+				car.vhcl_nm,
 				rent.bzmn_sn,
-				rent.engine_fom,
+				car.engine_fom,
 				rent.use_yn,
 				rent.sgg_cd,
 				verf.dln,
