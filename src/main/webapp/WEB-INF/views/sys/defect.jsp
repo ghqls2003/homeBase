@@ -7,6 +7,7 @@
 
 <c:set var="contextPath" value="${pageContext.request.contextPath }" />
 <script src="${contextPath}/js/sys/defect.js"></script>
+<script src="https://unpkg.com/jszip/dist/jszip.min.js"></script>
 
 <script>
     var authrtCd = '${authrtCd}';
@@ -589,7 +590,7 @@ button.red_btn {
 								                <td>
 								                    <div class="tb_flex">
 								                        <label for="">차대번호</label>
-								                        <input type="text" id="actnVin" class="input readOnlyGrayBtn" maxLength="200" readonly="readonly"/>
+								                        <input type="text" id="actnVin" class="input " maxLength="200" readonly="readonly"/>
 								                    </div>
 								                </td>
 								            </tr>
@@ -598,7 +599,7 @@ button.red_btn {
 								                <td>
 								                	<div  class="tb_flex admin">
 								                        <label for="actnDefectsSn">결함일련번호</label>
-								                        <input type="text" id="actnDefectsSn" class="input readOnlyGrayBtn" aria-label="결함일련번호" readonly="readonly"/>
+								                        <input type="text" id="actnDefectsSn" class="input " aria-label="결함일련번호" readonly="readonly"/>
 								                    </div>
 								                </td>
 								            </tr>
@@ -627,7 +628,7 @@ button.red_btn {
 								                <td>
 								                	<div  class="tb_flex ">
 								                        <label for="actnOcrnDt">발생일시</label>
-								                        <input type="text" id="actnOcrnDt"   aria-label="발생일시"  title="datepicker"/>
+								                        <input type="text" id="actnOcrnDt" class="input clear"  aria-label="발생일시"  title="datepicker" readonly="readonly"/>
 								                    </div>
 								                </td>
 								            </tr>
@@ -690,7 +691,7 @@ button.red_btn {
 								    			<td>
 								    				<div class="tb_flex aprv">
 								    				<label for="detailActnDt">시정조치일</label>
-								    				<input type="text" id="detailActnCrrTvActStrtDay"  class="" aria-label="시정조치일"/>
+								    				<input type="text" id="detailActnCrrTvActStrtDay"  class="input" aria-label="시정조치일" readonly="readonly"/>
 							    					</div>
 							    				</td>
 							    			</tr>
@@ -699,7 +700,7 @@ button.red_btn {
 								                <td>
 								                    <div class="tb_flex">
 								                        <label for="detailActnRegDt">등록일자</label>
-								                        <input type="text" id="detailActnRegDt"  class="" maxLength="200" aria-label="등록일자" />
+								                        <input type="text" id="detailActnRegDt"  class="input" maxLength="200" aria-label="등록일자" readonly="readonly"/>
 								                    </div>
 								                </td>
 								            </tr>

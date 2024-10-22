@@ -36,10 +36,6 @@ public class RentIdpDao extends CmmnAbstractMapper{
 		return selectOne("vfc.rentIdp.CarListCnt", paramsMap);
 	}
 	
-	public List<Map<String, Object>> selectHisDetailRentInfo(Map<String, Object> paramsMap) {
-		return selectList("vfc.rentIdp.HisDetailRentInfo", paramsMap);
-	}
-
 	public int selectHisDetailRentInfoCnt(Map<String, Object> paramsMap) {
 		return selectOne("vfc.rentIdp.HisDetailRentInfoCnt", paramsMap);
 	}
@@ -48,25 +44,9 @@ public class RentIdpDao extends CmmnAbstractMapper{
 		return selectOne("vfc.rentIdp.RentMtInfo", rentNo);
 	}
 
-//	public List<Map<String, Object>> selectRentHsInfo(String rentNo) {
-//		return selectList("vfc.rentIdp.RentHsInfo", rentNo);
-//	}
-	
-//	public int insertRentHisInfo1(Map<String, Object> paramsMap) {
-//		return insert("vfc.rentIdp.insertRentHisInfo1", paramsMap);
-//	}
-//	
-//	public int insertRentHisInfo2(Map<String, Object> paramsMap) {
-//		return insert("vfc.rentIdp.insertRentHisInfo2", paramsMap);
-//	}
-	
 	public int updateDeleteYn(Map<String, Object> paramsMap) {
 		return update("vfc.rentIdp.updateDeleteYn", paramsMap);
 	}
-	
-//	public int insertRentRegHs(Map<String, Object> paramsMap) {
-//		return insert("vfc.rentIdp.insertRentRegHs", paramsMap);
-//	}
 	
 	public int insertRentReg(Map<String, Object> paramsMap) {
 		return insert("vfc.rentIdp.insertRentReg", paramsMap);

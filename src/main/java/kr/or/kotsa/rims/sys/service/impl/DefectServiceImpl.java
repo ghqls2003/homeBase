@@ -31,34 +31,6 @@ public class DefectServiceImpl extends CmmnAbstractServiceImpl implements Defect
 	}
 	
 	@Override
-	public int insertDefect(Map<String, Object> paramsMap) throws RimsException {
-		 return defectDao.insertDefect(paramsMap);
-	}
-	
-	@Override
-	public Map<String, Object> selectValidDuplicate(Map<String, Object> paramsMap) {
-		Map<String, Object> result = new HashMap<>();
-
-		List<Map<String, Object>> dataCarInfoList = defectDao.selectCarInfoList(paramsMap);
-		List<Map<String, Object>> dataDefectList = defectDao.selectDefectList(paramsMap);
-		result.put("dataCarInfoList", dataCarInfoList);
-		result.put("dataDefectList", dataDefectList);
-
-		return result; 
-	}
-	
-	@Override
-	public int updateDefect(Map<String, Object> paramsMap) throws RimsException {
-		return defectDao.updateDefect(paramsMap);
-	}
-	
-	@Override
-	public int deleteDefect(Map<String, Object> paramsMap) throws RimsException {
-		return defectDao.deleteDefect(paramsMap);
-	}
-	
-	
-	@Override
 	public List<Map<String, Object>> selectCtpvNm(Map<String, Object> paramsMap) {
 		return defectDao.selectCtpvNm(paramsMap);
 	}
