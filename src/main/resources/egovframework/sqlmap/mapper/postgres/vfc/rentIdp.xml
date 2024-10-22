@@ -251,7 +251,7 @@
 				WHEN '9' THEN '대여취소'
 				ELSE rent.rent_stts_cd
 				END AS rent_stts_nm
-		FROM dqvs.dvs_dqv_hs_rent_new rent
+		FROM dqvs.dvs_dqv_hs_rent rent
 				 left join dqvs.dvs_rac_mt_car car
 						   on rent.vin = car.vin
 				 left join dqvs.dvs_cmm_mt_intrlcnsfile dcmi
@@ -279,7 +279,7 @@
 					WHEN '9' THEN '대여취소'
 					ELSE rent.rent_stts_cd
 					END AS rent_stts_nm
-			from dqvs.dvs_dqv_hs_rent_new rent
+			from dqvs.dvs_dqv_hs_rent rent
 					 left join dqvs.dvs_rac_mt_car car
 							   on rent.vin = car.vin
 					 left join dqvs.dvs_cmm_mt_intrlcnsfile dcmi
@@ -293,11 +293,11 @@
 		with max_his_number as(
 			select
 				MAX(rent_hstry_no) AS max_num
-			from dqvs.dvs_dqv_hs_rent_new
+			from dqvs.dvs_dqv_hs_rent
 			where rent_no = #{rentNo}
 			group by rent_no
 		)
-		INSERT INTO dqvs.dvs_dqv_hs_rent_new
+		INSERT INTO dqvs.dvs_dqv_hs_rent
 		values
 		(
 		#{rentNo}
@@ -333,7 +333,7 @@
 	
 		<!--대여정보이력 테이블에 이전 데이터가 없는 경우-->
 	<insert id="insertRentHisInfo2">
-		INSERT INTO dqvs.dvs_dqv_hs_rent_new
+		INSERT INTO dqvs.dvs_dqv_hs_rent
 		values
 		(
 			#{rentNo}
@@ -402,7 +402,7 @@
 			 , atch_file_sn
 			 , del_yn
 			 , vhcl_idnty_cd
-		from dqvs.dvs_dqv_hs_rent_new
+		from dqvs.dvs_dqv_hs_rent
 		where rent_no = #{rentNo}
 	</select>
 	
@@ -416,7 +416,7 @@
 	</update>
 	
 	<insert id="insertRentRegHs">
-			INSERT INTO dqvs.dvs_dqv_hs_rent_new
+			INSERT INTO dqvs.dvs_dqv_hs_rent
 				(rent_no,
 				rent_hstry_no,
 				vin,
