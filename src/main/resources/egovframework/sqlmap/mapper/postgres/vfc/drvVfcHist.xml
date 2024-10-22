@@ -21,10 +21,10 @@
  				concat(left(viui.onepass_user_nm, 1), repeat('*', length(viui.onepass_user_nm) - 2), right(viui.onepass_user_nm, 1))
  			else null
  		end as rqstr_nm
-		,  CASE
+		, CASE
               WHEN LENGTH(dln) > 6 THEN '*******' || SUBSTRING(dqvs.pca_decrypt(dln, '150'), 8)
               ELSE SUBSTRING(dln, 1, 6) || '******'
-           END AS dln
+          END AS dln
         , lcns_asort_cd
         , CASE ddhv.lcns_asort_cd
         WHEN '11' THEN '1종대형'
