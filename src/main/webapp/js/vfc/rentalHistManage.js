@@ -635,6 +635,11 @@
 				if (authrtCd.includes("Z") || authrtCd.includes("G") || authrtCd.includes("K")) {
 					$("#delYn").attr('style', 'display: contents');
 				}
+				if ((authrtCd.includes("Z") || authrtCd.includes("G") || authrtCd.includes("K")) && data[0].delYn == 'Y') {
+					$(".red_btn").css("display", "none");
+				} else if((authrtCd.includes("Z") || authrtCd.includes("G") || authrtCd.includes("K")) && data[0].delYn == 'N') {
+					$(".red_btn").css("display", "block");
+				}
 
 				//국제 면허의 경우 첨부된 면허증 사본(다운로드) 필드 노출 여부
 				$("#detailFileDown").val(data[0].atchFileNm);
