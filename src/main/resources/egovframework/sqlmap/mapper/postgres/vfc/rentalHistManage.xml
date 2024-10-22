@@ -435,7 +435,10 @@
 		/* 자격확인 정보 */
 		SELECT
    			TO_CHAR(verf.vrfc_dmnd_dt, 'YYYYMMDD') AS vrfc_dmnd_dt
-   			, SUBSTRING(verf.dln, 1, 6) || '******' AS dln
+   			,  CASE
+	              WHEN LENGTH(verf.dln) > 6 THEN '*******' || SUBSTRING(dqvs.pca_decrypt(verf.dln, '150'), 8)
+	              ELSE SUBSTRING(verf.dln, 1, 6) || '******'
+	           END AS dln,
 			, to_char(verf.vrfc_dmnd_dt,'YYYYMMDD') vrfc_dmnd_dt
 			,COALESCE(verf.vrfc_dmnd_dt::TEXT, '-') vrfc_dmnd_dt2
 			, COALESCE(CASE verf.vrfc_mthd WHEN '1' THEN '직접입력' WHEN '2' THEN 'OCR' WHEN '3' THEN '모바일면허증' WHEN '4' THEN 'API' END, '-') vrfc_mthd 
