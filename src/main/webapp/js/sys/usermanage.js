@@ -665,10 +665,18 @@
 		},
 
 		updateUserInfo : function(param){
+		    // 24.10.22 jeonghyewon  개발자 또는 관리자 로는 변경 불가 하도록 추가
+            var selectedAuthrtCd = $('#detail_authrt_cd').val();
+            if(selectedAuthrtCd.startsWith("Z") || selectedAuthrtCd.startsWith("D")) {
+                 alert("해당 권한으로 수정할 수 없습니다.");
+                 return ;
+            }
 			ajax(true, contextPath + '/sys/usermanage/updateUserInfo.do', 'body', '확인인중입니다.', param, function (data) {
 				alert("수정되었습니다.");
 			});
 		},
+
+
 
 		updateApprove: function(userSn, authrtCd){
 			var param = {}
