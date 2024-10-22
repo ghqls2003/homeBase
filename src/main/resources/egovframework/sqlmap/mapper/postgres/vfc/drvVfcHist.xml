@@ -21,7 +21,7 @@
  				concat(left(viui.onepass_user_nm, 1), repeat('*', length(viui.onepass_user_nm) - 2), right(viui.onepass_user_nm, 1))
  			else null
  		end as rqstr_nm
-		, '*******' || SUBSTRING(dqvs.pca_decrypt(dln, '150'), 8) AS dln
+		, SUBSTRING(dln, 1, 6) || '*******' AS dln 
         , lcns_asort_cd
         , CASE ddhv.lcns_asort_cd
         WHEN '11' THEN '1종대형'
@@ -47,7 +47,7 @@
         , ddhv.req_rslt_cd
         , prcs_se
         , drma.bzmn_sn
-        FROM dqvs.dvs_dqv_hs_verf_new AS ddhv
+        FROM dqvs.dvs_dqv_hs_verf AS ddhv
         LEFT OUTER JOIN dqvs.v_intg_user_info AS viui  ON ddhv.rqstr_sn = viui.user_sn
         LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn
         <!-- 권한처리 -->
@@ -87,7 +87,7 @@
             AND vrfc_mthd = #{vrfcMthd}
         </if>
         <if test="dln != null and dln != ''">
-            AND dln = dqvs.pca_encrypt(#{dln},'150')
+            AND dln_enc = dqvs.pca_encrypt(#{dln},'150')
         </if>
         <if test="cd != null and cd != '' ">
             <choose>
@@ -132,7 +132,7 @@
     <!-- 자격확인이력 건수 조회 -->
     <select id="listViewCnt" resultType="int">
         SELECT count(1) AS cnt
-        FROM dqvs.dvs_dqv_hs_verf_new AS ddhv
+        FROM dqvs.dvs_dqv_hs_verf AS ddhv
         LEFT OUTER JOIN dqvs.v_intg_user_info AS viui  ON ddhv.rqstr_sn = viui.user_sn
         LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn
         <!-- 권한처리 -->
@@ -172,7 +172,7 @@
             AND vrfc_mthd = #{vrfcMthd}
         </if>
         <if test="dln != null and dln != ''">
-            AND dln = dqvs.pca_encrypt(#{dln},'150')
+            AND dln_enc = dqvs.pca_encrypt(#{dln},'150')
         </if>
         <if test="cd != null and cd != '' ">
             <choose>
