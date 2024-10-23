@@ -2,15 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="vfc.drvRsvMag">
 
-	<!-- bzmn_se_cd 값을 조회하는 쿼리 -->
-	<select id="DlnFind" parameterType="map" resultType="string">
-		SELECT 
-			dln
-<!-- 		FROM dqvs.dvs_dqv_mt_rent_dump -->
-		FROM dqvs.dvs_dqv_mt_rent
-		WHERE rent_no = #{rentNo}
-	</select>
-	<!-- -->
 	<sql id ='RentalistSql'>
 			select
 				row_number() over(order by rent.rent_prcs_dt desc) rn,
