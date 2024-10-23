@@ -71,7 +71,7 @@
 				},
 				columns: [
 					{ field: "rn", title: "순번", width: "50px", template: "#:rn #", sortable: false },
-					{ field: "co_nm", title: "회사명", width: "75px", template: "#:co_nm #", sortable: false },
+					{ field: "co_nm", title: "회사명", width: "75px", template: "#= co_nm != null ? co_nm : '-' #", sortable: false },
 					{ field: "vin", title: "차대번호", width: "100px", template: "#= vin != null ? vin : '-' #", sortable: true },
 					{ field: "vhcl_reg_no", title: "차량번호", width: "100px", template: "#= vhcl_reg_no != null ? vhcl_reg_no : '-' #", sortable: true },
 					{ field: "defects_sn", title: "결합일련번호", width: "100px", template: "#= defects_sn != null ? defects_sn : '-' #", sortable: true },

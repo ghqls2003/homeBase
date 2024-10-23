@@ -22,7 +22,7 @@
  			else null
  		end as rqstr_nm
 		, CASE
-              WHEN LENGTH(dln) > 6 THEN '*******' || SUBSTRING(dqvs.pca_decrypt(dln, '150'), 8)
+              WHEN LENGTH(dln) > 6 THEN SUBSTRING(dqvs.pca_decrypt(dln, '150'), 1, 6) || '******'
               ELSE SUBSTRING(dln, 1, 6) || '******'
           END AS dln
         , lcns_asort_cd
@@ -88,9 +88,6 @@
         </if>
         <if test="vrfcMthd != null and vrfcMthd != ''">
             AND vrfc_mthd = #{vrfcMthd}
-        </if>
-        <if test="dln != null and dln != ''">
-            AND dln_enc = dqvs.pca_encrypt(#{dln},'150')
         </if>
         <if test="cd != null and cd != '' ">
             <choose>
@@ -173,9 +170,6 @@
         </if>
         <if test="vrfcMthd != null and vrfcMthd != ''">
             AND vrfc_mthd = #{vrfcMthd}
-        </if>
-        <if test="dln != null and dln != ''">
-            AND dln_enc = dqvs.pca_encrypt(#{dln},'150')
         </if>
         <if test="cd != null and cd != '' ">
             <choose>
