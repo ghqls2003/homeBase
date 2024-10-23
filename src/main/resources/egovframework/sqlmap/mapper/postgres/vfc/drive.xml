@@ -117,12 +117,12 @@
 				INSERT INTO dqvs.dvs_dqv_hs_rent
 			<choose>
 				<when test="rgtrSn != null and rgtrSn != ''">
-					(rent_no, vin, vhcl_reg_no, bzmn_sn, use_yn, sgg_cd, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, rgtr_sn, reg_dt, reg_ip)
-					select rent_no, vin, vhcl_reg_no, bzmn_sn, use_yn, sgg_cd, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, rgtr_sn, reg_dt, reg_ip from dqvs.dvs_dqv_mt_rent
+					(rent_no, vin, vhcl_reg_no, bzmn_sn, use_yn, sgg_cd, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, rgtr_sn, reg_dt, reg_ip,oneway_yn)
+					select rent_no, vin, vhcl_reg_no, bzmn_sn, use_yn, sgg_cd, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, rgtr_sn, reg_dt, reg_ip , oneway_yn from dqvs.dvs_dqv_mt_rent
 				</when>
 				<otherwise>
-					(rent_no, vin, vhcl_reg_no, bzmn_sn, use_yn, sgg_cd, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, rgtr_sn, reg_dt, reg_ip, rent_prcs_dt, mdfr_sn, mdfcn_dt, mdfcn_ip)
-					select rent_no, vin, vhcl_reg_no, bzmn_sn, use_yn, sgg_cd, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, rgtr_sn, reg_dt, reg_ip, rent_prcs_dt, mdfr_sn, mdfcn_dt, mdfcn_ip from dqvs.dvs_dqv_mt_rent
+					(rent_no, vin, vhcl_reg_no, bzmn_sn, use_yn, sgg_cd, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, rgtr_sn, reg_dt, reg_ip, rent_prcs_dt, mdfr_sn, mdfcn_dt, mdfcn_ip,oneway_yn)
+					select rent_no, vin, vhcl_reg_no, bzmn_sn, use_yn, sgg_cd, vrfc_hstry_sn, rent_bgng_dt, rent_end_dt, rent_stts_cd, rgtr_sn, reg_dt, reg_ip, rent_prcs_dt, mdfr_sn, mdfcn_dt, mdfcn_ip , oneway_yn from dqvs.dvs_dqv_mt_rent
 				</otherwise>
 			</choose>
 				WHERE rent_no = #{rentno}
@@ -133,7 +133,12 @@
 	<update id="updateRentSttsCd">
         <if test="rentno != null and rentno != ''">
 	        UPDATE dqvs.dvs_dqv_mt_rent
-			SET rent_prcs_dt=now()::timestamp, rent_stts_cd='2', mdfr_sn=#{mdfrSn}::numeric, mdfcn_dt=now()::timestamp, mdfcn_ip=#{mdfcnIp}
+			SET rent_prcs_dt=now()::timestamp,
+			rent_stts_cd='2',
+			oneway_yn= #{onewayYn},
+			mdfr_sn=#{mdfrSn}::numeric,
+			mdfcn_dt=now()::timestamp,
+			mdfcn_ip=#{mdfcnIp}
 			WHERE rent_no = #{rentno}
 		</if>
     </update>

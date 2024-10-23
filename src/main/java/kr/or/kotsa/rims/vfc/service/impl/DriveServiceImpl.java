@@ -1,5 +1,6 @@
 package kr.or.kotsa.rims.vfc.service.impl;
 
+import kr.or.kotsa.rims.vfc.service.DrvVfcHistService;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	private DriveDao driveDao;
 	private MipDidVpService mipDidVpService;
 
+	private DrvVfcHistService drvVfcHistService;
 	@Value(value="${app.sp-server}")
     private String spServer;
 
@@ -37,15 +39,17 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	static String branchName;
 	static String trxcode;
 
-	public DriveServiceImpl(DriveDao driveDao, MipDidVpService mipDidVpService) {
+	public DriveServiceImpl(DriveDao driveDao, MipDidVpService mipDidVpService, DrvVfcHistService drvVfcHistService) {
 		this.driveDao = driveDao;
 		this.mipDidVpService = mipDidVpService;
+		this.drvVfcHistService = drvVfcHistService;
 	}
 
     //차량정보 조회
 	public Map<String, Object> selectCarList(Map<String, Object> paramsMap)
 			throws RimsException {
 		Map<String, Object> result = new HashMap<>();
+//		System.out.println("⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐paramsMap"+paramsMap);
 		List<Map<String, Object>> list = driveDao.selectCarList(paramsMap);
 		int total = driveDao.selectCarListCnt(paramsMap);
 
@@ -57,6 +61,7 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	//운전자격 확인 코드
 	public Map<String, Object> selectVerifyCd(Map<String, Object> paramsMap) {
 		Map<String, Object> result = new HashMap<>();
+
 
 		Map<String, Object> rentNo = driveDao.selectRentNo(paramsMap);
 		Map<String, Object> vin = driveDao.selectVin(paramsMap);
@@ -91,16 +96,13 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 		paramsMap.put("mdfrSn", getUserSn());
 		paramsMap.put("mdfcnIp", getClientIP());
 		String rentalTypeYn = (String) paramsMap.get("rentalTypeYn");
-		driveDao.insertRentHstryInfo(paramsMap);
-		// 대여정보 대여확정처리
+		// 대여정보 대여확정처리 : dvs_dqv_mt_rent update
 		driveDao.updateRentSttsCd(paramsMap);
-// 20240822 운전자격이력에서 대여유형컬럼 삭제해서 필요없어짐 우선 주석처리 추후 테이블 재설정 후 다시 구현 될 기능 !
-//		if(rentalTypeYn.equals("Y")){ // 대여유형 포함 : Y
-//			// 대여처리시 운전자격이력에 대여유형 업데이트
-//			driveDao.updateRentType(paramsMap);
-//		}
+		// 대여정보 대여확정처리 : dvs_dqv_hs_rent insert
+		driveDao.insertRentHstryInfo(paramsMap);
 		return "success";
 	}
+
 
 
 	//운전자격검증 부가정보 등록
@@ -115,7 +117,8 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 		int rentCnt = driveDao.selectRentCnt(paramsMap);
 		result.put("rentCnt", rentCnt);
 		// 최근 7일 운전자격이력 건수
-		int VfcHistCnt = driveDao.selectVfcHistCnt(paramsMap);
+//		int VfcHistCnt = driveDao.selectVfcHistCnt(paramsMap); // 대여정보이력건수
+		int VfcHistCnt = drvVfcHistService.drvListViewCnt(paramsMap);
 		result.put("VfcHistCnt", VfcHistCnt);
 
 

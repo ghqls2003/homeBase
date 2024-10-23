@@ -518,9 +518,9 @@ var authrtCd = '${authrtCd}'
                 </div>
             </div>
             <!-- 대여 미포함 -->
-           <div class="contBox" id = "rentalTypeBox" style = "margin-top: 10px;display: none;" >
+            <!-- <div class="contBox" id = "rentalTypeBox" style = "margin-top: 10px;display: none;" >-->
             <!-- 대여 포함 -->
-             <!--  <div class="contBox" id = "rentalTypeBox" style = "margin-top: 10px;" > -->
+            <div class="contBox" id = "rentalTypeBox" style = "margin-top: 10px;" >
                             <div class="nameBox">
                                 <h4 class="name"> 대여 유형 </h4>
                             </div>

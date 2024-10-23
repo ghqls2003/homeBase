@@ -130,4 +130,20 @@ public class DrvVfcHistController extends CmmnAbstractServiceImpl {
 		result.put("ckResults" , drvVfcHistService.ckResults(paramsMap));
 		return result;
 	}
+
+	/**
+	 * 목록 카운트 조회(운전자격확인페이지용 -최근 7일간의 이력) 24.10.23 jeonghyewon
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping("drvVfcHist/selectDrvListView.do")
+	@ResponseBody
+	public Map<String, Object> selectDrvListView(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		result.put("data" , drvVfcHistService.drvListView(paramsMap));
+		result.put("total", drvVfcHistService.drvListViewCnt(paramsMap));
+		return result;
+	}
 }
