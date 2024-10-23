@@ -253,7 +253,6 @@
             var ckResults = $("#ckResults").val();
             codeType = ckResults.split("_")[0];
             var cd = ckResults.split("_")[2];
-
             param.vrfcMthd = $("#searchMthd").val();
             param.bzmnSnKwd = $("#searchCoNm").val();
             param.startDtTm = startDtTm;

@@ -207,6 +207,11 @@ public class drvRsvMagController extends CmmnAbstractServiceImpl {
 	public List<Map<String, Object>> selectCheckRentNo(@RequestBody Map<String, Object> paramsMap) throws RimsException {
 		return DrvRsvMagService.selectCheckRentNo(paramsMap);
 	}
+	@RequestMapping("/drvRsvMag/selectCheckRentRsvf")
+	@ResponseBody
+	public List<Map<String, Object>> selectCheckRentRsvf(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		return DrvRsvMagService.selectCheckRentRsvf(paramsMap);
+	}
 
 	@PostMapping("drvRsvMag/listexcel")
 	public GenericExcelView excelloginViewExcel(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
@@ -238,7 +243,7 @@ public class drvRsvMagController extends CmmnAbstractServiceImpl {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		Date todayDate = new Date();
 		String today = dateFormat.format(todayDate);
-		String fileName = "자격확인반복예약" + today;
+		String fileName = "drvRsvMag" + today;
 
 		String colName[] = { "번호", "대여번호", "면허번호", "면허 소유자", "면허종별", "회사명", "예약자", "예약 지정일","수정자","수정일"};
 		String valName[] = { "rn", "rentNo", "dln2", "lcnsFlnm", "lcnsAsortCd", "coNm",

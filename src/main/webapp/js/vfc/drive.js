@@ -1603,7 +1603,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 											$('#result').prepend(html);
 										}
 
-										// ✂️todo : 대여이력건수 result.rentCnt
+										// 대여이력건수 result.rentCnt 추후 운전자격이력건수로 변경가능성으로 주석처리함
                                         //										if(result.rentCnt == 0){
                                         //											var html = `<br><p class="current_info" >
                                         //						                        최근 7일 대여이력이 없습니다.
@@ -1619,7 +1619,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                                         //										}
 										//==================================================대여이력건수 end
 
-                                        // ✂️todo  운전자격확인 이력 건수 result.VfcHistCnt
+                                        // ✂️todo  현재 운전자격이력 건수 는 운전자격확인 이력 건수로 진행중 result.VfcHistCnt
 										if(result.VfcHistCnt == 0){
 											var html = `<br><p class="current_info" >
 						                        최근 7일 운전자격확인 이력이 없습니다.

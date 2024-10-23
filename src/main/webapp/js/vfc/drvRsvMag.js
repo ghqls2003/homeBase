@@ -12,6 +12,8 @@
 		$drvRsvMag.ui.pageLoad();		//최초 페이지 로드 시
 		$drvRsvMag.event.setUIEvent();
 	});
+	var detaiCLick = null;
+	var rentNoClick = null;
 	var rsvStrData = null;
 	var detailstartDate = null;
 	var detailEndDate = null;
@@ -21,8 +23,8 @@
 		{ title: "순번", width: "40px", field: "rn", template: "#: rn #" },
 		{ title: "대여번호", width: "200px", field: "rentNo", template: "#: rentNo != null ? rentNo : '-'#" },
 		{ title: "회사명", width: "150px", field: "coNm", template: "#: coNm != null ? coNm : '-'#" },
-		{ title: "등록일", width: "140px", field: "regDt", template: "#: regDt != null ? regDt : '-'#" },
-		{ title: "최종결과", width: "100px", field: "lastVrfcRslt", template: "#: lastVrfcRslt != null ? lastVrfcRslt : '-'#" },
+		{ title: "처리일시", width: "140px", field: "rentPrcsDt", template: "#: rentPrcsDt != null ? rentPrcsDt : '-'#" },
+//		{ title: "등록일", width: "140px", field: "regDt", template: "#: regDt != null ? regDt : '-'#" },
 		{ title: "대여시작일", width: "140px", field: "rentBgngDt", template: "#: rentBgngDt != null ? rentBgngDt : '-'#" },
 		{ title: "대여종료일", width: "140px", field: "rentEndDt", template: "#: rentEndDt != null ? rentEndDt : '-'#" },
 	];
@@ -31,7 +33,7 @@
 
 	$drvRsvMag.ui = {
 		pageLoad: function() {
-			
+
 
 			var nowYear = new Date().getFullYear();
 			var nowMonth = new Date().getMonth();
@@ -142,7 +144,7 @@
 					var endDatePicker = $("#end-Picker01").data("kendoDatePicker");
 
 					if (startDate) {
-						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() +30);
+						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 30);
 						endDatePicker.min(startDate);
 						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
 						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
@@ -304,41 +306,41 @@
 		detailCondition: function() {
 			//예약기간 설정 종료일 7일전으로 설정한 코드
 			if (ClickSearchRsv === 1) {
-			    $("#start-picker03").kendoDatePicker({
-			        value: detailstartDate,
-			        format: "yyyy-MM-dd HH:mm",
-			        parseFormats: ["yyyy-MM-dd HH:mm"],
-			        min: detailstartDate,
-			        max: new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7)), // endDate의 7일 전까지 설정
-			        change: function() {
-			            var selectedDate = this.value();
-			            if (selectedDate < detailstartDate) {
-			                this.value(detailstartDate);
-			            } else if (selectedDate > new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7))) {
-			                this.value(new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7)));
-			            }
-			        }
-			    });
+				$("#start-picker03").kendoDatePicker({
+					value: detailstartDate,
+					format: "yyyy-MM-dd HH:mm",
+					parseFormats: ["yyyy-MM-dd HH:mm"],
+					min: detailstartDate,
+					max: new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7)), // endDate의 7일 전까지 설정
+					change: function() {
+						var selectedDate = this.value();
+						if (selectedDate < detailstartDate) {
+							this.value(detailstartDate);
+						} else if (selectedDate > new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7))) {
+							this.value(new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7)));
+						}
+					}
+				});
 			} else {
-			    if ($("#start-picker03").data("kendoDateTimePicker")) {
-			        $("#start-picker03").data("kendoDateTimePicker").destroy(); // 기존 인스턴스 파괴
-			    }
+				if ($("#start-picker03").data("kendoDateTimePicker")) {
+					$("#start-picker03").data("kendoDateTimePicker").destroy(); // 기존 인스턴스 파괴
+				}
 
-			    $("#start-picker03").kendoDatePicker({
-			        value: detailstartDate,
-			        format: "yyyy-MM-dd HH:mm",
-			        parseFormats: ["yyyy-MM-dd HH:mm"],
-			        min: detailstartDate,
-			        max: new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7)), // endDate의 7일 전까지 설정
-			        change: function() {
-			            var selectedDate = this.value();
-			            if (selectedDate < detailstartDate) {
-			                this.value(detailstartDate);
-			            } else if (selectedDate > new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7))) {
-			                this.value(new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7)));
-			            }
-			        }
-			    });
+				$("#start-picker03").kendoDatePicker({
+					value: detailstartDate,
+					format: "yyyy-MM-dd HH:mm",
+					parseFormats: ["yyyy-MM-dd HH:mm"],
+					min: detailstartDate,
+					max: new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7)), // endDate의 7일 전까지 설정
+					change: function() {
+						var selectedDate = this.value();
+						if (selectedDate < detailstartDate) {
+							this.value(detailstartDate);
+						} else if (selectedDate > new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7))) {
+							this.value(new Date(new Date(detailEndDate).setDate(new Date(detailEndDate).getDate() - 7)));
+						}
+					}
+				});
 			}
 
 
@@ -397,33 +399,6 @@
 				editable: false,
 				resizable: true,
 				selectable: "row",
-				change: function(e) {
-					var rows = e.sender.select();
-					var data = null;
-
-					rows.each(function(e) {
-						var grid = $(gridId).data("kendoGrid");
-						var item = grid.dataItem(this);
-						data = item;
-					})
-					//					var nec = {rentNo, vhclRegNo, periodRsv, startDt, rsvendDt}
-
-					if (gridId == "#carGrid") {
-						$("#carVhclRegNoVal").val(data.vhclRegNo);
-						$("#carVhclRegNoVal").val(data.vhclRegNo);
-						$("#regVhclRegNo").val(data.vhclRegNo);
-						$("#regRentNo").val(data.rentNo);
-						$("#rsvEndTime").val(data.rentEndDt);
-						$("#start-picker02").val(data.rentBgngDt);
-						$("#lastCfDt").val(data.vrfcDmndDt);
-						$("#lastCfRst").val(data.vrfcNm);
-						$("#regRgtrDln").val(data.dln);
-						$("#lcnsFlnm").val(data.lcnsFlnm);
-						$("#ReglcnsAsortCd").val(data.lcnsAsortCd);
-						$("#RsvedlastRst").val(data.vrfcCd);
-
-					}
-				}
 			});
 		},
 		checkRentNo: function() {
@@ -494,7 +469,7 @@
 			options.lncdDrop = $('#lncdDrop').val();
 			options.searchWrd = $('#searchWrd').val();
 
-			var filename = "자격확인반복예약";
+			var filename = "drvRsvMag";
 
 			//			excelDown("/os/OPSuseSttus/historylistexcelDown", options, filename, totalRowCount);
 			excelDown("/vfc/drvRsvMag/listexcel", options, filename);
@@ -607,6 +582,32 @@
 			});
 		},
 		carNoval: function() {
+			var grid = $('#carGrid').data("kendoGrid");
+			var selectedRow = grid.select();
+			var data = grid.dataItem(selectedRow);
+
+			if (data) {
+				detaiCLick = data.vrfcHstrySn;
+				rentNoClick = data.rentNo;
+				$("#carVhclRegNoVal").val(data.vhclRegNo);
+				$("#regVhclRegNo").val(data.vhclRegNo);
+				$("#regRentNo").val(rentNoClick);
+				$("#rsvEndTime").val(data.rentEndDt);
+				$("#start-picker02").val(data.rentBgngDt);
+				$("#regRgtrDln").val(data.dln);
+
+				var params = {};
+				params.detaiCLick = detaiCLick;
+
+				ajax(true, contextPath + '/vfc/drvRsvMag/selectCheckRentRsvf', 'body', '확인 중입니다.', params, function(data2) {
+					$("#lastCfRst").val(data2[0].vrfcRslt);
+					$("#lcnsFlnm").val(data2[0].lcnsFlnm);
+					$("#ReglcnsAsortCd").val(data2[0].lcnsAsortCd);
+					$("#RsvedlastRst").val(data2[0].vrfcCd);
+					$("#lastCfDt").val(data2[0].vrfcDmndDt);
+				});
+			}
+
 			var carRegNoVal = $("#regRentNo").val();
 			var carRegNoVal2 = $("#rsvEndTime").val();
 			var carRegNoVal3 = $("#start-picker02").val();
@@ -622,21 +623,7 @@
 				$("#carSearchWrd").val('');
 				$("#carTa").append("<table id='carGrid'><caption>대여예약</caption></table>");
 			}
-			// 중복 초기화 방지
 			rsvStrData = new Date(carRegNoVal3);
-			//		        $("#start-picker02").kendoDateTimePicker({
-			//		            format: "yyyy-MM-dd HH:mm",
-			//		            value: rsvStrData, // Date 객체 사용
-			//		            min: rsvStrData,   // Date 객체 사용
-			//		            change: function() {
-			//		                var selectedDate = this.value();
-			//		                if (selectedDate < rsvStrData) {
-			//		                    this.value(rsvStrData);
-			//		                }
-			//		            }
-			//		        });
-
-
 		},
 		detailDeleteBtn: function() {
 

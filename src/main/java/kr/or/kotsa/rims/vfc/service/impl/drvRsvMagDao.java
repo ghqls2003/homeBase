@@ -63,4 +63,7 @@ public class drvRsvMagDao extends CmmnAbstractMapper {
 	public List<Map<String, Object>> selectCheckRentNo(Map<String, Object> paramsMap) {
 		return selectList("vfc.drvRsvMag.CheckRentNo", paramsMap);
 	}
+	public List<Map<String, Object>> selectCheckRentRsvf(Map<String, Object> paramsMap) {
+		return selectList("vfc.drvRsvMag.CheckRentRsvf", paramsMap);
+	}
 }

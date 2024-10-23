@@ -6,143 +6,153 @@
 	<select id="DlnFind" parameterType="map" resultType="string">
 		SELECT 
 			dln
+<!-- 		FROM dqvs.dvs_dqv_mt_rent_dump -->
 		FROM dqvs.dvs_dqv_mt_rent
 		WHERE rent_no = #{rentNo}
 	</select>
 	<!-- -->
-	<select id="RsvNoList" resultType="resultMap">
-    select 
-    row_number() over(
-		order by car.rent_bgng_dt desc) rn,
-        car.rent_no,
-        drma.co_nm,
-        drma.brno,
-        car.vhcl_reg_no,
-        ddhv.vrfc_rslt,
-        ddhv.vrfc_cd,
-        dqvs.fn_get_cdnm('verify_cd', ddhv.vrfc_cd) as last_vrfc_rslt,
-        car.vin,
-        car.carmdl,
-        car.dln,
-        ddhv.lcns_flnm,
-        ddhv.lcns_asort_cd,
-        dqvs.fn_get_cdnm('verify_cd', ddhv.lcns_asort_cd) as alcnsAsortCd,
-        car.mdlyr,
-        car.vhcl_nm,
-        car.vrfc_hstry_sn,
-        to_char(car.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') as rent_bgng_dt,
-        to_char(car.rent_end_dt, 'YYYY-MM-DD HH24:MI') as rent_end_dt,
-        to_char(car.rent_prcs_dt, 'YYYY-MM-DD HH24:MI') as rent_prcs_dt,
-        car.bzmn_sn,
-        car.engine_fom,
-        to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') as reg_dt
-    from 
-        dqvs.dvs_dqv_mt_rent car
-    left join 
-        dqvs.dvs_dqv_hs_verf ddhv 
-    on 
-        ddhv.vrfc_hstry_sn = car.vrfc_hstry_sn
-    left join 
-        dqvs.dvs_rac_mt_agency drma 
-    on 
-        drma.bzmn_sn = car.bzmn_sn
-    where 
-        (car.rent_end_dt::timestamp - car.rent_bgng_dt::timestamp) > interval '7 days'
-        and car.rent_bgng_dt > current_timestamp 
-    <if test="searchWrd != '' and searchWrd != null">
-        and car.rent_no like '%' || #{searchWrd} || '%'
-    </if>
-    <choose>
-        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'>
-            and (car.bzmn_sn in (select bzmn_sn from dqvs.dvs_rac_mt_agency where up_brno = #{bzmnSn}) 
-            or car.bzmn_sn = #{bzmnSn})
-        </when>
-        <when test='authrtCd.equals("S02")'>
-            and car.bzmn_sn = #{bzmnSn}
-        </when>
-        <when test='authrtCd.equals("S03")'>
-            <if test="bzauthCd == 1">
-                and (car.bzmn_sn in (select bzmn_sn from dqvs.dvs_rac_mt_agency where up_brno = #{bzmnSn})
-                or car.bzmn_sn = #{bzmnSn})
-            </if>
-            <if test="bzauthCd == 2">
-                and car.bzmn_sn = #{bzmnSn}
-            </if>
-        </when>
-        <otherwise>
-            <if test="bzmnSn != '' and bzmnSn != null">
-                and car.bzmn_sn = #{bzmnSn}
-            </if>
-        </otherwise>
-    </choose>
-    order by car.rent_bgng_dt desc
-    <if test="take != '' and take != null">
-        limit CAST(#{take} AS INTEGER)
-    </if>
-    <if test="skip != '' and skip != null">
-        offset CAST(#{skip} AS INTEGER)
-    </if>
-</select>
-
-	<select id="RsvNoListCnt" resultType="int">
-		select count(*) from(
+	<sql id ='RentalistSql'>
 			select
-			row_number() over() as rn ,
-			car.rent_no,
-			drma.co_nm,
-			drma.brno,
-			car.vhcl_reg_no,
-			car.vin,
-			car.carmdl,
-			car.dln,
-			ddhv.lcns_flnm,
-			dqvs.fn_get_cdnm('verify_cd', ddhv.lcns_asort_cd) as alcnsAsortCd,
-			car.mdlyr,
-			car.vhcl_nm,
-			car.vrfc_hstry_sn,
-			to_char(car.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') as rent_bgng_dt ,
-			to_char(car.rent_end_dt, 'YYYY-MM-DD HH24:MI') as rent_end_dt,
-			to_char(car.rent_prcs_dt, 'YYYY-MM-DD HH24:MI') as rent_prcs_dt, 
-			car.bzmn_sn,
-			car.engine_fom,
-			to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
-			from dqvs.dvs_dqv_mt_rent car
-			left outer join dqvs.dvs_dqv_hs_verf ddhv
-			on ddhv.vrfc_hstry_sn = car.vrfc_hstry_sn
-			LEFT JOIN dqvs.dvs_rac_mt_agency drma 
-			ON drma.bzmn_sn = car.bzmn_sn
-		where 1=1
- 		AND (car.rent_end_dt::timestamp - car.rent_bgng_dt::timestamp) <![CDATA[>]]> interval '7 days'
- 		 AND car.rent_bgng_dt <![CDATA[>]]> current_timestamp 
- 		<if test="searchWrd != '' and searchWrd != null">
-			and car.rent_no like '%' || #{searchWrd} || '%'
-		</if>
-		<choose>
-	        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
-				AND (car.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
-				OR car.bzmn_sn = #{bzmnSn})
-	        </when>
-	        <when test='authrtCd.equals("S02")'> <!-- 영업소관리자 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시  -->
-				AND car.bzmn_sn = #{bzmnSn}
-	        </when>
-	        <when test='authrtCd.equals("S03")'> <!-- 주사무소 일반회원, 영업소 일반회원에 따라 조건처리  -->
-	            <if test="bzauthCd == 1">
-	                AND (car.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno = #{bzmnSn})
-	                OR car.bzmn_sn = #{bzmnSn})
-	            </if>
-	            <if test="bzauthCd == 2">
-	                AND car.bzmn_sn = #{bzmnSn}
-	            </if>
-	        </when>
-	        <otherwise> <!-- 그 외는 소속 회사의 대여 건만 표시 -->
-				<if test="bzmnSn != '' and bzmnSn != null">
-                	AND car.bzmn_sn = #{bzmnSn}
-				</if>
-	        </otherwise>
-		</choose>
-		) T
-	
+				row_number() over(order by rent.rent_prcs_dt desc) rn,
+				rent.rent_no,
+				rent.vhcl_reg_no,
+				rent.dln,
+				rent.vrfc_hstry_sn,
+				agency.co_nm,
+				to_char(rent.rent_bgng_dt,
+				'YYYY-MM-DD HH24:MI') as rent_bgng_dt,
+				to_char(rent.rent_end_dt,
+				'YYYY-MM-DD HH24:MI') as rent_end_dt,
+				to_char(rent.rent_prcs_dt,
+				'YYYY-MM-DD HH24:MI') as rent_prcs_dt,
+				rent.bzmn_sn,
+				to_char(rent.reg_dt,
+				'YYYY-MM-DD HH24:MI') as reg_dt
+			from
+				(
+					select
+						base.rent_no,
+						base.rent_prcs_dt,
+						base.lcns_idntf_cd,
+						base.vhcl_reg_no,
+						base.bzmn_sn,
+						base.rent_bgng_dt,
+						base.rent_end_dt ,
+						base.rent_stts_cd,
+						base.vrfc_hstry_sn,
+						base.del_yn,
+						base.rgtr_sn,
+						base.reg_dt,
+						base.mdfcn_dt,
+						base.dln
+					from
+<!-- 						dqvs.dvs_dqv_mt_rent_dump base -->
+						dqvs.dqvs.dvs_dqv_mt_rent base
+					where
+						1 = 1
+						and base.rent_prcs_dt is not null
+						and base.rent_stts_cd = '2'
+						and (base.rent_end_dt::timestamp - base.rent_bgng_dt::timestamp) > interval '7 days' ) as rent
+				left outer join dqvs.dvs_rac_mt_agency agency on
+					rent.bzmn_sn = agency.bzmn_sn
+		   WHERE 1=1
+		   		and (CURRENT_TIMESTAMP between rent.rent_bgng_dt and rent.rent_end_dt)
+		   <choose>
+		        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
+					AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
+					OR rent.bzmn_sn = #{bzmnSn})
+		        </when>
+		        <when test='authrtCd.equals("S02")'> <!-- 영업소관리자 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시  -->
+					AND rent.bzmn_sn = #{bzmnSn}
+		        </when>
+		        <when test='authrtCd.equals("S03")'> <!-- 주사무소 일반회원, 영업소 일반회원에 따라 조건처리  -->
+		            <if test="bzauthCd == 1">
+		                AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno = #{bzmnSn})
+		                OR rent.bzmn_sn = #{bzmnSn})
+		            </if>
+		            <if test="bzauthCd == 2">
+		                AND rent.bzmn_sn = #{bzmnSn}
+		            </if>
+		        </when>
+		        <otherwise> <!-- 그 외는 소속 회사의 대여 건만 표시 -->
+					<if test="bzmnSn != '' and bzmnSn != null">
+	                	AND rent.bzmn_sn = #{bzmnSn}
+					</if>
+		        </otherwise>
+			</choose>
+	</sql>
+	<select id="RsvNoList" resultType="resultMap">
+		select * 
+		 from(
+		 <include refid="RentalistSql"></include>
+		 ) as T 
+			<if test="take != '' and take != null">
+				LIMIT #{take} OFFSET #{skip}
+			</if>
+
 	</select>
+	<select id="RsvNoListCnt" resultType="int">
+			select
+				COUNT(*)
+			from
+				(
+					select
+						base.rent_no,
+						base.rent_prcs_dt,
+						base.lcns_idntf_cd,
+						base.vhcl_reg_no,
+						base.bzmn_sn,
+						base.rent_bgng_dt,
+						base.rent_end_dt ,
+						base.rent_stts_cd,
+						base.vrfc_hstry_sn,
+						base.del_yn,
+						base.rgtr_sn,
+						base.reg_dt,
+						base.mdfcn_dt,
+						base.dln
+					from
+<!-- 						dqvs.dvs_dqv_mt_rent_dump base -->
+						dqvs.dvs_dqv_mt_rent base
+					where
+						1 = 1
+						and base.rent_prcs_dt is not null
+						and base.rent_stts_cd = '2'
+						and (base.rent_end_dt::timestamp - base.rent_bgng_dt::timestamp) > interval '7 days' ) as rent
+				left outer join dqvs.dvs_rac_mt_agency agency on
+					rent.bzmn_sn = agency.bzmn_sn
+		   WHERE 1=1
+		   		and (CURRENT_TIMESTAMP between rent.rent_bgng_dt and rent.rent_end_dt)
+		   <choose>
+		        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
+					AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
+					OR rent.bzmn_sn = #{bzmnSn})
+		        </when>
+		        <when test='authrtCd.equals("S02")'> <!-- 영업소관리자 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시  -->
+					AND rent.bzmn_sn = #{bzmnSn}
+		        </when>
+		        <when test='authrtCd.equals("S03")'> <!-- 주사무소 일반회원, 영업소 일반회원에 따라 조건처리  -->
+		            <if test="bzauthCd == 1">
+		                AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno = #{bzmnSn})
+		                OR rent.bzmn_sn = #{bzmnSn})
+		            </if>
+		            <if test="bzauthCd == 2">
+		                AND rent.bzmn_sn = #{bzmnSn}
+		            </if>
+		        </when>
+		        <otherwise> <!-- 그 외는 소속 회사의 대여 건만 표시 -->
+					<if test="bzmnSn != '' and bzmnSn != null">
+	                	AND rent.bzmn_sn = #{bzmnSn}
+					</if>
+		        </otherwise>
+			</choose>
+	</select>
+<!-- 	<select id="RsvNoListCnt" resultType="int"> -->
+<!-- 		select count(*) from( -->
+<!-- 			<include refid="RentalistSql" /> -->
+<!-- 		) T -->
+	
+<!-- 	</select> -->
 
 		<select id="RentalHistList" resultType="resultMap">
 			select
@@ -176,6 +186,7 @@
 							ddvr.lcns_flnm,
 							ddvr.lcns_asort_cd
 						from dqvs.dvs_dqv_mt_rent rent
+<!-- 						from dqvs.dvs_dqv_mt_rent_dump rent -->
 						left outer join dqvs.dvs_rac_mt_agency agency on
 						rent.bzmn_sn = agency.bzmn_sn
 						inner join dqvs.dvs_dqv_vrfc_rsvt ddvr on
@@ -255,6 +266,7 @@
 							ddvr.lcns_flnm,
 							ddvr.lcns_asort_cd
 						from dqvs.dvs_dqv_mt_rent rent
+<!-- 						from dqvs.dvs_dqv_mt_rent_dump rent -->
 						left outer join dqvs.dvs_rac_mt_agency agency on
 						rent.bzmn_sn = agency.bzmn_sn
 						inner join dqvs.dvs_dqv_vrfc_rsvt ddvr on
@@ -271,29 +283,29 @@
 				 		<if test="lncdDrop != '' and lncdDrop != null">
 							and rent.lcns_asort_cd = #{lncdDrop}
 						</if>
-					<choose>
-				        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
-							AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
-							OR rent.bzmn_sn = #{bzmnSn})
-				        </when>
-				        <when test='authrtCd.equals("S02")'> <!-- 영업소관리자 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시  -->
-							AND rent.bzmn_sn = #{bzmnSn}
-				        </when>
-				        <when test='authrtCd.equals("S03")'> <!-- 주사무소 일반회원, 영업소 일반회원에 따라 조건처리  -->
-				            <if test="bzauthCd == 1">
-				                AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno = #{bzmnSn})
-				                OR rent.bzmn_sn = #{bzmnSn})
-				            </if>
-				            <if test="bzauthCd == 2">
-				                AND rent.bzmn_sn = #{bzmnSn}
-				            </if>
-				        </when>
-				        <otherwise> <!-- 그 외는 소속 회사의 대여 건만 표시 -->
-							<if test="bzmnSn != '' and bzmnSn != null">
-			                	AND rent.bzmn_sn = #{bzmnSn}
-							</if>
-				        </otherwise>
-					</choose>
+		<choose>
+	        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
+				AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
+				OR rent.bzmn_sn = #{bzmnSn})
+	        </when>
+	        <when test='authrtCd.equals("S02")'> <!-- 영업소관리자 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시  -->
+				AND rent.bzmn_sn = #{bzmnSn}
+	        </when>
+	        <when test='authrtCd.equals("S03")'> <!-- 주사무소 일반회원, 영업소 일반회원에 따라 조건처리  -->
+	            <if test="bzauthCd == 1">
+	                AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno = #{bzmnSn})
+	                OR rent.bzmn_sn = #{bzmnSn})
+	            </if>
+	            <if test="bzauthCd == 2">
+	                AND rent.bzmn_sn = #{bzmnSn}
+	            </if>
+	        </when>
+	        <otherwise> <!-- 그 외는 소속 회사의 대여 건만 표시 -->
+				<if test="bzmnSn != '' and bzmnSn != null">
+                	AND rent.bzmn_sn = #{bzmnSn}
+				</if>
+	        </otherwise>
+		</choose>
 			) as T
 		</select>
 
@@ -305,7 +317,8 @@
 			carmdl,
 			rent_bgng_dt,
 			rent_end_dt
-			from dqvs.dvs_dqv_mt_rent
+<!-- 			from dqvs.dvs_dqv_mt_rent_dump -->
+			from dqvs.dqvs.dvs_dqv_mt_rent
 			<if test="searchRentNo != '' and searchRentNo != null">
 				and LOWER(dcms.rent_no) like '%' || LOWER(#{searchRentNo}) || '%'
 			</if>
@@ -313,7 +326,8 @@
 		<select id="SearchRentNoCnt" resultType="int">
 			select
 			count(*)
-			from dqvs.dvs_dqv_mt_rent
+			from dqvs.dqvs.dvs_dqv_mt_rent
+<!-- 			from dqvs.dvs_dqv_mt_rent_dump -->
 			<if test="searchRentNo != '' and searchRentNo != null">
 				and LOWER(dcms.rent_no) like '%' || LOWER(#{searchRentNo}) || '%'
 			</if>
@@ -430,5 +444,17 @@
 			    rent_no
 			from dqvs.dvs_dqv_vrfc_rsvt
 			where rent_no = #{rentNo}
+	</select>
+	<select id="CheckRentRsvf" resultType="resultMap">
+			select 
+		        ddhv.vrfc_rslt,
+		        ddhv.vrfc_cd,
+		        dqvs.fn_get_cdnm('verify_cd', ddhv.vrfc_cd) as last_vrfc_rslt,
+		        ddhv.lcns_asort_cd,
+		        ddhv.lcns_flnm,
+		        ddhv.vrfc_dmnd_dt,
+		        dqvs.fn_get_cdnm('verify_cd', ddhv.lcns_asort_cd) as alcnsAsortCd
+		    FROM dqvs.dvs_dqv_hs_verf as ddhv
+			WHERE ddhv.vrfc_hstry_sn = #{detaiCLick}
 	</select>
 </mapper>
