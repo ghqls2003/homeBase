@@ -89,9 +89,6 @@
         <if test="vrfcMthd != null and vrfcMthd != ''">
             AND vrfc_mthd = #{vrfcMthd}
         </if>
-        <if test="dln != null and dln != ''">
-            AND dln_enc = dqvs.pca_encrypt(#{dln},'150')
-        </if>
         <if test="cd != null and cd != '' ">
             <choose>
                 <when test="codeType =='verify'"><!--요청 성공 후 확인결과 실패(vrfc_rslt_cd 컬럼 조회시 ) 일때 -->
@@ -173,9 +170,6 @@
         </if>
         <if test="vrfcMthd != null and vrfcMthd != ''">
             AND vrfc_mthd = #{vrfcMthd}
-        </if>
-        <if test="dln != null and dln != ''">
-            AND dln_enc = dqvs.pca_encrypt(#{dln},'150')
         </if>
         <if test="cd != null and cd != '' ">
             <choose>
