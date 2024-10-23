@@ -78,8 +78,6 @@
 					</if>
 		        </otherwise>
 			</choose>
-			
-    ) AS T 
 	</sql>
 	<select id="RsvNoList" resultType="resultMap">
 		select * 

@@ -48,10 +48,7 @@
 	        FROM dqvs.dvs_cmm_mt_code dcmc
 	        WHERE dcmc.cd_group = 'verify_cd' AND dcmc.cd = T.res_cd) AS res_nm
 			FROM (
-			    SELECT CASE
-		               WHEN TI.vrfc_cn ~ '^{.*}$' THEN (TI.vrfc_cn::jsonb ->> 'body')::jsonb ->> 'f_rtn_code'
-		               ELSE NULL
-		           END AS res_cd,
+			    SELECT vrfc_rslt_cd AS res_cd,
 		           vrfc_hstry_sn,
 		           rqstr_sn,
 		           (SELECT user_nm
@@ -96,10 +93,8 @@
 		               WHEN '3' THEN '모바일면허증'
 		               WHEN '4' THEN 'API'
 		           END AS vrfc_mthd,
-		           vrfc_rslt,
-		           vrfc_cn,
 		           prcs_se
-			    FROM dqvs.dvs_dqv_hs_verf TI
+			    FROM dqvs.dvs_dqv_hs_verf_new TI
 			    where 1=1
 			    <if test="dt != '' and dt != null">
 					and vrfc_dmnd_dt <![CDATA[>=]]> to_date(#{dt}, 'yyyy-mm-dd') and vrfc_dmnd_dt <![CDATA[<=]]> to_date(#{dt}, 'yyyy-mm-dd')+1
@@ -121,7 +116,7 @@
     <select id="listViewCnt" resultType="int">
 	    /* 검증이력 건수 조회 */
 		SELECT count(*) AS cnt
-		FROM dqvs.dvs_dqv_hs_verf TI
+		FROM dqvs.dvs_dqv_hs_verf_new TI
 		where rqstr_sn = #{userSn}::numeric
 		<if test="dt != '' and dt != null">
 			and vrfc_dmnd_dt <![CDATA[>=]]> to_date(#{dt}, 'yyyy-mm-dd') and vrfc_dmnd_dt <![CDATA[<=]]> to_date(#{dt}, 'yyyy-mm-dd')+1

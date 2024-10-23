@@ -198,3 +198,29 @@ table.tb td .k-picker-solid {
 #versionNotice{
 	display:none;
 }
+
+/* 상세팝업 24.10.21 jeonghyewon */
+@media (max-width: 480px) {
+    .sub03 .popup.detail_popup .box {
+        width: 380px;
+    }
+}
+/* 로딩시 메세지 추가 이벤트  24.10.21 jeonghyewon */
+.center-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 10px 10px;
+    border-radius: 5px;
+    z-index: 9999;
+    font-size: 16px;
+}
+
+@media (max-width: 480px) {
+    .center-message {
+        font-size: 11px;
+    }
+}

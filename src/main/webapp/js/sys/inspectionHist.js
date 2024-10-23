@@ -519,6 +519,7 @@
 					var sd = $("#searchCtpvNm").val();
 					var sgg = $("#searchSggNm").val();
 					excelDownArc.cmptncZoneCd = sd+sgg;
+					excelDownArc.searchChk    = $("input[name='searchChk']:checked").val();
 					excelDownArc.bzmnSeCd     = $('#searchBzmnSeCd').val();
 					excelDownArc.bsnSttsCd    = $('#searchBsnSttsCd').val();
 					excelDownArc.chckRslt     = $('#searchRslt').val();
@@ -908,6 +909,7 @@
 					var sd = $("#searchCtpvNm").val();
 					var sgg = $("#searchSggNm").val();
 					excelDownArc.cmptncZoneCd = sd+sgg;
+					excelDownArc.searchChk    = $("input[name='searchChk']:checked").val();
 					excelDownArc.bzmnSeCd     = $('#searchBzmnSeCd').val();
 					excelDownArc.bsnSttsCd    = $('#searchBsnSttsCd').val();
 					excelDownArc.chckRslt     = $('#searchRslt').val();

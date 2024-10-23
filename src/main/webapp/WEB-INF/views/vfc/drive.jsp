@@ -15,34 +15,6 @@ var userOperSystemBool = '${userOperSystemBool}' === 'true';
 var old_new = '${old_new}';
 var authrtCd = '${authrtCd}'
 </script>
-<style>
-@media (max-width: 480px) {
-    .sub03 .popup.detail_popup .box {
-        width: 380px;
-    }
-}
-
-.center-message {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.7);
-    color: #fff;
-    padding: 10px 10px;
-    border-radius: 5px;
-    z-index: 9999;
-    font-size: 16px;
-}
-
-@media (max-width: 480px) {
-    .center-message {
-        font-size: 11px;
-    }
-}
-
-</style>
-
 
 <div class="subPage sub02_03">
 	<!-- 콘텐츠 시작 -->
@@ -602,142 +574,141 @@ var authrtCd = '${authrtCd}'
 <div class="popup result_popup_in_popup drvie_popup sub02_04" id="popup_mobiDefect_box" style="display : none"></div>
 
 <!-- 대여이상 해당차량의 상세팝업 조회 링크   -->
-
 <div class="subPage sub03">
-<div class="popup detail_popup popup_type02" id='detail_popup_mobiDefect_box'>
- <div class="box">
-        <div class="popup_top">
-            <h4>차량 상세</h4>
-            <div class="close detailClose">
-                <span></span> <span></span>
+    <div class="popup detail_popup popup_type02" id='detail_popup_mobiDefect_box'>
+        <div class="box">
+            <div class="popup_top">
+                <h4>차량 상세</h4>
+                <div class="close detailClose">
+                    <span></span> <span></span>
+                </div>
             </div>
-        </div>
-        <div class="content">
-            <div class="scrollBar02">
-                <div class="info_wr">
-                    <div class="contBox detail">
-                        <div class="nameBox nameBox-flex">
-                            <h4 class="name">소유자 상세 정보</h4>
-                        </div>
-                        <div class="cont cont-flex">
-                            <table class="tb rental_tb01">
-                                <tr>
-                                    <th scope="col">법인등록번호</th>
-                                    <td><label for="detail_crno">법인등록번호</label> <input id="detail_crno"  class="input" aria-label="법인등록번호" maxlength="16" readonly>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">법인명</th>
-                                    <td><label for="detail_coNm">법인명</label> <input id="detail_coNm"  class="input" aria-label="법인명" readonly></td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">소유자명</th>
-                                    <td><label for="detail_ownrNm">소유자명</label> <input id="detail_ownrNm" class="input" aria-label="소유자명" readonly>
-                                    </td>
-                                </tr>
-                            </table>
-                            <table class="tb rental_tb01">
-                                <tr>
-                                    <th scope="col">주 사업자등록번호</th>
-                                    <td><label for="detail_brno">주 사업자등록번호</label> <input  id="detail_brno" class="input" aria-label="주 사업자등록번호" readonly>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">지역</th>
-                                    <td><label for="detail_ctpvSggNm">지역</label> <input  id="detail_ctpvSggNm" class="input" aria-label="시도 시군구" readonly>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="contBox detail">
-                        <div class="nameBox nameBox-flex">
-                            <h4 class="name">차량 상세 정보</h4>
-                        </div>
-                        <div class="cont cont-flex">
-                            <table class="tb rental_tb01">
-                                <tr>
-                                    <th scope="col">차량등록번호</th>
-                                    <td><label for="detail_vhclRegNo">차량등록번호</label> <input  id="detail_vhclRegNo" class="input" aria-label="차량등록번호"  maxlength="16" readonly></td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">차대번호</th>
-                                    <td><label for="detail_vin">차대번호</label> <input id="detail_vin"  class="input" aria-label="차대번호" maxlength="16" readonly>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">차종</th>
-                                    <td><label for="detail_carmdl">차종</label> <input id="detail_carmdl"  class="input" aria-label="차종" maxlength="16" readonly>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">차량명</th>
-                                    <td><label for="detail_vhclNm">차량명</label> <input id="detail_vhclNm"   class="input" aria-label="차량명" maxlength="16" readonly>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">연식</th>
-                                    <td><label for="detail_mdlyr">연식</label> <input id="detail_mdlyr" class="input" aria-label="연식" readonly></td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">엔진형식</th>
-                                    <td><label for="detail_engineFom">엔진형식</label> <input id="detail_engineFom" class="input" aria-label="엔진형식" readonly>
-                                    </td>
-                                </tr>
-                            </table>
-                            <table class="tb rental_tb01">
-                                <tr>
-                                    <th scope="col">소재지</th>
-                                    <td><label for="detail_sggNm">소재지</label> <input id="detail_sggNm" class="input" aria-label="소재지" readonly>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">최초등록일자</th>
-                                    <td><label for="detail_frstRegYmd">최초등록일자</label> <input id="detail_frstRegYmd" class="input" aria-label="최초등록일자" readonly>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">만료일자</th>
-                                    <td><label for="detail_expryYmd">만료일자</label> <input id="detail_expryYmd" class="input" aria-label="만료일자" readonly>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">자료연계등록일</th>
-                                    <td><label for="detail_regDt">자료연계등록일</label> <input id="detail_regDt" class="input" aria-label="자료연계등록일" maxlength="4" readonly></td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">결함여부</th>
-                                    <td><label for="detail_defectYn">결함여부</label> <input id="detail_defectYn" class="input" aria-label="결함여부" readonly>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="col">사용여부</th>
-                                    <td><label for="detail_useYn">사용여부</label> <input id="detail_useYn" class="useYn input" aria-label="사용여부" readonly></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="contBox" id="defectInfo" style="display: none;">
+            <div class="content">
+                <div class="scrollBar02">
+                    <div class="info_wr">
+                        <div class="contBox detail">
                             <div class="nameBox nameBox-flex">
-                                <h4 class="name">차량 결함 정보</h4>
+                                <h4 class="name">소유자 상세 정보</h4>
                             </div>
-                            <div class="grid_wr">
-                                <table id="detail_defectGrid">
-                                    <caption>차량 결함 조회</caption>
+                            <div class="cont cont-flex">
+                                <table class="tb rental_tb01">
+                                    <tr>
+                                        <th scope="col">법인등록번호</th>
+                                        <td><label for="detail_crno">법인등록번호</label> <input id="detail_crno"  class="input" aria-label="법인등록번호" maxlength="16" readonly>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">법인명</th>
+                                        <td><label for="detail_coNm">법인명</label> <input id="detail_coNm"  class="input" aria-label="법인명" readonly></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">소유자명</th>
+                                        <td><label for="detail_ownrNm">소유자명</label> <input id="detail_ownrNm" class="input" aria-label="소유자명" readonly>
+                                        </td>
+                                    </tr>
                                 </table>
+                                <table class="tb rental_tb01">
+                                    <tr>
+                                        <th scope="col">주 사업자등록번호</th>
+                                        <td><label for="detail_brno">주 사업자등록번호</label> <input  id="detail_brno" class="input" aria-label="주 사업자등록번호" readonly>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">지역</th>
+                                        <td><label for="detail_ctpvSggNm">지역</label> <input  id="detail_ctpvSggNm" class="input" aria-label="시도 시군구" readonly>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="contBox detail">
+                            <div class="nameBox nameBox-flex">
+                                <h4 class="name">차량 상세 정보</h4>
+                            </div>
+                            <div class="cont cont-flex">
+                                <table class="tb rental_tb01">
+                                    <tr>
+                                        <th scope="col">차량등록번호</th>
+                                        <td><label for="detail_vhclRegNo">차량등록번호</label> <input  id="detail_vhclRegNo" class="input" aria-label="차량등록번호"  maxlength="16" readonly></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">차대번호</th>
+                                        <td><label for="detail_vin">차대번호</label> <input id="detail_vin"  class="input" aria-label="차대번호" maxlength="16" readonly>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">차종</th>
+                                        <td><label for="detail_carmdl">차종</label> <input id="detail_carmdl"  class="input" aria-label="차종" maxlength="16" readonly>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">차량명</th>
+                                        <td><label for="detail_vhclNm">차량명</label> <input id="detail_vhclNm"   class="input" aria-label="차량명" maxlength="16" readonly>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">연식</th>
+                                        <td><label for="detail_mdlyr">연식</label> <input id="detail_mdlyr" class="input" aria-label="연식" readonly></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">엔진형식</th>
+                                        <td><label for="detail_engineFom">엔진형식</label> <input id="detail_engineFom" class="input" aria-label="엔진형식" readonly>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table class="tb rental_tb01">
+                                    <tr>
+                                        <th scope="col">소재지</th>
+                                        <td><label for="detail_sggNm">소재지</label> <input id="detail_sggNm" class="input" aria-label="소재지" readonly>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">최초등록일자</th>
+                                        <td><label for="detail_frstRegYmd">최초등록일자</label> <input id="detail_frstRegYmd" class="input" aria-label="최초등록일자" readonly>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">만료일자</th>
+                                        <td><label for="detail_expryYmd">만료일자</label> <input id="detail_expryYmd" class="input" aria-label="만료일자" readonly>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">자료연계등록일</th>
+                                        <td><label for="detail_regDt">자료연계등록일</label> <input id="detail_regDt" class="input" aria-label="자료연계등록일" maxlength="4" readonly></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">결함여부</th>
+                                        <td><label for="detail_defectYn">결함여부</label> <input id="detail_defectYn" class="input" aria-label="결함여부" readonly>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">사용여부</th>
+                                        <td><label for="detail_useYn">사용여부</label> <input id="detail_useYn" class="useYn input" aria-label="사용여부" readonly></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="contBox" id="defectInfo" style="display: none;">
+                                <div class="nameBox nameBox-flex">
+                                    <h4 class="name">차량 결함 정보</h4>
+                                </div>
+                                <div class="grid_wr">
+                                    <table id="detail_defectGrid">
+                                        <caption>차량 결함 조회</caption>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="btn_flex">
-                <button class="gray_btn cancel_btn detailClose" onclick= $drive.event.popupClose()>닫기</button>
+                <div class="btn_flex">
+                    <button class="gray_btn cancel_btn detailClose" onclick= $drive.event.popupClose()>닫기</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 
 
