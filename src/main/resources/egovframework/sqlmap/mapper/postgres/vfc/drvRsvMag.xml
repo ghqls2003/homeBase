@@ -2,15 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="vfc.drvRsvMag">
 
-	<!-- bzmn_se_cd 값을 조회하는 쿼리 -->
-	<select id="DlnFind" parameterType="map" resultType="string">
-		SELECT 
-			dln
-<!-- 		FROM dqvs.dvs_dqv_mt_rent_dump -->
-		FROM dqvs.dvs_dqv_mt_rent
-		WHERE rent_no = #{rentNo}
-	</select>
-	<!-- -->
 	<sql id ='RentalistSql'>
 			select
 				row_number() over(order by rent.rent_prcs_dt desc) rn,
@@ -44,7 +35,7 @@
 						base.rgtr_sn,
 						base.reg_dt,
 						base.mdfcn_dt,
-						base.dln
+						(SELECT v.dln_enc FROM dqvs.dvs_dqv_hs_verf v WHERE v.vrfc_hstry_sn = base.vrfc_hstry_sn) dln  <!-- 24.10.23 rent에 dln 없어짐 확인바람. -->
 					from
 <!-- 						dqvs.dvs_dqv_mt_rent_dump base -->
 						dqvs.dqvs.dvs_dqv_mt_rent base
@@ -110,7 +101,7 @@
 						base.rgtr_sn,
 						base.reg_dt,
 						base.mdfcn_dt,
-						base.dln
+						(SELECT v.dln_enc FROM dqvs.dvs_dqv_hs_verf v WHERE v.vrfc_hstry_sn = base.vrfc_hstry_sn) dln  <!-- 24.10.23 rent에 dln 없어짐 확인바람. -->
 					from
 <!-- 						dqvs.dvs_dqv_mt_rent_dump base -->
 						dqvs.dvs_dqv_mt_rent base
@@ -170,7 +161,7 @@
 							WHEN ddvr.dln ~ '^[0-9]+$' THEN
 							CONCAT(ddvr.dln, REPEAT('*', 12))
 							ELSE
-							CONCAT(SUBSTRING(dqvs.pca_decrypt(ddvr.dln, '150'), -5, LENGTH(dqvs.pca_decrypt(ddvr.dln, '150'))),
+							CONCAT(SUBSTRING(dqvs.pca_decrypt(ddvr.dln_enc, '150'), -5, LENGTH(dqvs.pca_decrypt(ddvr.dln_enc, '150'))),
 							REPEAT('*',6))
 							END AS dln2,
 							ddvr.mdfcn_dt,
@@ -250,7 +241,7 @@
 							WHEN ddvr.dln ~ '^[0-9]+$' THEN
 							CONCAT(ddvr.dln, REPEAT('*', 12))
 							ELSE
-							CONCAT(SUBSTRING(dqvs.pca_decrypt(ddvr.dln, '150'), -5, LENGTH(dqvs.pca_decrypt(ddvr.dln, '150'))),
+							CONCAT(SUBSTRING(dqvs.pca_decrypt(ddvr.dln_enc, '150'), -5, LENGTH(dqvs.pca_decrypt(ddvr.dln_enc, '150'))),
 							REPEAT('*',6))
 							END AS dln2,
 							ddvr.mdfcn_dt,

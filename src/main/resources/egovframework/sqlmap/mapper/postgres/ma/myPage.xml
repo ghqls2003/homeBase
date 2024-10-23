@@ -71,7 +71,7 @@
 		            WHERE uut.user_sn = TI.rqstr_sn
 		           ) AS rqstr_nm,
 		           CASE
-		              WHEN LENGTH(dln) > 6 THEN '*******' || SUBSTRING(dqvs.pca_decrypt(dln, '150'), 8)
+		              WHEN LENGTH(dln) > 6 THEN SUBSTRING(dqvs.pca_decrypt(dln, '150'), 1, 6) || '******'
 		              ELSE SUBSTRING(dln, 1, 6) || '******'
 		           END AS dln,
 		           lcns_asort_cd,
