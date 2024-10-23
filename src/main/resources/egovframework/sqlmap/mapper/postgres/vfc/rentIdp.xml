@@ -224,7 +224,6 @@
 					and car.crno = (select crno from dqvs.dvs_rac_mt_agency where bzmn_sn = #{bzmnSn} )
 				</if>
 			) AS T
-			WHERE 1=1
 			ORDER BY T.rn ASC
 		) AS C
 	</select>

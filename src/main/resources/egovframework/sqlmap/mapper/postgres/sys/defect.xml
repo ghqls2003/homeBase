@@ -15,7 +15,8 @@
 				crrtvact_rslt,
 				case crrtvact_rslt when 'Y' then '조치' when 'N' then '미조치' else '-' end as crrtvact_rslt_nm,
 				reg_cmptnc_cd,
-				bzmn_sn
+				bzmn_sn,
+				agencyCrno
 				from (
 					select 
 						t0.vin,
@@ -28,7 +29,8 @@
 						t2.co_nm,
 						coalesce((select cmptn_yn from dvs_rac_mt_defect_actn where t1.vin = vin),'-') as crrtvact_rslt,
 						reg_cmptnc_cd,
-						t2.bzmn_sn
+						t2.bzmn_sn,
+						t2.crno as agencyCrno
 					from dvs_rac_mt_car t0 left join dvs_rac_mt_defect t1 on t0.vin = t1.vin
 					left join (
 							select
@@ -43,7 +45,7 @@
 									bzmn_se_cd = '1' and bzmn_sn like 'RCC' || '%'
 								) t2 on t0.crno  = t2.crno 
 				) Tm
-				where defects_type_cd is not null 
+				where defects_type_cd is not null and agencyCrno is not null
 			<if test="coNm != '' and coNm != null">
 	           	and co_nm like '%' || #{coNm} ||'%'
 			</if>
