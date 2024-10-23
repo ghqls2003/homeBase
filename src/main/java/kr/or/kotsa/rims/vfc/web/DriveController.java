@@ -347,6 +347,7 @@ public class DriveController extends CmmnAbstractServiceImpl {
 				}
 			}
 		} catch (IOException e) {
+			System.out.println("탓다");
 			System.out.printf("IOException Occured");
 		} finally {
 			if (connection != null) {

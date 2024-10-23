@@ -161,7 +161,7 @@
 							WHEN ddvr.dln ~ '^[0-9]+$' THEN
 							CONCAT(ddvr.dln, REPEAT('*', 12))
 							ELSE
-							CONCAT(SUBSTRING(dqvs.pca_decrypt(ddvr.dln_enc, '150'), -5, LENGTH(dqvs.pca_decrypt(ddvr.dln_enc, '150'))),
+							CONCAT(SUBSTRING(dqvs.pca_decrypt(ddvr.dln, '150'), -5, LENGTH(dqvs.pca_decrypt(ddvr.dln, '150'))),
 							REPEAT('*',6))
 							END AS dln2,
 							ddvr.mdfcn_dt,
@@ -241,7 +241,7 @@
 							WHEN ddvr.dln ~ '^[0-9]+$' THEN
 							CONCAT(ddvr.dln, REPEAT('*', 12))
 							ELSE
-							CONCAT(SUBSTRING(dqvs.pca_decrypt(ddvr.dln_enc, '150'), -5, LENGTH(dqvs.pca_decrypt(ddvr.dln_enc, '150'))),
+							CONCAT(SUBSTRING(dqvs.pca_decrypt(ddvr.dln, '150'), -5, LENGTH(dqvs.pca_decrypt(ddvr.dln, '150'))),
 							REPEAT('*',6))
 							END AS dln2,
 							ddvr.mdfcn_dt,
@@ -253,7 +253,7 @@
 							(select sso_user_nm from v_intg_user_info vui where vui.user_sn =
 							ddvr.rgtr_sn)as reg_nm,
 							agency.co_nm ,
-							rent.bzmn_sn,
+							rent.bzmn_sn, 
 							ddvr.lcns_flnm,
 							ddvr.lcns_asort_cd
 						from dqvs.dvs_dqv_mt_rent rent
