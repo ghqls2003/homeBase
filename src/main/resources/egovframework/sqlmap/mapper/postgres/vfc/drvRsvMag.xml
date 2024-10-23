@@ -102,7 +102,7 @@
 			car.vrfc_hstry_sn,
 			to_char(car.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') as rent_bgng_dt ,
 			to_char(car.rent_end_dt, 'YYYY-MM-DD HH24:MI') as rent_end_dt,
-			to_char(car.rent_prcs_dt, 'YYYY-MM-DD HH24:MI') as rent_prcs_dt, 
+			to_char(car.rent_prcs_dt, 'YYYY-MM-DD HH24:MI') as rent_prcs_dt,
 			car.bzmn_sn,
 			car.engine_fom,
 			to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
