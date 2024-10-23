@@ -436,7 +436,7 @@
 		SELECT
    			TO_CHAR(verf.vrfc_dmnd_dt, 'YYYYMMDD') AS vrfc_dmnd_dt
    			, CASE
-	              WHEN LENGTH(verf.dln) > 6 THEN '*******' || SUBSTRING(dqvs.pca_decrypt(verf.dln, '150'), 8)
+	              WHEN LENGTH(verf.dln) > 6 THEN SUBSTRING(dqvs.pca_decrypt(verf.dln, '150'), 1, 6) || '******'
 	              ELSE SUBSTRING(verf.dln, 1, 6) || '******'
 	           END AS dln
 			, to_char(verf.vrfc_dmnd_dt,'YYYYMMDD') vrfc_dmnd_dt
