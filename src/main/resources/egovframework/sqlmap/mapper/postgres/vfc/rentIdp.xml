@@ -199,47 +199,42 @@
 		</if>
 	</select>
 	
-		<select id="CarListCnt" resultType="int">
-	SELECT COUNT(*) FROM (
-		SELECT * FROM (
-			SELECT
-				row_number() over() as rn ,
-			car.vhcl_reg_no,
-			car.vin,
-			car.carmdl,
-			car.mdlyr,
-			car.vhcl_nm,
-			car.bzmn_sn,
-			car.ownr_nm,
-			(select brno from dqvs.dvs_rac_mt_agency drma where bzmn_sn = car.bzmn_sn),
-			car.engine_fom,
-			case car.use_yn  when 'Y' then '사용' when 'N' then '미사용' else '미상' END AS use_yn ,
-			to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
-			from dqvs.dvs_rac_mt_car car
-			where 1=1
-			<if test="searchWrd != '' and searchWrd != null">
-				and car.vhcl_reg_no like '%' || #{searchWrd} || '%'
-			</if>
-			<if test="bzmnSn != '' and bzmnSn != null">
-				and car.crno = (select crno from dqvs.dvs_rac_mt_agency where bzmn_sn = #{bzmnSn} )
-			</if>
-		) AS T
-		WHERE 1=1
-		ORDER BY T.rn ASC
-		limit 100
-	) AS C
+	<select id="CarListCnt" resultType="int">
+		SELECT COUNT(*) FROM (
+			SELECT * FROM (
+				SELECT
+					row_number() over() as rn ,
+				car.vhcl_reg_no,
+				car.vin,
+				car.carmdl,
+				car.mdlyr,
+				car.vhcl_nm,
+				car.bzmn_sn,
+				car.ownr_nm,
+				(select brno from dqvs.dvs_rac_mt_agency drma where bzmn_sn = car.bzmn_sn),
+				car.engine_fom,
+				case car.use_yn  when 'Y' then '사용' when 'N' then '미사용' else '미상' END AS use_yn ,
+				to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
+				from dqvs.dvs_rac_mt_car car
+				where 1=1
+				<if test="searchWrd != '' and searchWrd != null">
+					and car.vhcl_reg_no like '%' || #{searchWrd} || '%'
+				</if>
+				<if test="bzmnSn != '' and bzmnSn != null">
+					and car.crno = (select crno from dqvs.dvs_rac_mt_agency where bzmn_sn = #{bzmnSn} )
+				</if>
+			) AS T
+			WHERE 1=1
+			ORDER BY T.rn ASC
+		) AS C
 	</select>
 
-
-	
-	
-		<!--대여정보 테이블에서 대여번호로 조회-->
+	<!--대여정보 테이블에서 대여번호로 조회-->
 	<select id="RentMtInfo" resultType="resultMap">
 		select *
 		from dvs_dqv_mt_rent_idp
 		where rent_no = #{rentNo}
 	</select>
-	
 	
 	<update id="updateDeleteYn">
 			UPDATE dvs_dqv_mt_rent_idp
@@ -249,8 +244,7 @@
 				mdfcn_dt= now()::timestamp
 			WHERE rent_no = #{rentNo}
 	</update>
-	
-	
+		
 	<insert id="insertRentReg">
 			INSERT INTO dqvs.dvs_dqv_mt_rent_idp
 				(rent_no,
@@ -308,7 +302,7 @@
 				)
 	</insert>
 	
-		<insert id="insertConfData">
+	<insert id="insertConfData">
 		WITH car_info AS (
 		    SELECT 
 		        vin,
@@ -381,6 +375,5 @@
     </select>
 	
 		
-    
-
+ 
 </mapper>
