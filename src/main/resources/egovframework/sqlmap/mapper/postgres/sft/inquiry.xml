@@ -111,9 +111,9 @@ from(
 			t.ogdp,
 			t.use_yn
 			)t2
-			where 1=1 
+			where  
 			<if test="take != '' and take != null">
-		        AND T2.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		        T2.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
 		    </if>
 		    <if test="skip != '' and skip != null">
 		        AND T2.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
@@ -260,8 +260,8 @@ from(
 		ON dcmp.atch_file_sn = dcmf.file_sn
 		left join dqvs.dvs_cmm_mt_code as dcmc
 		on dcmc.cd = dcmp.pst_type_cd
-		where 1=1
-		and dcmc.cd_group = 'pst_type_cd'
+		where 
+		 dcmc.cd_group = 'pst_type_cd'
 		and dcmp.menu_cd = 'BBST02' 
 		AND dcmp.pst_sn = #{pstSn}::numeric
 		<if test='Auth != "K01" and Auth != "Z01"'>
@@ -341,9 +341,9 @@ from(
 			mdfcn_dt,
 			mdfcn_ip
 		from dqvs.dvs_cmm_mt_cmnt
-		where 1=1 
+		where  
+		menu_cd = 'BBST02'
 		and pst_sn = #{pstSn}
-		and menu_cd = 'BBST02'
 	</select>
 	<select id="inquiryReplyCnt" resultType="int">
 	select
@@ -363,9 +363,9 @@ from(
 			mdfcn_dt,
 			mdfcn_ip
 		from dqvs.dvs_cmm_mt_cmnt
-		where 1=1 
+		where
+		menu_cd = 'BBST02'
 		and pst_sn = #{pstSn}
-		and menu_cd = 'BBST02'
 
 	</select>
 	<insert id="insertInquiry"  parameterType="paraMap">
@@ -492,9 +492,8 @@ from(
 	    	atch_file_nm,
 	    	atch_file_path
 		from dqvs.dvs_cmm_mt_file
-		where 1=1
 		<if test="bzmnLicenseAtchSn != null and bzmnLicenseAtchSn != ''">
-			and file_sn = CAST(#{bzmnLicenseAtchSn} AS numeric)
+			where file_sn = CAST(#{bzmnLicenseAtchSn} AS numeric)
 		</if>
 	</select>
 	<update id="updateReply">

@@ -66,9 +66,9 @@
 			viui.bzmn_sn = drma.bzmn_sn
         <!-- 권한처리 -->
         <choose>
-            <when test='authrtCd.indexOf("Z") != -1 or authrtCd.indexOf("M") != -1 or authrtCd.indexOf("K") != -1 or authrtCd.indexOf("D") != -1'> <!-- 관리자/공단/국토부/개발자 -->
-                WHERE 1 = 1
-            </when>
+<!--             <when test='authrtCd.indexOf("Z") != -1 or authrtCd.indexOf("M") != -1 or authrtCd.indexOf("K") != -1 or authrtCd.indexOf("D") != -1'> 관리자/공단/국토부/개발자 -->
+<!--                 WHERE 1 = 1 -->
+<!--             </when> -->
             <when test='authrtCd.indexOf("G") != -1'> <!-- 지자체,대여사업조합 : 관할지역 내 사업자의 사용자 -->
                 WHERE viui.user_sn IN (
                 SELECT user_sn
@@ -148,9 +148,9 @@
         LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn
         <!-- 권한처리 -->
         <choose>
-            <when test='authrtCd.indexOf("Z") != -1 or authrtCd.indexOf("M") != -1 or authrtCd.indexOf("K") != -1 or authrtCd.indexOf("D") != -1'> <!-- 관리자/공단/국토부/개발자 -->
-                WHERE 1 = 1
-            </when>
+<!--             <when test='authrtCd.indexOf("Z") != -1 or authrtCd.indexOf("M") != -1 or authrtCd.indexOf("K") != -1 or authrtCd.indexOf("D") != -1'> 관리자/공단/국토부/개발자 -->
+<!--                 WHERE 1 = 1 -->
+<!--             </when> -->
             <when test='authrtCd.indexOf("G") != -1'> <!-- 지자체,대여사업조합 : 관할지역 내 사업자의 사용자 -->
                 WHERE viui.user_sn IN (
                 SELECT user_sn

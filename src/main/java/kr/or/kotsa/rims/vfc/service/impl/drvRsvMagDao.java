@@ -36,9 +36,6 @@ public class drvRsvMagDao extends CmmnAbstractMapper {
 	public List<Map<String, Object>> selectSearchRentNo(Map<String, Object> paramsMap) {
 		return selectList("vfc.drvRsvMag.SearchRentNo", paramsMap);
 	}
-	public  List<Map<String, Object>> selectDlnFind(Map<String, Object> paramsMap) {
-		return selectList("vfc.drvRsvMag.DlnFind", paramsMap);
-	}
 
 	public int selectSearchRentNoCnt(Map<String, Object> paramsMap) {
 		return selectOne("vfc.drvRsvMag.SearchRentNoCnt", paramsMap);

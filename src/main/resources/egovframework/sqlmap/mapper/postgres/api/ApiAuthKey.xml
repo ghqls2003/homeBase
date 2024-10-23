@@ -60,14 +60,13 @@
 						) AS T
 					) AS t1
 					left JOIN dqvs.dvs_rac_mt_agency agency ON t1.bzmn_sn = agency.bzmn_sn
-					where 1=1 
 					<if test="searchCondition == 'companyNm' and searchText != '' ">
-				        AND agency.co_nm  like '%' || LOWER(#{searchText}) || '%'
+				        where agency.co_nm  like '%' || LOWER(#{searchText}) || '%'
 				    </if>
 				    	)t2
-				    	where 1=1
+				    	where 
 					<if test="take != '' and take != null">
-				        and t2.sn <![CDATA[<=]]> (#{page} * #{take})
+				        t2.sn <![CDATA[<=]]> (#{page} * #{take})
 				    </if>
 				    <if test="skip != '' and skip != null">
 				        AND t2.sn <![CDATA[>]]> #{skip}
@@ -200,9 +199,8 @@
 						) AS T
 					) AS t1
 					left JOIN dqvs.dvs_rac_mt_agency agency ON t1.bzmn_sn = agency.bzmn_sn
-					where 1=1 
 					<if test="searchCondition == 'companyNm' and searchText != '' ">
-				        AND agency.co_nm  like '%' || LOWER(#{searchText}) || '%'
+				        where agency.co_nm  like '%' || LOWER(#{searchText}) || '%'
 				    </if>
 				    	)t2
     </select>
@@ -258,9 +256,8 @@
 						) AS T
 					) AS t1
 					left JOIN dqvs.dvs_rac_mt_agency agency ON t1.bzmn_sn = agency.bzmn_sn
-					where 1=1 
 					<if test="searchCondition == 'companyNm' and searchText != '' ">
-				        AND agency.co_nm  like '%' || LOWER(#{searchText}) || '%'
+				        where agency.co_nm  like '%' || LOWER(#{searchText}) || '%'
 				    </if>
 				    	)t2
     </select>

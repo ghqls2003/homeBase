@@ -27,9 +27,9 @@
 			and pst_ttl like '%' || #{searchWrd} || '%'
 		</if>
 		) T
-		WHERE 1 = 1
+		WHERE
 			<if test="take != '' and take != null">
-				AND T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+				T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
 			</if>
 			<if test="skip != '' and skip != null">
 				AND T.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
