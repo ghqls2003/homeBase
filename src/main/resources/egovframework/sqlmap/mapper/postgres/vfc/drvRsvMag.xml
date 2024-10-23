@@ -2,15 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="vfc.drvRsvMag">
 
-	<!-- bzmn_se_cd 값을 조회하는 쿼리 -->
-	<select id="DlnFind" parameterType="map" resultType="string">
-		SELECT 
-			dln
-<!-- 		FROM dqvs.dvs_dqv_mt_rent_dump -->
-		FROM dqvs.dvs_dqv_mt_rent
-		WHERE rent_no = #{rentNo}
-	</select>
-	<!-- -->
 	<sql id ='RentalistSql'>
 			select
 				row_number() over(order by rent.rent_prcs_dt desc) rn,
@@ -55,8 +46,8 @@
 						and (base.rent_end_dt::timestamp - base.rent_bgng_dt::timestamp) > interval '7 days' ) as rent
 				left outer join dqvs.dvs_rac_mt_agency agency on
 					rent.bzmn_sn = agency.bzmn_sn
-		   WHERE 1=1
-		   		and (CURRENT_TIMESTAMP between rent.rent_bgng_dt and rent.rent_end_dt)
+		   WHERE 
+		   		 (CURRENT_TIMESTAMP between rent.rent_bgng_dt and rent.rent_end_dt)
 		   <choose>
 		        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
 					AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
@@ -121,8 +112,8 @@
 						and (base.rent_end_dt::timestamp - base.rent_bgng_dt::timestamp) > interval '7 days' ) as rent
 				left outer join dqvs.dvs_rac_mt_agency agency on
 					rent.bzmn_sn = agency.bzmn_sn
-		   WHERE 1=1
-		   		and (CURRENT_TIMESTAMP between rent.rent_bgng_dt and rent.rent_end_dt)
+		   WHERE
+		   		(CURRENT_TIMESTAMP between rent.rent_bgng_dt and rent.rent_end_dt)
 		   <choose>
 		        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
 					AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
@@ -183,7 +174,7 @@
 							ddvr.rgtr_sn)as reg_nm,
 							agency.co_nm ,
 							rent.bzmn_sn,
-							ddvr.lcns_flnm,
+<!-- 							ddvr.lcns_flnm, -->
 							ddvr.lcns_asort_cd
 						from dqvs.dvs_dqv_mt_rent rent
 <!-- 						from dqvs.dvs_dqv_mt_rent_dump rent -->
@@ -197,9 +188,9 @@
 				 		<if test="searchCd == 'E1'">
 							and ddvr.rent_no like '%' || #{searchWrd} || '%'
 						</if>
-				 		<if test="searchCd == 'E2'">
-							and ddvr.lcns_flnm like '%' || #{searchWrd} || '%'
-						</if>
+<!-- 				 		<if test="searchCd == 'E2'"> -->
+<!-- 							and ddvr.lcns_flnm like '%' || #{searchWrd} || '%' -->
+<!-- 						</if> -->
 				 		<if test="lncdDrop != '' and lncdDrop != null">
 							and rent.lcns_asort_cd = #{lncdDrop}
 						</if>
@@ -263,7 +254,7 @@
 							ddvr.rgtr_sn)as reg_nm,
 							agency.co_nm ,
 							rent.bzmn_sn,
-							ddvr.lcns_flnm,
+<!-- 							ddvr.lcns_flnm, -->
 							ddvr.lcns_asort_cd
 						from dqvs.dvs_dqv_mt_rent rent
 <!-- 						from dqvs.dvs_dqv_mt_rent_dump rent -->
@@ -277,9 +268,9 @@
 				 		<if test="searchCd == 'E1'">
 							and ddvr.rent_no like '%' || #{searchWrd} || '%'
 						</if>
-				 		<if test="searchCd == 'E2'">
-							and ddvr.lcns_flnm like '%' || #{searchWrd} || '%'
-						</if>
+<!-- 				 		<if test="searchCd == 'E2'"> -->
+<!-- 							and ddvr.lcns_flnm like '%' || #{searchWrd} || '%' -->
+<!-- 						</if> -->
 				 		<if test="lncdDrop != '' and lncdDrop != null">
 							and rent.lcns_asort_cd = #{lncdDrop}
 						</if>
@@ -339,7 +330,7 @@
 				vhcl_reg_no,
 				dln,
 				lcns_asort_cd,
-				lcns_flnm,
+<!-- 				lcns_flnm, -->
 				vrfc_period,
 				rsvt_bgng_ymd,
 				rsvt_end_ymd,
@@ -410,7 +401,7 @@
 			        WHEN dln ~ '^[0-9]+$' THEN CONCAT(SUBSTRING(dln, 1, 6), REPEAT('*', 6))
 			        ELSE CONCAT(SUBSTRING(dqvs.pca_decrypt(dln, '150'), 1, 6), REPEAT('*', 6)) 
 			    END as dln,
-			    lcns_flnm,
+<!-- 			    lcns_flnm, -->
 			    vrfc_period,
 			    dqvs.fn_get_cdnm('vrfc_period', vrfc_period) as vrfc_period,
 			    rsvt_bgng_ymd,
@@ -451,7 +442,7 @@
 		        ddhv.vrfc_cd,
 		        dqvs.fn_get_cdnm('verify_cd', ddhv.vrfc_cd) as last_vrfc_rslt,
 		        ddhv.lcns_asort_cd,
-		        ddhv.lcns_flnm,
+<!-- 		        ddhv.lcns_flnm, -->
 		        ddhv.vrfc_dmnd_dt,
 		        dqvs.fn_get_cdnm('verify_cd', ddhv.lcns_asort_cd) as alcnsAsortCd
 		    FROM dqvs.dvs_dqv_hs_verf as ddhv

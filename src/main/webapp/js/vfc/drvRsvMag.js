@@ -219,7 +219,7 @@
 					{ field: "coNm", title: "회사명", width: "200px", template: "#= coNm != null ? coNm : '-' #" },
 					{ field: "rentNo", title: "대여번호", width: "200px", template: "#= rentNo != null ? rentNo : '-' #" },
 					{ field: "dln2", title: "면허번호", width: "180px", template: "#= dln2 != null ? dln2 : '-' #" },
-					{ field: "lcnsFlnm", title: "면허 소유자", width: "180px", template: "#= lcnsFlnm != null ? lcnsFlnm : '-' #" },
+//					{ field: "lcnsFlnm", title: "면허 소유자", width: "180px", template: "#= lcnsFlnm != null ? lcnsFlnm : '-' #" },
 					{ field: "lcnsAsortCd", title: "면허종별", width: "150px", template: "#= lcnsAsortCd != null ? lcnsAsortCd : '-' #" },
 					{ field: "regNm", title: "예약자", width: "150px", template: "#= regNm != null ? regNm : '-' #" },
 					{
@@ -292,7 +292,7 @@
 				$('#RsvedlastRst').val(data[0].lastVrfcRslt);
 				$('#rsvedDln').val(data[0].dln);
 				$('#rsvedCar').val(data[0].vhclRegNo);
-				$('#RsvedlcnsFlnm').val(data[0].lcnsFlnm);
+//				$('#RsvedlcnsFlnm').val(data[0].lcnsFlnm);
 				$('#rsvedEndTime').val(formatDate(data[0].rsvtEndYmd));
 				$('#RsvedNtCfDt').val(formatDate(data[0].nextVrfcYmd));
 
@@ -361,45 +361,53 @@
 			$drvRsvMag.ui.carGridModule(gridId);
 		},
 		carGridModule: function(gridId) {
-			$(gridId).kendoGrid({
-				dataSource: {
-					data: null,
-					transport: {
-						read: {
-							dataType: "json",
-							contentType: "application/json; charset=utf-8",
-							url: contextPath + '/vfc/drvRsvMag/selectRsvNoList',
-							type: "POST",
-							beforeSend: function(xhr) {
-								xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
-							},
-						},
-						parameterMap: function(options) {
-							options.searchWrd = $("#carSearchWrd").val();
-							return JSON.stringify(options);
-						}
-					},
-					schema: {
-						data: "data",
-						total: "total",
-					},
-					pageSize: 5,
-					serverPaging: true
-				},
-				navigatable: true,
-				pageable: {
-					pageSizes: [5, 10, 20],
-					buttonCount: 5
-				},
-				noRecords: {
-					template: "데이터가 없습니다."
-				},
-				columns: carListColmuns,
-				scrollable: true,
-				editable: false,
-				resizable: true,
-				selectable: "row",
+			$('#carGrid').kendoGrid({
+			    dataSource: {
+			        data: null,
+			        transport: {
+			            read: {
+			                dataType: "json",
+			                contentType: "application/json; charset=utf-8",
+			                url: contextPath + '/vfc/drvRsvMag/selectRsvNoList',
+			                type: "POST",
+			                beforeSend: function(xhr) {
+			                    // Loading 창 표시
+			                    kendo.ui.progress($("#carGrid"), true);
+			                    
+			                    xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+			                },
+			                complete: function() {
+			                    // Loading 창 숨김
+			                    kendo.ui.progress($("#carGrid"), false);
+			                }
+			            },
+			            parameterMap: function(options) {
+			                options.searchWrd = $("#carSearchWrd").val();
+			                return JSON.stringify(options);
+			            }
+			        },
+			        schema: {
+			            data: "data",
+			            total: "total",
+			        },
+			        pageSize: 5,
+			        serverPaging: true
+			    },
+			    navigatable: true,
+			    pageable: {
+			        pageSizes: [5, 10, 20],
+			        buttonCount: 5
+			    },
+			    noRecords: {
+			        template: "데이터가 없습니다."
+			    },
+			    columns: carListColmuns,
+			    scrollable: true,
+			    editable: false,
+			    resizable: true,
+			    selectable: "row",
 			});
+
 		},
 		checkRentNo: function() {
 			var params = {}
@@ -424,7 +432,7 @@
 			params.endtDt = $("#rsvEndTime").val();
 			params.lastCfRst = $("#lastCfRst").val();
 			params.dln = $("#regRgtrDln").val();
-			params.lcnsFlnm = $("#lcnsFlnm").val();
+//			params.lcnsFlnm = $("#lcnsFlnm").val();
 			params.lcnsAsortCd = $("#ReglcnsAsortCd").val();
 			params.lastRst = $("#RsvedlastRst").val();
 			if (params.vhclRegNo == null || params.vhclRegNo == '') {
@@ -601,7 +609,7 @@
 
 				ajax(true, contextPath + '/vfc/drvRsvMag/selectCheckRentRsvf', 'body', '확인 중입니다.', params, function(data2) {
 					$("#lastCfRst").val(data2[0].vrfcRslt);
-					$("#lcnsFlnm").val(data2[0].lcnsFlnm);
+//					$("#lcnsFlnm").val(data2[0].lcnsFlnm);
 					$("#ReglcnsAsortCd").val(data2[0].lcnsAsortCd);
 					$("#RsvedlastRst").val(data2[0].vrfcCd);
 					$("#lastCfDt").val(data2[0].vrfcDmndDt);
@@ -612,12 +620,12 @@
 			var carRegNoVal2 = $("#rsvEndTime").val();
 			var carRegNoVal3 = $("#start-picker02").val();
 			var lcnsAsortCd = $("#ReglcnsAsortCd").val();
-			var lcnsFlnm = $("#lcnsFlnm").val();
+//			var lcnsFlnm = $("#lcnsFlnm").val();
 
 			$("#regRentNo").val(carRegNoVal);
 			$("#rsvEndTime").val(carRegNoVal2);
 			$("#ReglcnsAsortCd").val(lcnsAsortCd);
-			$("#lcnsFlnm").val(lcnsFlnm);
+//			$("#lcnsFlnm").val(lcnsFlnm);
 			$("#carTa").empty();
 			if ($("#carTa")[0].children.length == 0) {
 				$("#carSearchWrd").val('');
