@@ -13,13 +13,7 @@ public interface RentIdpService {
 	
 	Object selectCarList(Map<String, Object> paramsMap);
 	
-	Map<String, Object> selectHisDetailRentInfo(Map<String, Object> paramsMap);
-	
-	int insertRentHisInfo(Map<String, Object> paramsMap);
-	
 	int updateDeleteYn(Map<String, Object> paramsMap);
-	
-	int insertRentRegHs(Map<String, Object> paramsMap);
 	
 	int insertRentReg(Map<String, Object> paramsMap);
 	

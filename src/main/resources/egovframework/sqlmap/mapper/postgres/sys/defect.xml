@@ -13,7 +13,9 @@
 				defects_cn,
 				co_nm,
 				crrtvact_rslt,
-				case crrtvact_rslt when 'Y' then '조치' when 'N' then '미조치' else '-' end as crrtvact_rslt_nm
+				case crrtvact_rslt when 'Y' then '조치' when 'N' then '미조치' else '-' end as crrtvact_rslt_nm,
+				reg_cmptnc_cd,
+				bzmn_sn
 				from (
 					select 
 						t0.vin,
@@ -24,14 +26,22 @@
 						t1.prcs_stts_cd ,
 						coalesce(t1.defects_cn,'-') as  defects_cn,
 						t2.co_nm,
-						coalesce((select cmptn_yn from dvs_rac_mt_defect_actn where t1.vin = vin),'-') as crrtvact_rslt
+						coalesce((select cmptn_yn from dvs_rac_mt_defect_actn where t1.vin = vin),'-') as crrtvact_rslt,
+						reg_cmptnc_cd,
+						t2.bzmn_sn
 					from dvs_rac_mt_car t0 left join dvs_rac_mt_defect t1 on t0.vin = t1.vin
-					left join (select * from (
-						select crno, 
-							   co_nm ,
-							   ROW_NUMBER() OVER (PARTITION BY crno ORDER BY co_nm asc) AS RNK 	   
-						from dvs_rac_mt_agency 
-					) as ta where rnk ='1') t2 on t0.crno  = t2.crno 
+					left join (
+							select
+									distinct on (crno) bzmn_sn,		
+									crno,
+									co_nm,
+									up_brno,
+									reg_cmptnc_cd
+							from 
+									dvs_rac_mt_agency
+							where 
+									bzmn_se_cd = '1' and bzmn_sn like 'RCC' || '%'
+								) t2 on t0.crno  = t2.crno 
 				) Tm
 				where defects_type_cd is not null 
 			<if test="coNm != '' and coNm != null">
@@ -49,52 +59,39 @@
 		    <if test ='endDt != null and endDt != ""'>
 		        AND ocrn_dt::TIMESTAMP <![CDATA[<=]]> #{endDt}::TIMESTAMP
 		    </if>	
+		    <choose>
+		    	<when test='authrtCd.indexOf("K01") != -1'> <!-- 공단 : 전체목록 -->
+		       		AND 1=1
+		        </when>
+		        <when test='authrtCd.indexOf("G01") != -1'> <!-- 지자체 : 관할지역 내 사업자의 대여이력 -->
+		        	AND Tm.reg_cmptnc_cd LIKE #{cmptncZoneCd} || '%'
+		        </when>
+		        <when test='authrtCd.equals("S01")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
+					AND (Tm.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
+					OR Tm.bzmn_sn = #{bzmnSn})
+		        </when>
+		        <when test='authrtCd.equals("S02")'> <!-- 영업소관리자 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시  -->
+					AND Tm.bzmn_sn = #{bzmnSn}
+		        </when>
+		        <otherwise> <!-- 그 외는 소속 회사의 대여 건만 표시 -->
+					<if test="bzmnSn != '' and bzmnSn != null">
+	                	AND Tm.bzmn_sn = #{bzmnSn}
+					</if>
+		        </otherwise>
+		    </choose>
 		    ) as Ta
 	</sql>
 	
-		<sql id="carQuery">
-	(
-		select * from(
-			select
-				row_number() over() as rn ,
-				car.vhcl_reg_no,
-				car.vin,
-				car.carmdl,
-				car.mdlyr,
-				car.vhcl_nm,
-				car.bzmn_sn,
-				car.crno,
-				car.ownr_nm,
-				(select brno from dqvs.dvs_rac_mt_agency drma where bzmn_sn = car.bzmn_sn),
-				car.engine_fom,
-				case car.use_yn  when 'Y' then '사용' when 'N' then '미사용' else '미상' END AS use_yn ,
-				to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
-				from dqvs.dvs_rac_mt_car car
-				where 1=1
-				<if test="searchWrd != '' and searchWrd != null">
-					and car.vhcl_reg_no like '%' || #{searchWrd} || '%'
-				</if>
-				<if test="bzmnSn != '' and bzmnSn != null">
-					and car.crno = (select crno from dqvs.dvs_rac_mt_agency where bzmn_sn = #{bzmnSn} )
-				</if>
-		) T
-		WHERE 1 = 1
-		ORDER BY T.rn ASC
-		limit 100
-	) as t0
-	</sql>
-
-
 	<select id="selectDefectInfo" resultType="map">
-	<!-- 	대여차량 결함정보 조회 -->
-	select * from 
-		<include refid="defectInfoSql" />
-	<if test="take != '' and take != null">
-		WHERE Ta.rn  <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
-	</if>
-	<if test="skip != '' and skip != null">
-		AND Ta.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
-	</if>
+		<!-- 	대여차량 결함정보 조회 -->
+		select * from 
+			<include refid="defectInfoSql" />
+		<if test="take != '' and take != null">
+			WHERE Ta.rn  <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		</if>
+		<if test="skip != '' and skip != null">
+			AND Ta.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+		</if>
 	</select>
 	
 	<select id="selectDefectInfoCnt" resultType="int">
@@ -105,101 +102,10 @@
 			<include refid="defectInfoSql"/>	
 	</select>
 	
-	<select id="selectCarInfoList" resultType="map">
-	<!-- 	차량등록번호 중복확인 대여차량 정보  -->
-	select 
-		coalesce(vin, '-') as vin, 
-		coalesce(vhcl_reg_no,'-') as vhcl_reg_no,   
-		coalesce(carmdl,'-') as carmdl,  
-		coalesce(mdlyr,'-') as mdlyr,  
-		coalesce(vhcl_nm,'-') as vhcl_nm,  
-		coalesce(engine_fom,'-') as engine_fom,  
-		coalesce(use_yn,'-') as use_yn, 
-		coalesce(t1.sgg_cd,'-') as sgg_cd, 
-		coalesce(brno ,'-') as brno,
-		coalesce(rmrk,'-') as rmrk,
-		co_nm
-	from (
-		select * from dvs_rac_mt_car where vhcl_reg_no = #{vhclRegNo} 
-	) t0 left join (select crno, brno, sgg_cd, co_nm from dvs_rac_mt_agency) t1 on t0.crno = t1.crno
-	limit 1
-	</select>
-	
 	<select id="selectDefectList" resultType="map">
-	<!-- 차량등록번호 중복확인 차량 결험 정보 List-->
+		<!-- 차량등록번호 중복확인 차량 결험 정보 List-->
 		select * from dvs_rac_mt_defect where vin = (select vin from dvs_rac_mt_car where vhcl_reg_no = #{vhclRegNo})
 	</select>
-	
-	<update id="updateDefect" parameterType="paraMap">
-	/*대여차량 결함정보 수정*/
-		update dvs_rac_mt_defect 
-		set 
-			prcs_stts_cd = #{prcs_stts_cd},
-			defects_cn = #{defects_cn},
-			defects_type_cd = #{defects_type_cd},
-			ocrn_dt = #{ocrn_dt} ::TIMESTAMP
-		where vin = #{vin} AND 	defects_sn = #{defects_sn}
-	</update>
-	
-	
-	<insert id="insertDefect" parameterType="paraMap">
-	/*시정조치 결과 등록*/
-INSERT INTO dvs_rac_mt_defectActn ( 
-			  vin
-			, defects_recall_no
-			, defects_reg_no
-			, vhcl_no
-			, co_nm
-			, crrtvact_type
-			, crrtvact_rslt
-			, crrtvact_cn
-			, crrtvact_day
-			, crrtvact_yn
-			, rgtr_sn
-			, reg_dt
-			, mdfr_sn
-			, mdfcn_dt
-			, atch_file_sn
-			, rmrk
-			) VALUES (
-				  #{vin}
-				, #{actnSn}
-				, #{defectSn}
-				, #{regCarNo}
-				, #{coNm}
-				, #{actnTyCd}
-				, #{actnRsCd}
-				, #{actnCn}
-				, #{actnDt}::timestamp
-				, #{actnYn}
-				, #{userSn} ::numeric
-				, now()::timestamp
-				, null
-				, null
-				, #{actnFileAtchSn}
-				, #{rmrk}
-			)
-	</insert>
-	
-	<update id="deleteDefect" parameterType="paraMap">
-		/*조치내용 삭제*/
-<!-- 		update -->
-<!-- 			  actnSn = null -->
-<!-- 			, actnTyCd = null -->
-<!-- 			, actnRsCd = null -->
-<!-- 			, actnCn = null -->
-<!-- 			, actnDt = null -->
-<!-- 			, actnYn = null -->
-<!-- 			, affilitn = null -->
-<!-- 			, regCarNo = null -->
-<!-- 			, defectSn = null -->
-<!-- 			, regNm = null -->
-<!-- 			, regDt = null -->
-<!-- 			, rmrk = null -->
-<!-- 			dvs_rac_mt_defect  -->
-<!-- 		set where vin = #{vin} and defects_sn = #{defects_sn} -->
-	</update>
-	
 	
 	<select id="selectDetailDefectInfo" resultType="resultMap">
 		select 
@@ -289,8 +195,6 @@ INSERT INTO dvs_rac_mt_defectActn (
 	) as t2
 	</select>
 	
-	
-	 
     <select id="selectCtpvNm" resultType="map">
     <!--  - 시도(전체) -->
         select distinct
@@ -319,44 +223,4 @@ INSERT INTO dvs_rac_mt_defectActn (
 		order by sgg_cd
     </select>
     
-    <select id="CarList" resultType="resultMap">
-	    select * from 
-			<include refid="carQuery" />
-		<if test="take != '' and take != null">
-			LIMIT #{take} OFFSET #{skip}
-		</if>
-	</select>
-	
-	<select id="CarListCnt" resultType="int">
-		SELECT COUNT(*) FROM (
-			SELECT * FROM (
-				SELECT
-					row_number() over() as rn ,
-				car.vhcl_reg_no,
-				car.vin,
-				car.carmdl,
-				car.mdlyr,
-				car.vhcl_nm,
-				car.bzmn_sn,
-				car.ownr_nm,
-				(select brno from dqvs.dvs_rac_mt_agency drma where bzmn_sn = car.bzmn_sn),
-				car.engine_fom,
-				case car.use_yn  when 'Y' then '사용' when 'N' then '미사용' else '미상' END AS use_yn ,
-				to_char(car.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
-				from dqvs.dvs_rac_mt_car car
-				where 1=1
-				<if test="searchWrd != '' and searchWrd != null">
-					and car.vhcl_reg_no like '%' || #{searchWrd} || '%'
-				</if>
-				<if test="bzmnSn != '' and bzmnSn != null">
-					and car.crno = (select crno from dqvs.dvs_rac_mt_agency where bzmn_sn = #{bzmnSn} )
-				</if>
-			) AS T
-			WHERE 1=1
-			ORDER BY T.rn ASC
-			limit 100
-		) AS C
-	</select>
-    
-
 </mapper>

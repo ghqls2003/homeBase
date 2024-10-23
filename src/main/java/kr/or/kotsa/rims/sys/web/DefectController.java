@@ -61,130 +61,12 @@ public class DefectController extends CmmnAbstractServiceImpl{
 	@PostMapping("/defect/selectDefectInfo")
 	@ResponseBody
 	public Map<String, Object> selectDefectInfo(@RequestBody Map<String, Object> paramsMap){
+		paramsMap.put("authrtCd", getAuthrtCd());
+		paramsMap.put("cmptncZoneCd", getCmptncZoneCd());
+		paramsMap.put("bzmnSn", getBzmnSn());
+		
 		return defectService.selectDefectInfo(paramsMap);
 	}
-	
-	
-	
-	//차량등록번호 중복확인
-	@PostMapping("/defect/selectValidDuplicate")
-	@ResponseBody
-	public Map<String, Object> selectValidDuplicate(@RequestBody Map<String, Object> paramsMap){
-		return defectService.selectValidDuplicate(paramsMap);
-	}
-	
-	/**
-     *   등록
-     * @param paramsMap
-     * @return
-     * @throws RimsException
-     */
-	@RequestMapping("defect/insertDefect")
-	@ResponseBody
-	public ModelAndView insertPrsnMng(@RequestBody Map<String, Object> paramsMap,
-			HttpServletRequest request, HttpServletResponse response) throws RimsException{
-		
-		int ret = 0;
-		String resultMsg = "";
-		String resultMsg1 = "";
-		ModelAndView mav = new ModelAndView("jsonView");
-		paramsMap.put("userSn", getUserSn());
-		
-		
-		ret = defectService.insertDefect(paramsMap);
-		if(ret == 1) {
-			resultMsg = "완료";
-		} else {
-			resultMsg = "실패";
-		}
-
-		mav.addObject("resultMsg", resultMsg);
-		return mav;
-	}
-	
-	
-	
-	/**
-	 *  수정
-	 * @param paramsMap
-	 * @return
-	 * @throws RimsException
-	 */
-	@RequestMapping(value = "/defect/updateDefect")
-	@ResponseBody
-	public ModelAndView updateDefect(@RequestBody Map<String, Object> paramsMap,
-			HttpServletRequest request, HttpServletResponse response) throws RimsException {
-		
-		int ret = 0;
-		String resultMsg = "";
-		ModelAndView mav = new ModelAndView("jsonView");
-		
-		ret = defectService.updateDefect(paramsMap);    	
-		
-		if(ret == 1) {
-			resultMsg = "완료";
-		} else {
-			resultMsg = "실패";
-		}
-		
-		mav.addObject("resultMsg", resultMsg);
-		return mav;
-	}
-	
-	@RequestMapping("defect/deleteDefect")
-	@ResponseBody
-	public ModelAndView deleteDefect(@RequestBody Map<String, Object> paramsMap,
-			HttpServletRequest request, HttpServletResponse response) throws RimsException {
-		
-		int ret = 0;
-		String resultMsg = "";
-		
-		ModelAndView mav = new ModelAndView("jsonView");
-			
-		ret = defectService.deleteDefect(paramsMap);  
-		
-		if(ret == 1) {
-			resultMsg = "완료";
-		} else {
-			resultMsg = "실패";
-		}
-		
-		mav.addObject("resultMsg", resultMsg);
-		return mav;
-	}
-	
-	   /**
-     * 엑셀다운로드 요청
-     * @param paramsMap
-     * @return
-     * @throws RimsException
-     */
-	@PostMapping("/defect/excelDown")
-    public GenericExcelView selectExcelDown(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap
-    						, HttpServletResponse response) throws RimsException {
-	
-	
-    	String fileName = "defect" + (new java.text.SimpleDateFormat("yyyyMMddHHmmss")).format(new java.util.Date());
-    	String colName[] = {"순번", "차대번호",  "차량번호", "결합일련번호","발생일시","결합유형","처리상태코드","결합내용","시정조치결과"};
-    	String valName[] = {"rn", "vin", "vhcl_reg_no", "defects_sn","ocrn_dt","defects_type_cd","prcs_stts_cd","defects_cn","crrtvact_rslt_nm"};
-
-    	List<Map<String, Object>> colValue = defectDao.selectDefectInfo(paramsMap);
-    	int total = defectDao.selectDefectInfoCnt(paramsMap);
-  
-    	paramsMap.put("total", total);
-
-		modelMap.put("excelName", fileName);
-		modelMap.put("colName", colName);
-		modelMap.put("valName", valName);
-		modelMap.put("colValue", colValue);
-
-		return new GenericExcelView();
-    }
-	
-	
-
-	
-	
 	
 	//시도
     @RequestMapping(value = "/defect/selectCtpvNm")
@@ -200,19 +82,6 @@ public class DefectController extends CmmnAbstractServiceImpl{
         return defectService.selectSggNm(paramsMap);
     }
     
-	@RequestMapping("/defect/selectCarList")
-	@ResponseBody
-	public Object selectCarList(@RequestBody Map<String, Object> paramsMap) throws RimsException {
-		Map<String, Object> result = new HashMap<>();
-		
-		List<Map<String, Object>> list = defectDao.selectCarList(paramsMap);
-		int total = defectDao.selectCarListCnt(paramsMap);
-		
-		result.put("data", list);
-		result.put("total", total);
-		return result;
-	}
-	
 	@RequestMapping("/defect/selectDetailDefectInfo")
 	@ResponseBody
 	public Map<String, Object> selectDetailDefectInfo(@RequestBody Map<String, Object> paramsMap) throws RimsException {

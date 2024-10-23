@@ -3,13 +3,13 @@
 <mapper namespace="vfc.contactlessVfc">
 
 	<select id="selectRentInfo" resultType="resultMap">
-		select rent.rent_no
-			, rent.lcns_idntf_cd
+		SELECT rent.rent_no
+			, '1' lcns_idntf_cd
 			, rent.vhcl_reg_no
 			, TO_CHAR(rent.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt
 		    , TO_CHAR(rent.rent_end_dt, 'YYYY-MM-DD HH24:MI') rent_end_dt
 			, rent.rent_stts_cd
-			, rent.dln
+			, NULL dln
 			, rent.vhcl_reg_no
 			, car.vin
 			, car.carmdl
@@ -20,14 +20,22 @@
 			, car.use_yn
 			, car.sgg_cd
 			, car.ownr_nm
-			, to_char(car.reg_dt, 'yyyy-mm-dd') as reg_dt
-		from dqvs.dvs_dqv_mt_rent_new rent
-		left join dqvs.dvs_rac_mt_car car
-		on rent.vhcl_reg_no = car.vhcl_reg_no 
-		where 1=1
-		and rent.rent_stts_cd = '2'
-		and rent.del_yn  = 'N'
-		and rent.rent_no = #{rentNo}
+			, TO_CHAR(car.reg_dt, 'yyyy-mm-dd') reg_dt
+		FROM
+			dqvs.dvs_dqv_mt_rent rent
+		LEFT JOIN
+			dqvs.dvs_rac_mt_car car
+		ON rent.vhcl_reg_no = car.vhcl_reg_no  
+		WHERE rent.rent_stts_cd = '2'
+			AND rent.del_yn  = 'N'
+			AND rent.rent_no = #{rentNo}
 	</select>
+	
+	<!-- 대여번호 검증이력번호 업데이트 -->
+	<update id="updateVrfcSn">
+		UPDATE dqvs.dvs_dqv_mt_rent
+		SET vrfc_hstry_sn = #{sn}
+		WHERE rent_no = #{updateRentNo}
+    </update>
 
 </mapper>

@@ -146,7 +146,7 @@
 			$rentIdp.ui.rentIdpGrid();
 			
 			if (authrtCd.startsWith('G')) {
-				var grid = $("#rentalHistGrid").data("kendoGrid");
+				var grid = $("#rentIdpGrid").data("kendoGrid");
 				grid.hideColumn("대여 확인증");
 
 				$("#rentUpdateBtn").remove();
@@ -158,6 +158,9 @@
 				var endDatetimepicker = $("#end-picker03").data("kendoDateTimePicker");
 				startDatetimepicker.readonly();
 				endDatetimepicker.readonly();
+				$("#rentIdpGrid").attr('style','width:100%');
+				$('.k-grid-header-wrap table').css('width', '100%'); 
+
 			}
 			
 			$(".date").prop("readonly", true);
@@ -181,15 +184,10 @@
 						parameterMap: function(options) {
 							options.startDt	= searchParamsArc.startDt;
 							options.endDt	= searchParamsArc.endDt;
-//							options.rentDt = searchParamsArc.rentBgngDt;
-//							options.rentDt = searchParamsArc.rentEndDt;
 							options.rentDt = searchParamsArc.rentDt;
 							options.lcnsIdntfCd = searchParamsArc.lcnsIdntfCd;
-							//options.rentSttsCd = searchParamsArc.rentSttsCd;
 							options.vhclRegNo = searchParamsArc.vhclRegNo;
 							options.coNm = searchParamsArc.coNm;
-							//options.dln = searchParamsArc.dln;
-							//options.selectQuery = sq;
 							return JSON.stringify(options);
 						}
 					},
@@ -217,7 +215,6 @@
 						{title: "요청일시", field: "regDt", template:  "#: regDt#", width : "100px"},
 						{title: "대여 시작일시", field: "rentBgngDt",template: "#: rentBgngDt#", width : "100px"},
 						{title: "대여 종료일시", field: "rentEndDt", template: "#: rentEndDt#", width : "100px"},
-						//{title: "면허 종류", field: "lcnsIdntfCd", template: "#: lcnsIdntfCd #"},
 						{title: "대여상태", field: "rentSttsNm", template: "#: rentSttsNm #", width : "100px"},
 						{field: "대여 확인증", exportable: false, width : "100px", template: "<button class='gray_btn' style='width: 70px;height: 30px;' onclick='javascript:$rentIdp.event.issued(`#:rentNo#`, `#:rentSttsNm#`);'>발급</button>" }
 				],
@@ -503,7 +500,6 @@
 			var regDt = date.toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD 형식으로 변환
 			var mdfcnDt = date2.toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD 형식으로 변환
 			params.rentNo = param.rentNo;
-			params.vrfcHstrySn = param.vrfcHstrySn;
 			if(setParamTimeMdf == null){
 				params.DateMaker = regDt;
 			}else{
@@ -514,17 +510,20 @@
 		   ajax(true, contextPath + '/vfc/rentIdp/selectDetailRentInfo', 'body', '확인중입니다.', params, function(data) {
 			   $("#detailFileDown").off('click');  //기존 클릭이벤트 핸들러 제거
 
-			   //				$("#verfDln").val('');
-			   //				$("#verfDmnd").val('');
-			   //				$("#verfMthd").val('');
-			   //				$("#verfRslt").val('');
-
 			   $("#detailRentNo").val(data[0].rentNo);
 			   $("#detailLcnsIdntfNm").val(data[0].lcnsIdntfNm);
 			   $("#detailVhclRegNo").val(data[0].vhclRegNo);
 			   $("#detailRentSttsNm").val(data[0].rentSttsNm);
 			   $("#detailRentHstryNo").val(data[0].rentHstryNo);
 			   $("#delYnVal").val(data[0].delYn);
+				
+				//삭제여부가 'Y'인 경우 '삭제 버튼'을 삭제
+				if(data[0].delYn == "Y"){
+					$(".red_btn").attr('style', 'display: none');
+				}else{
+					$(".red_btn").attr('style', 'display: block');
+					$(".red_btn").attr('style', 'margin-right:10px');
+				}
 
 				//Z관리자, G지자체, K공단 만 삭제여부 컬럼 노출
 				if (authrtCd.includes("Z") || authrtCd.includes("G") || authrtCd.includes("K")) {
@@ -571,11 +570,10 @@
 					   .after(`<button id="rentSttsCdConfUpdateBtn" class='gray_btn cancel_btn' style="margin-right: 10px"
 							value = '${a}' onclick=$rentIdp.event.rentSttsCdConfUpdateBtn();>대여확정</button>`);
 			   }
+
 				detailCk++;
 
 		   });
-			//대여정보이력
-			$rentIdp.event.hsDetailRent(params);
 			
 		   var ckInterval = setInterval(function() {
 			   if (detailCk >= 3) {
@@ -641,142 +639,11 @@
 						alert("수정을 " + data.resultMsg + "했습니다.");
 					}
 					$rentIdp.event.detailDeleteBtn();
-					// 대여이력 갱신
-					$rentIdp.event.hsDetailRent(params);
 					
 				});
 			}
 		},
-		
-		// 대여정보이력 수정 후, 갱신을 위해 따로 뺌
-	   hsDetailRent: function(params) {
-		   ajax(true, contextPath + '/vfc/rentIdp/selectHisDetailRentInfo', 'body', '처리중입니다.', params, function(data) {
-			   var total = data.total;
-			   var data = data.data;
-
-			   var html = '';
-
-			   for (var i = 0; i < data.length; i++) {
-
-				   html += '<div class="detail_popup top_info">';
-				   html += '	<div style="color: #000">';
-				   html += '       <span>수정</span>';
-				   html += '       <span id="" style="margin-left: 5px; color: red">' + nvl(total, ' ') + '</span>';
-				   html += '	</div>';
-				   html += '	<div>';
-				   html += '       <span class="mdfcnDate">수정일시</span>';
-				   html += '       <span id="" style="margin-left: 5px; color: red">' + nvl(data[i].regDt, ' ') + '</span>';
-				   html += '	</div>';
-				   html += '	<div>';
-				   html += '       <span class="mdfcnName">수정자명</span>';
-				   html += '       <span id="" style="margin-left: 5px; color: blue;">' + nvl(data[i].userNm, ' ') + '</span>';
-				   html += '	</div>';
-				   html += '</div>';
-
-				   html += '<div class="contBox">';
-				   html += '   <div class="nameBox nameBox-flex">';
-				   html += '       <h4 class="name">대여이력 상세</h4>';
-				   html += '   </div>';
-				   html += '	<div class="cont cont-flex">';
-				   html += '		<table class="tb rental_tb01">';
-				   html += '			<tr>';
-				   html += '				<th scope="col">대여번호</th>';
-				   html += '				<td>';
-				   html += '					<div class="tb_flex">';
-				   html += '						<label for="detailRentNo">대여번호</label>';
-				   html += '						<input type="text" id="" name="detailRentNo" class="input no_line" value="' + nvl(data[i].rentNo, ' ') + '" readonly/>';
-				   html += '					</div>';
-				   html += '				</td>';
-				   html += '			</tr>';
-				   html += '			<tr>';
-				   html += '				<th scope="col">면허종류</th>';
-				   html += '				<td>';
-				   html += '					<div class="tb_flex">';
-				   html += '						<label for="detailLcnsIdntfNm">면허종류</label>';
-				   html += '						<input type="text" id="" name="detailLcnsIdntfNm" class="input no_line" value="' + nvl(data[i].lcnsIdntfNm, ' ') + '" readonly/>';
-				   html += '					</div>';
-				   html += '				</td>';
-				   html += '			</tr>';
-				   html += '			<tr>';
-				   html += '				<th scope="col">대여시작일</th>';
-				   html += '				<td>';
-				   html += '					<div class="tb_flex">';
-				   html += '						<label for="start-picker03">시작기간</label>';
-				   html += '						<input type="text" id="" name="" class="input no_line" value="' + nvl(data[i].rentBgngDt, ' ') + '" readonly/>';
-				   html += '					</div>';
-				   html += '				</td>';
-				   html += '			</tr>';
-				   /*html += '			<tr id="" style="display: none;">';
-				   html += '				<th scope="col">삭제여부</th>';
-				   html += '				<td>';
-				   html += '					<div class="tb_flex">';
-				   html += '						<label for="delYnVal">삭제여부</label>';
-				   html += '						<input type="text" id="" name="delYnVal" class="input no_line" value="'+nvl(data[i].delYn,' ')+'" readonly/>';
-				   html += '					</div>';
-				   html += '				</td>';
-				   html += '			</tr>';*/
-				   html += '		</table>';
-				   html += '		<table class="tb rental_tb01">';
-				   html += '			<tr>';
-				   html += '				<th scope="col">차량번호</th>';
-				   html += '				<td>';
-				   html += '					<div class="tb_flex">';
-				   html += '						<label for="detailVhclRegNo">차량번호</label>';
-				   html += '						<input type="text" id="" name="" class="input no_line" value="' + nvl(data[i].vhclRegNo, ' ') + '" readonly/>';
-				   html += '					</div>';
-				   html += '				</td>';
-				   html += '			</tr>';
-				   html += '			<tr>';
-				   html += '				<th scope="col">대여 상태</th>';
-				   html += '				<td>';
-				   html += '					<div class="tb_flex">';
-				   html += '						<label for="detailRentSttsNm">대여 상태</label>';
-				   html += '						<input type="text" id="" name="detailRentSttsNm" class="input no_line" value="' + nvl(data[i].rentSttsNm, ' ') + '" readonly/>';
-				   html += '					</div>';
-				   html += '				</td>';
-				   html += '			</tr>';
-				   html += '			<tr>';
-				   html += '				<th scope="col">대여종료일</th>';
-				   html += '				<td>';
-				   html += '					<div class="tb_flex">';
-				   html += '						<label for="end-picker03">종료기간</label>';
-				   html += '						<input type="text" id="" name="" class="input no_line" value="' + nvl(data[i].rentEndDt, ' ') + '" readonly/>';
-				   html += '					</div>';
-				   html += '				</td>';
-				   html += '			</tr>';
-
-				   //국제 면허의 경우 첨부된 면허증 사본(다운로드) 필드 노출 여부
-				   if (data[i].lcnsIdntfCd === '2') {
-					   //파일이 존재하는 경우
-					   if (data[i].atchFileSn && data[i].atchFileNm !== '-') {
-						   html += '			<tr>';
-						   html += '				<th scope="col">국제 면허증 파일</th>';
-						   html += '				<td>';
-						   html += '					<div class="tb_flex">';
-						   html += '						<label for="detailFileDown">파일 다운로드</label>';
-						   html += '						<input type="text" id="" name="detailFileDown" class="input no_line" value="' + nvl(data[i].atchFileNm, ' ') + '" >';
-						   html += '					</div>';
-						   html += '				</td>';
-						   html += '			</tr>';
-					   } else {
-
-					   }
-				   } else {
-
-				   }
-				   html += '		</table>';
-				   html += '	</div>';
-				   html += '</div>';
-
-				   total -= 1;
-			   }
-
-			   $('#rentalHistDetailGrid').html(html);
-
-			  detailCk++;
-		   });
-	   },
-		
+			
 	   carGridPopup: function() {
 		   $rentIdp.ui.carGrid();
 		   $("#carPopup").addClass("view");
@@ -810,7 +677,6 @@
 		   $("#globalLicense").addClass("view");
 		   $("#regi").addClass("view");
 		   $("#regChk01").prop("checked", true);
-		   //			$("#licenseView").attr('style', 'display: none');
 		   $("#files").val('');
 		   $(".filetype").val('');
 
@@ -930,7 +796,7 @@
 		   $("#regVhclRegNo").val('');
 		   $("#regRentNo").val('');
 		   $("#regRgtrSn").val('');
-		   $('#start-picker02').data("kendoDateTimePicker").value(new Date(2023, 5, 1));
+		   $('#start-picker02').data("kendoDateTimePicker").value(new Date(nowYear, nowMonth, nowDate, nowHours, nowMinutes))
 		   $('#end-picker02').data("kendoDateTimePicker").value(new Date(nowYear, nowMonth, nowDate, nowHours, nowMinutes));
 		   $('#rentIdpGrid').data('kendoGrid').dataSource.read();
 	   },

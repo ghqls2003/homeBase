@@ -70,7 +70,10 @@
 		            ) uut
 		            WHERE uut.user_sn = TI.rqstr_sn
 		           ) AS rqstr_nm,
-		           '*******' || SUBSTRING(dqvs.pca_decrypt(dln, '150'), 8) AS dln,
+		           CASE
+		              WHEN LENGTH(dln) > 6 THEN '*******' || SUBSTRING(dqvs.pca_decrypt(dln, '150'), 8)
+		              ELSE SUBSTRING(dln, 1, 6) || '******'
+		           END AS dln,
 		           lcns_asort_cd,
 		           CASE lcns_asort_cd
 		               WHEN '11' THEN '1종대형'
@@ -94,7 +97,7 @@
 		               WHEN '4' THEN 'API'
 		           END AS vrfc_mthd,
 		           prcs_se
-			    FROM dqvs.dvs_dqv_hs_verf_new TI
+			    FROM dqvs.dvs_dqv_hs_verf TI
 			    where 1=1
 			    <if test="dt != '' and dt != null">
 					and vrfc_dmnd_dt <![CDATA[>=]]> to_date(#{dt}, 'yyyy-mm-dd') and vrfc_dmnd_dt <![CDATA[<=]]> to_date(#{dt}, 'yyyy-mm-dd')+1
@@ -116,7 +119,7 @@
     <select id="listViewCnt" resultType="int">
 	    /* 검증이력 건수 조회 */
 		SELECT count(*) AS cnt
-		FROM dqvs.dvs_dqv_hs_verf_new TI
+		FROM dqvs.dvs_dqv_hs_verf TI
 		where rqstr_sn = #{userSn}::numeric
 		<if test="dt != '' and dt != null">
 			and vrfc_dmnd_dt <![CDATA[>=]]> to_date(#{dt}, 'yyyy-mm-dd') and vrfc_dmnd_dt <![CDATA[<=]]> to_date(#{dt}, 'yyyy-mm-dd')+1
