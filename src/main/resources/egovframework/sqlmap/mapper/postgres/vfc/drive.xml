@@ -243,8 +243,6 @@
 	<select id="selectVfcHistCnt" parameterType="paraMap" resultType="int">
 	SELECT count(1) AS cnt
 	FROM dqvs.dvs_dqv_hs_verf AS ddhv
-	LEFT OUTER JOIN dqvs.v_intg_user_info AS viui  ON ddhv.rqstr_sn = viui.user_sn
-	LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn
 	where
 	1 = 1
 	<!-- 조회조건 -->
