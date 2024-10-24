@@ -12,6 +12,7 @@
 		$drvRsvMag.ui.pageLoad();		//최초 페이지 로드 시
 		$drvRsvMag.event.setUIEvent();
 	});
+	var popClick = 0;
 	var detaiCLick = null;
 	var rentNoClick = null;
 	var rsvStrData = null;
@@ -24,7 +25,7 @@
 		{ title: "대여번호", width: "200px", field: "rentNo", template: "#: rentNo != null ? rentNo : '-'#" },
 		{ title: "회사명", width: "150px", field: "coNm", template: "#: coNm != null ? coNm : '-'#" },
 		{ title: "처리일시", width: "140px", field: "rentPrcsDt", template: "#: rentPrcsDt != null ? rentPrcsDt : '-'#" },
-//		{ title: "등록일", width: "140px", field: "regDt", template: "#: regDt != null ? regDt : '-'#" },
+		//		{ title: "등록일", width: "140px", field: "regDt", template: "#: regDt != null ? regDt : '-'#" },
 		{ title: "대여시작일", width: "140px", field: "rentBgngDt", template: "#: rentBgngDt != null ? rentBgngDt : '-'#" },
 		{ title: "대여종료일", width: "140px", field: "rentEndDt", template: "#: rentEndDt != null ? rentEndDt : '-'#" },
 	];
@@ -219,7 +220,7 @@
 					{ field: "coNm", title: "회사명", width: "200px", template: "#= coNm != null ? coNm : '-' #" },
 					{ field: "rentNo", title: "대여번호", width: "200px", template: "#= rentNo != null ? rentNo : '-' #" },
 					{ field: "dln2", title: "면허번호", width: "180px", template: "#= dln2 != null ? dln2 : '-' #" },
-//					{ field: "lcnsFlnm", title: "면허 소유자", width: "180px", template: "#= lcnsFlnm != null ? lcnsFlnm : '-' #" },
+					//					{ field: "lcnsFlnm", title: "면허 소유자", width: "180px", template: "#= lcnsFlnm != null ? lcnsFlnm : '-' #" },
 					{ field: "lcnsAsortCd", title: "면허종별", width: "150px", template: "#= lcnsAsortCd != null ? lcnsAsortCd : '-' #" },
 					{ field: "regNm", title: "예약자", width: "150px", template: "#= regNm != null ? regNm : '-' #" },
 					{
@@ -292,7 +293,7 @@
 				$('#RsvedlastRst').val(data[0].lastVrfcRslt);
 				$('#rsvedDln').val(data[0].dln);
 				$('#rsvedCar').val(data[0].vhclRegNo);
-//				$('#RsvedlcnsFlnm').val(data[0].lcnsFlnm);
+				//				$('#RsvedlcnsFlnm').val(data[0].lcnsFlnm);
 				$('#rsvedEndTime').val(formatDate(data[0].rsvtEndYmd));
 				$('#RsvedNtCfDt').val(formatDate(data[0].nextVrfcYmd));
 
@@ -357,55 +358,61 @@
 		},
 
 		carGrid: function() {
-			var gridId = "#carGrid";
-			$drvRsvMag.ui.carGridModule(gridId);
+			popClick += 1;
+			if (popClick == 1) {
+				var gridId = "#carGrid";
+				$drvRsvMag.ui.carGridModule(gridId);
+			} else {
+				var grid = $('#carGrid').data('kendoGrid');
+				grid.dataSource.page(1);
+			}
 		},
 		carGridModule: function(gridId) {
 			$('#carGrid').kendoGrid({
-			    dataSource: {
-			        data: null,
-			        transport: {
-			            read: {
-			                dataType: "json",
-			                contentType: "application/json; charset=utf-8",
-			                url: contextPath + '/vfc/drvRsvMag/selectRsvNoList',
-			                type: "POST",
-			                beforeSend: function(xhr) {
-			                    // Loading 창 표시
-			                    kendo.ui.progress($("#carGrid"), true);
-			                    
-			                    xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
-			                },
-			                complete: function() {
-			                    // Loading 창 숨김
-			                    kendo.ui.progress($("#carGrid"), false);
-			                }
-			            },
-			            parameterMap: function(options) {
-			                options.searchWrd = $("#carSearchWrd").val();
-			                return JSON.stringify(options);
-			            }
-			        },
-			        schema: {
-			            data: "data",
-			            total: "total",
-			        },
-			        pageSize: 5,
-			        serverPaging: true
-			    },
-			    navigatable: true,
-			    pageable: {
-			        pageSizes: [5, 10, 20],
-			        buttonCount: 5
-			    },
-			    noRecords: {
-			        template: "데이터가 없습니다."
-			    },
-			    columns: carListColmuns,
-			    scrollable: true,
-			    editable: false,
-			    resizable: true,
-			    selectable: "row",
+				dataSource: {
+					data: null,
+					transport: {
+						read: {
+							dataType: "json",
+							contentType: "application/json; charset=utf-8",
+							url: contextPath + '/vfc/drvRsvMag/selectRsvNoList',
+							type: "POST",
+							beforeSend: function(xhr) {
+								// Loading 창 표시
+								kendo.ui.progress($("#carGrid"), true);
+
+								xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+							},
+							complete: function() {
+								// Loading 창 숨김
+								kendo.ui.progress($("#carGrid"), false);
+							}
+						},
+						parameterMap: function(options) {
+							options.searchWrd = $("#carSearchWrd").val();
+							return JSON.stringify(options);
+						}
+					},
+					schema: {
+						data: "data",
+						total: "total",
+					},
+					pageSize: 5,
+					serverPaging: true
+				},
+				navigatable: true,
+				pageable: {
+					pageSizes: [5, 10, 20],
+					buttonCount: 5
+				},
+				noRecords: {
+					template: "데이터가 없습니다."
+				},
+				columns: carListColmuns,
+				scrollable: true,
+				editable: false,
+				resizable: true,
+				selectable: "row",
 			});
 
 		},
@@ -432,7 +439,7 @@
 			params.endtDt = $("#rsvEndTime").val();
 			params.lastCfRst = $("#lastCfRst").val();
 			params.dln = $("#regRgtrDln").val();
-//			params.lcnsFlnm = $("#lcnsFlnm").val();
+			//			params.lcnsFlnm = $("#lcnsFlnm").val();
 			params.lcnsAsortCd = $("#ReglcnsAsortCd").val();
 			params.lastRst = $("#RsvedlastRst").val();
 			if (params.vhclRegNo == null || params.vhclRegNo == '') {
@@ -504,6 +511,7 @@
 				$drvRsvMag.event.carGridPopup();
 			});
 			$("#carVhclRegNoVal").on("click", function() {
+
 				if ($("#start-picker02").data("kendoDateTimePicker")) {
 					$("#start-picker02").data("kendoDateTimePicker").destroy();
 				}
@@ -566,10 +574,13 @@
 				}
 			});
 			$(".carClose").on("click", function() {
-				$("#carPopup").hide(); // 또는 .fadeOut() 등으로 애니메이션 효과 추가 가능
-
-				$("#carSearchWrd").val(''); // 검색어 초기화
-				$("#carGrid").empty(); // 테이블 초기화
+				$("#carPopup").removeClass("view");
+				$("#carSearchWrd").val('');
+				var grid = $("#carGrid").data("kendoGrid");
+				if (grid) {
+					grid.clearSelection();  
+					grid.dataSource.data([]);  
+				}
 			});
 
 			$(".carClose2").on("click", function() {
@@ -602,16 +613,16 @@
 				$("#regRentNo").val(rentNoClick);
 				$("#rsvEndTime").val(data.rentEndDt);
 				$("#start-picker02").val(data.rentBgngDt);
-				$("#regRgtrDln").val(data.dln);
 
 				var params = {};
 				params.detaiCLick = detaiCLick;
 
 				ajax(true, contextPath + '/vfc/drvRsvMag/selectCheckRentRsvf', 'body', '확인 중입니다.', params, function(data2) {
 					$("#lastCfRst").val(data2[0].vrfcRslt);
-//					$("#lcnsFlnm").val(data2[0].lcnsFlnm);
+					//					$("#lcnsFlnm").val(data2[0].lcnsFlnm);
 					$("#ReglcnsAsortCd").val(data2[0].lcnsAsortCd);
 					$("#RsvedlastRst").val(data2[0].vrfcCd);
+					$("#regRgtrDln").val(data2[0].dln);
 					$("#lastCfDt").val(data2[0].vrfcDmndDt);
 				});
 			}
@@ -620,17 +631,24 @@
 			var carRegNoVal2 = $("#rsvEndTime").val();
 			var carRegNoVal3 = $("#start-picker02").val();
 			var lcnsAsortCd = $("#ReglcnsAsortCd").val();
-//			var lcnsFlnm = $("#lcnsFlnm").val();
+			//			var lcnsFlnm = $("#lcnsFlnm").val();
 
 			$("#regRentNo").val(carRegNoVal);
 			$("#rsvEndTime").val(carRegNoVal2);
 			$("#ReglcnsAsortCd").val(lcnsAsortCd);
-//			$("#lcnsFlnm").val(lcnsFlnm);
-			$("#carTa").empty();
-			if ($("#carTa")[0].children.length == 0) {
-				$("#carSearchWrd").val('');
-				$("#carTa").append("<table id='carGrid'><caption>대여예약</caption></table>");
+			$("#carPopup").removeClass("view");
+			$("#carSearchWrd").val('');
+			var grid = $("#carGrid").data("kendoGrid");
+			if (grid) {
+				grid.clearSelection();  
+				grid.dataSource.data([]);  
 			}
+			//			$("#lcnsFlnm").val(lcnsFlnm);
+//			$("#carTa").empty();
+//			if ($("#carTa")[0].children.length == 0) {
+//				$("#carSearchWrd").val('');
+//				$("#carTa").append("<table id='carGrid'><caption>대여예약</caption></table>");
+//			}
 			rsvStrData = new Date(carRegNoVal3);
 		},
 		detailDeleteBtn: function() {

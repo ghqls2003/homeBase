@@ -693,7 +693,7 @@ table.tb .tb_flex23 {
 
 			<div id="carTa" class="result">
 				<table id="carGrid">
-					<caption>자동차리스트</caption>
+					<caption>대여번호 리스트</caption>
 				</table>
 			</div>
 			<div class="btn_flex" style="margin-top: 80px;">
@@ -763,17 +763,17 @@ table.tb .tb_flex23 {
 									</div>
 								</td>
 							</tr>
-							<tr>
-								<th scope="col">면허성명</th>
-								<td>
-									<div class="tb_flex">
-										<label for="RsvedlcnsFlnm">면허성명</label> <input
-											style='border-radius: 0px; border: 0px solid;' type="text"
-											id="RsvedlcnsFlnm" name="RsvedlcnsFlnm" class="input"
-											readonly />
-									</div>
-								</td>
-							</tr>
+<!-- 							<tr> -->
+<!-- 								<th scope="col">면허성명</th> -->
+<!-- 								<td> -->
+<!-- 									<div class="tb_flex"> -->
+<!-- 										<label for="RsvedlcnsFlnm">면허성명</label> <input -->
+<!-- 											style='border-radius: 0px; border: 0px solid;' type="text" -->
+<!-- 											id="RsvedlcnsFlnm" name="RsvedlcnsFlnm" class="input" -->
+<!-- 											readonly /> -->
+<!-- 									</div> -->
+<!-- 								</td> -->
+<!-- 							</tr> -->
 							<tr>
 								<th scope="col">최종검증결과</th>
 								<td>
