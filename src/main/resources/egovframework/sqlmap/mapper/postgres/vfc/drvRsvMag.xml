@@ -158,7 +158,17 @@
 				(
 				select
 					row_number() over(order by T.reg_dt desc) rn ,
-					*
+					*,
+				CASE
+					WHEN T.reg_nm IS NOT NULL THEN
+						CONCAT(LEFT(T.reg_nm, 1), REPEAT('*', LENGTH(T.reg_nm) - 2), RIGHT(T.reg_nm, 1))
+					ELSE NULL
+				END AS reg_nm2,
+				CASE
+					WHEN T.mdfr_nm IS NOT NULL THEN
+						CONCAT(LEFT(T.mdfr_nm, 1), REPEAT('*', LENGTH(T.mdfr_nm) - 2), RIGHT(T.mdfr_nm, 1))
+					ELSE NULL
+				END AS mdfr_nm2
 					from
 						(
 						select
@@ -192,11 +202,8 @@
 							agency.co_nm ,
 							rent.bzmn_sn,
 							ddvr.lcns_asort_cd,
-							
-<!-- 							ddvr.lcns_flnm, -->
 							ddvr.lcns_asort_cd
 						from dqvs.dvs_dqv_mt_rent rent
-<!-- 						from dqvs.dvs_dqv_mt_rent_dump rent -->
 						left outer join dqvs.dvs_rac_mt_agency agency on
 						rent.bzmn_sn = agency.bzmn_sn
 						left join dqvs.dvs_dqv_vrfc_rsvt ddvr on

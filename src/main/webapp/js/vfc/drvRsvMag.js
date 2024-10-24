@@ -228,14 +228,14 @@
 					{ field: "dln2", title: "면허번호", width: "180px", template: "#= dln2 != null ? dln2 : '-' #" },
 					//					{ field: "lcnsFlnm", title: "면허 소유자", width: "180px", template: "#= lcnsFlnm != null ? lcnsFlnm : '-' #" },
 					{ field: "lcnsAsortCd", title: "면허종별", width: "150px", template: "#= lcnsAsortCd != null ? lcnsAsortCd : '-' #" },
-					{ field: "regNm", title: "예약자", width: "150px", template: "#= regNm != null ? regNm : '-' #" },
+					{ field: "regNm2", title: "예약자", width: "150px", template: "#= regNm2 != null ? regNm2 : '-' #" },
 					{
 						field: "regDt",
 						title: "예약 지정일",
 						width: "150px",
 						template: "#= regDt != null ? kendo.toString(new Date(regDt), 'yyyy-MM-dd HH:mm') : '-' #"
 					},
-					{ field: "mdfrNm", title: "수정자", width: "150px", template: "#= mdfrNm != null ? mdfrNm : '-' #" },
+					{ field: "mdfrNm2", title: "수정자", width: "150px", template: "#= mdfrNm2 != null ? mdfrNm2 : '-' #" },
 					{
 						field: "mdfcnDt",
 						title: "수정일",
