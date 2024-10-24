@@ -532,7 +532,7 @@ table.tb .tb_flex23 {
 												<li class="li_slec" style="display: flex;"><label
 													for="regRentNo">대여번호</label> <input type="text"
 													id="regRentNo" name="regRentNo" class="input"
-													placeholder="대여번호를 등록해주세요" readonly />
+													placeholder="검색버튼을 클릭해주세요." readonly />
 													<button id="carBtn" class="yellow_btn carBtn">
 														<img src="${contextPath}/images/sub/ico_search02.png"
 															alt="검색아이콘">

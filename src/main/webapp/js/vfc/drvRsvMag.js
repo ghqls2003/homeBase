@@ -54,7 +54,7 @@
 			var dropData = [
 				{ value: '', text: "전체(검색조건)" },
 				{ value: "E1", text: "대여번호" },
-				{ value: "E2", text: "면허 소유자" }
+//				{ value: "E2", text: "면허 소유자" }
 			];
 			$("#searchCd").kendoDropDownList({
 				dataTextField: "text",
