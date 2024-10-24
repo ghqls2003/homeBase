@@ -171,8 +171,8 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 	}
 
 	public static boolean isAccMthd(HttpServletRequest req) {
+//		iOS에서 크롬으로 접속 시, CRIOS(Chrome on iOS)가 존재
 		String userAgent = req.getHeader("User-Agent").toUpperCase();
-		System.out.println("뭐야"+userAgent);
 		if(userAgent.contains("INRIMSAPP")) {
 			return IS_MW;
 		} else if(userAgent.contains("WV")) {
