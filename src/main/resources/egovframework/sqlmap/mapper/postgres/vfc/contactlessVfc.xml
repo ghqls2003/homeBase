@@ -33,9 +33,11 @@
 	
 	<!-- 대여번호 검증이력번호 업데이트 -->
 	<update id="updateVrfcSn">
-		UPDATE dqvs.dvs_dqv_mt_rent
-		SET vrfc_hstry_sn = #{sn}
-		WHERE rent_no = #{updateRentNo}
+		<if test="updateRentNo != null and updateRentNo != ''">
+			UPDATE dqvs.dvs_dqv_mt_rent
+			SET vrfc_hstry_sn = #{sn}
+			WHERE rent_no = #{updateRentNo}
+		</if>
     </update>
 
 </mapper>

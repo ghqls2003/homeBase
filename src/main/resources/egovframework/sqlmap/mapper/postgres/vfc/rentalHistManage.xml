@@ -495,6 +495,7 @@
 	</update>
 
 	<update id="updateDeleteYn">
+		<if test="rentNo != '' and rentNo != null">
 			UPDATE dqvs.dvs_dqv_mt_rent
 			SET del_yn = 'Y',
 				use_yn = 'N',
@@ -502,6 +503,7 @@
 				mdfr_sn= #{userSn}::numeric,
 				mdfcn_dt= now()::timestamp
 			WHERE rent_no = #{rentNo}
+		</if>
 	</update>
 
 	<insert id="insertRentInfo">

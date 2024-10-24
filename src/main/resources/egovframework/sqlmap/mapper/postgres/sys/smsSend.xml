@@ -458,9 +458,8 @@
 				and crno = #{crno}
 			</if>
 		)AS T2
-		WHERE 1=1
 		<if test='api.equals("true")'>
-			and api = 'Y'
+			where api = 'Y'
 		</if>
 		ORDER BY rn asc
 	)AS T

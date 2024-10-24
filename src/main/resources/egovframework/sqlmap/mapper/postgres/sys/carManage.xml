@@ -637,12 +637,11 @@
 	</insert>
 	
 	<delete id="deleteBookmark" parameterType="paraMap">
-		<if test="vin != null and vin != ''">
+		<if test="vin != null and vin != '' and mdfr_sn != null and mdfr_sn != ''">
 	      /*즐겨찾기 수정*/
 			DELETE
 			FROM dqvs.dvs_rac_mt_fvrts
-			WHERE 1=1 
-			AND vin = #{vin}
+			WHERE vin = #{vin}
 			AND mdfr_sn = #{mdfr_sn}::numeric
 		</if>
 	</delete>
