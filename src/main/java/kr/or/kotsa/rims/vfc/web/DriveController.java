@@ -328,7 +328,6 @@ public class DriveController extends CmmnAbstractServiceImpl {
 					resultMap = objectMapper.readValue(data, Map.class);
 					//resultMap {respCode=-90, errorMsg=연계 서버와 연결 실패}
 					if( resultMap.get("header") == null ){
-						//resultMap {respCode=-90, errorMsg=연계 서버와 연결 실패} 에러처리
 						String errorMsg = "내부 서버 오류로 인해 운전자격확인을 할 수 없습니다";
 						response.put("errorMsg",errorMsg);
 
