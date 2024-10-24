@@ -1154,7 +1154,11 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			$(".similarity_pop .close").on("click",function(){
 			    $(".similarity_pop").css("display", "none");
 			});
-		
+
+		    // 속한 법인차량만 검색 가능 기능
+            $("#car_num_pop").on("change",function(){
+                  $drive.event.searchVehicleById();
+            });
 		},
 
 
@@ -1678,7 +1682,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                                     location.reload();
                             }
                         }else{
-                                alert(data.errorMsg); //errorMsg = "내부 서버 오류로 인해 운전자격확인을 할 수 없습니다"
+                                alert(data.errorMsg); //errorMsg ="일시적인 시스템 문제로 운전자격 확인이 지연되고 있습니다.\n 잠시 후 다시 시도해 주세요.";
                                 location.reload();
                         }
 					} else{
