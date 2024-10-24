@@ -34,8 +34,7 @@
 						base.del_yn,
 						base.rgtr_sn,
 						base.reg_dt,
-						base.mdfcn_dt,
-						(SELECT v.dln_enc FROM dqvs.dvs_dqv_hs_verf v WHERE v.vrfc_hstry_sn = base.vrfc_hstry_sn) dln  <!-- 24.10.23 rent에 dln 없어짐 확인바람. -->
+						base.mdfcn_dt
 					from
 <!-- 						dqvs.dvs_dqv_mt_rent_dump base -->
 						dqvs.dqvs.dvs_dqv_mt_rent base
@@ -49,6 +48,9 @@
 
 		   WHERE 
 		   		 (CURRENT_TIMESTAMP between rent.rent_bgng_dt and rent.rent_end_dt)
+		   <if test = 'searchWrd != null and searchWrd != ""'>
+   					AND rent.rent_no like '%' || #{searchWrd} || '%'
+		   </if>		 
 		   <choose>
 		        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
 					AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
@@ -101,9 +103,9 @@
 						base.del_yn,
 						base.rgtr_sn,
 						base.reg_dt,
-						base.mdfcn_dt,
-
-						(SELECT v.dln_enc FROM dqvs.dvs_dqv_hs_verf v WHERE v.vrfc_hstry_sn = base.vrfc_hstry_sn) dln  <!-- 24.10.23 rent에 dln 없어짐 확인바람. -->
+						base.mdfcn_dt
+						<!-- 24.10.23 rent에 dln 없어짐 확인바람. -->
+						<!-- 24.10.24 dln 삭제 확인 확인 이력에서 불러오기 -->
 					from
 <!-- 						dqvs.dvs_dqv_mt_rent_dump base -->
 						dqvs.dvs_dqv_mt_rent base
@@ -117,6 +119,9 @@
 
 		   WHERE
 		   		(CURRENT_TIMESTAMP between rent.rent_bgng_dt and rent.rent_end_dt)
+		   <if test = 'searchWrd != null and searchWrd != ""'>
+   					AND rent.rent_no like '%' || #{searchWrd} || '%'
+		   </if>
 		   <choose>
 		        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
 					AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
@@ -185,7 +190,7 @@
 <!-- 						from dqvs.dvs_dqv_mt_rent_dump rent -->
 						left outer join dqvs.dvs_rac_mt_agency agency on
 						rent.bzmn_sn = agency.bzmn_sn
-						inner join dqvs.dvs_dqv_vrfc_rsvt ddvr on
+						left join dqvs.dvs_dqv_vrfc_rsvt ddvr on
 						ddvr.rent_no = rent.rent_no
 						where 
 							ddvr.reg_dt <![CDATA[>=]]> #{startDt}::TIMESTAMP
@@ -267,7 +272,7 @@
 <!-- 						from dqvs.dvs_dqv_mt_rent_dump rent -->
 						left outer join dqvs.dvs_rac_mt_agency agency on
 						rent.bzmn_sn = agency.bzmn_sn
-						inner join dqvs.dvs_dqv_vrfc_rsvt ddvr on
+						left join dqvs.dvs_dqv_vrfc_rsvt ddvr on
 						ddvr.rent_no = rent.rent_no
 						where 
 							ddvr.reg_dt <![CDATA[>=]]> #{startDt}::TIMESTAMP
@@ -452,6 +457,7 @@
 		        ddhv.vrfc_cd,
 		        dqvs.fn_get_cdnm('verify_cd', ddhv.vrfc_cd) as last_vrfc_rslt,
 		        ddhv.lcns_asort_cd,
+		        ddhv.dln_enc as dln,
 
 <!-- 		        ddhv.lcns_flnm, -->
 		        ddhv.vrfc_dmnd_dt,
