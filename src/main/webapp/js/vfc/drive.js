@@ -1155,10 +1155,10 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			    $(".similarity_pop").css("display", "none");
 			});
 
-		    // 속한 법인차량만 검색 가능 기능
-            $("#car_num_pop").on("change",function(){
-                  $drive.event.searchVehicleById();
-            });
+//		    // 속한 법인차량만 검색 가능 기능
+//            $("#car_num_pop").on("change",function(){
+//                  $drive.event.searchVehicleById();
+//            });
 		},
 
 
