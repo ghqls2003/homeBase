@@ -125,72 +125,59 @@
 
 				});
 			}
-
-			//			$('button.k-input-button.k-button.k-button-md.k-button-solid.k-button-solid-base.k-icon-button:has(.k-icon.k-i-clock)').hide();
-			var threeMonthsAgo = new Date();
-			//			$("#start-picker01").kendoDatePicker({
-			//				value: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-			//				dateInput: true,
-			//				format: "yyyy-MM-dd",
-			//				parseFormats: ["yyyy-MM-dd"],
-			//				max: new Date(),
-			//				change: function() {
-			//					var startDate = this.value();
-			//					var endDatePicker = $("#end-picker01").data("kendoDatePicker");
-			//					if (startDate) {
-			//						endDatePicker.min(startDate);
-			//					}
-			//					if (new Date($('#start-picker01').val()) > new Date($('#end-picker01').val())) {
-			//						alert("시작일은 종료일보다 늦을 수 없습니다.");
-			//						$('#start-picker01').data("kendoDatePicker").value(new Date($('#end-picker01').val()));
-			//					}
-			//				}
-			//			});
-			//			$("#end-picker01").kendoDatePicker({
-			//				value: new Date(),
-			//				dateInput: true,
-			//				format: "yyyy-MM-dd",
-			//				parseFormats: ["yyyy-MM-dd"]
-			//			});
 			$("#start-picker01").kendoDatePicker({
-				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 30),
-				//				value: new Date(2024, 3, 1),
-				dateInput: true,
-				format: "yyyy-MM-dd",
-				parseFormats: ["yyyy-MM-dd"],
-				max: new Date(),
-				change: function() {
-					var startDate = this.value();
-					var endDatePicker = $("#end-Picker01").data("kendoDatePicker");
+			    value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 30),
+			    dateInput: true,
+			    format: "yyyy-MM-dd",
+			    parseFormats: ["yyyy-MM-dd"],
+			    max: new Date(),
+			    change: function() {
+			        var startDate = this.value();
+			        var endDatePicker = $("#end-picker01").data("kendoDatePicker");
+			        var endDate = endDatePicker.value();
 
-					if (startDate) {
-						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 30);
-						endDatePicker.min(startDate);
-						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
-						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
-					}
-				}
+			        if (startDate && endDate && startDate > endDate) {
+			            alert("시작일이 종료일보다 늦을 수 없습니다.");
+			            this.value(endDate);  // 종료일보다 빠른 시작일을 선택하면 시작일을 종료일로 맞춤
+			            return;
+			        }
+
+			        if (startDate) {
+			            var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 30);
+			            endDatePicker.min(startDate);
+			            endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
+			            endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
+			        }
+			    }
 			});
+
 			$("#end-picker01").kendoDatePicker({
-				value: new Date(),
-				dateInput: true,
-				format: "yyyy-MM-dd",
-				parseFormats: ["yyyy-MM-dd"],
-				max: new Date(),
-				change: function() {
-					var endDate = this.value();
-					var startDatePicker = $("#start-Picker01").data("kendoDatePicker");
-					var startDate = startDatePicker.value();
+			    value: new Date(),
+			    dateInput: true,
+			    format: "yyyy-MM-dd",
+			    parseFormats: ["yyyy-MM-dd"],
+			    max: new Date(),
+			    change: function() {
+			        var endDate = this.value();
+			        var startDatePicker = $("#start-picker01").data("kendoDatePicker");
+			        var startDate = startDatePicker.value();
 
-					if (startDate) {
-						var diffInDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
-						if (diffInDays > 30) {
-							alert("30일 이내만 조회 가능합니다.");
-							this.value(new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 30));
-						}
-					}
-				}
+			        if (startDate && endDate && startDate > endDate) {
+			            alert("종료일이 시작일보다 빠를 수 없습니다.");
+			            this.value(startDate);  // 시작일보다 빠른 종료일을 선택하면 종료일을 시작일로 맞춤
+			            return;
+			        }
+
+			        if (startDate) {
+			            var diffInDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+			            if (diffInDays > 30) {
+			                alert("30일 이내만 조회 가능합니다.");
+			                this.value(new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 30));
+			            }
+			        }
+			    }
 			});
+
 			$drvRsvMag.ui.kendoGrid();
 		},
 
@@ -662,12 +649,6 @@
 				grid.clearSelection();
 				grid.dataSource.data([]);
 			}
-			//			$("#lcnsFlnm").val(lcnsFlnm);
-			//			$("#carTa").empty();
-			//			if ($("#carTa")[0].children.length == 0) {
-			//				$("#carSearchWrd").val('');
-			//				$("#carTa").append("<table id='carGrid'><caption>대여예약</caption></table>");
-			//			}
 			rsvStrData = new Date(carRegNoVal3);
 		},
 		detailDeleteBtn: function() {
