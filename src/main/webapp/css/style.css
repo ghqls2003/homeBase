@@ -1585,6 +1585,8 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
 
 .chkSend_popup .msg_box {width: 100%; height: 340px; padding: 24px; border: 1px solid #E8EDF8; background-color: #F5F8FE; border-radius: 12px; -webkit-border-radius: 12px; -moz-border-radius: 12px; -ms-border-radius: 12px; -o-border-radius: 12px; margin-top: 13px;  overflow-y: auto; font-size: 1.5rem; line-height: 1.4;}
 .chkSend_popup .k-grid-norecords {align-items: baseline;}
+.chkSend_popup .scrollBar02::-webkit-scrollbar {height: 7px;}
+.chkSend_popup .cont_body {margin-bottom: 10px;}
 
 /* 문자 조회 */
 .viewMsg_popup .box {width: 589px; height: 540px;}
@@ -1606,7 +1608,7 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
     .indivSelec_popup .box {width: 850px; }
     .indivSelec_popup .k-picker-solid {width: 88px !important;}
     .indivSelec_popup #receiver_send_condition02 {width: 160px;}
-    .indivSelec_popup .li_slec label {font-size: 1.2rem;}
+    .indivSelec_popup .li_slec label {font-size: 1.4rem;}
     .indivSelec_popup .selec_wr {flex-wrap: wrap; gap: 12px;}
 /*     .indivSelec_popup .k-grid-content {height: 276px;} */
 	.indivSelec_popup .selec_box {flex-wrap: wrap;gap: 8px;}
@@ -1637,6 +1639,8 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
     .indivSelec_popup .selec_wr {flex-wrap: nowrap; gap: 0;}
     .indivSelec_popup .k-grid-content {height: 200px;}
     
+    .chkSend_popup .box {width: 90vw;} 
+    
 
 }
 @media (max-width:640px) {
@@ -1660,7 +1664,7 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
 
     .viewMsg_popup .box{width: 80vw;}
 
-    .indivSelec_popup .box {width: 480px; height: 596px;}
+    .indivSelec_popup .box {width: 90vw; height: 596px;}
     .indivSelec_popup .selec_wr .mo_flex {width: 100%;}
     .indivSelec_popup .selec_wr ul.selec_box {flex-direction: row; gap: 12px 0; align-items: center;}
     .indivSelec_popup .k-picker-solid {width: 84px !important;;}
@@ -1668,12 +1672,12 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
     .indivSelec_popup .k-grid-content {height: 200px;}
     .indivSelec_popup #receiverSearchBtn {margin-left: 0;}
 
-    .chkSend_popup .box {width: 80vw;}
-    .chkSend_popup .box .content {padding: 20px 37px;}
-    .chkSend_popup .content .cont_inner {flex-direction: column; height: 440px; overflow: hidden;}
+    .chkSend_popup .box {width: 90vw;}
+    .chkSend_popup .box .content {padding: 20px;}
+    .chkSend_popup .content .cont_inner {flex-direction: column; height: 440px;}
     .chkSend_popup .view_receivers_wr {width: 100%;}
     .chkSend_popup .view_msgView_wr {width: 100%;}
-    .chkSend_popup .k-grid-content {height: 132px;}
+    .chkSend_popup .k-grid-content {height: auto;}
     .chkSend_popup .msg_box {height: 200px;}
 }
 @media (max-width:480px) {
@@ -1681,8 +1685,8 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
     .sub04 .selec_wr ul.selec_box li .k-picker-solid{border-radius: 8px;background-color: #fff;}
     .sub04 .btn_s {height: 30px;}
 
-    .send_popup .box{width: 350px;}
-
+	.msg_send .box {width: 90vw;}
+	
     .send_popup .selec_box .box_head {flex-direction: column; align-items: flex-start; gap: 8px; height: auto; padding: 8px 15px;}
     .send_popup .selec_box .box_head .cont_wr {gap: 8px;  flex-wrap: wrap;}
     .send_popup .selec_box .box_head .cont_wr h5 {font-size: 1.5rem;}
@@ -1695,7 +1699,6 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
     .send_popup .msg_box .box_cont {padding: 15px;}
     .viewMsg_popup .box{width: 80vw; min-height: 480px }
 
-    .indivSelec_popup .box {width: 350px;}
     .indivSelec_popup #receiver_send_condition02 {height: 30px;}
     .indivSelec_popup .selec_wr ul.selec_box { flex-wrap: wrap;}
     .indivSelec_popup .k-picker-solid {width: 98px !important;}
@@ -1703,7 +1706,8 @@ table.tb .tb_flex .lc_01{margin-right: 12px;}
 }
 @media (max-width: 390px) {
 	.sub04 .selec_wr ul.selec_box li .k-picker-solid{border-radius: 8px;background-color: #fff;}
-    .msg_send .box {width: 80vw;}
+    .msg_send .box {width: 90vw;}
+    .indivSelec_popup .box .content {padding: 15px;}
     .indivSelec_popup .k-picker-solid {width: 20vw !important;;}
     .indivSelec_popup #receiver_send_condition02 {width: 32vw;}
     .chkSend_popup button.blue_btn {width: 30vw;}
