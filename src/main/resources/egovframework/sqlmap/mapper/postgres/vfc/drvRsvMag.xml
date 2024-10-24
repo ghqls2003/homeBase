@@ -7,7 +7,6 @@
 				row_number() over(order by rent.rent_prcs_dt desc) rn,
 				rent.rent_no,
 				rent.vhcl_reg_no,
-				rent.dln,
 				rent.vrfc_hstry_sn,
 				agency.co_nm,
 				to_char(rent.rent_bgng_dt,
@@ -285,7 +284,7 @@
 <!-- 							and ddvr.lcns_flnm like '%' || #{searchWrd} || '%' -->
 <!-- 						</if> -->
 				 		<if test="lncdDrop != '' and lncdDrop != null">
-							and rent.lcns_asort_cd = #{lncdDrop}
+							and ddvr.lcns_asort_cd = #{lncdDrop}
 						</if>
 		<choose>
 	        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
