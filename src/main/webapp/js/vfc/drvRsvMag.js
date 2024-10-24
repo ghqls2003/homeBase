@@ -52,6 +52,7 @@
 			//			});
 
 			var dropData = [
+				{ value: '', text: "검색 조건(전체)" },
 				{ value: "E1", text: "대여번호" },
 				//				{ value: "E2", text: "면허 소유자" }
 			];
