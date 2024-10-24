@@ -52,6 +52,19 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 		{title: "차량등록번호", width: "120px", field: "vhclRegNo", template: "#: vhclRegNo #"},
 		{title: "차종", width: "60px", field: "carmdl", template: "#: carmdl #"}
 	];
+	
+	var mobiColumns_agency = [
+		{ title: "즐겨찾기", width: "60px", field: "bookmark" 
+			, template:function(dataItem) {
+					        var value = dataItem.regYn == "Y" ? "Y" : "N";
+					        var imageName = value=="Y" ? "star_y.png" : "star_n.png";
+					        return '<div class="bookmark" value="' + value + '"><img src="' + contextPath + '/images/sub/' + imageName + '"></div>';
+			}
+		},
+		{title: "순번", width: "40px", field: "rn", template: "#: rn #"},
+		{title: "차량등록번호", width: "120px", field: "vhclRegNo", template: "#: vhclRegNo #"},
+		{title: "차종", width: "60px", field: "carmdl", template: "#: carmdl #"}
+	];
 
     // 차량결함 그리드 컬럼
 	var defectColumns =[
@@ -213,7 +226,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 
 		columns : function() {
 			if(authrtCd.includes('S')){
-				return userTypeBool ? pcColumns_agency : mobiColumns;
+				return userTypeBool ? pcColumns_agency : mobiColumns_agency;
 			}else{
 				return userTypeBool ? pcColumns : mobiColumns;
 			}
