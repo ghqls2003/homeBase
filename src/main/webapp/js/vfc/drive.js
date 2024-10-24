@@ -1553,132 +1553,137 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 
 				ajax(true, contextPath+"/vfc/drive/verifyLicense", 'body', '처리중입니다.', param, function(data) {
 					if(data != null && data != ""){
+                        if(data.header != null && data.header != ""){
+                            var resultHeaderCd = data.header.f_rtn_cd;
+                            var resultHeaderMsg = data.vrfcRsltMsg;
+                            resultHeaderCd = resultHeaderCd.padStart(2,'0');
 
-						var resultHeaderCd = data.header.f_rtn_cd;
-						var resultHeaderMsg = data.vrfcRsltMsg;
-						resultHeaderCd = resultHeaderCd.padStart(2,'0');
+                        /*	 resultHeaderCd(vrfc_rslt ) : 00 또는 1 일때 성공
+                             resultHeaderCd(vrfc_rslt ) : 나머지  또는 2 일때 실패*/
 
-					/*	 resultHeaderCd(vrfc_rslt ) : 00 또는 1 일때 성공
-                         resultHeaderCd(vrfc_rslt ) : 나머지  또는 2 일때 실패*/
+                            if (resultHeaderCd == '00' || resultHeaderCd == '01' ) { // api 통신 성공 일때
+                                // 운전자격이력 일련번호
+                                vrfcHstrySn  = data.vrfc_hstry_sn;
+                                $('#result').empty();
 
-						if (resultHeaderCd == '00' || resultHeaderCd == '01' ) { // api 통신 성공 일때
-                            // 운전자격이력 일련번호
-                            vrfcHstrySn  = data.vrfc_hstry_sn;
-							$('#result').empty();
+                                $('.result_popup').css('display', 'block');
+                                $('.result_popup').addClass("view");
 
-							$('.result_popup').css('display', 'block');
-							$('.result_popup').addClass("view");
+                                $("#resetChk").prop('checked', false);
+                                if (result.respCode == 500) {
 
-							$("#resetChk").prop('checked', false);
-							if (result.respCode == 500) {
+                                    var html = `<p class="current_info">
+                                        운전면허정보 조회 결과 <span class="point02">비정상</span> 입니다.
+                                        <br>
+                                        <span class="red">*</span> 비정상 사유 : 운전자격확인 프로세스가 정상적으로 이루어지지 않았습니다.` +
+                                    '</p>';
+                                    $('#result').append(html);
+                                    $('#rentCfm').css('display', 'none');
+                                    return;
+                                }
+                                param.cd = data.body.f_rtn_code;
+                                param.sn = data.vrfc_hstry_sn;
+                                param.dln = $('#num01').val() + $('#num02').val() + $('#num03').val() + $('#num04').val();
+                                $drive.cmmn.cusAjax(true, contextPath+"/vfc/drive/selectVerifyCd", '#loadingMessage', '처리 중 입니다. 잠시만 기다려 주세요. ',param, function(result) {
+                                    if (result != null && result != "") {
+                                        rentno = result.rentno;
+                                        if(data.body.f_rtn_code == '00'){
+    // 상세팝업 안될시 아래 1줄 코드 $drive.event.popupRntlHsList(); 주석풀기
+    //                                        $drive.event.popupRntlHsList();
+                                            if(result.data != undefined && result.total != 0){
+                                                var html = `<p class="current_info" >
+                                                    차량 결함 정보가
+                                                    <span class = "popupSpan" id ="rslt_vehicleDefect" onclick =$drive.event.popupVhclDfctListClick()>존재</span> 합니다.
+                                                </p>`;
+                                                $('#result').prepend(html);
+                                            } else{
+                                                var html = `<p class="current_info">
+                                                    차량 결함 정보가 없습니다.
+                                                </p>`;
+                                                $('#result').prepend(html);
+                                            }
 
-								var html = `<p class="current_info">
-			                        운전면허정보 조회 결과 <span class="point02">비정상</span> 입니다.
-			                        <br>
-			                        <span class="red">*</span> 비정상 사유 : 운전자격확인 프로세스가 정상적으로 이루어지지 않았습니다.` +
-			                    '</p>';
-								$('#result').append(html);
-								$('#rentCfm').css('display', 'none');
-								return;
-							}
-							param.cd = data.body.f_rtn_code;
-							param.sn = data.vrfc_hstry_sn;
-							param.dln = $('#num01').val() + $('#num02').val() + $('#num03').val() + $('#num04').val();
-							$drive.cmmn.cusAjax(true, contextPath+"/vfc/drive/selectVerifyCd", '#loadingMessage', '처리 중 입니다. 잠시만 기다려 주세요. ',param, function(result) {
-								if (result != null && result != "") {
-									rentno = result.rentno;
-									if(data.body.f_rtn_code == '00'){
-// 상세팝업 안될시 아래 1줄 코드 $drive.event.popupRntlHsList(); 주석풀기
-//                                        $drive.event.popupRntlHsList();
-										if(result.data != undefined && result.total != 0){
-											var html = `<p class="current_info" >
-						                        차량 결함 정보가
-						                        <span class = "popupSpan" id ="rslt_vehicleDefect" onclick =$drive.event.popupVhclDfctListClick()>존재</span> 합니다.
-						                    </p>`;
-											$('#result').prepend(html);
-										} else{
-											var html = `<p class="current_info">
-						                        차량 결함 정보가 없습니다.
-						                    </p>`;
-											$('#result').prepend(html);
-										}
+                                            // 대여이력건수 result.rentCnt 추후 운전자격이력건수로 변경가능성으로 주석처리함
+                                            //										if(result.rentCnt == 0){
+                                            //											var html = `<br><p class="current_info" >
+                                            //						                        최근 7일 대여이력이 없습니다.
+                                            //						                    </p><br>`;
+                                            //											$('#result').prepend(html);
+                                            //										} else {
+                                            //                                        $drive.event.popupVhclDfctList();
+                                            //					                    	var html = `<br><p class="current_info">
+                                            //						                        최근 7일 대여이력은
+                                            //						                        <span class = "popupSpan" id = "rslt_rentalHistory" onclick =$drive.event.popupRntlHsListClick(); >`+ result.rentCnt + `건</span> 입니다.
+                                            //						                    </p><br>`;
+                                            //											$('#result').prepend(html);
+                                            //										}
+                                            //==================================================대여이력건수 end
 
-										// 대여이력건수 result.rentCnt 추후 운전자격이력건수로 변경가능성으로 주석처리함
-                                        //										if(result.rentCnt == 0){
-                                        //											var html = `<br><p class="current_info" >
-                                        //						                        최근 7일 대여이력이 없습니다.
-                                        //						                    </p><br>`;
-                                        //											$('#result').prepend(html);
-                                        //										} else {
-                                        //                                        $drive.event.popupVhclDfctList();
-                                        //					                    	var html = `<br><p class="current_info">
-                                        //						                        최근 7일 대여이력은
-                                        //						                        <span class = "popupSpan" id = "rslt_rentalHistory" onclick =$drive.event.popupRntlHsListClick(); >`+ result.rentCnt + `건</span> 입니다.
-                                        //						                    </p><br>`;
-                                        //											$('#result').prepend(html);
-                                        //										}
-										//==================================================대여이력건수 end
+                                            // ✂️todo  현재 운전자격이력 건수 는 운전자격확인 이력 건수로 진행중 result.VfcHistCnt
+                                            if(result.VfcHistCnt == 0){
+                                                var html = `<br><p class="current_info" >
+                                                    최근 7일 운전자격확인 이력이 없습니다.
+                                                </p><br>`;
+                                                $('#result').prepend(html);
+                                            } else {
+    // 상세팝업 안될시 아래 1줄 코드 $drive.event.popupVhclDfctList(); 주석풀기
+    //                                        	$drive.event.popupVhclDfctList();
+                                                var html = `<p class="current_info">
+                                                    최근 7일 운전자격확인 건수는
+                                                    <span class = "popupSpan" id = "rslt_rentalHistory" onclick =$drive.event.popupRntlHsListClick(); >`+ result.VfcHistCnt + `건</span> 입니다.
+                                                </p><br>`;
+                                                $('#result').prepend(html);
+                                            }
 
-                                        // ✂️todo  현재 운전자격이력 건수 는 운전자격확인 이력 건수로 진행중 result.VfcHistCnt
-										if(result.VfcHistCnt == 0){
-											var html = `<br><p class="current_info" >
-						                        최근 7일 운전자격확인 이력이 없습니다.
-						                    </p><br>`;
-											$('#result').prepend(html);
-										} else {
-// 상세팝업 안될시 아래 1줄 코드 $drive.event.popupVhclDfctList(); 주석풀기
-//                                        	$drive.event.popupVhclDfctList();
-											var html = `<p class="current_info">
-						                        최근 7일 운전자격확인 건수는
-						                        <span class = "popupSpan" id = "rslt_rentalHistory" onclick =$drive.event.popupRntlHsListClick(); >`+ result.VfcHistCnt + `건</span> 입니다.
-						                    </p><br>`;
-											$('#result').prepend(html);
-										}
-										
-										if(userType == "MOBI" && userTypeDetail == false && similarityData.similarityConfidence != null && similarityData.livenessConfidence != null){
-											var similarityConfidence = parseFloat(similarityData.similarityConfidence);
-											var livenessConfidence = parseFloat(similarityData.livenessConfidence);
+                                            if(userType == "MOBI" && userTypeDetail == false && similarityData.similarityConfidence != null && similarityData.livenessConfidence != null){
+                                                var similarityConfidence = parseFloat(similarityData.similarityConfidence);
+                                                var livenessConfidence = parseFloat(similarityData.livenessConfidence);
 
-											if (Number.isInteger(similarityConfidence)) {
-											    similarityConfidence = parseFloat(similarityConfidence) * 100;
-											} else {
-											    similarityConfidence = (parseFloat(similarityConfidence) * 100).toFixed(2);
-											}
+                                                if (Number.isInteger(similarityConfidence)) {
+                                                    similarityConfidence = parseFloat(similarityConfidence) * 100;
+                                                } else {
+                                                    similarityConfidence = (parseFloat(similarityConfidence) * 100).toFixed(2);
+                                                }
 
-											if (Number.isInteger(livenessConfidence)) {
-											    livenessConfidence = parseFloat(livenessConfidence) * 100;
-											} else {
-											    livenessConfidence = (parseFloat(livenessConfidence) * 100).toFixed(2);
-											}
+                                                if (Number.isInteger(livenessConfidence)) {
+                                                    livenessConfidence = parseFloat(livenessConfidence) * 100;
+                                                } else {
+                                                    livenessConfidence = (parseFloat(livenessConfidence) * 100).toFixed(2);
+                                                }
 
 
-											var html = `<br><p class="current_info">
-												유사도 검증 결과 유사도는 ` + similarityConfidence + `%이며,<br>
-												생체 감지는 ` + livenessConfidence + `%입니다.
-						                    </p><br>`;
-											$('#result').prepend(html);
-										}
-										//==================================================운전자격확인 이력 건수 end
-										var html = `<p class="current_info">운전면허정보 조회 결과 <span class="point">정상</span> 입니다.</p>`;
-										$('#result').prepend(html);
-										$('#rentCfm').css('display', 'block');
-									} else{
-										var html = `<p class="current_info">
-					                        운전면허정보 조회 결과 <span class="point02">비정상</span> 입니다.
-					                        <br>
-					                        <span class="red">*</span> 비정상 사유 : `+ result.code.cdNm +
-					                    '</p>';
-										$('#result').append(html);
-										$('#rentCfm').css('display', 'none');
-									}
-								}
-							});
-		                } else{   // api 통신 실패 일때
-                            //============================================ 실패처리 24.02.14
-                                alert(resultHeaderMsg);
-						}
+                                                var html = `<br><p class="current_info">
+                                                    유사도 검증 결과 유사도는 ` + similarityConfidence + `%이며,<br>
+                                                    생체 감지는 ` + livenessConfidence + `%입니다.
+                                                </p><br>`;
+                                                $('#result').prepend(html);
+                                            }
+                                            //==================================================운전자격확인 이력 건수 end
+                                            var html = `<p class="current_info">운전면허정보 조회 결과 <span class="point">정상</span> 입니다.</p>`;
+                                            $('#result').prepend(html);
+                                            $('#rentCfm').css('display', 'block');
+                                        } else{
+                                            var html = `<p class="current_info">
+                                                운전면허정보 조회 결과 <span class="point02">비정상</span> 입니다.
+                                                <br>
+                                                <span class="red">*</span> 비정상 사유 : `+ result.code.cdNm +
+                                            '</p>';
+                                            $('#result').append(html);
+                                            $('#rentCfm').css('display', 'none');
+                                        }
+                                    }
+                                });
+                            } else{   // api 통신 실패 일때
+                                    alert(resultHeaderMsg);
+                                    location.reload();
+                            }
+                        }else{
+                                alert(data.errorMsg); //errorMsg = "내부 서버 오류로 인해 운전자격확인을 할 수 없습니다"
+                                location.reload();
+                        }
 					} else{
 						alert("운전자격 확인 중 오류가 발생하였습니다.");
+						location.reload();
 					}
 	            });
 			} else{

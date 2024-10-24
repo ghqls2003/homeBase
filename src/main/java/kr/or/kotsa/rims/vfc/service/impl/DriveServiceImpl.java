@@ -49,23 +49,20 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	public Map<String, Object> selectCarList(Map<String, Object> paramsMap)
 			throws RimsException {
 		Map<String, Object> result = new HashMap<>();
-//		System.out.println("⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐paramsMap"+paramsMap);
 		List<Map<String, Object>> list = driveDao.selectCarList(paramsMap);
 		int total = driveDao.selectCarListCnt(paramsMap);
-
 		result.put("data", list);
 		result.put("total", total);
 		return result;
 	}
 
 	//운전자격 확인 코드
-	public Map<String, Object> selectVerifyCd(Map<String, Object> paramsMap) {
+	public Map<String, Object> selectVerifyCd(Map<String, Object> paramsMap) throws RimsException {
 		Map<String, Object> result = new HashMap<>();
 
 
 		Map<String, Object> rentNo = driveDao.selectRentNo(paramsMap);
 		Map<String, Object> vin = driveDao.selectVin(paramsMap);
-
 		result.putAll(rentNo);
 		paramsMap.putAll(rentNo);
 		result.put("code", driveDao.selectVerifyCd(paramsMap));

@@ -326,24 +326,33 @@ public class DriveController extends CmmnAbstractServiceImpl {
 					// JsonPasing
 					ObjectMapper objectMapper = new ObjectMapper();
 					resultMap = objectMapper.readValue(data, Map.class);
-					Map<String,Object> header = new HashMap<>();
-					f_rtn_cd = (String) ((Map<String, Object>) resultMap.get("header")).get("f_rtn_cd");
-					f_rtn_cd = String.format("%02d",Integer.parseInt(f_rtn_cd));
-					// vrfcRslt의 해당 코드에 대한 공통코드 테이블에서 코드명 가져오기
-					if(f_rtn_cd != "01" && f_rtn_cd != "00"){
+					//resultMap {respCode=-90, errorMsg=연계 서버와 연결 실패}
+					if( resultMap.get("header") == null ){
+						//resultMap {respCode=-90, errorMsg=연계 서버와 연결 실패} 에러처리
+						String errorMsg = "내부 서버 오류로 인해 운전자격확인을 할 수 없습니다";
+						response.put("errorMsg",errorMsg);
 
-						//02 -> 03 실패코드로 처리하기로함  ---
-						if(f_rtn_cd =="02"){
-							f_rtn_cd = "03";
+				   }else{
+						Map<String, Object> header = new HashMap<>();
+						f_rtn_cd = (String) ((Map<String, Object>) resultMap.get("header")).get("f_rtn_cd");
+						// header={f_rtn_msg=, f_request_date=20241024, f_rtn_cd=0, f_send_cnt=1}, body={f_rtn_code=00, f_license_no=2*1*0*6*9*1}}
+						f_rtn_cd = String.format("%02d", Integer.parseInt(f_rtn_cd));
+						// vrfcRslt의 해당 코드에 대한 공통코드 테이블에서 코드명 가져오기
+						if (f_rtn_cd != "01" && f_rtn_cd != "00") {
+
+							//02 -> 03 실패코드로 처리하기로함  ---
+							if (f_rtn_cd == "02") {
+								f_rtn_cd = "03";
+							}
+							paramsMap.put("fRtnCd", f_rtn_cd);
+							String vrfcRsltMsg = (String) driveService.getRtnMsg(paramsMap).get(0).get("cdNm");
+							response = resultMap;
+							response.put("vrfcRsltMsg", vrfcRsltMsg);
 						}
-					paramsMap.put("fRtnCd",f_rtn_cd);
-					String vrfcRsltMsg = (String)  driveService.getRtnMsg(paramsMap).get(0).get("cdNm");
-					response = resultMap;
-					response.put("vrfcRsltMsg",vrfcRsltMsg);
-					}
 
-					header.put("f_rtn_cd",f_rtn_cd);
-					response.put("header",header);
+						header.put("f_rtn_cd", f_rtn_cd);
+						response.put("header", header);
+					}
 				}
 			}
 		} catch (IOException e) {

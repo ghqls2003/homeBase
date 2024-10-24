@@ -12,7 +12,7 @@ public interface DriveService {
     public Map<String, Object> selectCarList(Map<String, Object> paramsMap) throws RimsException;
 
     //운전자격 확인 코드
-	public Map<String, Object> selectVerifyCd(Map<String, Object> paramsMap);
+	public Map<String, Object> selectVerifyCd(Map<String, Object> paramsMap) throws RimsException;
 
 	//대여처리
 	public String updateRentSttsCd(Map<String, Object> paramsMap);
