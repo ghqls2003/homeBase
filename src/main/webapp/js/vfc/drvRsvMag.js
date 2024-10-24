@@ -52,9 +52,20 @@
 			//			});
 
 			var dropData = [
-				{ value: '', text: "전체(검색조건)" },
 				{ value: "E1", text: "대여번호" },
-//				{ value: "E2", text: "면허 소유자" }
+				//				{ value: "E2", text: "면허 소유자" }
+			];
+			var dropData2 = [
+				{ value: '', text: "먼허 종별(설정)" },
+				{ value: "12", text: "1종보통" },
+				{ value: "13", text: "1종소형" },
+				{ value: "14", text: "대형견인" },
+				{ value: "15", text: "구난차" },
+				{ value: "16", text: "소형견인" },
+				{ value: "32", text: "2종보통" },
+				{ value: "33", text: "2종소형" },
+				{ value: "38", text: "원동기" },
+				//				{ value: "E2", text: "면허 소유자" }
 			];
 			$("#searchCd").kendoDropDownList({
 				dataTextField: "text",
@@ -62,17 +73,24 @@
 				dataValueField: "value",
 				value: '' // 초기값을 ''로 설정합니다.
 			});
-			ajax(false, contextPath + '/vfc/drvRsvMag/selectLncdDrop', 'body', '처리중입니다.', {}, function(data) {
+			//공통코드가 지금은 없어 하드코딩으로 대체
+			//			ajax(false, contextPath + '/vfc/drvRsvMag/selectLncdDrop', 'body', '처리중입니다.', {}, function(data) {
+			//				$("#lncdDrop").kendoDropDownList({
+			//					optionLabel: '먼허 종별(설정)',
+			//					autoWidth: true,
+			//					dataTextField: "cdNm",
+			//					dataValueField: "cd",
+			//					dataSource: data.result,
+			//					autoWidth: false,
+			//					width: "250px"
+			//				});
+			//			});
 				$("#lncdDrop").kendoDropDownList({
-					optionLabel: '먼허 종별(설정)',
-					autoWidth: true,
-					dataTextField: "cdNm",
-					dataValueField: "cd",
-					dataSource: data.result,
-					autoWidth: false,
-					width: "250px"
+					dataTextField: "text",
+					dataSource: dropData2,
+					dataValueField: "value",
+					value: '' // 초기값을 ''로 설정합니다.
 				});
-			});
 			ajax(false, contextPath + '/vfc/drvRsvMag/selectPeriodCd', 'body', '처리중입니다.', {}, function(data) {
 				$("#periodRsv").kendoDropDownList({
 					optionLabel: '예약 주기(설정)',
@@ -389,7 +407,7 @@
 							}
 						},
 						parameterMap: function(options) {
-							options.searchWrd = $("#carSearchWrd").val();
+							options.searchWrd = $("#carSearchWrd").val().toString();
 							return JSON.stringify(options);
 						}
 					},
@@ -578,8 +596,8 @@
 				$("#carSearchWrd").val('');
 				var grid = $("#carGrid").data("kendoGrid");
 				if (grid) {
-					grid.clearSelection();  
-					grid.dataSource.data([]);  
+					grid.clearSelection();
+					grid.dataSource.data([]);
 				}
 			});
 
@@ -640,15 +658,15 @@
 			$("#carSearchWrd").val('');
 			var grid = $("#carGrid").data("kendoGrid");
 			if (grid) {
-				grid.clearSelection();  
-				grid.dataSource.data([]);  
+				grid.clearSelection();
+				grid.dataSource.data([]);
 			}
 			//			$("#lcnsFlnm").val(lcnsFlnm);
-//			$("#carTa").empty();
-//			if ($("#carTa")[0].children.length == 0) {
-//				$("#carSearchWrd").val('');
-//				$("#carTa").append("<table id='carGrid'><caption>대여예약</caption></table>");
-//			}
+			//			$("#carTa").empty();
+			//			if ($("#carTa")[0].children.length == 0) {
+			//				$("#carSearchWrd").val('');
+			//				$("#carTa").append("<table id='carGrid'><caption>대여예약</caption></table>");
+			//			}
 			rsvStrData = new Date(carRegNoVal3);
 		},
 		detailDeleteBtn: function() {
