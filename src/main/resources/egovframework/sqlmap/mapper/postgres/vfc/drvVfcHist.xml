@@ -95,6 +95,7 @@
                     AND ddhv.vrfc_rslt_cd = #{cd}
                 </when>
                 <when test="codeType =='vrfc'"><!--요청 실패 일때 (req_rslt_cd 컬럼 조회시 )-->
+<!--                <when test="codeType =='req_rslt_cd'">&lt;!&ndash;요청 실패 일때 (req_rslt_cd 컬럼 조회시 )&ndash;&gt;-->
                     AND ddhv.req_rslt_cd = #{cd}
                 </when>
             </choose>

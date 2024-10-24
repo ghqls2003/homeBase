@@ -251,8 +251,12 @@
             var cmpnyName =  $("#cmpnyName").val();
             //예 cd = "verify_cd_test"
             var ckResults = $("#ckResults").val();
-            codeType = ckResults.split("_")[0];
-            var cd = ckResults.split("_")[2];
+            var parts = ckResults.split("_");
+            var codeType = parts.slice(0, -1).join("_"); // "req_rslt_cd"
+            codeType = (codeType == "req_rslt_cd") ? "vrfc" : "verify" ;
+            var cd = parts[parts.length - 1]; // "99"
+//            codeType = ckResults.split("_")[0];
+//            var cd = ckResults.split("_")[2];
             param.vrfcMthd = $("#searchMthd").val();
             param.bzmnSnKwd = $("#searchCoNm").val();
             param.startDtTm = startDtTm;
