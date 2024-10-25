@@ -250,7 +250,7 @@
 		AND vrfc_dmnd_dt <![CDATA[>=]]> #{startDtTm}::timestamp AND vrfc_dmnd_dt <![CDATA[<=]]> #{endDtTm}::timestamp
 	</if>
 	<if test="dln != null and dln != ''">
-		AND dln_enc = #{dln}
+		AND dln_enc = dqvs.pca_encrypt(#{dln}, '200')
 	</if>
 	</select>
 

@@ -144,7 +144,7 @@
 	            	AND rent.rent_stts_cd = #{rentSttsCd}
 				</if>
 				<if test="dln != '' and dln != null">
-	            	AND verf.dln_enc = dqvs.pca_encrypt(#{dln}, '150')
+	            	AND verf.dln_enc = dqvs.pca_encrypt(#{dln}, '200')
 				</if>
 				) AS rent
 			WHERE 1=1
