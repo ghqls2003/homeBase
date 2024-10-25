@@ -55,24 +55,5 @@ public class DrvVfcHistDao extends CmmnAbstractMapper {
 		return selectList("vfc.drvVfcHist.ckResults", paramsMap);
 	}
 
-	/**
-	 * 목록 조회(운전자격확인페이지용 -최근 7일간의 이력) 24.10.23 jeonghyewon
-	 * @param paramsMap
-	 * @return
-	 * @throws RimsException
-	 */
-	public List<Map<String, Object>> drvListView(Map<String, Object> paramsMap) {
-		return selectList("vfc.drvVfcHist.drvListView", paramsMap);
-	}
 
-
-	/**
-	 * 목록 카운트 조회(운전자격확인페이지용 -최근 7일간의 이력) 24.10.23 jeonghyewon
-	 * @param paramsMap
-	 * @return
-	 * @throws RimsException
-	 */
-	public int drvListViewCnt(Map<String, Object> paramsMap) {
-		return selectOne("vfc.drvVfcHist.drvListViewCnt", paramsMap);
-	}
 }

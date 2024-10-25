@@ -51,19 +51,6 @@ public interface DrvVfcHistService {
     Object ckResults(Map<String, Object> paramsMap);
 
 
-    /**
-     * 목록 카운트 조회(운전자격확인페이지용 -최근 7일간의 이력) 24.10.23 jeonghyewon
-     * @return
-     * @throws RimsException
-     */
-    List<Map<String, Object>> drvListView(Map<String, Object> paramsMap);
 
-    /**
-     * 목록 카운트 조회 건수(운전자격확인페이지용 -최근 7일간의 이력)24.10.23 jeonghyewon
-     * @param paramsMap
-     * @return
-     * @throws RimsException
-     */
-    int drvListViewCnt(Map<String, Object> paramsMap);
 
 }

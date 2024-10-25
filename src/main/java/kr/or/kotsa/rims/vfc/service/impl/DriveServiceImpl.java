@@ -25,7 +25,6 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	private DriveDao driveDao;
 	private MipDidVpService mipDidVpService;
 
-	private DrvVfcHistService drvVfcHistService;
 	@Value(value="${app.sp-server}")
     private String spServer;
 
@@ -42,7 +41,6 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	public DriveServiceImpl(DriveDao driveDao, MipDidVpService mipDidVpService, DrvVfcHistService drvVfcHistService) {
 		this.driveDao = driveDao;
 		this.mipDidVpService = mipDidVpService;
-		this.drvVfcHistService = drvVfcHistService;
 	}
 
     //차량정보 조회
@@ -115,7 +113,7 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 		result.put("rentCnt", rentCnt);
 		// 최근 7일 운전자격이력 건수
 //		int VfcHistCnt = driveDao.selectVfcHistCnt(paramsMap); // 대여정보이력건수
-		int VfcHistCnt = drvVfcHistService.drvListViewCnt(paramsMap);
+		int VfcHistCnt = driveDao.drvListViewCnt(paramsMap);
 		result.put("VfcHistCnt", VfcHistCnt);
 
 
@@ -334,5 +332,20 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	public List<Map<String, Object>> getRtnMsg(Map<String, Object> paramsMap) {
 		return driveDao.getRtnMsg(paramsMap);
 	}
+
+
+    // 면허번호에 해당하는 최근 7일간의 대여이력 조회  24.10.25 jeonghyewon
+	@Override
+	public List<Map<String, Object>> drvListView(Map<String, Object> paramsMap) {
+		return driveDao.drvListView(paramsMap);
+	}
+
+	// 면허번호에 해당하는 최근 7일간의 대여이력 조회 건수 24.10.25 jeonghyewon
+	@Override
+	public int drvListViewCnt(Map<String, Object> paramsMap) {
+		return driveDao.drvListViewCnt(paramsMap);
+	}
+
+
 
 }
