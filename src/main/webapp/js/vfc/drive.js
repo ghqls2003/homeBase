@@ -755,10 +755,10 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			                 };
 				if ($('#car_num').val() == ''){
 					alert('차량번호를 입력해주세요.');
-				}else if(bzmnCarYn === "N"){
-                    alert('로그인 한 사용자의 법인에 소속된 차량이 아닙니다.대여 할수 없습니다.');
-                    location.reload();
-                    bzmnCarYn = "";
+//				}else if(bzmnCarYn === "N"){
+//                    alert('로그인 한 사용자의 법인에 소속된 차량이 아닙니다.대여 할수 없습니다.');
+//                    location.reload();
+//                    bzmnCarYn = "";
 				}else if (onewayYn =='' || onewayYn == null || onewayYn == ' '){
 				    alert('대여유형을 선택해주세요.');
 				}
@@ -1310,11 +1310,10 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
             var num02Pattern = /^\d{2}$/;
             var num03Pattern = /^\d{6}$/;
             var num04Pattern = /^\d{2}$/;
-            // 1. 운전자격확인 이전 해당법인 차량인지 유무 확인  --> 결과 저장
+//              운전자격확인 이전 해당법인 차량인지 유무 확인  --> 결과 저장
             	ajax(false, contextPath+"/vfc/drive/selectBzmnCarYn", 'body', '처리중입니다.', param, function(data) {
             	    bzmnCarYn = data.bzmnCarYn;// 해당 차량이면  "Y" , 아닐 경우 "N"
             	});
-            // 2. 운전자격검증 결과 와 함께 유무에 따른 메세지 출력
 
 			if(param.carNum == ''){
 				alert('차량번호를 입력해 주십시오.')
@@ -1365,7 +1364,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                                                            <span style = "color:red";> 로그인 한 사용자의 법인에 소속된 차량이 아닙니다.</span>
                                                          </p>`;
                                                 $('#result').prepend(html);
-                                            }else if(result.data != undefined && result.total != 0){
+                                            } else if(result.data != undefined && result.total != 0){
                                                 var html = `<p class="current_info" >
                                                                 차량 결함 정보가
                                                                 <span class = "popupSpan" id ="rslt_vehicleDefect" onclick =$drive.event.popupVhclDfctListClick()>존재</span> 합니다.
@@ -1542,7 +1541,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			if($("#similarityChk").is(":checked")) {
 				$("#similarityChk").prop("checked", false);
 			}
-//			bzmnCarYn = '';
+			bzmnCarYn = '';
 		},
 
 	};
