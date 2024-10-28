@@ -111,9 +111,9 @@ from(
 			t.ogdp,
 			t.use_yn
 			)t2
-			where  
+			where 1=1 
 			<if test="take != '' and take != null">
-		        T2.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		        AND T2.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
 		    </if>
 		    <if test="skip != '' and skip != null">
 		        AND T2.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)

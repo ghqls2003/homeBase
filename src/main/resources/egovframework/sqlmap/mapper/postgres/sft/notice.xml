@@ -25,9 +25,9 @@
 			and reg_dt <![CDATA[>=]]> to_date(#{startDt}, 'yyyy-mm-dd') and reg_dt <![CDATA[<=]]> to_date(#{endDt}, 'yyyy-mm-dd')+1
 		</if>
 		) T
-		WHERE
+		WHERE 1=1
 			<if test="take != '' and take != null">
-				T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+				AND T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
 			</if>
 			<if test="skip != '' and skip != null">
 				AND T.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)

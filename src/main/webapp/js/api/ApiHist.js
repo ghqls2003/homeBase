@@ -22,7 +22,35 @@ var expryYmd;
 		 * @author	     : 이광호
 		 */
 		pageLoad: function() {
-
+			ajax(true, contextPath + '/api/apiHist/ckapiList', 'body', '처리중입니다.', {}, function(data) {
+				var ckResults = data.ckResults;
+				var defaultValue = "1";
+				$('#search_stts_cd').kendoDropDownList({
+					//					optionLabel: "API 선택 (전체)",
+					dataTextField: "apiNm",
+					dataValueField: "apiSn",
+					dataSource: ckResults,
+					value: defaultValue,
+				});
+				$("#search_stts_cd_Dev01").kendoDropDownList({
+					dataTextField: "apiNm",
+					dataValueField: "apiSn",
+					dataSource: ckResults,
+					value: defaultValue,
+				});
+				$("#search_stts_cd_api").kendoDropDownList({
+					dataTextField: "apiNm",
+					dataValueField: "apiSn",
+					dataSource: ckResults,
+					value: defaultValue,
+				});
+				$("#search_stts_cd_api_Dev").kendoDropDownList({
+					dataTextField: "apiNm",
+					dataValueField: "apiSn",
+					dataSource: ckResults,
+					value: defaultValue,
+				});
+			});
 			if (Auth == 'K01' || Auth == 'D01' || Auth == 'Z01') {
 				$("#tabview1").show();
 				$("#tabview2").hide();
@@ -118,9 +146,9 @@ var expryYmd;
 					}
 				}
 			});
-			
+
 			/*사업자 일떄 데이트피커*/
-			
+
 			$("#start-Picker02").kendoDatePicker({
 				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 2),
 				//				value: new Date(2024, 3, 1),
@@ -199,60 +227,6 @@ var expryYmd;
 					}
 				}
 			});
-
-
-
-
-			$apiHist.ui.selectSearchData();
-			$(document).ready(function() {
-				kendo.ui.progress($(document.body), true);
-
-				$apiHist.ui.apiView();
-
-			});
-		},
-		AuthCheck: function() {
-			if (Auth == 'K01' || Auth == 'D01' || Auth == 'Z01' || Auth == 'S04') {
-				$("#search_area").show();
-				$("#search_area2").hide();
-			} else {
-				$("#search_area").hide();
-				$("#search_area2").show();
-			}
-
-		},
-
-
-		selectSearchData: function() {
-			ajax(true, contextPath + '/api/apiHist/ckapiList', 'body', '처리중입니다.', {}, function(data) {
-				var ckResults = data.ckResults;
-				var defaultValue = "1";
-				$('#search_stts_cd').kendoDropDownList({
-					//					optionLabel: "API 선택 (전체)",
-					dataTextField: "apiNm",
-					dataValueField: "apiSn",
-					dataSource: ckResults,
-					value: defaultValue,
-				});
-				$("#search_stts_cd_Dev01").kendoDropDownList({
-					dataTextField: "apiNm",
-					dataValueField: "apiSn",
-					dataSource: ckResults,
-					value: defaultValue,
-				});
-				$("#search_stts_cd_api").kendoDropDownList({
-					dataTextField: "apiNm",
-					dataValueField: "apiSn",
-					dataSource: ckResults,
-					value: defaultValue,
-				});
-				$("#search_stts_cd_api_Dev").kendoDropDownList({
-					dataTextField: "apiNm",
-					dataValueField: "apiSn",
-					dataSource: ckResults,
-					value: defaultValue,
-				});
-			});
 			var searchOtherCondition2 = [
 				{ value: "", text: "회사명 (선택)" },
 				{ value: "user", text: "요청사" },
@@ -284,7 +258,7 @@ var expryYmd;
 				dataTextField: "text",
 				dataSource: searchOtherCondition3,
 				dataValueField: "value"
-				,value: "E1"
+				, value: "E1"
 			});
 			$("#search_stts_cd3").kendoDropDownList({
 				dataTextField: "text",
@@ -296,8 +270,19 @@ var expryYmd;
 				dataTextField: "text",
 				dataSource: searchOtherCondition3,
 				dataValueField: "value"
-				,value: "E1"
+				, value: "E1"
 			});
+				$apiHist.ui.apiView();
+		},
+		
+		AuthCheck: function() {
+			if (Auth == 'K01' || Auth == 'D01' || Auth == 'Z01' || Auth == 'S04') {
+				$("#search_area").show();
+				$("#search_area2").hide();
+			} else {
+				$("#search_area").hide();
+				$("#search_area2").show();
+			}
 		},
 
 		apiView: function() {
@@ -330,7 +315,7 @@ var expryYmd;
 							if (Auth == 'K01' || Auth == 'D01' || Auth == 'Z01') {
 								options.endPicker02 = resultTime2;
 								options.startPicker02 = resultTime;
-								options.searchSttsCd = $("#search_stts_cd").val();
+								options.searchSttsCd = $("#search_stts_cd").val() || "1";  // 빈 문자열일 경우 1로 설정
 								options.searchSttsCd2 = $("#search_stts_cd2").val();
 								options.detailYN = $("#search_stts_cd3").val();
 								options.searchReq = $("#search_box").val();
@@ -410,11 +395,7 @@ var expryYmd;
 							url: contextPath + '/api/apiHist/listViewDev',
 							type: "POST",
 							beforeSend: function(xhr) {
-								kendo.ui.progress($(document.body), true); // 프로그레스 인디케이터 표시
 								xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
-							},
-							complete: function() {
-								kendo.ui.progress($(document.body), false); // 프로그레스 인디케이터 숨김
 							}
 						},
 						parameterMap: function(options) {
@@ -436,7 +417,7 @@ var expryYmd;
 								var resultTime4 = endtime2.replace(/-/g, '')
 								options.startPicker02 = resultTime3
 								options.endPicker02 = resultTime4
-								
+
 								options.searchSttsCd = $("#search_stts_cd_api_Dev").val();
 								options.detailYN = $("#search_stts_cd_error_dev").val();
 							}
@@ -484,7 +465,13 @@ var expryYmd;
 					serverPaging: true
 				},
 				dataBound: function(e) {
-					kendo.ui.progress($(document.body), false);
+					kendo.ui.progress($(document.body), false); // 로딩 종료
+				},
+				requestStart: function(e) {
+					kendo.ui.progress($(document.body), true); // 로딩 시작
+				},
+				requestEnd: function(e) {
+					kendo.ui.progress($(document.body), false); // 로딩 종료
 				},
 				noRecords: {
 					template: "데이터가 없습니다."
@@ -498,6 +485,7 @@ var expryYmd;
 				},
 				selectable: "row",
 			});
+
 		},
 
 		execlDownload: function() {
@@ -660,22 +648,22 @@ var expryYmd;
 				$apiHist.ui.execlDownloadDev();
 			})
 		},
-		search: function() {
-			var startPickerValue = $("#start-Picker01").val();
-			var endPickerValue = $("#end-Picker01").val();
-
-			if (startPickerValue && endPickerValue) {
-				var startDate = new Date(startPickerValue);
-				var endDate = new Date(endPickerValue);
-
-				if (startDate > endDate) {
-					alert("종료시간이 시작시간보다 빠릅니다. 올바른 시간 범위를 선택해주세요.");
-					return; // 검색 중지
-				}
-			}
-			var grid = $('#grid').data('kendoGrid');
-			grid.dataSource.page(1);
-		},
+		//		search: function() {
+		//			var startPickerValue = $("#start-Picker01").val();
+		//			var endPickerValue = $("#end-Picker01").val();
+		//
+		//			if (startPickerValue && endPickerValue) {
+		//				var startDate = new Date(startPickerValue);
+		//				var endDate = new Date(endPickerValue);
+		//
+		//				if (startDate > endDate) {
+		//					alert("종료시간이 시작시간보다 빠릅니다. 올바른 시간 범위를 선택해주세요.");
+		//					return; // 검색 중지
+		//				}
+		//			}
+		//			var grid = $('#grid').data('kendoGrid');
+		//			grid.dataSource.page(1);
+		//		},
 		search: function() {
 			var startPickerValue = $("#start-Picker01").val();
 			var endPickerValue = $("#end-Picker01").val();

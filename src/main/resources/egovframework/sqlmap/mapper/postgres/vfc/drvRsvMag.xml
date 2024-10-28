@@ -203,6 +203,7 @@
 							rent.bzmn_sn,
 							ddvr.lcns_asort_cd,
 							ddvr.lcns_asort_cd
+<!-- 						from dqvs.dvs_dqv_mt_rent_dump rent -->
 						from dqvs.dvs_dqv_mt_rent rent
 						left outer join dqvs.dvs_rac_mt_agency agency on
 						rent.bzmn_sn = agency.bzmn_sn
