@@ -449,5 +449,17 @@ public class DriveController extends CmmnAbstractServiceImpl {
 		return result;
 	}
 
+	/**
+	 *  해당 법인 차량 유무 조회   24.10.28 jeonghyewon
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping("drive/selectBzmnCarYn")
+	@ResponseBody
+	public Map<String, Object> selectBzmnCarYn(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		paramsMap.put("userSn", getUserSn());
+		return (Map<String, Object>) driveService.selectBzmnCarYn(paramsMap); //("bzmnCarYn","Y");
+	}
 
 }

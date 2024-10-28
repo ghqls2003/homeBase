@@ -7,6 +7,7 @@ var choiceVhclRegNo = '';
 //var tempHtml = ''; // 팝업 그리드 동적 html
 var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
 var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
+var bzmnCarYn = ''; // 해당 법인 차량 유무 전역변수
 var similarityChk = false; // 유사도 검증 체크박스 전역변수
 var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 (function (W, D, $) {
@@ -174,7 +175,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			});
 
 			$(".datePicker").prop("readonly", true);
-
 			if(authrtCd.includes('S')){
 				ajax(false, contextPath+'/vfc/drive/selectCrno', 'body', '처리중입니다.', {}, function (data) {
 					if(data!=null)
@@ -711,7 +711,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			$('.verify-btn-app').click(function(){
 				if($('#car_num').val() == '') {
 					alert("차량번호를 입력해 주십시오.");
-				} else if(($('#num01').val()!='' && $('#num02').val()!='' && $('#num03').val()!='' && $('#num04').val()!='' &&
+				} else if(($('#num01').val()!='' && $('#num02').val()!='' &&$('#num03').val()!=''  && $('#num04').val()!=''  &&
 				$('#user_name02').val()!='' && $("input[type=radio][name=category01]:checked").val() !=undefined)&& similarityChk==true && similarityImage == false){
 					alert("유사도 검증은 면허증 촬영시에만 가능합니다.");
 				} else if(($('#num01').val()!='' && $('#num02').val()!='' && $('#num03').val()!='' && $('#num04').val()!='' &&
@@ -755,7 +755,10 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			                 };
 				if ($('#car_num').val() == ''){
 					alert('차량번호를 입력해주세요.');
-
+				}else if(bzmnCarYn === "N"){
+                    alert('로그인 한 사용자의 법인에 소속된 차량이 아닙니다.대여 할수 없습니다.');
+                    location.reload();
+                    bzmnCarYn = "";
 				}else if (onewayYn =='' || onewayYn == null || onewayYn == ' '){
 				    alert('대여유형을 선택해주세요.');
 				}
@@ -1012,6 +1015,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 				$(this).val($(this).val().replace(/[^ㄱ-힣0-9]/gi, ""));
 			});
 
+
 			$('#user_tel').on("input", function(){
 				$(this).val($(this).val().replace(/[^0-9-]/gi, ""));
 			});
@@ -1074,10 +1078,10 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			    $(".similarity_pop").css("display", "none");
 			});
 
-//		    // 속한 법인차량만 검색 가능 기능
-//            $("#car_num_pop").on("change",function(){
-//                  $drive.event.searchVehicleById();
-//            });
+		    // 속한 법인차량만 검색 가능 기능
+            $("#car_num").on("change",function(){
+                  var carNum = $(this).val();
+            });
 		},
 
 
@@ -1298,14 +1302,25 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 				signguCd: $("#signguCd").val(),
 				regDt: $("#regDt").val(),
 				vrfcMthd: vrfcMthd,
+				crno : $("#crno").val(),
 				similarityConfidence: similarityData.similarityConfidence,
 				livenessConfidence: similarityData.livenessConfidence
 			};
 
+            var num02Pattern = /^\d{2}$/;
+            var num03Pattern = /^\d{6}$/;
+            var num04Pattern = /^\d{2}$/;
+            // 1. 운전자격확인 이전 해당법인 차량인지 유무 확인  --> 결과 저장
+            	ajax(false, contextPath+"/vfc/drive/selectBzmnCarYn", 'body', '처리중입니다.', param, function(data) {
+            	    bzmnCarYn = data.bzmnCarYn;// 해당 차량이면  "Y" , 아닐 경우 "N"
+            	});
+            // 2. 운전자격검증 결과 와 함께 유무에 따른 메세지 출력
 
-			if(param.carNum == '')
+			if(param.carNum == ''){
 				alert('차량번호를 입력해 주십시오.')
-			else if($('#num01').val()!='' && $('#num02').val()!='' && $('#num03').val()!='' && $('#num04').val()!='' &&
+            } else if( !num02Pattern.test($('#num02').val()) || !num03Pattern.test($('#num03').val()) || !num04Pattern.test($('#num04').val())){
+                alert("면허 정보의 자릿수를 확인하고 정확히 입력해 주세요.");
+			} else if($('#num01').val()!='' && $('#num02').val()!='' && $('#num03').val()!='' && $('#num04').val()!='' &&
 				$('#user_name02').val()!='' && $("input[type=radio][name=category01]:checked").val() !=undefined){
 
 				ajax(true, contextPath+"/vfc/drive/verifyLicense", 'body', '처리중입니다.', param, function(data) {
@@ -1345,16 +1360,21 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                                     if (result != null && result != "") {
                                         rentno = result.rentno;
                                         if(data.body.f_rtn_code == '00'){
-                                            if(result.data != undefined && result.total != 0){
+                                            if(bzmnCarYn === "N"){
+                                              var html = `<p class="current_info" >
+                                                           <span style = "color:red";> 로그인 한 사용자의 법인에 소속된 차량이 아닙니다.</span>
+                                                         </p>`;
+                                                $('#result').prepend(html);
+                                            }else if(result.data != undefined && result.total != 0){
                                                 var html = `<p class="current_info" >
-                                                    차량 결함 정보가
-                                                    <span class = "popupSpan" id ="rslt_vehicleDefect" onclick =$drive.event.popupVhclDfctListClick()>존재</span> 합니다.
-                                                </p>`;
+                                                                차량 결함 정보가
+                                                                <span class = "popupSpan" id ="rslt_vehicleDefect" onclick =$drive.event.popupVhclDfctListClick()>존재</span> 합니다.
+                                                            </p>`;
                                                 $('#result').prepend(html);
                                             } else{
                                                 var html = `<p class="current_info">
-                                                    차량 결함 정보가 없습니다.
-                                                </p>`;
+                                                                차량 결함 정보가 없습니다.
+                                                            </p>`;
                                                 $('#result').prepend(html);
                                             }
 
@@ -1522,6 +1542,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			if($("#similarityChk").is(":checked")) {
 				$("#similarityChk").prop("checked", false);
 			}
+//			bzmnCarYn = '';
 		},
 
 	};

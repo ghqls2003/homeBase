@@ -44,6 +44,6 @@ public interface DriveService {
 	// 면허번호에 해당하는 최근 7일간의 대여이력 조회 건수 24.10.25 jeonghyewon
 	int drvListViewCnt(Map<String, Object> paramsMap);
 
-
-
+	// 해당 법인 차량 유무 조회   24.10.28 jeonghyewon
+	Object selectBzmnCarYn(Map<String, Object> paramsMap) throws RimsException;
 }

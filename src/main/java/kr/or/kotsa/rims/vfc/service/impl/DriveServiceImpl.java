@@ -347,5 +347,19 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	}
 
 
+	// 해당 법인 차량 유무 조회   24.10.28 jeonghyewon
+	@Override
+	public Object selectBzmnCarYn(Map<String, Object> paramsMap) throws RimsException {
+        Map<String,Object> result = new HashMap<>();
+		String bzmnCarYn = "N";
+		List<Map<String, Object>> list  = driveDao.selectCarList(paramsMap);
+		if(!list.isEmpty()){
+			bzmnCarYn = "Y";
+		}
+
+		result.put("bzmnCarYn",bzmnCarYn);
+		return result;
+	}
+
 
 }
