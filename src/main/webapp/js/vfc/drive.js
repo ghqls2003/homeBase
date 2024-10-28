@@ -7,6 +7,7 @@ var choiceVhclRegNo = '';
 //var tempHtml = ''; // 팝업 그리드 동적 html
 var detailMobiDefectData = ''; // 차량결함상세데이터 전역변수
 var vrfcHstrySn = ''; // 운전자격이력 일련번호 전역변수
+var bzmnCarYn = ''; // 해당 법인 차량 유무 전역변수
 var similarityChk = false; // 유사도 검증 체크박스 전역변수
 var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 (function (W, D, $) {
@@ -174,7 +175,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			});
 
 			$(".datePicker").prop("readonly", true);
-
 			if(authrtCd.includes('S')){
 				ajax(false, contextPath+'/vfc/drive/selectCrno', 'body', '처리중입니다.', {}, function (data) {
 					if(data!=null)
@@ -297,7 +297,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                 var dataItem = grid.dataItem(this);
                 data = dataItem;
             });
-
 			$('#car_num').val(data.vhclRegNo);
 			$('#vin').val(data.vin);
 			$('#carmdl').val(data.carmdl);
@@ -308,104 +307,15 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			$('#useYn').val(data.useYn);
 			$('#signguCd').val(data.sggCd);
 			$('#regDt').val(data.regDt);
+//			$("#crno").val(data.crno);
 		},
-//------ 상세팝업 안될시 롤백 코드 ---------------
-//		popupGridLoad : function(gridId,selectedUrl,columns) {
-//			$(gridId).kendoGrid({
-//				dataSource: {
-//					data: null,
-//					transport: {
-//						read:{
-//							dataType: "json",
-//							contentType: "application/json; charset=utf-8",
-//							url: contextPath + selectedUrl,
-//							type: "POST",
-//							beforeSend: function(xhr) {
-//								xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
-//							},
-//							complete : function(xhr, status) {
-//								if(xhr.status != 200) {
-//									if (xhr.status == 401) {
-//										alert("권한이 없습니다. 사용자 인증이 필요합니다.");
-//									} else if (xhr.status == 403) {
-//										alert("세션이 만료되었습니다. 로그인페이지로 이동합니다.");
-//										location.href = "/rims";
-//									} else {
-//										alert("처리 중 에러가 발생하였습니다.");
-//									}
-//								}
-//							},
-//						},
-//						parameterMap: function(options){
-//						    // 대여자 이력 정보
-//						    if(gridId == '#rentalHistManage_grid'){
-//						        //  최근 7일 이력 조회
-////						        var dln = '251301689481'; // 🚗 todo 더미
-//						        var dln =  $('#num01').val() + $('#num02').val() + $('#num03').val() + $('#num04').val();// todo 더미 추후 풀기
-//                                 //✂️todo : 대여정보이력일때
-////                                var now = new Date();
-////                                var endDt = dateToStr(now);
-////                                var startDt = dateToStr(new Date(now.getTime() - 1000 * 60 * 60 * 24 * 7));
-////                                options.startDt = startDt;
-////                                options.endDt = endDt;
-////                                options.dln = dln; // 면허등록정보
-////                                options.rentSttsCd = '2'; // 대여확정
-////                                options.lcnsIdntfCd = ''; // 국내 , 국제 면허 (전체)
-//
-//                                //✂️todo : 운전자격이력일때
-//                                var dateData = $drive.event.vfcHistDateDt();
-//                                var startDtTm = dateData.startDtTm;
-//                                var endDtTm = dateData.endDtTm;
-//
-//                                options.startDtTm = startDtTm;
-//                                options.endDtTm = endDtTm;
-//                                options.dln = dln; // 면허등록정보
-//
-//                            // 검색 차량의 결함 정보
-//                            }else if(gridId == '#mobiDefect_grid'){
-//                                var gridOptions = {};
-//                                gridOptions.searchCol = 'vhclRegNo'; // 차량번호 조건
-////                                gridOptions.searchWrd = '01하5030';// 🚗 tODO !! 더미넣음 이걸로 변경하기 $("#car_num").val(); 01하5030
-//                                gridOptions.searchWrd = $("#car_num").val(); //
-//                                options.searchYn = 'Y';//	and defect_yn = #{searchYn} // 결함 여부
-//                                Object.assign(options, gridOptions);
-//                            }
-//						    return JSON.stringify(options);
-//						}
-//					},
-//					schema: {
-//						data: "data",
-//						total: "total",
-//					},
-//					pageSize: 5,
-//					serverPaging: true,
-//				},
-//				navigatable: true,
-//				pageable: {
-//					pageSizes: [5, 10, 20],
-//					buttonCount: 5
-//				},
-//				noRecords: {
-//					template: "데이터가 없습니다."
-//				},
-//				columns: gridId == '#rentalHistManage_grid' ? rentalHistManageColumns : defectColumns ,
-//				scrollable: true,
-//				editable: false,
-//				resizable: true,
-//				selectable: "row",
-//                change: $drive.ui.popupRowClickEvent
-//            });
-//
-//        },
-//------ 상세팝업 안될시 롤백 코드end ---------------
 
-//------ 상세팝업 수정코드 안될시 주석처리 요망 ---------------
 	popupGridLoad : function(gridId,selectedUrl,columns) {
             var options = {};
             // 대여자 이력 정보
             if(gridId == '#rentalHistManage_grid'){
                 //  최근 7일 이력 조회
-                var dln =  $('#num01').val() + $('#num02').val() + $('#num03').val() + $('#num04').val();// todo 더미 추후 풀기
+                var dln =  $('#num01').val() + $('#num02').val() + $('#num03').val() + $('#num04').val();
                 //✂️todo : 운전자격이력일때
                 var dateData = $drive.event.vfcHistDateDt();
                 var startDtTm = dateData.startDtTm;
@@ -426,7 +336,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 
 
             $drive.cmmn.cusAjax(true, contextPath+selectedUrl, '#loadingMessage', '처리 중 입니다. 잠시만 기다려 주세요. ',options, function(result) {
-//            ajax(true, contextPath+selectedUrl,'body', '불러오는 중입니다.', options, function(result) {
                 $(gridId).kendoGrid({
                     dataSource: {
                         data: result,
@@ -456,9 +365,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 
 
         },
-
-//------ 상세팝업 안될시 롤백 코드 end ---------------
-
 
         popupRowClickEvent : function(e) {
 
@@ -805,7 +711,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			$('.verify-btn-app').click(function(){
 				if($('#car_num').val() == '') {
 					alert("차량번호를 입력해 주십시오.");
-				} else if(($('#num01').val()!='' && $('#num02').val()!='' && $('#num03').val()!='' && $('#num04').val()!='' &&
+				} else if(($('#num01').val()!='' && $('#num02').val()!='' &&$('#num03').val()!=''  && $('#num04').val()!=''  &&
 				$('#user_name02').val()!='' && $("input[type=radio][name=category01]:checked").val() !=undefined)&& similarityChk==true && similarityImage == false){
 					alert("유사도 검증은 면허증 촬영시에만 가능합니다.");
 				} else if(($('#num01').val()!='' && $('#num02').val()!='' && $('#num03').val()!='' && $('#num04').val()!='' &&
@@ -849,7 +755,10 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			                 };
 				if ($('#car_num').val() == ''){
 					alert('차량번호를 입력해주세요.');
-
+//				}else if(bzmnCarYn === "N"){
+//                    alert('로그인 한 사용자의 법인에 소속된 차량이 아닙니다.대여 할수 없습니다.');
+//                    location.reload();
+//                    bzmnCarYn = "";
 				}else if (onewayYn =='' || onewayYn == null || onewayYn == ' '){
 				    alert('대여유형을 선택해주세요.');
 				}
@@ -1106,6 +1015,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 				$(this).val($(this).val().replace(/[^ㄱ-힣0-9]/gi, ""));
 			});
 
+
 			$('#user_tel').on("input", function(){
 				$(this).val($(this).val().replace(/[^0-9-]/gi, ""));
 			});
@@ -1168,14 +1078,13 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			    $(".similarity_pop").css("display", "none");
 			});
 
-//		    // 속한 법인차량만 검색 가능 기능
-//            $("#car_num_pop").on("change",function(){
-//                  $drive.event.searchVehicleById();
-//            });
+		    // 속한 법인차량만 검색 가능 기능
+            $("#car_num").on("change",function(){
+                  var carNum = $(this).val();
+            });
 		},
 
 
-// --------- 상세팝업 수정 코드 , 안될시 주석처리 요망 2024.10.18 ----------------------
          // 2024.10.17 jeonghyewon code add
          popupClose: function() {
              $('.result_popup').css('display', 'block');
@@ -1188,7 +1097,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 
         // 2024.10.17 jeonghyewon code add
         popupRntlHsListClick : function(){
-            $drive.ui.popupGridLoad('#rentalHistManage_grid','/vfc/drvVfcHist/selectDrvListView.do', rentalHistManageColumns);
+            $drive.ui.popupGridLoad('#rentalHistManage_grid','/vfc/drive/selectDrvListView', rentalHistManageColumns);
 
             $('.result_popup').css('display', 'none');
             $(".result_popup").removeClass("view");
@@ -1328,173 +1237,8 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                         } else {
                             $("#defectInfo").hide();
                         }
-// --------- 상세팝업 수정 코드 end ----------------------
-
-
         },
-// --------- 상세팝업 수정한거 에러시 주석 풀기(롤백하기) ----------------------
-//        // 2024.07.31 jeonghyewon code add
-//        popupClose: function(){
-//            $('.result_popup').css('display', 'block');
-//            $(".result_popup").addClass("view");
-//            $('#popup_drvVfcHist_box').hide();
-//            $('#popup_mobiDefect_box').hide();
-//            $('.result_popup_in_popup').css('display', 'none');
-//            $(".result_popup_in_popup").removeClass("view");
-//            $("#rentalHistManage_grid").data("kendoGrid").dataSource.page(1);
-//        },
-//
-//        // 2024.08.01 jeonghyewon code add
-//        popupRntlHsListClick : function(){
-//            $('.result_popup').css('display', 'none');
-//            $(".result_popup").removeClass("view");
-//
-//            popupinPopupType = '#rentalHistManage_grid';
-//
-//            $('.result_popup_in_popup').css('display', 'block');
-//            $('#popup_drvVfcHist_box').css('display', 'block');
-//            $('#popup_drvVfcHist_box').addClass("view");
-//        },
-//
-//        // 2024.07.31 jeonghyewon code add
-//        popupRntlHsList : function(){
-//            tempHtml = `    <div class="box">
-//                            	<div class="popup_top">
-//                                	<h4>대여 이력 정보</h4>
-//                        		        <div class="close">
-//                        			        <span></span>
-//                        			        <span></span>
-//                        		        </div>
-//                            	</div>
-//                              	<div class="content">
-//                              		<div class="contBox" >
-//                                        <div class="nameBox">
-//                                            <h4 class="name">대여 이력 정보</h4>
-//                                        </div>
-//                                            <table class = "popoup_grid" id="rentalHistManage_grid">
-//                                                <caption>대여 이력 정보</caption>
-//                                            </table>
-//                                    </div>
-//                                    <div class="btn_flex" style = "padding-top: 30px;">
-//                                        <button class="gray_btn cancel_popup_btn" onclick= $drive.event.popupClose();>닫기</button>
-//                                    </div>
-//                        		</div>
-//                            </div>`;
-//            $('#popup_drvVfcHist_box').append(tempHtml);
-//                 // ✂️todo
-//            //            $drive.ui.popupGridLoad('#rentalHistManage_grid','/vfc/rentalHistManage/selectRentalHistList', rentalHistManageColumns);
-//            $drive.ui.popupGridLoad('#rentalHistManage_grid','/vfc/drvVfcHist/listView.do', rentalHistManageColumns);
-//
-//        },
-//
-//        // 2024.08.01 jeonghyewon code add
-//        popupVhclDfctListClick : function(){
-//            $('.result_popup').css('display', 'none');
-//            $(".result_popup").removeClass("view");
-//
-//            popupinPopupType = '#mobiDefect_grid';
-//            $('.result_popup_in_popup').css('display', 'block');
-//            $('#popup_mobiDefect_box').css('display', 'block');
-//            $('#popup_mobiDefect_box').addClass("view");
-//
-//        },
-//
-//        // 2024.07.31 jeonghyewon code add
-//        popupVhclDfctList : function(){
-//            tempHtml = ` <div class="box" >
-//                                <div class="popup_top">
-//                                    <h4>차량 결함 정보</h4>
-//                                        <div class="close">
-//                                            <span></span>
-//                                            <span></span>
-//                                        </div>
-//                                </div>
-//                                <div class="content">
-//                                <h2 class = "h2" style ="text-align:center; margin-bottom:30px;">해당 대여차량의 결함정보가 <span style="color: red;">존재</span>합니다.</h2>
-//                                    <div class="contBox" >
-//                                        <div class="nameBox">
-//                                            <h4 class="name">차량 결함 정보</h4>
-//                                        </div>
-//                                            <table class = "popoup_grid" id="mobiDefect_grid">
-//                                                <caption>차량 결함 정보</caption>
-//                                            </table>
-//                                    </div>
-//                                    <div class="btn_flex" style = "padding-top: 30px;">
-//                                        <button class="blue_btn mobiDefect-btn"  style = "width: 250px;" onclick= $drive.event.detailMobiDefectUi();>차량 결함정보 상세내용 확인</button>
-//                                        <button class="gray_btn cancel_popup_btn" onclick= $drive.event.popupClose(); >닫기</button>
-//                                    </div>
-//                                </div>
-//                            </div>`;
-//            $('#popup_mobiDefect_box').append(tempHtml);
-//            $drive.ui.popupGridLoad('#mobiDefect_grid','/sys/carManage/selectCarList',defectColumns);
-//        },
-//        // 2024.07.31 jeonghyewon code add
-//        detailMobiDefectUi: function(){
-//            var data = detailMobiDefectData;
-//            if(data == null || data == '' || data == ' '){
-//                alert("데이터를 선택한 후 버튼을 클릭해 주세요.");
-//                return;
-//            }
-//            $('#popup_mobiDefect_box').css('display', 'none');
-//            $("#popup_mobiDefect_box").removeClass("view");
-//            // 차량 결함정보 상세내용 팝업 데이터 주입
-//                        /** ownr left */
-//                        var crno = !data.crno ? '-' : toCorporateNumFormat(data.crno);
-//                        $('#detail_crno').val(crno);
-//                        $('#detail_coNm').val(data.coNm);
-//                        $('#detail_ownrNm').val(data.ownrNm);
-//
-//                        /** ownr right */
-//                        var brno = !data.brno ? "-" : toBizrnoNumFormat(data.brno);
-//                        $('#detail_brno').val(brno);
-//                        /** ownr right - 지역 */
-//                        if(!data.sggCd){
-//                            var ctpvNm = '-';
-//                            var sggNm = ''
-//                            $('#detail_ctpvSggNm').val(ctpvNm + ' ' + sggNm);
-//                        } else {
-//                            ajax(false, contextPath+'/sys/carManage/selectCtpvSggNm', 'body', '처리중입니다.', { sggCd: data.sggCd }, function (sggNmData) {
-//                                var ctpvNm = sggNmData.ctpv_nm;
-//                                var sggNm = sggNmData.sgg_nm;
-//                                if(!sggNm){
-//                                    sggNm = '';
-//                                }
-//                                $('#detail_ctpvSggNm').val(ctpvNm + ' ' + sggNm);
-//                            });
-//                        }
-//                        /** car info  left */
-//                        $('#detail_vhclRegNo').val(!data.vhclRegNo ? "-" : data.vhclRegNo);
-//                        $('#detail_vin').val(!data.vin ? "-" : data.vin);
-//                        $('#detail_carmdl').val(!data.carmdl ? "-" : data.carmdl);
-//                        $('detail_#vhclNm').val(!data.vhclNm ? "-" : data.vhclNm);
-//                        $('#detail_mdlyr').val(!data.mdlyr ? "-" : data.mdlyr);
-//                        $('#detail_engineFom').val(!data.engineFom ? "-" : data.engineFom );
-//
-//                        /** car info  right */
-//                        $('#detail_sggNm').val(!data.sggNm ? "-" : data.sggNm);
-//                        $('#detail_frstRegYmd').val(!data.frstRegYmd ? "-" : data.frstRegYmd);
-//                        $('#detail_expryYmd').val(!data.expryYmd ? "-" : data.expryYmd);
-//                        $('#detail_regDt').val(!data.regDt ? "-" : data.regDt);
-//                        $('#detail_defectYn').val(!data.defectYn ? "-" : data.defectYn);
-//                        if(auth === "s0123"){
-//                            $('#detail_useYn').data("kendoDropDownList").value(data.useYn);
-//                        } else {
-//                            $('#detail_useYn').val(data.useYn);
-//                        }
-//
-//                        /** 결함정보 표출여부 */
-//                        if(data.defectYn === 'Y'){
-//                            $("#defectInfo").show();
-//                            ajax(true, contextPath+'/sys/carManage/selectDefectList', 'body', '처리중입니다.', {vin : data.vin}, function (data1) {
-//                                $("#detail_defectGrid").data("kendoGrid").setDataSource(data1.data);
-//                            });
-//                        } else {
-//                            $("#defectInfo").hide();
-//                        }
-//                        $(".detail_popup").addClass("view");
-//
-//        },
-// --------- 상세팝업 수정한거 에러시 주석 풀기(롤백하기) ----------------------
+
 
 		// todo : !! 최근이력 7일
         // 운전자격이력 건수 관련 Date 셋팅
@@ -1558,14 +1302,24 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 				signguCd: $("#signguCd").val(),
 				regDt: $("#regDt").val(),
 				vrfcMthd: vrfcMthd,
+				crno : $("#crno").val(),
 				similarityConfidence: similarityData.similarityConfidence,
 				livenessConfidence: similarityData.livenessConfidence
 			};
 
+            var num02Pattern = /^\d{2}$/;
+            var num03Pattern = /^\d{6}$/;
+            var num04Pattern = /^\d{2}$/;
+//              운전자격확인 이전 해당법인 차량인지 유무 확인  --> 결과 저장
+            	ajax(false, contextPath+"/vfc/drive/selectBzmnCarYn", 'body', '처리중입니다.', param, function(data) {
+            	    bzmnCarYn = data.bzmnCarYn;// 해당 차량이면  "Y" , 아닐 경우 "N"
+            	});
 
-			if(param.carNum == '')
+			if(param.carNum == ''){
 				alert('차량번호를 입력해 주십시오.')
-			else if($('#num01').val()!='' && $('#num02').val()!='' && $('#num03').val()!='' && $('#num04').val()!='' &&
+            } else if( !num02Pattern.test($('#num02').val()) || !num03Pattern.test($('#num03').val()) || !num04Pattern.test($('#num04').val())){
+                alert("면허 정보의 자릿수를 확인하고 정확히 입력해 주세요.");
+			} else if($('#num01').val()!='' && $('#num02').val()!='' && $('#num03').val()!='' && $('#num04').val()!='' &&
 				$('#user_name02').val()!='' && $("input[type=radio][name=category01]:checked").val() !=undefined){
 
 				ajax(true, contextPath+"/vfc/drive/verifyLicense", 'body', '처리중입니다.', param, function(data) {
@@ -1605,18 +1359,21 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                                     if (result != null && result != "") {
                                         rentno = result.rentno;
                                         if(data.body.f_rtn_code == '00'){
-    // 상세팝업 안될시 아래 1줄 코드 $drive.event.popupRntlHsList(); 주석풀기
-    //                                        $drive.event.popupRntlHsList();
-                                            if(result.data != undefined && result.total != 0){
+                                            if(bzmnCarYn === "N"){
+                                              var html = `<p class="current_info" >
+                                                           <span style = "color:red";> 로그인 한 사용자의 법인에 소속된 차량이 아닙니다.</span>
+                                                         </p>`;
+                                                $('#result').prepend(html);
+                                            } else if(result.data != undefined && result.total != 0){
                                                 var html = `<p class="current_info" >
-                                                    차량 결함 정보가
-                                                    <span class = "popupSpan" id ="rslt_vehicleDefect" onclick =$drive.event.popupVhclDfctListClick()>존재</span> 합니다.
-                                                </p>`;
+                                                                차량 결함 정보가
+                                                                <span class = "popupSpan" id ="rslt_vehicleDefect" onclick =$drive.event.popupVhclDfctListClick()>존재</span> 합니다.
+                                                            </p>`;
                                                 $('#result').prepend(html);
                                             } else{
                                                 var html = `<p class="current_info">
-                                                    차량 결함 정보가 없습니다.
-                                                </p>`;
+                                                                차량 결함 정보가 없습니다.
+                                                            </p>`;
                                                 $('#result').prepend(html);
                                             }
 
@@ -1643,8 +1400,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                                                 </p><br>`;
                                                 $('#result').prepend(html);
                                             } else {
-    // 상세팝업 안될시 아래 1줄 코드 $drive.event.popupVhclDfctList(); 주석풀기
-    //                                        	$drive.event.popupVhclDfctList();
                                                 var html = `<p class="current_info">
                                                     최근 7일 운전자격확인 건수는
                                                     <span class = "popupSpan" id = "rslt_rentalHistory" onclick =$drive.event.popupRntlHsListClick(); >`+ result.VfcHistCnt + `건</span> 입니다.
@@ -1786,6 +1541,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			if($("#similarityChk").is(":checked")) {
 				$("#similarityChk").prop("checked", false);
 			}
+			bzmnCarYn = '';
 		},
 
 	};

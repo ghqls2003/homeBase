@@ -102,8 +102,6 @@
 						base.rgtr_sn,
 						base.reg_dt,
 						base.mdfcn_dt
-						<!-- 24.10.23 rent에 dln 없어짐 확인바람. -->
-						<!-- 24.10.24 dln 삭제 확인 확인 이력에서 불러오기 -->
 					from
 <!-- 						dqvs.dvs_dqv_mt_rent_dump base -->
 						dqvs.dvs_dqv_mt_rent base
@@ -173,13 +171,7 @@
 						(
 						select
 							ddvr.reg_dt,
-							CASE
-							WHEN ddvr.dln ~ '^[0-9]+$' THEN
-							CONCAT(ddvr.dln, REPEAT('*', 12))
-							ELSE
-							CONCAT(SUBSTRING(dqvs.pca_decrypt(ddvr.dln, '150'), -5, LENGTH(dqvs.pca_decrypt(ddvr.dln, '150'))),
-							REPEAT('*',6))
-							END AS dln2,
+							CONCAT(dqvs.pca_decrypt(ddvr.dln, '150'), REPEAT('*',6)) dln2,  <!-- dln사용관련 -->
 							ddvr.mdfcn_dt,
 							ddvr.rent_no ,
 							ddvr.dln,
@@ -265,13 +257,7 @@
 			(
 						select
 							ddvr.reg_dt,
-							CASE
-							WHEN ddvr.dln ~ '^[0-9]+$' THEN
-							CONCAT(ddvr.dln, REPEAT('*', 12))
-							ELSE
-							CONCAT(SUBSTRING(dqvs.pca_decrypt(ddvr.dln, '150'), -5, LENGTH(dqvs.pca_decrypt(ddvr.dln, '150'))),
-							REPEAT('*',6))
-							END AS dln2,
+							CONCAT(dqvs.pca_decrypt(ddvr.dln, '150'), REPEAT('*',6)) dln2,  <!-- dln사용관련 -->
 							ddvr.mdfcn_dt,
 							ddvr.rent_no ,
 							ddvr.dln,
@@ -440,10 +426,7 @@
 			select 
 			    rent_no,
 			    vhcl_reg_no,
-			   	case 
-			        WHEN dln ~ '^[0-9]+$' THEN CONCAT(SUBSTRING(dln, 1, 6), REPEAT('*', 6))
-			        ELSE CONCAT(SUBSTRING(dqvs.pca_decrypt(dln, '150'), 1, 6), REPEAT('*', 6)) 
-			    END as dln,
+			   	CONCAT(dqvs.pca_decrypt(ddvr.dln, '150'), REPEAT('*',6)) as dln,  <!-- dln사용관련 -->
 			    vrfc_period,
 			    dqvs.fn_get_cdnm('vrfc_period', vrfc_period) as vrfc_period,
 			    rsvt_bgng_ymd,
@@ -490,7 +473,7 @@
 		        ddhv.vrfc_cd,
 		        dqvs.fn_get_cdnm('verify_cd', ddhv.vrfc_cd) as last_vrfc_rslt,
 		        ddhv.lcns_asort_cd,
-		        ddhv.dln_enc as dln,
+		        ddhv.dln,  <!-- dln사용관련 -->
 		        ddhv.vrfc_dmnd_dt,
 		        case
 				ddhv.lcns_asort_cd when '11' then '1종대형'

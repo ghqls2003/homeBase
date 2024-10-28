@@ -92,4 +92,15 @@ public class DriveDao extends CmmnAbstractMapper {
 	public void updateRentType(Map<String, Object> paramsMap) {
 		update("vfc.drive.updateRentType", paramsMap);
 	}
+
+	// 면허번호에 해당하는 최근 7일간의 대여이력 조회 24.10.25 jeonghyewon
+	public List<Map<String, Object>> drvListView(Map<String, Object> paramsMap) {
+		return selectList("vfc.drive.drvListView", paramsMap);
+	}
+
+	// 면허번호에 해당하는 최근 7일간의 대여이력 조회 건수 24.10.25 jeonghyewon
+	public int drvListViewCnt(Map<String, Object> paramsMap) {
+		return selectOne("vfc.drive.drvListViewCnt", paramsMap);
+	}
+
 }

@@ -20,6 +20,7 @@ import javax.net.ssl.X509TrustManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import kr.or.kotsa.rims.vfc.service.DrvVfcHistService;
 import org.apache.htrace.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONObject;
 import org.sonar.api.internal.google.gson.JsonParser;
@@ -68,6 +69,8 @@ public class DriveController extends CmmnAbstractServiceImpl {
 
 	private String poket;
 
+
+
 	/**
 	 * 자격검증 화면
 	 *
@@ -112,6 +115,8 @@ public class DriveController extends CmmnAbstractServiceImpl {
 		mav.addObject("error", request.getAttribute("error"));
 		return mav;
 	}
+
+
 
 	public static String isDevice(HttpServletRequest req) {
 		String userAgent = req.getHeader("User-Agent").toUpperCase();
@@ -425,6 +430,36 @@ public class DriveController extends CmmnAbstractServiceImpl {
 		String encodedText = Base64.getUrlEncoder().withoutPadding().encodeToString(data.getBytes());
 
 		return encodedText;
+	}
+
+
+	/**
+	 *  면허번호에 해당하는 최근 7일간의 대여이력 조회  24.10.25 jeonghyewon
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping("drive/selectDrvListView")
+	@ResponseBody
+	public Map<String, Object> selectDrvListView(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		result.put("data" , driveService.drvListView(paramsMap));
+		result.put("total", driveService.drvListViewCnt(paramsMap));
+		return result;
+	}
+
+	/**
+	 *  해당 법인 차량 유무 조회   24.10.28 jeonghyewon
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping("drive/selectBzmnCarYn")
+	@ResponseBody
+	public Map<String, Object> selectBzmnCarYn(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		paramsMap.put("userSn", getUserSn());
+		return (Map<String, Object>) driveService.selectBzmnCarYn(paramsMap); //("bzmnCarYn","Y");
 	}
 
 }
