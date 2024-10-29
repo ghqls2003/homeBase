@@ -222,11 +222,10 @@
 			            dcms.user_id,
 			            dahr.dmnd_ymd,
 			            dcmc.cd_expln,
-			            CASE
-			                WHEN dahr.dln IS NULL THEN NULL
-			                WHEN LENGTH(dahr.dln) <![CDATA[<=]]>  4 THEN dahr.dln
-			                ELSE '*******' || SUBSTRING(dahr.dln, 8)
-			            END AS dln,
+			            CASE WHEN dahr.dln ISNULL THEN NULL   <!-- dln사용관련 -->
+							WHEN LENGTH(dahr.dln) <![CDATA[ = ]]> 6 THEN CONCAT(dqvs.pca_decrypt(dahr.dln, '150'), REPEAT('*', 6))
+							ELSE CONCAT(SUBSTRING(dqvs.pca_decrypt(dahr.dln, '150'), 1, 6), REPEAT('*', 6))
+							END AS dln,
 			            dahr.dmnd_cnt,
 			            CASE
 			                WHEN dahr.user_sn = dahr.rqstr_sn THEN '플래폼'

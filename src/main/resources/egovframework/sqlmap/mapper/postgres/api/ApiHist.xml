@@ -14,10 +14,10 @@
 		            dcms2.bzmn_sn AS S1BZSN,
 		            dcmc.cd_expln AS rslt_msg,
 		            dahr.dmnd_cnt,
-		            CASE
-				        WHEN dahr.dln ~ '^[0-9]+$' THEN CONCAT(REPEAT('*', LENGTH(dahr.dln) - 4), SUBSTRING(dahr.dln FROM LENGTH(dahr.dln) - 4))
-				        ELSE '*******' || SUBSTRING(dqvs.pca_decrypt(dahr.dln, '150'), 8)
-				    END AS dln2,	
+		            CASE WHEN dahr.dln ISNULL THEN NULL   <!-- dln사용관련 -->
+							WHEN LENGTH(dahr.dln) <![CDATA[ = ]]> 6 THEN CONCAT(dqvs.pca_decrypt(dahr.dln, '150'), REPEAT('*', 6))
+							ELSE CONCAT(SUBSTRING(dqvs.pca_decrypt(dahr.dln, '150'), 1, 6), REPEAT('*', 6))
+							END AS dln2,
                 	dahr.dln,
 		            dahr.req_hr
 		        FROM dqvs.dvs_api_hs_req AS dahr
