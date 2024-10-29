@@ -263,7 +263,6 @@
             param.cmpnyName = cmpnyName;
             param.codeType = codeType;
             param.cd = cd;
-            console.log(param)
             return param;
         },
 
