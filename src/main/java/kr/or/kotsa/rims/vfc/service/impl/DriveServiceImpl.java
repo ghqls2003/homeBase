@@ -112,8 +112,7 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 		int rentCnt = driveDao.selectRentCnt(paramsMap);
 		result.put("rentCnt", rentCnt);
 		// 최근 7일 운전자격이력 건수
-//		int VfcHistCnt = driveDao.selectVfcHistCnt(paramsMap); // 대여정보이력건수
-		int VfcHistCnt = driveDao.drvListViewCnt(paramsMap);
+		int VfcHistCnt = driveDao.selectVfcHistCnt(paramsMap);
 		result.put("VfcHistCnt", VfcHistCnt);
 
 

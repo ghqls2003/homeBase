@@ -146,7 +146,7 @@
     </update>
 
     <select id="selectRentCnt" resultType="int">
-        with encDln as(select dqvs.pca_encrypt(#{num}, '150') as enc_d )
+        with encDln as(select dqvs.pca_encrypt(#{num}, '200') as enc_d )  <!-- dln사용관련 -->
 		select
 			count(*)
 		from
@@ -169,21 +169,32 @@
 		limit 1
 	</select>
 
-	<!-- 결함정보  -->
+	<!-- 결함정보SQL -->
+	<sql id="selectDefectListSql">
+		(
+			SELECT ROW_NUMBER() OVER(ORDER BY d.ocrn_dt DESC) as rn
+				, d.vin
+				, TO_CHAR(ocrn_dt, 'YYYY-MM-DD HH24:MI') AS ocrn_dt
+				, d.defects_type_cd
+				, d.prcs_stts_cd
+			FROM
+				dqvs.dvs_rac_mt_defect d
+				<choose>
+					<when test="vin != null and vin != ''">
+						WHERE vin LIKE '%' || rpad(#{vin}, 17) || '%'
+					</when>
+					<otherwise>
+						WHERE 1!=1
+					</otherwise>
+				</choose>
+		) AS T
+	</sql>
+	<!-- 결함정보 -->
 	<select id="selectDefectList" resultType="resultMap">
-		select * from(
-			select
-				row_number() over() as rn,
-				vin,
-				to_char(ocrn_dt, 'YYYY-MM-DD HH24:MI') as ocrn_dt,
-				defects_type_cd,
-				prcs_stts_cd
-			from dqvs.dvs_rac_mt_defect
-				where 1=1
-				<if test="vin != null and vin != ''">
-					and vin like '%' || rpad(#{vin}, 17) || '%'
-				</if>
-		) T
+	/* 결함정보 */
+		SELECT T.*
+		FROM
+			<include refid="selectDefectListSql" />
 		WHERE 1 = 1
 			<if test="take != '' and take != null">
 				AND T.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
@@ -191,23 +202,13 @@
 			<if test="skip != '' and skip != null">
 				AND T.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
 			</if>
-		ORDER BY T.rn ASC
 	</select>
-
+	<!-- 결함정보cnt -->
 	<select id="selectDefectListCnt" resultType="int">
-		select count(*) from(
-			select
-				row_number() over() as rn,
-				vin,
-				ocrn_dt,
-				defects_type_cd,
-				prcs_stts_cd
-			from dqvs.dvs_rac_mt_defect
-				where 1=1
-				<if test="vin != null and vin != ''">
-					and vin like '%' || rpad(#{vin}, 17) || '%'
-				</if>
-		) T
+	/* 결함정보cnt */
+		SELECT COUNT(*)
+		FROM
+			<include refid="selectDefectListSql" />
 	</select>
 
     <insert id="insertEtcInfo">
@@ -241,20 +242,15 @@
 		</if>
 	</select>
 
-<!--	&lt;!&ndash; 운전자격이력 건수 &ndash;&gt;-->
-<!--	<select id="selectVfcHistCnt" parameterType="paraMap" resultType="int">-->
-<!--	SELECT count(1) AS cnt-->
-<!--	FROM dqvs.dvs_dqv_hs_verf AS ddhv-->
-<!--	where-->
-<!--	1 = 1-->
-<!--	&lt;!&ndash; 조회조건 &ndash;&gt;-->
-<!--	<if test="startDtTm != null and startDtTm != '' and endDtTm != null and endDtTm != ''">-->
-<!--		AND vrfc_dmnd_dt <![CDATA[>=]]> #{startDtTm}::timestamp AND vrfc_dmnd_dt <![CDATA[<=]]> #{endDtTm}::timestamp-->
-<!--	</if>-->
-<!--	<if test="dln != null and dln != ''">-->
-<!--		AND dln_enc = #{dln}-->
-<!--	</if>-->
-<!--	</select>-->
+<!-- 최근 7일 운전자격이력 건수(팝업에 이거 사용함) -->
+	<select id="selectVfcHistCnt" parameterType="paraMap" resultType="int">
+		/* 최근 7일 운전자격이력 건수(팝업용) */
+		SELECT COUNT(1) AS cnt
+		FROM 
+			dqvs.dvs_dqv_hs_verf v
+		WHERE v.dln_enc = dqvs.pca_encrypt(#{dln}, '200')
+			AND vrfc_dmnd_dt <![CDATA[>]]> NOW() - INTERVAL '7days'
+	</select>
 
 
 	<!-- 면허번호에 해당하는 최근 7일간의 대여이력 조회 24.10.25 jeonghyewon -->
@@ -276,10 +272,7 @@
 					concat(left(viui.onepass_user_nm, 1), repeat('*', length(viui.onepass_user_nm) - 2), right(viui.onepass_user_nm, 1))
 					else null
 					end as rqstr_nm
-					, CASE
-					WHEN LENGTH(dln) > 6 THEN SUBSTRING(dqvs.pca_decrypt(dln, '150'), 1, 6) || '******'
-					ELSE SUBSTRING(dln, 1, 6) || '******'
-					END AS dln
+					, CONCAT(dqvs.pca_decrypt(ddhv.dln, '150'), '******') AS dln  <!-- dln사용관련 -->
 					, lcns_asort_cd
 					, CASE ddhv.lcns_asort_cd
 					WHEN '11' THEN '1종대형'
@@ -340,7 +333,7 @@
 		LEFT OUTER JOIN dqvs.v_intg_user_info AS viui  ON ddhv.rqstr_sn = viui.user_sn
 		LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn
 		where  ddhv.dln_enc = dqvs.pca_encrypt(#{dln}, '200')
-			AND vrfc_dmnd_dt <![CDATA[>=]]> now() - interval '7days'
+			AND vrfc_dmnd_dt <![CDATA[>]]> now() - interval '7days'
 
 	</select>
 </mapper>
