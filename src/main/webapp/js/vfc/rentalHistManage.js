@@ -542,9 +542,9 @@
 		insertRentReg: function(){
 			var params ={};
 			var regVal = $("input[name='regChk']:checked").val();
-			var formData = new FormData();
-			var filedata = document.getElementById('files').files[0]
-			formData.append('files', filedata);
+//			var formData = new FormData();
+//			var filedata = document.getElementById('files').files[0]
+//			formData.append('files', filedata);
 			params.vhclRegNo = $("#regVhclRegNo").val();
 			params.rentNo = $("#regRentNo").val();
 			params.rgtrSn = $("#regRgtrSn").val();
@@ -564,21 +564,28 @@
 				alert("대여시작일시를 등록해 주세요");
 			}else if(params.rentEndDt == null || params.rentEndDt == ''){
 				alert("대여종료일시를 등록해 주세요");
-			}else if(filedata == null){
-			 	alert("면허증 사본을 등록해 주세요");
 			}else{
-				encryptFileAjax(contextPath + "/cmmn/encryptFileUpload", formData, function (response) {
-					if (response != null) {
-						params.atchFileSn = response.fileSn;
-
-						ajax(true, contextPath + '/vfc/rentalHistManage/insertRentReg.do', 'body', '확인인중입니다.', params, function (data) {
-							alert("대여이력에 등록을 성공하셨습니다");
-							$("#regi").removeClass("view");
-					        $('#rentalHistGrid').data('kendoGrid').dataSource.page(1);
-					    });
-					}
-				});
+				ajax(true, contextPath + '/vfc/rentalHistManage/insertRentReg.do', 'body', '확인인중입니다.', params, function (data) {
+					alert("대여이력에 등록을 성공하셨습니다");
+					$("#regi").removeClass("view");
+			        $('#rentalHistGrid').data('kendoGrid').dataSource.page(1);
+			    });
 			}
+//			else if(filedata == null){
+//			 	alert("면허증 사본을 등록해 주세요");
+//			}else{
+//				encryptFileAjax(contextPath + "/cmmn/encryptFileUpload", formData, function (response) {
+//					if (response != null) {
+//						params.atchFileSn = response.fileSn;
+//
+//						ajax(true, contextPath + '/vfc/rentalHistManage/insertRentReg.do', 'body', '확인인중입니다.', params, function (data) {
+//							alert("대여이력에 등록을 성공하셨습니다");
+//							$("#regi").removeClass("view");
+//					        $('#rentalHistGrid').data('kendoGrid').dataSource.page(1);
+//					    });
+//					}
+//				});
+//			}
 		},
 		
 		detailInfoPopup: function(param){
@@ -632,23 +639,23 @@
 					$(".red_btn").css("display", "block");
 				}
 
-				//국제 면허의 경우 첨부된 면허증 사본(다운로드) 필드 노출 여부
-				$("#detailFileDown").val(data[0].atchFileNm);
-				//파일이 존재하는 경우
-				if(data[0].atchFileSn && data[0].atchFileNm !== '-'){
-					$("#detailFileDown").css("cursor", "pointer").hover(function () {
-						$(this).css("color", "#364BC6");
-					}, function() {
-						$(this).css("color", "");
-					});
-					$("#detailFileDown").click(function(){
-						decryptFileDownload(data[0].atchFileSn, data[0].atchFileNm);
-					});
-				//파일이 없는 경우
-				} else{
-					$("#detailFileDown").off('mouseenter mouseleave');
-					$("#detailFileDown").css("cursor", "default");
-				}
+//				//국제 면허의 경우 첨부된 면허증 사본(다운로드) 필드 노출 여부
+//				$("#detailFileDown").val(data[0].atchFileNm);
+//				//파일이 존재하는 경우
+//				if(data[0].atchFileSn && data[0].atchFileNm !== '-'){
+//					$("#detailFileDown").css("cursor", "pointer").hover(function () {
+//						$(this).css("color", "#364BC6");
+//					}, function() {
+//						$(this).css("color", "");
+//					});
+//					$("#detailFileDown").click(function(){
+//						decryptFileDownload(data[0].atchFileSn, data[0].atchFileNm);
+//					});
+//				//파일이 없는 경우
+//				} else{
+//					$("#detailFileDown").off('mouseenter mouseleave');
+//					$("#detailFileDown").css("cursor", "default");
+//				}
 
 				$("#start-picker03").data("kendoDateTimePicker").value(data[0].rentBgngDt);
 				$("#end-picker03").data("kendoDateTimePicker").value(data[0].rentEndDt);

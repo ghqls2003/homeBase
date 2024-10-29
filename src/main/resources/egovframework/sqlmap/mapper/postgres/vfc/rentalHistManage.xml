@@ -130,7 +130,7 @@
 			COALESCE(agency.lotno_addr, agency.road_nm_addr) addr,
 			dqvs.pca_decrypt(agency.telno, '150') telno,
 			dqvs.pca_decrypt(verf.dln, '150') dln,
-			rent.atch_file_sn
+<!-- 			rent.atch_file_sn -->
 		 FROM dqvs.dvs_dqv_mt_rent rent
 		 LEFT JOIN dqvs.dvs_rac_mt_agency agency ON rent.bzmn_sn = agency.bzmn_sn
 		 LEFT JOIN dqvs.dvs_rac_mt_car car ON rent.vin = car.vin
@@ -223,11 +223,11 @@
 				rent_stts_cd,
 				rgtr_sn,
 				reg_dt,
-				<choose>
-					<when test="atchFileSn != '' and atchFileSn != null">
-						atch_file_sn,
-					</when>
-				</choose>
+<!-- 				<choose> -->
+<!-- 					<when test="atchFileSn != '' and atchFileSn != null"> -->
+<!-- 						atch_file_sn, -->
+<!-- 					</when> -->
+<!-- 				</choose> -->
 				reg_ip
 				)
 			VALUES
@@ -247,11 +247,11 @@
 				'2',
 				#{userSn}::numeric,
 				now()::timestamp,
-				<choose>
-					<when test="atchFileSn != '' and atchFileSn != null">
-						#{atchFileSn},
-					</when>
-				</choose>
+<!-- 				<choose> -->
+<!-- 					<when test="atchFileSn != '' and atchFileSn != null"> -->
+<!-- 						#{atchFileSn}, -->
+<!-- 					</when> -->
+<!-- 				</choose> -->
 				#{IP}
 				)
 	</insert>
@@ -276,11 +276,11 @@
 				rent_stts_cd,
 				rgtr_sn,
 				reg_dt,
-				<choose>
-					<when test="atchFileSn != '' and atchFileSn != null">
-						atch_file_sn,
-					</when>
-				</choose>
+<!-- 				<choose> -->
+<!-- 					<when test="atchFileSn != '' and atchFileSn != null"> -->
+<!-- 						atch_file_sn, -->
+<!-- 					</when> -->
+<!-- 				</choose> -->
 				reg_ip
 				)
 			VALUES
@@ -302,11 +302,11 @@
 				'2',
 				#{userSn}::numeric,
 				now()::timestamp,
-				<choose>
-					<when test="atchFileSn != '' and atchFileSn != null">
-						#{atchFileSn},
-					</when>
-				</choose>
+<!-- 				<choose> -->
+<!-- 					<when test="atchFileSn != '' and atchFileSn != null"> -->
+<!-- 						#{atchFileSn}, -->
+<!-- 					</when> -->
+<!-- 				</choose> -->
 				#{IP}
 				)
 	</insert>
@@ -317,8 +317,8 @@
 	/* 대여이력 상세 */
 		SELECT rent.rent_no
 			, rent.vhcl_reg_no
-			, rent.atch_file_sn
-			, COALESCE(dcmi.atch_file_nm, '-') atch_file_nm
+<!-- 			, rent.atch_file_sn -->
+<!-- 			, COALESCE(dcmi.atch_file_nm, '-') atch_file_nm -->
 			, TO_CHAR(rent.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt
 			, TO_CHAR(rent.rent_end_dt, 'YYYY-MM-DD HH24:MI') rent_end_dt
 			, rent.rent_stts_cd
@@ -331,9 +331,9 @@
 		LEFT JOIN
 			dqvs.dvs_rac_mt_car car
 		ON rent.vin = car.vin
-		LEFT JOIN
-			dqvs.dvs_cmm_mt_intrlcnsfile dcmi
-		ON rent.atch_file_sn = dcmi.file_sn
+<!-- 		LEFT JOIN -->
+<!-- 			dqvs.dvs_cmm_mt_intrlcnsfile dcmi -->
+<!-- 		ON rent.atch_file_sn = dcmi.file_sn -->
 		WHERE rent.rent_no = #{rentNo}
 	</select>
 	
@@ -429,11 +429,11 @@
 			reg_dt,
 			reg_ip,
 			rent_prcs_dt,
-			<choose>
-				<when test="atchFileSn != '' and atchFileSn != null">
-					atch_file_sn,
-				</when>
-			</choose>
+<!-- 			<choose> -->
+<!-- 				<when test="atchFileSn != '' and atchFileSn != null"> -->
+<!-- 					atch_file_sn, -->
+<!-- 				</when> -->
+<!-- 			</choose> -->
 			mdfr_sn,
 			mdfcn_dt,
 			mdfcn_ip)
@@ -455,11 +455,11 @@
 			reg_dt,
 			reg_ip,
 			rent_prcs_dt,
-			<choose>
-				<when test="atchFileSn != '' and atchFileSn != null">
-					atch_file_sn,
-				</when>
-			</choose>
+<!-- 			<choose> -->
+<!-- 				<when test="atchFileSn != '' and atchFileSn != null"> -->
+<!-- 					atch_file_sn, -->
+<!-- 				</when> -->
+<!-- 			</choose> -->
 			mdfr_sn,
 			mdfcn_dt,
 			mdfcn_ip
@@ -500,7 +500,7 @@
 			, mdfr_sn
 			, mdfcn_dt
 			, mdfcn_ip
-			, atch_file_sn
+<!-- 			, atch_file_sn -->
 		)
 		values
 		(
@@ -526,7 +526,7 @@
 		,null
 		,null
 		,null
-		,#{atchFileSn}
+<!-- 		,#{atchFileSn} -->
 		)
 	</insert>
 
@@ -556,7 +556,7 @@
 			, mdfr_sn
 			, mdfcn_dt
 			, mdfcn_ip
-			, atch_file_sn
+<!-- 			, atch_file_sn -->
 		)
 		values
 		(
@@ -582,7 +582,7 @@
 			,null
 			,null
 			,null
-			,#{atchFileSn}
+<!-- 			,#{atchFileSn} -->
 		)
 	</insert>
 
@@ -614,7 +614,7 @@
 			 , mdfr_sn
 			 , mdfcn_dt
 			 , mdfcn_ip
-			 , atch_file_sn
+<!-- 			 , atch_file_sn -->
 			 , del_yn
 			 , vhcl_idnty_cd
 		from dqvs.dvs_dqv_hs_rent
@@ -642,7 +642,7 @@
 			reg_dt,
 			reg_ip,
 			rent_prcs_dt,
-			atch_file_sn,
+<!-- 			atch_file_sn, -->
 			mdfr_sn,
 			mdfcn_dt,
 			mdfcn_ip)
@@ -666,7 +666,7 @@
 				rent.reg_dt,
 				rent.reg_ip,
 				rent.rent_prcs_dt,
-				rent.atch_file_sn,
+<!-- 				rent.atch_file_sn, -->
 				#{userSn}::numeric,
 				now()::timestamp,
 				#{clientIP}
@@ -681,8 +681,8 @@
 		SELECT rent.rent_hstry_no,
 			rent.rent_no,
 			rent.vhcl_reg_no,
-			rent.atch_file_sn,
-			coalesce(dcmi.atch_file_nm, '-') atch_file_nm,
+<!-- 			rent.atch_file_sn, -->
+<!-- 			coalesce(dcmi.atch_file_nm, '-') atch_file_nm, -->
 			to_char(rent.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt,
 			to_char(rent.rent_end_dt, 'YYYY-MM-DD HH24:MI') rent_end_dt,
 			rent.rent_stts_cd,
@@ -700,8 +700,8 @@
 		FROM dqvs.dvs_dqv_hs_rent rent
 				 left join dqvs.dvs_rac_mt_car car
 						   on rent.vin = car.vin
-				 left join dqvs.dvs_cmm_mt_intrlcnsfile dcmi
-						   on rent.atch_file_sn = dcmi.file_sn
+<!-- 				 left join dqvs.dvs_cmm_mt_intrlcnsfile dcmi -->
+<!-- 						   on rent.atch_file_sn = dcmi.file_sn -->
 		WHERE rent.rent_no = #{rentNo}
 		ORDER BY rent.rent_hstry_no DESC
 	</select>
@@ -713,8 +713,8 @@
 				rent.rent_hstry_no,
 				rent.rent_no,
 				rent.vhcl_reg_no,
-				rent.atch_file_sn,
-				coalesce(dcmi.atch_file_nm, '-') atch_file_nm,
+<!-- 				rent.atch_file_sn, -->
+<!-- 				coalesce(dcmi.atch_file_nm, '-') atch_file_nm, -->
 				to_char(rent.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt,
 				to_char(rent.rent_end_dt, 'YYYY-MM-DD HH24:MI') rent_end_dt,
 				rent.rent_stts_cd,
@@ -728,8 +728,8 @@
 			from dqvs.dvs_dqv_hs_rent rent
 					 left join dqvs.dvs_rac_mt_car car
 							   on rent.vin = car.vin
-					 left join dqvs.dvs_cmm_mt_intrlcnsfile dcmi
-							   on rent.atch_file_sn = dcmi.file_sn
+<!-- 					 left join dqvs.dvs_cmm_mt_intrlcnsfile dcmi -->
+<!-- 							   on rent.atch_file_sn = dcmi.file_sn -->
 			where rent.rent_no = #{rentNo}
 			)T
 	</select>
