@@ -130,8 +130,6 @@
 				
 			}
 			
-			
-			
 			// 시구군
 			$('.sub04 #searchSggNm').kendoDropDownList({
 	            optionLabel: "시군구",
@@ -147,11 +145,8 @@
 	              dataSource: data,
 	              value: "cd_nm"
 				});
-				$(".sub04 #searchSttsCd").data("kendoDropDownList").select(3);
+				$(".sub04 #searchSttsCd").data("kendoDropDownList").select(2);
 			});
-			
-			
-			
 
 			// 권한
 			ajax(false, contextPath + '/sys/smsSend/selectAuth', 'body', '처리중입니다.', param, function(data) {
@@ -507,7 +502,6 @@
 			return grid;
 		},
 		
-		
 		// 그룹 발송전 확인 그리드
 		groupReceiverList: function(){
 			$("#receiver_grid").kendoGrid({
@@ -538,7 +532,6 @@
 									options.userCmptncZoneCd=userCmptncZoneCd;
 								}
 							};
-							
 							return JSON.stringify(options);
 						}
 					},
@@ -656,9 +649,6 @@
 			});
 			
 		},
-		
-		
-		
 	};
 	
 	//이벤트 정의
@@ -721,7 +711,6 @@
         },
 
 		setUIEvent: function() {
-			
 			// 그룹별 작동
 			$('input[name="selec_target"]').on('change', function() {
                 if (this.id === 'all') {
@@ -793,19 +782,7 @@
 			
 			// 발송이력 조회 버튼
 			$(".searchBtn").on("click",function(){
-				var start = new Date($("#start-picker01").val());
-				var end = new Date($("#end-picker01").val());
-				if(end > new Date(new Date(start).setMonth(start.getMonth() + 1))){
-					alert("한 달 이상으로 선택할 수 없습니다.");
-					$('#start-picker01').data("kendoDatePicker").value(new Date(new Date(end).setMonth(end.getMonth() - 1)));
-					return;
-				}
-				if(new Date($('#start-picker01').val()) > new Date($('#end-picker01').val())){
-					alert("시작일은 종료일보다 늦을 수 없습니다.");
-					$('#end-picker01').data("kendoDatePicker").value(new Date($('#start-picker01').val()));
-					return;
-				}
-				$smsSend.event.sendListSearch();
+				$smsSend.event.searchClick();
 			});
 			
 			// 재전송 클릭
@@ -817,38 +794,7 @@
 			
 			// 개별 수신자 검색 버튼
 			$("#receiverSearchBtn").on("click", function() {
-				searchTriggered = true;
-				var sd = $("#searchCtpvNm").val();
-				var sgg = $("#searchSggNm").val();
-				receiverParams.cmptnc_zone_cd = sd+sgg;
-				receiverParams.authrt_cd = $("#searchAuthrtCd").val();
-				receiverParams.stts_cd = $("#searchSttsCd").val();
-				receiverParams.search_other_condition = $("#searchOtherCondition").val();
-				receiverParams.search_wrd = $("#searchBox").val();
-				receiverParams.receiver_except_tel = JSON.stringify($("#receiver_except_tel").is(':checked'));
-				
-				var searchReq3 = $("#searchOtherCondition").val();
-				var searchReq4 = $("#searchBox").val();
-				
-				if(searchReq3 == '' && searchReq4 != '') {
-	                alert("검색조건을 선택해주세요");
-	            }
-	            else if(searchReq3 != '' && searchReq4 == '' ){
-					alert("검색조건을 입력해주세요");
-				}
-				else{
-					var grid = $("#receiverListGrid").data("kendoGrid");
-	                if (grid) {
-						$("#receiverListGrid_box").empty();
-						$(".indivReceiver_lists").empty();
-		                $('#receiverListGrid_box').append('<table id="receiverListGrid"></table>');
-	                }
-					var totalReciverCnt = 0;
-					$('#totalRowCnt').text(totalReciverCnt);
-					$smsSend.ui.receiverListGrid();
-				}
-				
-				
+				 $smsSend.event.indivSearchClick();
             });
 			
 		    $(".msg_send01 .close, .msg_send01 .cancel_btn").on("click",function(){
@@ -1030,6 +976,66 @@
 				
 			});
 			
+			$("#searchWrd").on('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    $smsSend.event.searchClick();
+                }
+            });
+
+			$("#searchBox").on('keydown', function(e) {
+                if (e.key === 'Enter') {
+                   $smsSend.event.indivSearchClick();
+                }
+            });
+		},
+		
+		searchClick: function() {
+			var start = new Date($("#start-picker01").val());
+			var end = new Date($("#end-picker01").val());
+			if(end > new Date(new Date(start).setMonth(start.getMonth() + 1))){
+				alert("한 달 이상으로 선택할 수 없습니다.");
+				$('#start-picker01').data("kendoDatePicker").value(new Date(new Date(end).setMonth(end.getMonth() - 1)));
+				return;
+			}
+			if(new Date($('#start-picker01').val()) > new Date($('#end-picker01').val())){
+				alert("시작일은 종료일보다 늦을 수 없습니다.");
+				$('#end-picker01').data("kendoDatePicker").value(new Date($('#start-picker01').val()));
+				return;
+			}
+			$smsSend.event.sendListSearch();
+		},
+		
+		indivSearchClick: function() {
+			searchTriggered = true;
+			var sd = $("#searchCtpvNm").val();
+			var sgg = $("#searchSggNm").val();
+			receiverParams.cmptnc_zone_cd = sd+sgg;
+			receiverParams.authrt_cd = $("#searchAuthrtCd").val();
+			receiverParams.stts_cd = $("#searchSttsCd").val();
+			receiverParams.search_other_condition = $("#searchOtherCondition").val();
+			receiverParams.search_wrd = $("#searchBox").val();
+			receiverParams.receiver_except_tel = JSON.stringify($("#receiver_except_tel").is(':checked'));
+			
+			var searchReq3 = $("#searchOtherCondition").val();
+			var searchReq4 = $("#searchBox").val();
+			
+			if(searchReq3 == '' && searchReq4 != '') {
+                alert("검색조건을 선택해주세요");
+            }
+            else if(searchReq3 != '' && searchReq4 == '' ){
+				alert("검색조건을 입력해주세요");
+			}
+			else{
+				var grid = $("#receiverListGrid").data("kendoGrid");
+                if (grid) {
+					$("#receiverListGrid_box").empty();
+					$(".indivReceiver_lists").empty();
+	                $('#receiverListGrid_box').append('<table id="receiverListGrid"></table>');
+                }
+				var totalReciverCnt = 0;
+				$('#totalRowCnt').text(totalReciverCnt);
+				$smsSend.ui.receiverListGrid();
+			}
 		},
 		
 		incListValid: function() {
@@ -1038,6 +1044,7 @@
                 alert('가입된 계정이 없거나 법인번호가 없습니다.');
             }
 		},
+		
 		authValid: function() {
             var checkboxes = $('.box_lists input[type="checkbox"]');
             let checked = false;
