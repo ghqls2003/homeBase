@@ -342,7 +342,7 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	// 면허번호에 해당하는 최근 7일간의 대여이력 조회 건수 24.10.25 jeonghyewon
 	@Override
 	public int drvListViewCnt(Map<String, Object> paramsMap) {
-		return  driveDao.selectVfcHistCnt(paramsMap);
+		return  driveDao.drvListViewCnt(paramsMap);
 	}
 
 

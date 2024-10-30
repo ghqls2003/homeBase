@@ -325,4 +325,15 @@
 			) AS TT
 	</select>
 
+
+	<!--  면허번호에 해당하는 최근 7일간의 대여이력 조회 건수 24.10.25 jeonghyewon-->
+	<select id="drvListViewCnt" resultType="int">
+		SELECT count(1) AS cnt
+		FROM dqvs.dvs_dqv_hs_verf AS ddhv
+		LEFT OUTER JOIN dqvs.v_intg_user_info AS viui  ON ddhv.rqstr_sn = viui.user_sn
+		LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn
+		where  ddhv.dln_enc = dqvs.pca_encrypt(#{dln}, '200')
+			AND vrfc_dmnd_dt <![CDATA[>]]> now() - interval '7days'
+
+	</select>
 </mapper>
