@@ -272,9 +272,14 @@ var expryYmd;
 				dataValueField: "value"
 				, value: "E1"
 			});
+
+			$(document).ready(function() {
+				kendo.ui.progress($(document.body), true);
+
 				$apiHist.ui.apiView();
+			});
 		},
-		
+
 		AuthCheck: function() {
 			if (Auth == 'K01' || Auth == 'D01' || Auth == 'Z01' || Auth == 'S04') {
 				$("#search_area").show();
@@ -395,7 +400,11 @@ var expryYmd;
 							url: contextPath + '/api/apiHist/listViewDev',
 							type: "POST",
 							beforeSend: function(xhr) {
+								kendo.ui.progress($(document.body), true); // 프로그레스 인디케이터 표시
 								xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+							},
+							complete: function() {
+								kendo.ui.progress($(document.body), false); // 프로그레스 인디케이터 숨김
 							}
 						},
 						parameterMap: function(options) {
@@ -596,12 +605,19 @@ var expryYmd;
 				$("#tabBtn02").addClass("on");
 
 				if (tabClick) {
-					$apiHist.ui.apiView02();
-					tabClick = false;
+					$(document).ready(function() {
+						kendo.ui.progress($(document.body), true);
+
+						$apiHist.ui.apiView02();
+					}); tabClick = false;
 				} else {
 					var grid = $('#grid02').data('kendoGrid');
 					grid.dataSource.page(1);
 				}
+
+
+
+
 
 				if (Auth == 'K01' || Auth == 'D01' || Auth == 'Z01' || Auth == 'S04') {
 					$("#search_area_Dev").show();
