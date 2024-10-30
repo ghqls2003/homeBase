@@ -14,10 +14,21 @@
 		            dcms2.bzmn_sn AS S1BZSN,
 		            dcmc.cd_expln AS rslt_msg,
 		            dahr.dmnd_cnt,
+					CASE WHEN dahr.dln ISNULL THEN NULL   <!-- dln사용관련 -->
+						WHEN LENGTH(dahr.dln) <![CDATA[ = ]]> 6 THEN CONCAT(dqvs.pca_decrypt(dahr.dln, '150'), REPEAT('*', 6))
+						ELSE CONCAT(SUBSTRING(dqvs.pca_decrypt(dahr.dln, '150'), 1, 6), REPEAT('*', 6))
+					END AS dln2,
+<<<<<<< .mine
+					CASE WHEN dahr.dln ISNULL THEN NULL   <!-- dln사용관련 -->
+						WHEN LENGTH(dahr.dln) <![CDATA[ = ]]> 6 THEN CONCAT(dqvs.pca_decrypt(dahr.dln, '150'), REPEAT('*', 6))
+						ELSE CONCAT(SUBSTRING(dqvs.pca_decrypt(dahr.dln, '150'), 1, 6), REPEAT('*', 6))
+					END AS dln2,
+=======
 		            CASE WHEN dahr.dln ISNULL THEN NULL   <!-- dln사용관련 -->
 							WHEN LENGTH(dahr.dln) <![CDATA[ = ]]> 6 THEN CONCAT(dqvs.pca_decrypt(dahr.dln, '150'), REPEAT('*', 6))
 							ELSE CONCAT(SUBSTRING(dqvs.pca_decrypt(dahr.dln, '150'), 1, 6), REPEAT('*', 6))
 							END AS dln2,
+>>>>>>> .theirs
                 	dahr.dln,
 		            dahr.req_hr
 		        FROM dqvs.dvs_api_hs_req AS dahr
@@ -77,7 +88,6 @@
 					 and rq LIKE '%' || LOWER(#{searchReq}) || '%'
 				</if>
 		    ) AS t
-	    		ORDER BY rn
 			<if test="take != '' and take != null">
 				LIMIT #{take} OFFSET #{skip}
 			</if>
