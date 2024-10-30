@@ -48,6 +48,18 @@ table.tb td .k-picker-solid {
     margin-right: 10px;
 }
 
+/* 운전자격확인결과 팝업 */
+@media (max-width: 640px){
+    .sub02_04  .contBox .cont{padding: 10px 20px 10px;height: 40px; justify-content: flex-start;}
+    .sub02_04 .content_result{width: 775px;margin: 0 auto;}
+    .sub02_04 .contBox .cont{height: 120px;display: flex;align-items: center;justify-content: center;}
+    .sub02_04 .contBox .cont p{text-align: center;}
+    .sub02_04 .contBox .cont p span.point{font-weight: 600;color: #364BC6;}
+    .sub02_04 .contBox .cont p span.point02{font-weight: 600;color: #ff3838;}
+    .sub02_04 .contBox .cont p.current_info{font-size: 1.6rem;line-height: 26px;font-weight: 500;}
+    .sub02_04 p.p_info{font-size: 1.4rem;line-height: 26px;color: #364BC6;margin-top: 9px;}
+}
+
 /* 업로드 팝업관련 추가 */
 #uploadFlex {
     display: flex;
@@ -93,18 +105,19 @@ table.tb td .k-picker-solid {
 }
 
 @media (max-width:550px) {
-    .popup.drvie_popup .box{width: 390px;}
+    .popup.drvie_popup .box{width: 390px;height: 550px;}
     .popup.drvie_popup .box .content h2 {display: inline-block; text-align: center;  margin-bottom: 30px; white-space: pre-wrap; width: 100%;   }
 }
 
 @media (max-width:480px) {
-    .popup.drvie_popup .box{width: 380px;height: 469px;}
+    .popup.drvie_popup .box{width: 380px;height: 480px;}
+    .btn_flex {display: flex; align-items: center; justify-content: center; margin-top: 10px; }
 }
 
 @media (max-width:420px) {
-    .popup.drvie_popup .box{height: 445px;}
+    .popup.drvie_popup .box{height: 470px;}
     .popup.drvie_popup .box .content h2 {display: inline-block; text-align: center;  margin-bottom: 30px; white-space: pre-wrap; width: 100%;   }
-
+    .btn_flex {display: flex; align-items: center; justify-content: center; margin-top: 10px; }
 }
 
 /* 팝업추가 코드 24.07.26 */

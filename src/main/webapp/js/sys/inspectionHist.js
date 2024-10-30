@@ -127,7 +127,7 @@
 			
 			ajax(false, contextPath + '/sys/inspectionHist/agencyList', 'body', '처리중입니다.', param, function(data) {
 				$(element).kendoAutoComplete({
-	              filter: "contains",
+	              	filter: "contains",
 					placeholder: '회사명을 입력하세요.',
 					dataTextField: "coNm",
 			        dataSource: data,
@@ -249,7 +249,6 @@
 		
 		// 검색옵션
 		search: function() {
-			
 			var param = {};
 			
 			// 권한
@@ -509,26 +508,7 @@
 			});
 			
 			$("#searchBtn").on("click", function() {
-				var selectCond = $("#selectCond").val();
-				var searchWrd = $('#searchWrd').val().trim();
-				
-				if(selectCond == '' && searchWrd != '') {
-					alert("조건을 선택해주세요.");
-					$("#selectCond").focus();
-				} else {
-					var sd = $("#searchCtpvNm").val();
-					var sgg = $("#searchSggNm").val();
-					excelDownArc.cmptncZoneCd = sd+sgg;
-					excelDownArc.searchChk    = $("input[name='searchChk']:checked").val();
-					excelDownArc.bzmnSeCd     = $('#searchBzmnSeCd').val();
-					excelDownArc.bsnSttsCd    = $('#searchBsnSttsCd').val();
-					excelDownArc.chckRslt     = $('#searchRslt').val();
-					excelDownArc.selectCond   = selectCond;
-					excelDownArc.searchWrd    = searchWrd;
-					
-					$("#inspectionHistGrid").data("kendoGrid").dataSource.page(1);
-				}
-				
+				$inspectionHist.event.searchClick();
             });
 			
 			// 등록팝업 버튼
@@ -650,6 +630,35 @@
 			$(".deleteBtn").on("click", function() {
 				$inspectionHist.event.updateDeleteYn();
 			});
+			
+			$("#searchWrd").on('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    $inspectionHist.event.searchClick();
+                }
+            });
+			
+		},
+		
+		searchClick: function() {
+			var selectCond = $("#selectCond").val();
+			var searchWrd = $('#searchWrd').val().trim();
+			
+			if(selectCond == '' && searchWrd != '') {
+				alert("조건을 선택해주세요.");
+				$("#selectCond").focus();
+			} else {
+				var sd = $("#searchCtpvNm").val();
+				var sgg = $("#searchSggNm").val();
+				excelDownArc.cmptncZoneCd = sd+sgg;
+				excelDownArc.searchChk    = $("input[name='searchChk']:checked").val();
+				excelDownArc.bzmnSeCd     = $('#searchBzmnSeCd').val();
+				excelDownArc.bsnSttsCd    = $('#searchBsnSttsCd').val();
+				excelDownArc.chckRslt     = $('#searchRslt').val();
+				excelDownArc.selectCond   = selectCond;
+				excelDownArc.searchWrd    = searchWrd;
+				
+				$("#inspectionHistGrid").data("kendoGrid").dataSource.page(1);
+			}
 		},
 		
 		chckRsltClick: function(params) {

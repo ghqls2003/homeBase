@@ -128,7 +128,7 @@
 				conf.cnfrmn_hstry_no,
 				to_char(conf.mdfcn_dt,'YYYY-MM-DD HH24:MI') mdfcn_dt,
 				to_char(conf.rent_bgng_dt,'YYYY-MM-DD HH24:MI') rent_bgng_dt,
-				to_char(conf.rent_end_dt,'YYYYY-MM-DD HH24:MI') rent_end_dt,
+				to_char(conf.rent_end_dt,'YYYY-MM-DD HH24:MI') rent_end_dt,
 				conf.vhcl_reg_no,
 				conf.vin,
 				agency.co_nm,

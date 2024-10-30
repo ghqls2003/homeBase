@@ -239,20 +239,20 @@
 
                                        </table>
                                        <table class="tb rental_tb01">
-                                           <tr id="licenseView">
-                                               <th scope="col">
-	                                               면허증사본
-	                                               <span class="asterisk">*</span>
-                                               </th>
-                                               <td>
-                                               <div class="tb_flex">
-                                                   <label for="files">면허증사본</label>
-                                                   <input type="text" placeholder="면허증을 등록해주세요" class="input inp filetype" disabled="disabled" style="border: none;" readonly/>
-												   <input type="file" id="files" name="files" onchange="fileAddCheck(this)" class="upload-hidden" style="display: none;" accept=".jpg, .jpeg, .png, .pdf"/>
-                                                   <button id="internationalLicenseBtn" class="yellow_btn carBtn"><img src="${contextPath}/images/sub/ico_search02.png" alt="검색아이콘"></button>
-                                               </div>
-                                               </td>
-                                           </tr>
+<!--                                            <tr id="licenseView"> -->
+<!--                                                <th scope="col"> -->
+<!-- 	                                               면허증사본 -->
+<!-- 	                                               <span class="asterisk">*</span> -->
+<!--                                                </th> -->
+<!--                                                <td> -->
+<!--                                                <div class="tb_flex"> -->
+<!--                                                    <label for="files">면허증사본</label> -->
+<!--                                                    <input type="text" placeholder="면허증을 등록해주세요" class="input inp filetype" disabled="disabled" style="border: none;" readonly/> -->
+<!-- 												   <input type="file" id="files" name="files" onchange="fileAddCheck(this)" class="upload-hidden" style="display: none;" accept=".jpg, .jpeg, .png, .pdf"/> -->
+<%--                                                    <button id="internationalLicenseBtn" class="yellow_btn carBtn"><img src="${contextPath}/images/sub/ico_search02.png" alt="검색아이콘"></button> --%>
+<!--                                                </div> -->
+<!--                                                </td> -->
+<!--                                            </tr> -->
                                            <tr>
                                                <th scope="col">
 	                                               대여시작일시
@@ -387,15 +387,15 @@
                                                    </div>
                                                    </td>
                                                </tr>
-                                               <tr id="detailFileDownView">
-                                                   <th scope="col">면허증 파일</th>
-                                                   <td>
-                                                   <div class="tb_flex">
-                                                       <label for="detailFileDown">파일 다운로드</label>
-                                                       <input type="text" id="detailFileDown" name="detailFileDown" class="input no_line">
-                                                   </div>
-                                                   </td>
-                                               </tr>
+<!--                                                <tr id="detailFileDownView"> -->
+<!--                                                    <th scope="col">면허증 파일</th> -->
+<!--                                                    <td> -->
+<!--                                                    <div class="tb_flex"> -->
+<!--                                                        <label for="detailFileDown">파일 다운로드</label> -->
+<!--                                                        <input type="text" id="detailFileDown" name="detailFileDown" class="input no_line"> -->
+<!--                                                    </div> -->
+<!--                                                    </td> -->
+<!--                                                </tr> -->
                                                <tr style="display: none;">
                                                    <th scope="col">차대번호</th>
                                                    <td>

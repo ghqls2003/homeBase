@@ -18,6 +18,17 @@
 						WHEN LENGTH(dahr.dln) <![CDATA[ = ]]> 6 THEN CONCAT(dqvs.pca_decrypt(dahr.dln, '150'), REPEAT('*', 6))
 						ELSE CONCAT(SUBSTRING(dqvs.pca_decrypt(dahr.dln, '150'), 1, 6), REPEAT('*', 6))
 					END AS dln2,
+<<<<<<< .mine
+					CASE WHEN dahr.dln ISNULL THEN NULL   <!-- dln사용관련 -->
+						WHEN LENGTH(dahr.dln) <![CDATA[ = ]]> 6 THEN CONCAT(dqvs.pca_decrypt(dahr.dln, '150'), REPEAT('*', 6))
+						ELSE CONCAT(SUBSTRING(dqvs.pca_decrypt(dahr.dln, '150'), 1, 6), REPEAT('*', 6))
+					END AS dln2,
+=======
+		            CASE WHEN dahr.dln ISNULL THEN NULL   <!-- dln사용관련 -->
+							WHEN LENGTH(dahr.dln) <![CDATA[ = ]]> 6 THEN CONCAT(dqvs.pca_decrypt(dahr.dln, '150'), REPEAT('*', 6))
+							ELSE CONCAT(SUBSTRING(dqvs.pca_decrypt(dahr.dln, '150'), 1, 6), REPEAT('*', 6))
+							END AS dln2,
+>>>>>>> .theirs
                 	dahr.dln,
 		            dahr.req_hr
 		        FROM dqvs.dvs_api_hs_req AS dahr

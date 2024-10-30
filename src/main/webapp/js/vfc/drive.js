@@ -1395,7 +1395,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 
                                             // ✂️todo  현재 운전자격이력 건수 는 운전자격확인 이력 건수로 진행중 result.VfcHistCnt
                                             if(result.VfcHistCnt == 0){
-                                                var html = `<br><p class="current_info" >
+                                                var html = `<p class="current_info" >
                                                     최근 7일 운전자격확인 이력이 없습니다.
                                                 </p><br>`;
                                                 $('#result').prepend(html);
@@ -1425,8 +1425,8 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 
 
                                                 var html = `<br><p class="current_info">
-                                                    유사도 검증 결과 유사도는 ` + similarityConfidence + `%이며,<br>
-                                                    생체 감지는 ` + livenessConfidence + `%입니다.
+                                                    유사도 검증 결과 유사도는 ` + parseFloat(similarityConfidence).toString() + `%이며,<br>
+                                                    생체 감지는 ` + parseFloat(livenessConfidence).toString() + `%입니다.
                                                 </p><br>`;
                                                 $('#result').prepend(html);
                                             }

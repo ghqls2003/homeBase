@@ -82,7 +82,7 @@ public class DriveDao extends CmmnAbstractMapper {
 		return selectList("vfc.drive.getRtnMsg", paramsMap);
 	}
 
- 	// 운전자격이력 건수
+ 	// 운전자격이력 건수(팝업에 뜨는건 이거 사용함)
 	public int selectVfcHistCnt(Map<String, Object> paramsMap) {
 		return selectOne("vfc.drive.selectVfcHistCnt", paramsMap);
 	}

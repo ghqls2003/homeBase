@@ -245,8 +245,8 @@
             var endDt = $("#end-picker01").val();
             var startTime = $("#start-timePicker01").val();
             var endTime = $("#end-timePicker01").val();
-            var endDtTm = endDt +" "+ endTime;
-            var startDtTm = startDt +" "+ startTime;
+            var endDtTm = endDt +" "+ endTime+":59";
+            var startDtTm = startDt +" "+ startTime+":00";
             var rqstrNm =  $("#rqstrNm").val();
             var cmpnyName =  $("#cmpnyName").val();
             //예 cd = "verify_cd_test"
