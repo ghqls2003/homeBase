@@ -48,12 +48,14 @@
         .searchBsnStts1{ font-size: 11px; text-align: left; padding-left: 12px;}
         .searchBsnStts2{ font-size: 11px; text-align: left; padding-left: 12px;}
     }
+    @media (max-width:780px) {
+        .searchBsnStts2 { width: 200px;}
+    }
 
     @media (max-width:590px) {
-        .yearBox {display: flex; flex-direction: column;
-        }
-       .datePicker{text-align: left;}
-
+        .yearBox {display: flex; flex-direction: column; }
+        .datePicker{text-align: left;}
+        .searchBsnStts2 { width: 270px;}
     }
 
 
@@ -82,8 +84,8 @@
             </div>
 
             <!-- 검색조건 -->
-            <div class="search_top">
-			    <div class="selec_wr">
+            <div class="search_top" >
+			    <div class="selec_wr" >
 			        <div class="mo_flex">
 			        	<div class="year_picker">
                             <ul class="yearBox" >
@@ -111,7 +113,7 @@
                             </ul>
                         </div>
 
-			            <ul class="selec_box">
+			            <ul class="selec_box" >
 							<li class="li_slec">
 								<input type="text" id="searchMthd" class="searchBsnStts" aria-label= "확인방법" >
 							</li>
