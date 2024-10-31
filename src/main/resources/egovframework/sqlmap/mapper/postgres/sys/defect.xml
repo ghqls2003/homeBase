@@ -13,10 +13,10 @@
         defect.prcs_stts_cd,
         COALESCE(defect.defects_cn, '-') AS defects_cn,
         agency.co_nm,
-        COALESCE(actn.cmptn_yn, '-') AS crrtvact_rslt,
+        COALESCE(actn.crrtvact_yn, '-') AS crrtvact_rslt,
         CASE 
-            WHEN actn.cmptn_yn = 'Y' THEN '조치'
-            WHEN actn.cmptn_yn = 'N' THEN '미조치'
+            WHEN actn.crrtvact_yn = 'Y' THEN '조치'
+            WHEN actn.crrtvact_yn = 'N' THEN '미조치'
             ELSE '-'
         END AS crrtvact_rslt_nm,
         agency.reg_cmptnc_cd,
@@ -66,7 +66,7 @@
 	           	and car.vhcl_reg_no like '%' || #{vhclRegNo} ||'%'
 			</if>
 			<if test="crrtvactRslt != '' and crrtvactRslt != null">
-	           	and crrtvact_rslt = #{crrtvactRslt}
+	           	and actn.crrtvact_yn = #{crrtvactRslt}
 			</if>
 			<if test ='startDt != null and startDt != ""'>
 		        AND defect.ocrn_dt::TIMESTAMP <![CDATA[>=]]>  #{startDt}::TIMESTAMP
