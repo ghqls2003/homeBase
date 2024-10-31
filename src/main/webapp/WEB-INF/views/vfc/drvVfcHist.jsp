@@ -13,11 +13,10 @@
         color: #364BC6;
     }
     .timePicker01{
-        width: 100px;
         height: 38px;
         text-align: center;
     }
-
+#start-timePicker01, #end-timePicker01 {width: 100px;}
     .searchBsnStts1{
         width: 130px;
         height: 40px;
@@ -43,12 +42,21 @@
         background-color: white;
 
     }
-@media (max-width:590px) {
-    .yearBox {display: flex; flex-direction: column;
+
+    @media (max-width:900px) {
+        .timePicker01 {width: 100%; text-align: left;}
+        .searchBsnStts1{ font-size: 11px; text-align: left; padding-left: 12px;}
+        .searchBsnStts2{ font-size: 11px; text-align: left; padding-left: 12px;}
     }
-   .timePicker01 {width: 100%; text-align: left;}
-   .datePicker{text-align: left;}
-}
+
+    @media (max-width:590px) {
+        .yearBox {display: flex; flex-direction: column;
+        }
+       .datePicker{text-align: left;}
+
+    }
+
+
 
 </style>
 
