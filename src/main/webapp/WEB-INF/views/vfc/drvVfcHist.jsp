@@ -43,6 +43,12 @@
         background-color: white;
 
     }
+@media (max-width:590px) {
+    .yearBox {display: flex; flex-direction: column;
+    }
+   .timePicker01 {width: 100%; text-align: left;}
+   .datePicker{text-align: left;}
+}
 
 </style>
 
@@ -72,10 +78,10 @@
 			    <div class="selec_wr">
 			        <div class="mo_flex">
 			        	<div class="year_picker">
-                            <ul class="yearBox">
+                            <ul class="yearBox" >
                                 <li class="mo_li">
                                     <label for="start-picker01">시작기간</label>
-                                    <input id="start-picker01" title="datepicker"
+                                    <input id="start-picker01" class = "datePicker" title="datepicker"
                                         aria-label="시작기간검색">
                                 </li>
                                 <li class="mo_li">
@@ -86,7 +92,7 @@
                                 <li class="bar">-</li>
                                 <li class="mo_li">
                                     <label for="end-picker01">종료기간</label>
-                                    <input id="end-picker01" title="datepicker"
+                                    <input id="end-picker01"  class = "datePicker" title="datepicker"
                                         aria-label="종료기간검색">
                                 </li>
                                 <li class="mo_li">
