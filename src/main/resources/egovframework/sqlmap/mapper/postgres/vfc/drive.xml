@@ -225,7 +225,7 @@
 
 	<select id="selectCrno" resultType="resultMap">
 		<if test="bzmnSn != null and bzmnSn != ''">
-			select crno from dqvs.dvs_rac_mt_agency
+			select bzmn_sn, crno from dqvs.dvs_rac_mt_agency
 			where bzmn_sn = #{bzmnSn}
 		</if>
 	</select>
