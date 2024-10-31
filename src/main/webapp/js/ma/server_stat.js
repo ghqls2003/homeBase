@@ -61,7 +61,6 @@
 		 */
 		svrStatLoad: function() {
 			const url = contextPath + "/ma/main/svrStat";
-			eventSource = new EventSource(url);
 
 			// 서버 상태 호출
 			const authChk = $(".serverStatusBar");
@@ -72,9 +71,6 @@
 				eventSource.onmessage = function(event) {
 					$serverStat.event.sseCall(event)
 				}
-				/*eventSource.onerror = function () {
-					$main.event.renderDefaultStatList(statList);
-				};*/
 			}
 
 		},
