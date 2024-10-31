@@ -48,8 +48,15 @@
 						<if test="carNum != '' and carNum != null">
 							and vhcl_reg_no like '%' || #{carNum} || '%'
 						</if>
+						<choose>
+							<when test= "crno != '' and crno != null">
+								AND crno = #{crno}
+							</when>
+							<otherwise>
+								AND 1 != 1
+							</otherwise>
+						</choose>
 						<if test="crno != '' and crno != null">
-							and crno = #{crno}
 						</if>
 						 ) T1 
 					) T2
