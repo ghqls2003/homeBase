@@ -97,8 +97,8 @@
 //						var accUrl = "/stts/verfStts/excelDown";
 //						var success = kendoExcelAOPAcc(a_data, accUrl);
 //						
-//						console.log(success)
 //						var intervalExcel = setInterval(function() {
+//						console.log(success)
 //							if(success) {
 								var sheet = e.workbook.sheets[0];
 								var columnVal = sheet.rows[0].cells;

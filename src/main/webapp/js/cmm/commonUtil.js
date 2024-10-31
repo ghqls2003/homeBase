@@ -1570,16 +1570,15 @@ function kendoExcelAOPAcc(a_data, accUrl) {
         if (result != null) {
             var prvYn = result[0].prvc_idntf_yn;
 
-//				if (prvYn === "Y") {
-				if (1) {
-					if ($("#elxExcelDownReason").length === 0) {
-						var $excelDownReasonInput = '<input type="hidden" id="elxExcelDownReason" name="excelDownReason" />';
-						$(".sub03").append($excelDownReasonInput);
-					}
-					$("#excelDownReasonPopup").remove();
+//			if (prvYn === "Y") {
+			if(0){
+				if ($("#elxExcelDownReason").length === 0) {
+					var $excelDownReasonInput = '<input type="hidden" id="elxExcelDownReason" name="excelDownReason" />';
+					$(".sub03").append($excelDownReasonInput);
+				}
+				$("#excelDownReasonPopup").remove();
 
-
-					var dialogCont = '<div id="excelDownReasonPopup" class="popup popup_type02 view">';
+				var dialogCont = '<div id="excelDownReasonPopup" class="popup popup_type02 view">';
 					dialogCont    += '    <div class="box">';
 					dialogCont    += '        <div class="popup_top">';
 					dialogCont    += '            <h4>엑셀다운로드</h4>';
@@ -1608,37 +1607,33 @@ function kendoExcelAOPAcc(a_data, accUrl) {
 					dialogCont    += '	  </div>';
 					dialogCont    += '</div>';
 
-					$(document).on("click", ".close", function() {
+				$(document).on("click", ".close", function() {
+					$("#excelDownReasonPopup").removeClass("view");
+				});
+
+				$(document).on("click", "#btnClose", function() {
+					$('#excelDownReasonPopup .close').click();
+				});
+
+				$(document).off("click", "#btnExcelDownload").on("click", "#btnExcelDownload", function() {
+					var excelDownReason = $("#excelDownReason").val();
+					if(validateExcelDownReason(excelDownReason)){
+						var params = {
+	                    	excelDownReason: $("#excelDownReason").val(),
+	                        total: a_data.length
+	                    };
+	                    ajax(false, contextPath + accUrl, "", "", params, function(result) {});
 						$("#excelDownReasonPopup").removeClass("view");
-					});
+					}
+				});
 
-					$(document).on("click", "#btnClose", function() {
-						$('#excelDownReasonPopup .close').click();
-					});
-
-					$(document).off("click", "#btnExcelDownload").on("click", "#btnExcelDownload", function() {
-						var excelDownReason = $("#excelDownReason").val();
-						if(validateExcelDownReason(excelDownReason)){
-							var params = {
-	                            excelDownReason: $("#excelDownReason").val(),
-	                            total: a_data.length
-	                        };
-	                        ajax(false, contextPath + accUrl, "", "", params, function(result) {});
-							$("#excelDownReasonPopup").removeClass("view");
-						}
-					});
-
-					$(".sub03").append(dialogCont);
-					$("#excelDownReasonPopup").addClass("view");
-
-				} else {
-	                var params = {total: a_data.length};
-	                ajax(false, contextPath + accUrl, "", "", params, function(result) {});
-				}
-		    return 1;
-        } else {
-	    	return 0;
-		}
+				$(".sub03").append(dialogCont);
+				$("#excelDownReasonPopup").addClass("view");
+			} else {
+				var params = {total: a_data.length};
+	            ajax(false, contextPath + accUrl, "", "", params, function(result) {});
+			}
+        };
     });
 }
 
@@ -2231,3 +2226,62 @@ function defaultMenuInfoList(){
 	    }
     });
 }
+
+
+/**
+ * @author : 김경룡
+ * @date : 2024.10.30
+ * @description : kendoExcel사용테스트 중
+*/
+function syncAjax(choiceSync, isLodingBool, url, isLodingElement, beforeSendText, ajaxParam, fn_success, fn_complete) {
+
+			var loader = isLoading($(isLodingElement)[0], {
+				type: "overlay",
+				class: "fa fa-refresh fa-spin",
+				text: beforeSendText
+			});
+
+			var header = $("meta[name='_csrf_header']").attr("content");
+			var token = $("meta[name='_csrf']").attr("content");
+
+			$.ajax({
+				url: url,
+				type: 'POST',
+				async: choiceSync,
+				contentType: "application/json",
+				data: JSON.stringify(ajaxParam),
+				dataType: "json",
+				beforeSend: function(xhr) {
+
+					xhr.setRequestHeader(header, token);
+
+					if (isLodingBool) {
+						loader.loading();
+					}
+				},
+				success: function(data) {
+					if (fn_success != null || fn_complete != undefined) {
+						fn_success(data);
+					}
+				},
+				error: function(xhr, textStatus) {
+					if (xhr.status == 401) {
+						alert("권한이 없습니다. 사용자 인증이 필요합니다.");
+					} else if (xhr.status == 403) {
+						alert("세션이 만료되었습니다. 다시 로그인하세요.\n" + textStatus);
+						location.href = "/rims";
+					} else {
+						alert("처리 중 에러가 발생하였습니다.");
+					}
+				},
+				complete: function(xhr, status) {
+					if (isLodingBool) {
+						loader.remove();
+					}
+					$(".is-loading-element-overlay").remove();
+					if (fn_complete != null || fn_complete != undefined) {
+						fn_complete(xhr);
+					}
+				}
+			});
+		}

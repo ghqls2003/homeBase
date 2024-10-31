@@ -130,7 +130,7 @@ button.red_btn {
                     <li class="mid"><img src="${contextPath}/images/sub/ico_menuLine.png" alt="라인"/></li>
                     <li>대여사업자 관리</li>
                     <li class="mid"><img src="${contextPath}/images/sub/ico_menuLine.png" alt="라인"/></li>
-                    <li class="current">대여차량 결합정보</li>
+                    <li class="current">대여차량 결함정보</li>
                 </ul>
 	        </div>
 	        
@@ -189,7 +189,7 @@ button.red_btn {
 	        <!-- 대여차량 결함정보 그리드 -->
 	        <div class="contBox grid_wr">
 	            <div class="nameBox nameBox-flex">
-                    <h4 class="name">대여차량 결합정보</h4>
+                    <h4 class="name">대여차량 결함정보</h4>
                     <button class="download-btn exel_down" type="button">
                         <img src="${contextPath}/images/sub/ico_down.png" alt="다운로드아이콘">
                         엑셀
@@ -566,7 +566,7 @@ button.red_btn {
 				</div>
 			</div>
 	        
-	        <!-- 결합정보 상세보기 팝업 -->
+	        <!-- 결함정보 상세보기 팝업 -->
 	        <div class="popup viewDefect_popup msg_send  popup_type02">
 	            <div class="box">
 	                <div class="popup_top">
