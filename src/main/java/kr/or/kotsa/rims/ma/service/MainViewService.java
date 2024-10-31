@@ -49,7 +49,7 @@ public interface MainViewService {
 	 * @return
 	 * @throws RimsException
 	 */
-   public Map<String, Object> selectSvrStat() throws RimsException ;
+   public Map<String, Object> svrStat() throws RimsException ;
    
    /**
     * 개인정보보호 서약 처리

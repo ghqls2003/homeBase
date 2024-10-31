@@ -296,17 +296,10 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 	@Async
 	public void svrStat(HttpServletRequest request, HttpServletResponse response) throws RimsException, IOException {
 		String result = "";
-		String authrtCd = getAuthrtCd();
-
 		Gson objGson = new Gson();
 
-		char firstChar = authrtCd.charAt(0);
-		if(firstChar == 'S' ) {
-			result = objGson.toJson(Collections.emptyMap());
-		}else {
-			Map<String, Object> resultMap = mainViewService.selectSvrStat();
-			result = objGson.toJson(resultMap);
-		}
+		Map<String, Object> resultMap = mainViewService.svrStat();
+		result = objGson.toJson(resultMap);
 		response.setContentType("text/event-stream;charset=UTF-8");
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		response.setHeader("Connection", "keep-alive");
@@ -316,7 +309,7 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 		writer.flush();
 
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(60000);
 		} catch (InterruptedException e) {
 			logger.error("InterruptedException 에러 발생");
 			Thread.currentThread().interrupt();

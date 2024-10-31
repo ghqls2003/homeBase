@@ -783,9 +783,14 @@
 			LEFT OUTER JOIN
 				dqvs.dvs_rac_mt_defect defect
 			ON car.vin = defect.vin
-<!-- 			<if test="crno != null and crno != ''"> -->
-			WHERE car.crno = #{crno}
-<!-- 			</if> -->
+			<choose>
+				<when test="crno != null and crno != ''">
+					WHERE car.crno = #{crno}
+				</when>
+				<otherwise>
+					WHERE 1 != 1
+				</otherwise>
+			</choose>
 			) AS t1
 	) AS T
 	</sql>

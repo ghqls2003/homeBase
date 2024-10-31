@@ -186,10 +186,10 @@ public class MainViewServiceImpl extends CmmnAbstractServiceImpl implements Main
 	 * @throws RimsException
 	 */
 	@Override
-	public Map<String, Object> selectSvrStat() throws RimsException {
+	public Map<String, Object> svrStat() throws RimsException {
 	   Map<String, Object> result = new HashMap<>();
 		try {
-			List<Map<String, Object>> svrStatList = mainViewDao.selectSvrStat();
+			List<Map<String, Object>> svrStatList = mainViewDao.svrStat();
 			result.put(SUCCESS, true);
 		   	result.put("svrStatList", svrStatList);
 	   }catch (Exception e){
