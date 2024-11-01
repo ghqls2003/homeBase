@@ -175,7 +175,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			});
 
 			$(".datePicker").prop("readonly", true);
-			if(authrtCd.includes('S')){
+			if(authrtCd.includes('S')){ // 대여사업자여도 법인번호가 없을 경우 있음 crno = '';
 				ajax(false, contextPath+'/vfc/drive/selectCrno', 'body', '처리중입니다.', {}, function (data) {
 					if(data[0] != null) {
 						$("#crno").val(data[0].crno);
@@ -747,7 +747,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 				$drive.event.resetInput();
 			});
 
-            // 대여유형 포함 코드 추후 대여유형 포함 코드로 변경 가능성 있어 주석처리함 ====
+            // 대여유형 포함
 			$('#rentCfm').click(function(){
 			    var onewayYn = $("input[type=radio][name=category02]:checked").val();
 			    var vrfcHstrySn1 = vrfcHstrySn;
@@ -756,10 +756,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			                 };
 				if ($('#car_num').val() == ''){
 					alert('차량번호를 입력해주세요.');
-//				}else if(bzmnCarYn === "N"){
-//                    alert('로그인 한 사용자의 법인에 소속된 차량이 아닙니다.대여 할수 없습니다.');
-//                    location.reload();
-//                    bzmnCarYn = "";
 				}else if (onewayYn =='' || onewayYn == null || onewayYn == ' '){
 				    alert('대여유형을 선택해주세요.');
 				}
@@ -767,17 +763,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 					$drive.event.updateRentSttsCdInclRentalType(param);
 				}
 			});
-			//================================================end=======
-
-            // 대여유형 미포함 코드 =======================================
-//			$('#rentCfm').click(function(){
-//				if ($('#car_num').val() == ''){
-//					alert('차량번호를 입력해주세요.');
-//				} else {
-//					$drive.event.updateRentSttsCd();
-//				}
-//			});
-			//================================================end=======
 
 
 			$('.carNum_btn').click(function(){
@@ -1360,17 +1345,21 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                                     if (result != null && result != "") {
                                         rentno = result.rentno;
                                         if(data.body.f_rtn_code == '00'){
+                                            //1. 입력된 차량번호가 로그인한 법인소속 차량인지 먼저 판단 ,bzmnCarYn = N 이면 결함여부 미노출
                                             if(bzmnCarYn === "N"){
                                               var html = `<p class="current_info" >
                                                            <span style = "color:red";> 로그인 한 사용자의 법인에 소속된 차량이 아닙니다.</span>
                                                          </p>`;
                                                 $('#result').prepend(html);
+                                            //2. 해당 법인 차량일 경우 차량번호를 통한 결함data를 result에 저장함
+                                            //2-1. bzmnCarYn = N  and result.data !== null 이면 '결함존재'
                                             } else if(result.data != undefined && result.total != 0){
                                                 var html = `<p class="current_info" >
                                                                 차량 결함 정보가
                                                                 <span class = "popupSpan" id ="rslt_vehicleDefect" onclick =$drive.event.popupVhclDfctListClick()>존재</span> 합니다.
                                                             </p>`;
                                                 $('#result').prepend(html);
+                                            //2-2.  bzmnCarYn = N  and result.data === null 이면 '없음 '
                                             } else{
                                                 var html = `<p class="current_info">
                                                                 차량 결함 정보가 없습니다.
@@ -1501,23 +1490,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
             }
         },
 
-//        // 대여유형 미!!!포함
-//        updateRentSttsCd : function() {
-//            var obj1 = {};
-//            obj1.rentno = rentno;
-//            obj1.rentalTypeYn = 'N';
-//            if($(".point02").length) {
-//                alert("면허정보 조회 결과 비정상이기 때문에 대여처리 할 수 없습니다.");
-//            } else {
-//                ajax(false, contextPath+"/vfc/drive/updateRentSttsCd", "", "", obj1, function(result) {
-//                    if (result != null && result=="success"){
-//                        alert("대여처리 완료되었습니다.");
-//                        $(".result_popup").removeClass("view");
-//                        location.reload();
-//                    }
-//                });
-//            }
-//        },
 
 		resetInput : function() {
 			$("#num01").data("kendoDropDownList").select(0);
