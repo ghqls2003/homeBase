@@ -75,20 +75,37 @@
 			}
 
 			var oneWeekAgo = new Date(new Date().setDate(new Date().getDate() - 7));
-
+				
 			$("#start-picker01").kendoDatePicker({
 				format: "yyyy-MM-dd",
 				parseFormats: ["yyyy-MM-dd"],
-				value: new Date(oneWeekAgo)
+				value: new Date(oneWeekAgo),
+				max: new Date()
 			});
 			$("#start-picker01").attr("readonly", true);
 
             $("#end-picker01").kendoDatePicker({
 				format: "yyyy-MM-dd",
 				parseFormats: ["yyyy-MM-dd"],
-				value: new Date(nowYear, nowMonth, nowDate)
+				value: new Date(nowYear, nowMonth, nowDate),
+				max: new Date()
 			});
+			
 			$("#end-picker01").attr("readonly", true);
+			
+			$('#start-picker01').on('change', function(){
+				if(new Date($('#start-picker01').val()) > new Date($('#end-picker01').val())){
+					alert("시작일은 종료일보다 늦을 수 없습니다.");
+					$('#start-picker01').data("kendoDatePicker").value(new Date($('#end-picker01').val()));
+				}
+			});
+			
+			$('#end-picker01').on('change', function(){
+				if(new Date($('#end-picker01').val()) < new Date($('#start-picker01').val())){
+					alert("종료일은 시작일보다 빠를 수 없습니다.");
+					$('#end-picker01').data("kendoDatePicker").value(new Date($('#start-picker01').val()));
+				}
+			});
 			
 			$("#rent-picker").kendoDatePicker({
 				format: "yyyy-MM-dd",
@@ -398,9 +415,6 @@
 					$('#start-picker01').data("kendoDatePicker").value(new Date(new Date(end).setDate(end.getDate() - 7)));
 				}
 				
-				if(new Date($('#start-picker01').val()) > new Date($('#end-picker01').val())){
-					alert("시작일은 종료일보다 늦을 수 없습니다.");
-				}
 				searchParamsArc.startDt = $("#start-picker01").val();
 				searchParamsArc.endDt = $("#end-picker01").val();
 				$("#rentalHistGrid").data("kendoGrid").dataSource.page(1);
@@ -906,8 +920,10 @@
 			$("#regVhclRegNo").val('');
 			$("#regRentNo").val('');
 			$("#regRgtrSn").val('');
-			$('#start-picker02').data("kendoDateTimePicker").value(new Date(2023,5,1));
+			
+			$('#start-picker02').data("kendoDateTimePicker").value(new Date(nowYear, nowMonth, nowDate));
 			$('#end-picker02').data("kendoDateTimePicker").value(new Date(nowYear, nowMonth, nowDate, nowHours, nowMinutes));
+			
 			$('#rentalHistGrid').data('kendoGrid').dataSource.read();
 		},
 		issued: function(rentNo, rentSttsNm){

@@ -204,6 +204,22 @@
 			$("#start-picker01").attr("readonly", true);
 			$("#end-picker01").attr("readonly", true);
 			
+			
+			$('#start-picker01').on('change', function(){
+				if(new Date($('#start-picker01').val()) > new Date($('#end-picker01').val())){
+					alert("시작일은 종료일보다 늦을 수 없습니다.");
+					$('#start-picker01').data("kendoDatePicker").value(new Date($('#end-picker01').val()));
+				}
+			});
+			
+			$('#end-picker01').on('change', function(){
+				if(new Date($('#end-picker01').val()) < new Date($('#start-picker01').val())){
+					alert("종료일은 시작일보다 빠를 수 없습니다.");
+					$('#end-picker01').data("kendoDatePicker").value(new Date($('#start-picker01').val()));
+				}
+			});
+			
+			
 			// 발송 유형
 			var sendType = [
 				{ cd: 0, sendType: "즉시 전송"},
@@ -997,11 +1013,7 @@
 				$('#start-picker01').data("kendoDatePicker").value(new Date(new Date(end).setMonth(end.getMonth() - 1)));
 				return;
 			}
-			if(new Date($('#start-picker01').val()) > new Date($('#end-picker01').val())){
-				alert("시작일은 종료일보다 늦을 수 없습니다.");
-				$('#end-picker01').data("kendoDatePicker").value(new Date($('#start-picker01').val()));
-				return;
-			}
+			
 			$smsSend.event.sendListSearch();
 		},
 		

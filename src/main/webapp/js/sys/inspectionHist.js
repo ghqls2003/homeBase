@@ -26,10 +26,10 @@
 		detailSearch: function(){
 			$("#detailChckYmd").kendoDatePicker({
 				value: new Date(),
-				dateInput: true,
 				format: "yyyy-MM-dd",
 				max: new Date()
 			});
+			$("#detailChckYmd").attr("readonly", true);
 			
 			//서명여부
 			var signYn = [
@@ -73,10 +73,10 @@
 		insertSearch: function(){
 			$("#regChckYmd").kendoDatePicker({
 				value: new Date(),
-				dateInput: true,
 				format: "yyyy-MM-dd",
 				max: new Date()
 			});
+			$("#regChckYmd").attr("readonly", true);
 			
 			//서명여부
 			var signYn = [
