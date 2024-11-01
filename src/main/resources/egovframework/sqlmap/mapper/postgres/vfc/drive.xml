@@ -232,7 +232,7 @@
 
 	<select id="selectCrno" resultType="resultMap">
 		<if test="bzmnSn != null and bzmnSn != ''">
-			select crno from dqvs.dvs_rac_mt_agency
+			select bzmn_sn, crno from dqvs.dvs_rac_mt_agency
 			where bzmn_sn = #{bzmnSn}
 		</if>
 	</select>
@@ -252,11 +252,12 @@
 <!-- 최근 7일 운전자격이력 건수(팝업에 이거 사용함) -->
 	<select id="selectVfcHistCnt" parameterType="paraMap" resultType="int">
 		/* 최근 7일 운전자격이력 건수(팝업용) */
-		SELECT COUNT(1) AS cnt
-		FROM 
-			dqvs.dvs_dqv_hs_verf v
-		WHERE v.dln_enc = dqvs.pca_encrypt(#{dln}, '200')
-			AND vrfc_dmnd_dt <![CDATA[>]]> NOW() - INTERVAL '7days'
+		WITH dln_with AS (SELECT dqvs.pca_encrypt(#{dln}, '200') AS dln)
+			SELECT COUNT(1) AS cnt
+			FROM
+				dqvs.dvs_dqv_hs_verf v, dln_with
+			WHERE v.vrfc_dmnd_dt <![CDATA[>]]> NOW() - INTERVAL '7days'
+				AND v.dln_enc = dln_with.dln
 	</select>
 
 
