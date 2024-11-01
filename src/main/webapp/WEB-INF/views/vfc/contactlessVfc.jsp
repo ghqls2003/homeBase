@@ -268,7 +268,7 @@ var authrtCd = '${authrtCd}'
 </div>
 
 <!-- 결과 팝업 -->
-<div class="popup result_popup drvie_popup view sub02_04">
+<div class="popup result_popup drvie_popup sub02_04" style="display : none">
     <div class="box">
     	<div class="popup_top">
         	<h4>운전자격확인 결과</h4>
