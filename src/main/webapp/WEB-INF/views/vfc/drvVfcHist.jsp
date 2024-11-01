@@ -9,56 +9,27 @@
    var curAuthrtCd = '${authrtCd}';
 </script>
 <style>
-    .ap .k-input-value-text {
-        color: #364BC6;
-    }
-    .timePicker01{
-        height: 38px;
-        text-align: center;
-    }
+
+.ap .k-input-value-text { color: #364BC6;}
+.timePicker01{height: 38px;text-align: center;}
 #start-timePicker01, #end-timePicker01 {width: 100px;}
-    .searchBsnStts1{
-        width: 130px;
-        height: 40px;
-        font-size: 16px;
-        line-height: 1.42857143;
-        font-weight:500;
-        text-align: center;
-        border: 1px solid #DBE0EC;
-        border-radius: 10px;
-        background-color: white;
+.searchBsnStts1{width: 130px;height: 40px;font-size: 16px;line-height: 1.42857143;font-weight:500;text-align: center;border: 1px solid #DBE0EC;border-radius: 10px;background-color: white;}
+.searchBsnStts2{width: 277px;height: 40px;font-size: 16px;line-height: 1.42857143;font-weight:500;text-align: center;border: 1px solid #DBE0EC;border-radius: 10px;background-color: white;}
 
-    }
+@media (max-width:900px) {
+    .timePicker01 {width: 100%; text-align: left;}
+    .searchBsnStts1{ font-size: 11px; text-align: left; padding-left: 12px;}
+    .searchBsnStts2{ font-size: 11px; text-align: left; padding-left: 12px;}
+}
+@media (max-width:780px) {
+    .searchBsnStts2 { width: 200px;}
+}
 
-    .searchBsnStts2{
-        width: 277px;
-        height: 40px;
-        font-size: 16px;
-        line-height: 1.42857143;
-        font-weight:500;
-        text-align: center;
-        border: 1px solid #DBE0EC;
-        border-radius: 10px;
-        background-color: white;
-
-    }
-
-    @media (max-width:900px) {
-        .timePicker01 {width: 100%; text-align: left;}
-        .searchBsnStts1{ font-size: 11px; text-align: left; padding-left: 12px;}
-        .searchBsnStts2{ font-size: 11px; text-align: left; padding-left: 12px;}
-    }
-    @media (max-width:780px) {
-        .searchBsnStts2 { width: 200px;}
-    }
-
-    @media (max-width:590px) {
-        .yearBox {display: flex; flex-direction: column; }
-        .datePicker{text-align: left;}
-        .searchBsnStts2 { width: 270px;}
-    }
-
-
+@media (max-width:590px) {
+    .yearBox {display: flex; flex-direction: column; }
+    .datePicker{text-align: left;}
+    .searchBsnStts2 { width: 270px;}
+}
 
 </style>
 
@@ -91,24 +62,19 @@
                             <ul class="yearBox" >
                                 <li class="mo_li">
                                     <label for="start-picker01">시작기간</label>
-                                    <input id="start-picker01" class = "datePicker" title="datepicker"
-                                        aria-label="시작기간검색">
+                                    <input id="start-picker01" class = "datePicker" title="datepicker"  aria-label="시작기간검색">
                                 </li>
                                 <li class="mo_li">
-                                    <label for="start-timePicker01">시작시간</label>
-                                    <input id="start-timePicker01" title="timePicker" class = "timePicker01"
-                                        aria-label="시작시간검색">
+                                    <label for="start-timePicker01">시작시간</label>  aria-label="시작시간검색">
                                 </li>
                                 <li class="bar">-</li>
                                 <li class="mo_li">
                                     <label for="end-picker01">종료기간</label>
-                                    <input id="end-picker01"  class = "datePicker" title="datepicker"
-                                        aria-label="종료기간검색">
+                                    <input id="end-picker01"  class = "datePicker" title="datepicker" aria-label="종료기간검색">
                                 </li>
                                 <li class="mo_li">
                                     <label for="end-timePicker01">종료시간</label>
-                                    <input id="end-timePicker01" title="timePicker" class = "timePicker01"
-                                        aria-label="종료시간검색">
+                                    <input id="end-timePicker01" title="timePicker" class = "timePicker01"  aria-label="종료시간검색">
                                 </li>
                             </ul>
                         </div>
