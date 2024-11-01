@@ -302,7 +302,7 @@ var authrtCd = '${authrtCd}'
 						            </button>
 						            <span class="tooltiptext tooltip-right">
 						            	편도: 서울-김천 <br />
-										황복: 서울-김천-서울 <br />
+										왕복: 서울-김천-서울 <br />
 						            </span>
 						        </div>
                             </div>
