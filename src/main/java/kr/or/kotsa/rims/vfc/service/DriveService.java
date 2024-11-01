@@ -33,7 +33,7 @@ public interface DriveService {
 	public void sendError(Map<String, Object> paramsMap);
 
 	//법인번호 조회
-	public Object selectCrno(Map<String, Object> paramsMap);
+	public List<Map<String, Object>> selectCrno(Map<String, Object> paramsMap);
 
 	// 해당 코드에 대한 공통코드 테이블에서 메시지 가져오기
 	List<Map<String, Object>> getRtnMsg(Map<String, Object> paramsMap);

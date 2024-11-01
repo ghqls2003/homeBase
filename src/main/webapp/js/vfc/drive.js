@@ -177,8 +177,9 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			$(".datePicker").prop("readonly", true);
 			if(authrtCd.includes('S')){
 				ajax(false, contextPath+'/vfc/drive/selectCrno', 'body', '처리중입니다.', {}, function (data) {
-					if(data!=null)
-						$("#crno").val(data.crno);
+					if(data[0] != null) {
+						$("#crno").val(data[0].crno);
+					}
 				});
 			}
 

@@ -321,7 +321,7 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	}
 
 	//법인번호 조회
-	public Object selectCrno(Map<String, Object> paramsMap) {
+	public List<Map<String, Object>> selectCrno(Map<String, Object> paramsMap) {
 		paramsMap.put("bzmnSn", getBzmnSn());
 		return driveDao.selectCrno(paramsMap);
 	}
