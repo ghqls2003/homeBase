@@ -56,8 +56,6 @@
 								AND 1 != 1
 							</otherwise>
 						</choose>
-						<if test="crno != '' and crno != null">
-						</if>
 						 ) T1 
 					) T2
 					order by
@@ -98,9 +96,14 @@
 				<if test="carNum != '' and carNum != null">
 					and vhcl_reg_no like '%' || #{carNum} || '%'
 				</if>
-				<if test="crno != '' and crno != null">
-					and crno = #{crno}
-				</if>
+				<choose>
+					<when test= "crno != '' and crno != null">
+						AND crno = #{crno}
+					</when>
+					<otherwise>
+						AND 1 != 1
+					</otherwise>
+				</choose>
 		)a
 	</select>
 
@@ -232,7 +235,7 @@
 
 	<select id="selectCrno" resultType="resultMap">
 		<if test="bzmnSn != null and bzmnSn != ''">
-			select bzmn_sn, crno from dqvs.dvs_rac_mt_agency
+			select crno from dqvs.dvs_rac_mt_agency
 			where bzmn_sn = #{bzmnSn}
 		</if>
 	</select>

@@ -176,7 +176,7 @@ public class DriveController extends CmmnAbstractServiceImpl {
 	 */
 	@RequestMapping("drive/selectCrno")
 	@ResponseBody
-	public Object Crno(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+	public List<Map<String, Object>> Crno(@RequestBody Map<String, Object> paramsMap) throws RimsException {
 
 		return driveService.selectCrno(paramsMap);
 	}
