@@ -238,6 +238,7 @@
 			 ,	rmrk
 		FROM
 				dvs_cmm_bs_svr_stat
+		LIMIT 1
 	</select>
 
 	<select id="selectStChartHour" resultType="resultMap">

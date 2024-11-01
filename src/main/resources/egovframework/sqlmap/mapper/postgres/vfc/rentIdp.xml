@@ -128,7 +128,6 @@
     /*대여이력 상세*/
     	SELECT rentIdp.rent_no
 			, rentIdp.vhcl_reg_no
-			, '국제면허' lcns_idntf_nm 
 			, rentIdp.atch_file_sn
 			, COALESCE(dcmi.atch_file_nm, '-') atch_file_nm
 			, TO_CHAR(rentIdp.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') rent_bgng_dt

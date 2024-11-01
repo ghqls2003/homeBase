@@ -511,7 +511,6 @@
 			   $("#detailFileDown").off('click');  //기존 클릭이벤트 핸들러 제거
 
 			   $("#detailRentNo").val(data[0].rentNo);
-			   $("#detailLcnsIdntfNm").val(data[0].lcnsIdntfNm);
 			   $("#detailVhclRegNo").val(data[0].vhclRegNo);
 			   $("#detailRentSttsNm").val(data[0].rentSttsNm);
 			   $("#detailRentHstryNo").val(data[0].rentHstryNo);

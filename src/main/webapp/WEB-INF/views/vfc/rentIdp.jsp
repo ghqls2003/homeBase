@@ -434,16 +434,6 @@ button.red_btn:hover {
                                                    </td>
                                                </tr>
                                                <tr>
-                                                   <th scope="col">면허종류</th>
-                                                   <td>
-                                                   <div class="tb_flex">
-                                                       <label for="detailLcnsIdntfNm">면허종류</label>
-                                                       <input type="text" id="detailLcnsIdntfNm" name="detailLcnsIdntfNm" class="input no_line"
-                                                           readonly/>
-                                                   </div>
-                                                   </td>
-                                               </tr>
-                                               <tr>
                                                    <th scope="col">대여시작일</th>
                                                    <td>
                                                    <div class="tb_flex">
@@ -480,22 +470,22 @@ button.red_btn:hover {
                                                    </td>
                                                </tr>
                                                <tr>
-                                                   <th scope="col">대여 상태</th>
-                                                   <td>
-                                                   <div class="tb_flex">
-                                                       <label for="detailRentSttsNm">대여 상태</label>
-                                                       <input type="text" id="detailRentSttsNm" name="detailRentSttsNm" class="input no_line"
-                                                          maxlength="11" readonly/>
-                                                   </div>
-                                                   </td>
-                                               </tr>
-                                               <tr>
                                                    <th scope="col">대여종료일</th>
                                                    <td>
                                                    <div class="tb_flex">
                                                         <label for="end-picker03">종료기간</label>
                                                         <input id="end-picker03" class="date" title="datepicker"
                                                             aria-label="종료기간검색">
+                                                   </div>
+                                                   </td>
+                                               </tr>
+                                               <tr>
+                                                   <th scope="col">대여 상태</th>
+                                                   <td>
+                                                   <div class="tb_flex">
+                                                       <label for="detailRentSttsNm">대여 상태</label>
+                                                       <input type="text" id="detailRentSttsNm" name="detailRentSttsNm" class="input no_line"
+                                                          maxlength="11" readonly/>
                                                    </div>
                                                    </td>
                                                </tr>
