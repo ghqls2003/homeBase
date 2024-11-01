@@ -521,8 +521,17 @@ var authrtCd = '${authrtCd}'
             <!-- <div class="contBox" id = "rentalTypeBox" style = "margin-top: 10px;display: none;" >-->
             <!-- 대여 포함 -->
             <div class="contBox" id = "rentalTypeBox" style = "margin-top: 10px;" >
-                            <div class="nameBox">
+                            <div class="nameBox nameTolltip" >
                                 <h4 class="name"> 대여 유형 </h4>
+                                <div class="tooltip" style ="margin-top: 3px;">
+						            <button>
+						                <img src="${contextPath}/images/sub/ico_tooltip.png" alt="" />
+						            </button>
+						            <span class="tooltiptext tooltip-right">
+						            	편도: 서울-김천 <br />
+										황복: 서울-김천-서울 <br />
+						            </span>
+						        </div>
                             </div>
                             <div class="cont" id="result" style="height: auto; justify-content: flex-start;">
                                 <ul class="" style ="align-self: flex-start; display: flex; align-items: center; gap: 24px;">
