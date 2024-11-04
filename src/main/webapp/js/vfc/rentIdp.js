@@ -231,9 +231,23 @@
 					$("#searchBtn").attr("disabled", false);
 				},
 				excel: { allPages: true },
-				excelExport: function(e) {
-					e.workbook.fileName = "국제면허 대여이력([" + searchParamsArc.rentDt + "]포함).xlsx";
-					e.workbook.sheets[0].title = searchParamsArc.rentDt + " 포함";
+				excelExport: async function(e) {
+					e.preventDefault();
+						
+					var a_data = e.data;
+					var accUrl = "/vfc/rentIdp/excelDown";
+					var success = await kendoExcelAOPAcc(a_data, accUrl);
+					
+					if(success) {
+						e.workbook.fileName = "국제면허 대여이력([" + searchParamsArc.rentDt + "]포함).xlsx";
+						e.workbook.sheets[0].title = searchParamsArc.rentDt + " 포함";
+						
+						kendo.saveAs({
+							dataURI: new kendo.ooxml.Workbook(e.workbook).toDataURL(),
+				        	fileName: e.workbook.fileName
+						});						
+					}
+											
 				},
 				change: function(e) {
 					var rows = e.sender.select();

@@ -96,5 +96,5 @@ public class verfSttsController extends CmmnAbstractServiceImpl {
                                       HttpServletRequest request, HttpServletResponse response) throws RimsException {
 		Map<String, Object> result = new HashMap<>();
 		return result;
-    }	
+    }
 }

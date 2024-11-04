@@ -210,7 +210,7 @@
 //                noRecords: { template : "데이터가 없습니다." },
                 toolbar: [{name: "excel", text:"다운로드"}],
                 excel: { allPages: true },
-				excelExport : function(e){
+				excelExport : async function(e){
 					if($(gridId).data("kendoGrid").dataSource.total() == 0) {
 						e.preventDefault();
 						alert("데이터가 없어 다운로드를 할 수 없습니다.");
@@ -218,94 +218,101 @@
 //						e.workbook.fileName = "대여사업자현황.xlsx";
 //						e.workbook.sheets[0].title = "대여사업자 현황";
 						e.preventDefault();
-	
-					    var workbook = e.workbook;
-					    var masterData = e.data;
-					
-					    detailExportPromises = [];
-					
-						for (var rowIndex = 0; rowIndex < masterData.length-1; rowIndex++) {
-					    	exportChildData(masterData[rowIndex].conn, rowIndex, gridId, detailData);
-						}
 						
-						var sheet = workbook.sheets[0];
-
-					    // 시도 헤더
-					    var sdHeader = {
-					        background: "#303030", color: "#FFFFFF", bold: true
-					    };
-					    // 시도 데이터
-					    var sdData = {
-					        background: "#565656", color: "#FFFFFF", bold: true, borderTop: { color: "#000000", size: 2 }
-					    };
-					
-					    // 헤더 행의 스타일 변경
-					    var headerRow = sheet.rows[0];
-					    for (var colIndex = 0; colIndex < headerRow.cells.length; colIndex++) {
-					        Object.assign(headerRow.cells[colIndex], sdHeader);
-					    }
-					
-					    // 나머지 행과 열에도 헤더 스타일 적용
-					    for (var rowIndex = 1; rowIndex < sheet.rows.length-1; rowIndex++) {
-					        var row = sheet.rows[rowIndex];
-						    var rowEnd = sheet.rows[sheet.rows.length-1];
-					        for (var colIndex = 0; colIndex < row.cells.length; colIndex++) {
-					            Object.assign(row.cells[colIndex], sdData);
-							    Object.assign(rowEnd.cells[colIndex], sdHeader);
-					        }
-					    }
-					    
-    					sheet.freezePane = { rowSplit: 1 };
-    					
-//    					for (var colIndex = 0; colIndex < 1; colIndex++) {
-//						    for (var rowIndex = 0; rowIndex < sheet.rows.length; rowIndex++) {
-//						        var cell = sheet.rows[rowIndex].cells[colIndex];
-//						        Object.assign(cell, { background: "#303030" });
-//						    }
-//						}
-
-					    $.when.apply(null, detailExportPromises).then(function() {
-							var detailExports = $.makeArray(arguments);
+						var a_data = e.data;
+						var accUrl = "/stts/totStts/excelDown";
+						var success = await kendoExcelAOPAcc(a_data, accUrl);
+						
+						if(success) {
 							
-					        detailExports.sort(function(a, b) {
-					        	return a.masterRowIndex - b.masterRowIndex;
-					        });
-					
-					        workbook.sheets[0].columns.unshift({
-								width: 30
-					        });
-					
-							workbook.sheets[0].rows[0].cells.unshift({background: "#303030"});
-					        for (var i=1; i<workbook.sheets[0].rows.length; i++) {
-						        i == workbook.sheets[0].rows.length-1 ? workbook.sheets[0].rows[i].cells.unshift({background: "#303030"})
-						        : workbook.sheets[0].rows[i].cells.unshift({background: "#565656", borderTop: { color: "#000000", size: 2 }})
-					        }
-					
-					        for (var i=detailExports.length-1; i>=0; i--) {
-					        	var masterRowIndex = detailExports[i].masterRowIndex+1;
-								var sheet = detailExports[i].sheet;
-					
-								for (var ci = 0; ci < sheet.rows.length; ci++) {
-									if (sheet.rows[ci].cells[0].value) {
-										sheet.rows[ci].cells.unshift({background: "#565656"});
-									}
-								}
-					
-					        	[].splice.apply(workbook.sheets[0].rows, [masterRowIndex + 1, 0].concat(sheet.rows));
-					        }
-					        
-					        if(gridId == "#grid01") {
-						        kendo.saveAs({
-									dataURI: new kendo.ooxml.Workbook(workbook).toDataURL(),
-									fileName: "대여사업자 현황.xlsx"
-						        });
-							} else {
-						        kendo.saveAs({
-									dataURI: new kendo.ooxml.Workbook(workbook).toDataURL(),
-									fileName: "지자체별 가입 사용자 현황.xlsx"
-						        });
+						    var workbook = e.workbook;
+						    var masterData = e.data;
+						
+						    detailExportPromises = [];
+						
+							for (var rowIndex = 0; rowIndex < masterData.length-1; rowIndex++) {
+						    	exportChildData(masterData[rowIndex].conn, rowIndex, gridId, detailData);
 							}
-						});
+							
+							var sheet = workbook.sheets[0];
+	
+						    // 시도 헤더
+						    var sdHeader = {
+						        background: "#303030", color: "#FFFFFF", bold: true
+						    };
+						    // 시도 데이터
+						    var sdData = {
+						        background: "#565656", color: "#FFFFFF", bold: true, borderTop: { color: "#000000", size: 2 }
+						    };
+						
+						    // 헤더 행의 스타일 변경
+						    var headerRow = sheet.rows[0];
+						    for (var colIndex = 0; colIndex < headerRow.cells.length; colIndex++) {
+						        Object.assign(headerRow.cells[colIndex], sdHeader);
+						    }
+						
+						    // 나머지 행과 열에도 헤더 스타일 적용
+						    for (var rowIndex = 1; rowIndex < sheet.rows.length-1; rowIndex++) {
+						        var row = sheet.rows[rowIndex];
+							    var rowEnd = sheet.rows[sheet.rows.length-1];
+						        for (var colIndex = 0; colIndex < row.cells.length; colIndex++) {
+						            Object.assign(row.cells[colIndex], sdData);
+								    Object.assign(rowEnd.cells[colIndex], sdHeader);
+						        }
+						    }
+						    
+	    					sheet.freezePane = { rowSplit: 1 };
+	    					
+	//    					for (var colIndex = 0; colIndex < 1; colIndex++) {
+	//						    for (var rowIndex = 0; rowIndex < sheet.rows.length; rowIndex++) {
+	//						        var cell = sheet.rows[rowIndex].cells[colIndex];
+	//						        Object.assign(cell, { background: "#303030" });
+	//						    }
+	//						}
+	
+						    $.when.apply(null, detailExportPromises).then(function() {
+								var detailExports = $.makeArray(arguments);
+								
+						        detailExports.sort(function(a, b) {
+						        	return a.masterRowIndex - b.masterRowIndex;
+						        });
+						
+						        workbook.sheets[0].columns.unshift({
+									width: 30
+						        });
+						
+								workbook.sheets[0].rows[0].cells.unshift({background: "#303030"});
+						        for (var i=1; i<workbook.sheets[0].rows.length; i++) {
+							        i == workbook.sheets[0].rows.length-1 ? workbook.sheets[0].rows[i].cells.unshift({background: "#303030"})
+							        : workbook.sheets[0].rows[i].cells.unshift({background: "#565656", borderTop: { color: "#000000", size: 2 }})
+						        }
+						
+						        for (var i=detailExports.length-1; i>=0; i--) {
+						        	var masterRowIndex = detailExports[i].masterRowIndex+1;
+									var sheet = detailExports[i].sheet;
+						
+									for (var ci = 0; ci < sheet.rows.length; ci++) {
+										if (sheet.rows[ci].cells[0].value) {
+											sheet.rows[ci].cells.unshift({background: "#565656"});
+										}
+									}
+						
+						        	[].splice.apply(workbook.sheets[0].rows, [masterRowIndex + 1, 0].concat(sheet.rows));
+						        }
+						        
+						        if(gridId == "#grid01") {
+							        kendo.saveAs({
+										dataURI: new kendo.ooxml.Workbook(workbook).toDataURL(),
+										fileName: "대여사업자 현황.xlsx"
+							        });
+								} else {
+							        kendo.saveAs({
+										dataURI: new kendo.ooxml.Workbook(workbook).toDataURL(),
+										fileName: "지자체별 가입 사용자 현황.xlsx"
+							        });
+								}
+							});
+						}
 					}
 				}
 			});
@@ -455,13 +462,26 @@
 					$("body").css("overflow", "hidden");
 				},
                 excel: { allPages: true },
-				excelExport : function(e){
+				excelExport : async function(e){
 					if($(gridId).data("kendoGrid").dataSource.total() == 0) {
 						e.preventDefault();
 						alert("데이터가 없어 다운로드를 할 수 없습니다.");
 					} else {
-						e.workbook.fileName = "카쉐어링 업체 현황.xlsx";
-						e.workbook.sheets[0].title = "업체 현황";
+						e.preventDefault();
+						
+						var a_data = e.data;
+						var accUrl = "/stts/totStts/excelDown";
+						var success = await kendoExcelAOPAcc(a_data, accUrl);
+						
+						if(success) {
+							e.workbook.fileName = "카쉐어링 업체 현황.xlsx";
+							e.workbook.sheets[0].title = "업체 현황";
+							
+							kendo.saveAs({
+								dataURI: new kendo.ooxml.Workbook(e.workbook).toDataURL(),
+				                   fileName: e.workbook.fileName
+						    });
+						}
 					}
 				}
 			});

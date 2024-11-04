@@ -1,24 +1,23 @@
 package kr.or.kotsa.rims.vfc.web;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import kr.or.kotsa.rims.cmmn.biz.service.CmmnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import kr.or.kotsa.rims.cmmn.biz.service.CmmnService;
 import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
 import kr.or.kotsa.rims.cmmn.sys.service.CmmnAbstractServiceImpl;
-import kr.or.kotsa.rims.cmmn.sys.util.GenericExcelView;
 import kr.or.kotsa.rims.vfc.service.RentalHistManageService;
 import kr.or.kotsa.rims.vfc.service.impl.RentalHistManageDao;
 
@@ -274,4 +273,13 @@ public class RentalHistManageController extends CmmnAbstractServiceImpl {
 
 		return rentalHistManageService.insertConfData(paramsMap);
 	}
+	
+	// kendoExcel AOP 태우기용
+	@RequestMapping("/rentalHistManage/excelDown")
+	@ResponseBody
+    public Map<String, Object> excelDown(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
+                                      HttpServletRequest request, HttpServletResponse response) throws RimsException {
+		Map<String, Object> result = new HashMap<>();
+		return result;
+    }	
 }

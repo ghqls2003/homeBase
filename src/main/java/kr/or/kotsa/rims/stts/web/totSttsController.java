@@ -223,4 +223,13 @@ public class totSttsController extends CmmnAbstractServiceImpl {
 	public List<Map<String, Object>> selectCoNm(@RequestBody Map<String, Object> paramsMap) throws RimsException {
 		return totSttsService.selectCoNm(paramsMap);
 	}
+	
+	// kendoExcel AOP 태우기용
+	@RequestMapping("/totStts/excelDown")
+	@ResponseBody
+    public Map<String, Object> excelDown(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
+                                      HttpServletRequest request, HttpServletResponse response) throws RimsException {
+		Map<String, Object> result = new HashMap<>();
+		return result;
+    }		
 }

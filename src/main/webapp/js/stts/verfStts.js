@@ -92,11 +92,11 @@
 						
 						// 켄도 aop 테스트 중
 						e.preventDefault();
-//						
+						
 						var a_data = e.data;
 						var accUrl = "/stts/verfStts/excelDown";
 						var success = await kendoExcelAOPAcc(a_data, accUrl);
-//						
+						
 						if(success) {
 							var sheet = e.workbook.sheets[0];
 							var columnVal = sheet.rows[0].cells;

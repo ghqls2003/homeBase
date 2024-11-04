@@ -132,7 +132,12 @@ public class RentIdpController extends CmmnAbstractServiceImpl{
 		return mav;
 	}
 	
-	
-	
-
+	// kendoExcel AOP 태우기용
+	@RequestMapping("/rentIdp/excelDown")
+	@ResponseBody
+    public Map<String, Object> excelDown(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
+                                      HttpServletRequest request, HttpServletResponse response) throws RimsException {
+		Map<String, Object> result = new HashMap<>();
+		return result;
+    }
 }
