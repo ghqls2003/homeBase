@@ -1,6 +1,7 @@
 package kr.or.kotsa.rims.stts.web;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 import kr.or.kotsa.rims.cmmn.biz.service.CmmnService;
 import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
 import kr.or.kotsa.rims.cmmn.sys.service.CmmnAbstractServiceImpl;
-import kr.or.kotsa.rims.cmmn.sys.util.GenericExcelView;
 import kr.or.kotsa.rims.stts.service.VerfSttsService;
 
 @Controller
@@ -90,8 +90,11 @@ public class verfSttsController extends CmmnAbstractServiceImpl {
 	}
 	
 	// kendoExcel AOP 태우기용
-	@PostMapping("/verfStts/excelDown")
-    public void excelDown(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
+	@RequestMapping("/verfStts/excelDown")
+	@ResponseBody
+    public Map<String, Object> excelDown(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
                                       HttpServletRequest request, HttpServletResponse response) throws RimsException {
+		Map<String, Object> result = new HashMap<>();
+		return result;
     }	
 }

@@ -84,48 +84,48 @@
 					}
 				},
                 excel: { allPages: true },
-                excelExport : function(e){
+                excelExport : async function(e){
 					if($("#verf-grid").data("kendoGrid").dataSource.total() == 0) {
 						e.preventDefault();
 						alert("데이터가 없어 다운로드를 할 수 없습니다.");
 					} else {
 						
 						// 켄도 aop 테스트 중
-//						e.preventDefault();
+						e.preventDefault();
 //						
-//						var a_data = e.data;
-//						var accUrl = "/stts/verfStts/excelDown";
-//						var success = kendoExcelAOPAcc(a_data, accUrl);
+						var a_data = e.data;
+						var accUrl = "/stts/verfStts/excelDown";
+						var success = await kendoExcelAOPAcc(a_data, accUrl);
 //						
-//						var intervalExcel = setInterval(function() {
-//						console.log(success)
-//							if(success) {
-								var sheet = e.workbook.sheets[0];
-								var columnVal = sheet.rows[0].cells;
-								
-						        // 엑셀에 HTML태그가 표시되어서 모든 열 타이틀에서 HTML 태그 제거
-						        for(var i=0; i<columnVal.length; i++) {
-									columnVal[i].value = columnVal[i].value.replace(/<[^>]+>/g, '');
-								}
-								// 엑셀에 천자리 콤마. 쿼리에서 처리할 수도 있겠지만 불안함
-								for(var i=0; i<sheet.rows.length; i++) {
-									for(var j=0; j<sheet.rows[i].cells.length; j++) {
-										if(sheet.rows[i].cells[j].value > 999) {
-											sheet.rows[i].cells[j].value = FormatNumber(sheet.rows[i].cells[j].value);
-										} else {
-											if(typeof (sheet.rows[i].cells[j].value) != 'undefined') {
-												sheet.rows[i].cells[j].value = sheet.rows[i].cells[j].value.toString();
-											}
+						if(success) {
+							var sheet = e.workbook.sheets[0];
+							var columnVal = sheet.rows[0].cells;
+							
+							// 엑셀에 HTML태그가 표시되어서 모든 열 타이틀에서 HTML 태그 제거
+						    for(var i=0; i<columnVal.length; i++) {
+								columnVal[i].value = columnVal[i].value.replace(/<[^>]+>/g, '');
+							}
+							// 엑셀에 천자리 콤마. 쿼리에서 처리할 수도 있겠지만 불안함
+							for(var i=0; i<sheet.rows.length; i++) {
+								for(var j=0; j<sheet.rows[i].cells.length; j++) {
+									if(sheet.rows[i].cells[j].value > 999) {
+										sheet.rows[i].cells[j].value = FormatNumber(sheet.rows[i].cells[j].value);
+									} else {
+										if(typeof (sheet.rows[i].cells[j].value) != 'undefined') {
+											sheet.rows[i].cells[j].value = sheet.rows[i].cells[j].value.toString();
 										}
 									}
 								}
+							}
 								
-								e.workbook.fileName = "운전자격확인 시간별 통계("+excelDate+").xlsx";
-								e.workbook.sheets[0].title = "운전자격확인결과("+excelMthd+")";
+							e.workbook.fileName = "운전자격확인 시간별 통계("+excelDate+").xlsx";
+							e.workbook.sheets[0].title = "운전자격확인결과("+excelMthd+")";
 								
-//								clearInterval(intervalExcel);
-//							}
-//						});
+							kendo.saveAs({
+								dataURI: new kendo.ooxml.Workbook(e.workbook).toDataURL(),
+				                   fileName: e.workbook.fileName
+						    });
+						}
 					}
 				}
 			});
