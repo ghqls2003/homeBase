@@ -40,8 +40,10 @@ public class ContactlessVfcServiceImpl extends CmmnAbstractServiceImpl implement
 			paramsMap.putAll(vin);
 			result.putAll(selectDefectList(paramsMap));
 		}
-		
-		updateVrfcSn(paramsMap);
+		String successCode = (String) paramsMap.get("cd");
+		if("00".equals(successCode)) {
+			updateVrfcSn(paramsMap);
+		}
 		
 		result.putAll(selectEtcInfo(paramsMap));
 		return result;

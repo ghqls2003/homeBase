@@ -26,7 +26,7 @@
 		LEFT JOIN
 			dqvs.dvs_rac_mt_car car
 		ON rent.vhcl_reg_no = car.vhcl_reg_no  
-		WHERE rent.rent_stts_cd = '2'
+		WHERE rent.rent_stts_cd = '1'
 			AND rent.del_yn  = 'N'
 			AND rent.rent_no = #{rentNo}
 	</select>
@@ -36,6 +36,7 @@
 		<if test="updateRentNo != null and updateRentNo != ''">
 			UPDATE dqvs.dvs_dqv_mt_rent
 			SET vrfc_hstry_sn = #{sn}
+				, rent_stts_cd = '2'
 			WHERE rent_no = #{updateRentNo}
 		</if>
     </update>

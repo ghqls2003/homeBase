@@ -590,6 +590,7 @@
 			}else if(params.rentEndDt == null || params.rentEndDt == ''){
 				alert("대여종료일시를 등록해 주세요");
 			}else{
+				console.log(params)
 				ajax(true, contextPath + '/vfc/rentalHistManage/insertRentReg.do', 'body', '확인인중입니다.', params, function (data) {
 					alert("대여이력에 등록을 성공하셨습니다");
 					$("#regi").removeClass("view");

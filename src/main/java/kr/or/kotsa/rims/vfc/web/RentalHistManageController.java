@@ -219,7 +219,7 @@ public class RentalHistManageController extends CmmnAbstractServiceImpl {
 		paramsMap.put("IP", getClientIP());
 		//추가
 		paramsMap.put("bzmnSn", getBzmnSn());
-		rentalHistManageService.insertRentRegHs(paramsMap);
+//		rentalHistManageService.insertRentRegHs(paramsMap);
 		return rentalHistManageService.insertRentReg(paramsMap);
 	}
 
