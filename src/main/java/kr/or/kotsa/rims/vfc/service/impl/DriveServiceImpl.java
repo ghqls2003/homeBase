@@ -73,6 +73,10 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 		if("00".equals(successCode)) {
 			insertRent(paramsMap);
 		}
+		
+		// 최근 7일 운전자격이력 건수
+		int VfcHistCnt = driveDao.selectVfcHistCnt(paramsMap);
+		result.put("VfcHistCnt", VfcHistCnt);
 //		result.putAll(selectEtcInfo(paramsMap));  주석할꺼면 연관되는거 다 처리좀하지
 		return result;
 	}
