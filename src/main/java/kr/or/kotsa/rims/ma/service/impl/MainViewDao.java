@@ -85,15 +85,6 @@ public class MainViewDao extends CmmnAbstractMapper {
 	public List<Map<String, Object>> selectMainPopup() throws RimsException {
 		return selectList("ma.main.selectMainPopup");
 	}
-
-	/**
-	 * api 서버 상태 조회
-	 * @return
-	 * @throws RimsException
-	 */
-	public List<Map<String, Object>> svrStat() throws RimsException {
-		return selectList("ma.main.selectSvrStat");
-	}
 	
     /**
      * 개인정보보호 서약 처리
@@ -110,7 +101,16 @@ public class MainViewDao extends CmmnAbstractMapper {
 	 * @return
 	 * @throws RimsException
 	 */
-	public List<Map<String, Object>> selectStChartHour() throws RimsException{
-		return selectList("ma.main.selectStChartHour");
+	public List<Map<String, Object>> apiHourCnt() throws RimsException{
+		return selectList("ma.main.apiHourCnt");
+	}
+	
+	/**
+	 * api 서버 상태 조회
+	 * @return
+	 * @throws RimsException
+	 */
+	public Map<String, Object> svrStat() throws RimsException {
+		return selectOne("ma.main.selectSvrStat");
 	}
 }

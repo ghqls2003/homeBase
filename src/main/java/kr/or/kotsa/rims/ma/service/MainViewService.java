@@ -43,13 +43,6 @@ public interface MainViewService {
      * @param authrtCd 
    	 */
    public List<Map<String, Object>> selectMainPopup(String authrtCd) throws RimsException ;
-
-	/**
-	 * api 서버 상태 조회
-	 * @return
-	 * @throws RimsException
-	 */
-   public Map<String, Object> svrStat() throws RimsException ;
    
    /**
     * 개인정보보호 서약 처리
@@ -63,5 +56,12 @@ public interface MainViewService {
 	 * 시간별 API 요청 건수 조회
 	 * @return
 	 */
-	public Map<String, Object> selectStChartHour() throws RimsException;
+	public List<Map<String, Object>> apiHourCnt() throws RimsException;
+	
+	/**
+	 * api 서버 상태 조회
+	 * @return
+	 * @throws RimsException
+	 */
+	public Map<String, Object> svrStat() throws RimsException ;
 }
