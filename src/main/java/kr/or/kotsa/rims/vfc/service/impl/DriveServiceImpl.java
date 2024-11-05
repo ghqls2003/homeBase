@@ -351,14 +351,45 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	public Object selectBzmnCarYn(Map<String, Object> paramsMap) throws RimsException {
         Map<String,Object> result = new HashMap<>();
 		String bzmnCarYn = "N";
-		List<Map<String, Object>> list  = driveDao.selectCarList(paramsMap);
-		if(!list.isEmpty()){
-			bzmnCarYn = "Y";
-		}
+		String message = "";
+		// 로그인 유저의 해당하는 법인번호 유무
+		String crno = (String) selectCrno(paramsMap).get(0).get("crno");
+		System.out.println("⭐⭐⭐⭐⭐⭐⭐crno"+crno);
+		if(crno.isEmpty()) {
+			message = "법인없음";
+			bzmnCarYn = "Y"; // 지우기
+			System.out.println("⭐⭐⭐⭐⭐⭐⭐message"+message);
 
+			return result.put("message", message);
+		}else{
+			paramsMap.put("crno",crno);
+		}
+		System.out.println("⭐⭐⭐⭐⭐⭐⭐message"+message);
+		int carCnt = driveDao.selectBzmnCarYn1111(paramsMap);
+		if(carCnt == 0) {
+			message = "미등록차량";
+			bzmnCarYn = "Y"; // 지우기
+			result.put("bzmnCarYn",bzmnCarYn);// 지우기
+			System.out.println("⭐⭐⭐⭐⭐⭐⭐carCnt"+carCnt);
+			 result.put("message", message);
+//			return result.put("message", message);
+			return result;
+		}
+		System.out.println("⭐⭐⭐⭐⭐⭐⭐message"+message);
+		Map<String,Object> res  = driveDao.selectBzmnDefectedCarYn(paramsMap).get(0);
+         // todo : 왜 쿼리에서 존재일때 Y 로 처리했는데 N으로 입력해야 결함차량존재하는걸까 ?  낼 꼭 확인하기
+		if(res != null){
+			String regYn = (String) res.get("regYn");
+			System.out.println("⭐⭐⭐⭐⭐⭐⭐regYn"+regYn);
+			if(regYn.equals("N")){
+				message = "결함차량존재";
+			}else{
+				message = "결함차량미존재";
+			}
+		}
+		bzmnCarYn = "N"; /// 지우기
+		result.put("message",message);
 		result.put("bzmnCarYn",bzmnCarYn);
 		return result;
 	}
 
-
-}

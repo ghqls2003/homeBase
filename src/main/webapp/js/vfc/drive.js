@@ -1288,7 +1288,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 				signguCd: $("#signguCd").val(),
 				regDt: $("#regDt").val(),
 				vrfcMthd: vrfcMthd,
-				crno : $("#crno").val(),
+//				crno : $("#crno").val(),
 				similarityConfidence: similarityData.similarityConfidence,
 				livenessConfidence: similarityData.livenessConfidence
 			};
@@ -1298,7 +1298,12 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
             var num04Pattern = /^\d{2}$/;
 //              운전자격확인 이전 해당법인 차량인지 유무 확인  --> 결과 저장
             	ajax(false, contextPath+"/vfc/drive/selectBzmnCarYn", 'body', '처리중입니다.', param, function(data) {
-            	    bzmnCarYn = data.bzmnCarYn;// 해당 차량이면  "Y" , 아닐 경우 "N"
+//            	    bzmnCarYn = data.bzmnCarYn;// 해당 차량이면  "Y" , 아닐 경우 "N"
+            	    bzmnCarYn = data.message;// 해당 차량이면  "Y" , 아닐 경우 "N"
+            	    //message = "법인없음"
+                    //message = "미등록차량"
+                    //message = "결함차량미존재"
+                    //message = "결함차량존재";
             	});
 
 			if(param.carNum == ''){
@@ -1345,27 +1350,49 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                                     if (result != null && result != "") {
                                         rentno = result.rentno;
                                         if(data.body.f_rtn_code == '00'){
-                                            //1. 입력된 차량번호가 로그인한 법인소속 차량인지 먼저 판단 ,bzmnCarYn = N 이면 결함여부 미노출
-                                            if(bzmnCarYn === "N"){
-                                              var html = `<p class="current_info" >
-                                                           <span style = "color:red";> 로그인 한 사용자의 법인에 소속된 차량이 아닙니다.</span>
-                                                         </p>`;
+                                           if(bzmnCarYn === "법인없음"){
+                                               var html = `<p class="current_info" >
+                                                          <span style = "color:red";> 로그인 한 사용자의 법인에 소속된 차량이 아닙니다.</span>
+                                                        </p>`;
+                                               $('#result').prepend(html);
+                                           }else if(bzmnCarYn === "미등록차량"){
+                                               var html = `<p class="current_info">
+                                                           <span style = "color:red";>등록되지 않은 차량입니다. 신규 등록 시 최대 수주일이 소요될 수 있습니다.</span>
+                                                        </p>`;
                                                 $('#result').prepend(html);
-                                            //2. 해당 법인 차량일 경우 차량번호를 통한 결함data를 result에 저장함
-                                            //2-1. bzmnCarYn = N  and result.data !== null 이면 '결함존재'
-                                            } else if(result.data != undefined && result.total != 0){
-                                                var html = `<p class="current_info" >
-                                                                차량 결함 정보가
-                                                                <span class = "popupSpan" id ="rslt_vehicleDefect" onclick =$drive.event.popupVhclDfctListClick()>존재</span> 합니다.
-                                                            </p>`;
-                                                $('#result').prepend(html);
-                                            //2-2.  bzmnCarYn = N  and result.data === null 이면 '없음 '
-                                            } else{
+                                           }else if(bzmnCarYn === "결함차량미존재"){
                                                 var html = `<p class="current_info">
-                                                                차량 결함 정보가 없습니다.
-                                                            </p>`;
+                                                               차량 결함 정보가 없습니다.
+                                                           </p>`;
+                                               $('#result').prepend(html);
+                                           }else if(bzmnCarYn === "결함차량존재"){
+                                                var html = `<p class="current_info" >
+                                                            차량 결함 정보가
+                                                            <span class = "popupSpan" id ="rslt_vehicleDefect" onclick =$drive.event.popupVhclDfctListClick()>존재</span> 합니다.
+                                                        </p>`;
                                                 $('#result').prepend(html);
-                                            }
+                                           }
+//                                            //1. 입력된 차량번호가 로그인한 법인소속 차량인지 먼저 판단 ,bzmnCarYn = N 이면 결함여부 미노출
+//                                            if(bzmnCarYn === "N"){
+//                                              var html = `<p class="current_info" >
+//                                                           <span style = "color:red";> 로그인 한 사용자의 법인에 소속된 차량이 아닙니다.</span>
+//                                                         </p>`;
+//                                                $('#result').prepend(html);
+//                                            //2. 해당 법인 차량일 경우 차량번호를 통한 결함data를 result에 저장함
+//                                            //2-1. bzmnCarYn = N  and result.data !== null 이면 '결함존재'
+//                                            } else if(result.data != undefined && result.total != 0){
+//                                                var html = `<p class="current_info" >
+//                                                                차량 결함 정보가
+//                                                                <span class = "popupSpan" id ="rslt_vehicleDefect" onclick =$drive.event.popupVhclDfctListClick()>존재</span> 합니다.
+//                                                            </p>`;
+//                                                $('#result').prepend(html);
+//                                            //2-2.  bzmnCarYn = N  and result.data === null 이면 '없음 '
+//                                            } else{
+//                                                var html = `<p class="current_info">
+//                                                                차량 결함 정보가 없습니다.
+//                                                            </p>`;
+//                                                $('#result').prepend(html);
+//                                            }
 
                                             // 대여이력건수 result.rentCnt 추후 운전자격이력건수로 변경가능성으로 주석처리함
                                             //										if(result.rentCnt == 0){

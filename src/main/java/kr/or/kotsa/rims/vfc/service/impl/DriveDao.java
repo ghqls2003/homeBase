@@ -103,4 +103,12 @@ public class DriveDao extends CmmnAbstractMapper {
 		return selectOne("vfc.drive.drvListViewCnt", paramsMap);
 	}
 
+	// 면 해당 법인 차량 유무 조회 (차량결함상관없음)  2
+	public int selectBzmnCarYn1111(Map<String, Object> paramsMap) {
+		return selectOne("vfc.drive.selectBzmnCarYn1111", paramsMap);
+	}
+	public List<Map<String, Object>> selectBzmnDefectedCarYn(Map<String, Object> paramsMap) {
+		return selectList("vfc.drive.selectBzmnDefectedCarYn", paramsMap);
+	}
+
 }
