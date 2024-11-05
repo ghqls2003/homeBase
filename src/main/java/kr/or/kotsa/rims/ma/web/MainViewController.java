@@ -290,31 +290,6 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 		 
 		return popupData;
 	}
-
-	@RequestMapping("main/svrStat")
-	@ResponseBody
-	@Async
-	public void svrStat(HttpServletRequest request, HttpServletResponse response) throws RimsException, IOException {
-		String result = "";
-		Gson objGson = new Gson();
-
-		Map<String, Object> resultMap = mainViewService.svrStat();
-		result = objGson.toJson(resultMap);
-		response.setContentType("text/event-stream;charset=UTF-8");
-		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-		response.setHeader("Connection", "keep-alive");
-		PrintWriter writer = response.getWriter();
-		writer.write("event: message\n\n");
-		writer.write("data: " + new StringBuffer(result) + "\n\n");
-		writer.flush();
-
-		try {
-			Thread.sleep(60000);
-		} catch (InterruptedException e) {
-			logger.error("InterruptedException 에러 발생");
-			Thread.currentThread().interrupt();
-		}
-	}
 	
 	  /**
      * 개인정보보호 보안 서약서 처리
@@ -345,16 +320,17 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 	 * @return
 	 * @throws RimsException
 	 */
-	@RequestMapping("main/stVerfHour")
+	@RequestMapping("main/apiHourCnt")
 	@ResponseBody
-	public Object selectStVerfHour(HttpServletRequest request) throws RimsException{
-		String authrtCd = getAuthrtCd();
-		char firstChar = authrtCd.charAt(0);
-		if(firstChar == 'S') {
-			return Collections.emptyList();
-		}else {
-			Map<String, Object> resultMap = mainViewService.selectStChartHour();
-			return  resultMap;
-		}
+	public List<Map<String, Object>> apiHourCnt(HttpServletRequest request) throws RimsException{
+		List<Map<String, Object>> result = mainViewService.apiHourCnt();
+		
+		return  result;
+	}
+	
+	@RequestMapping("main/svrStat")
+	@ResponseBody
+	public Map<String, Object> svrStat(HttpServletRequest request, HttpServletResponse response) throws RimsException, IOException {
+		return mainViewService.svrStat();
 	}
 }

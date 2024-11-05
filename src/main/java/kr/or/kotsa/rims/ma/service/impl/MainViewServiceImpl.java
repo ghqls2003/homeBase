@@ -179,27 +179,6 @@ public class MainViewServiceImpl extends CmmnAbstractServiceImpl implements Main
         return filteredList;
 	
    	}
-
-	/**
-	 * api 서버 상태 조회
-	 * @return
-	 * @throws RimsException
-	 */
-	@Override
-	public Map<String, Object> svrStat() throws RimsException {
-	   Map<String, Object> result = new HashMap<>();
-		try {
-			List<Map<String, Object>> svrStatList = mainViewDao.svrStat();
-			result.put(SUCCESS, true);
-		   	result.put("svrStatList", svrStatList);
-	   }catch (Exception e){
-			result.put(SUCCESS, false);
-			result.put("svrStatList", Collections.emptyList());
-			logger.error("selectSvrStat Error", e);
-			e.printStackTrace();
-	   }
-	   return result;
-	}
 	
 	  /**
      * 개인정보보호 서약 처리
@@ -217,22 +196,19 @@ public class MainViewServiceImpl extends CmmnAbstractServiceImpl implements Main
 	 * @return
 	 */
 	@Override
-	public Map<String, Object> selectStChartHour() {
-		Map<String, Object> result = new HashMap<>();
-
-		try {
-			List<Map<String, Object>> stVerfHourList = mainViewDao.selectStChartHour();
-			result.put(SUCCESS, true);
-			result.put("stVerfHourList", stVerfHourList);
-		} catch (RimsException e){
-			result.put(SUCCESS, false);
-			result.put("stVerfHourList", Collections.emptyList());
-			logger.error("selectSvrStat Error", e);
-		}
-		return result;
+	public List<Map<String, Object>> apiHourCnt() throws RimsException {
+		return mainViewDao.apiHourCnt();
 	}
 	
-   	
+	/**
+	 * api 서버 상태 조회
+	 * @return
+	 * @throws RimsException
+	 */
+	@Override
+	public Map<String, Object> svrStat() throws RimsException {
+		return mainViewDao.svrStat();
+	}
 }
    	
    	

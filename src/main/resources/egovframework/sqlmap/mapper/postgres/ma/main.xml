@@ -241,37 +241,21 @@
 		LIMIT 1
 	</select>
 
-	<select id="selectStChartHour" resultType="resultMap">
-		SELECT
-				CONCAT(tmp_h.tmp_h, '시') AS hr,
-				COALESCE(h2.tot, 0) AS total
-		  FROM
-				(SELECT GENERATE_SERIES(0, 23)::TEXT AS tmp_h) tmp_h
-					LEFT OUTER JOIN
-				(
-				SELECT
-						h1.hr,
-						SUM(h1.tot) AS tot
-				  FROM
-					 (
-						SELECT
-								bzmn_sn
-							 ,	TO_CHAR(dt, 'yyyy-MM-dd') AS dt
-							 ,	hr
-							 ,	tot
-						FROM
-								dqvs.dvs_st_verf_hour
-						WHERE
-								dt = CURRENT_DATE
-					) AS h1
-				GROUP
-				   BY 	h1.hr
-			 	) AS h2
-				ON
-					tmp_h.tmp_h::NUMERIC = h2.hr
-		ORDER
-		   BY
-				tmp_h::NUMERIC
+	<select id="apiHourCnt" resultType="resultMap">
+	/* 시간별 api 호출 건수 */
+		SELECT CONCAT(T2.tmp_hr, '시') AS hr
+			, COALESCE(T.tot, 0) AS total
+		FROM
+			(SELECT GENERATE_SERIES(0, 23) AS tmp_hr) AS T2
+		LEFT OUTER JOIN
+			(
+			SELECT hr , SUM(tot) tot
+			FROM dqvs.dvs_st_verf_hour
+			WHERE dt = CURRENT_DATE
+			GROUP BY hr
+			) AS T
+		ON T2.tmp_hr = T.hr
+		ORDER BY T2.tmp_hr	
 	</select>
 
 	
