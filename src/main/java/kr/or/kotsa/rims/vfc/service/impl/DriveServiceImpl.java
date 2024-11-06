@@ -185,7 +185,6 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	 * @MethodName : directStart
 	 * @param trxInfo
 	 * @return
-	 * @throws SpException
 	 */
 	private Map<String, Object> directStart(Map<String, Object> paramsMap) {
 		trxcode = genTrxcode();
@@ -271,7 +270,6 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	 * @MethodName : getProfile
 	 * @param m310 M310 메세지
 	 * @return M310 메세지 + Profile
-	 * @throws SpException
 	 */
 	@Override
 	public String getProfile(Map<String, Object> paramsMap) {
@@ -295,7 +293,6 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	 * @param mipApiData {"data":"Base64로 인코딩된 M400 메시지"}
 	 * @return {"result":true}
 	 * @throws ParseException
-	 * @throws SpException
 	 */
 	public Boolean verifyVP(Map<String, Object> paramsMap) {
 		String trxcode = (String) paramsMap.get("trxcode");
@@ -312,8 +309,8 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	 * 오류 전송
 	 *
 	 * @MethodName : sendError
-	 * @param m900 M900 메세지
-	 * @throws SpException
+	 * @param  M900 메세지
+	 * @throws
 	 */
 	@Override
 	public void sendError(Map<String, Object> paramsMap){
@@ -350,51 +347,63 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	}
 
 
-	// 해당 법인 차량 유무 조회   24.10.28 jeonghyewon
+	// 해당 법인 차량 유무 조회   24.10.28 ->수정 24.11.06 jeonghyewon
 	@Override
-	public Object selectBzmnCarYn(Map<String, Object> paramsMap) throws RimsException {
+	public Object selectBzmnCarAndDefectedCarInfo(Map<String, Object> paramsMap) throws RimsException {
         Map<String,Object> result = new HashMap<>();
-		String bzmnCarYn = "N";
-		String message = "";
-		// 로그인 유저의 해당하는 법인번호 유무
-		String crno = (String) selectCrno(paramsMap).get(0).get("crno");
-		System.out.println("⭐⭐⭐⭐⭐⭐⭐crno"+crno);
-		if(crno.isEmpty()) {
-			message = "법인없음";
-			bzmnCarYn = "Y"; // 지우기
-			System.out.println("⭐⭐⭐⭐⭐⭐⭐message"+message);
+		String bzmnCarType = "";
+		String crno = (String) paramsMap.get("crno");
 
-			return result.put("message", message);
+		//1. 로그인 유저의 해당하는 법인번호 유무 : S권한일 경우만 법인 번호 조회됨
+		if(crno.isEmpty()) {
+			bzmnCarType = "법인없음";
+			result.put("bzmnCarType", bzmnCarType);
+			return result;
 		}else{
 			paramsMap.put("crno",crno);
 		}
-		System.out.println("⭐⭐⭐⭐⭐⭐⭐message"+message);
-		int carCnt = driveDao.selectBzmnCarYn1111(paramsMap);
+		//2. 해당 법인 차량 유무
+		int carCnt = driveDao.selectBzmnCarYn(paramsMap);
 		if(carCnt == 0) {
-			message = "미등록차량";
-			bzmnCarYn = "Y"; // 지우기
-			result.put("bzmnCarYn",bzmnCarYn);// 지우기
-			System.out.println("⭐⭐⭐⭐⭐⭐⭐carCnt"+carCnt);
-			 result.put("message", message);
-//			return result.put("message", message);
+			bzmnCarType = "미등록차량";
+			result.put("bzmnCarType", bzmnCarType);
 			return result;
 		}
-		System.out.println("⭐⭐⭐⭐⭐⭐⭐message"+message);
+		// 3. 해당 법인 차량의 결함 유무
 		Map<String,Object> res  = driveDao.selectBzmnDefectedCarYn(paramsMap).get(0);
-         // todo : 왜 쿼리에서 존재일때 Y 로 처리했는데 N으로 입력해야 결함차량존재하는걸까 ?  낼 꼭 확인하기
 		if(res != null){
 			String regYn = (String) res.get("regYn");
-			System.out.println("⭐⭐⭐⭐⭐⭐⭐regYn"+regYn);
-			if(regYn.equals("N")){
-				message = "결함차량존재";
+			if(regYn.equals("Y")){
+				bzmnCarType = "결함차량존재";
 			}else{
-				message = "결함차량미존재";
+				bzmnCarType = "결함차량미존재";
 			}
 		}
-		bzmnCarYn = "N"; /// 지우기
-		result.put("message",message);
-		result.put("bzmnCarYn",bzmnCarYn);
+		result.put("bzmnCarType",bzmnCarType);
 		return result;
-		}
 	}
+
+	// 해당 법인 차량 유무 조회   24.11.06 jeonghyewon
+	@Override
+	public Object selectBzmnCarYnTest(Map<String, Object> paramsMap) throws RimsException {
+		Map<String,Object> result = new HashMap<>();
+		String message = "N";
+		List<Map<String, Object>> list  = driveDao.selectCarList(paramsMap);
+		if(!list.isEmpty()){
+			message = "Y";
+		}
+
+		result.put("message",message);
+		return result;
+	}
+
+
+	//S권한 일 경우만 법인번호 가져오기 24.11.06 jeonghyewon
+	@Override
+	public List<Map<String, Object>> selectCorpNumIfSAuthrtCd(Map<String, Object> paramsMap) {
+		paramsMap.put("bzmnSn", getBzmnSn());
+		return driveDao.selectCorpNumIfSAuthrtCd(paramsMap);
+	}
+
+}
 

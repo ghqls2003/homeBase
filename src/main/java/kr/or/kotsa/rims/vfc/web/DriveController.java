@@ -190,9 +190,12 @@ public class DriveController extends CmmnAbstractServiceImpl {
 	@RequestMapping("drive/selectCarList")
 	@ResponseBody
 	public Object CarList(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		String crno = selectCorpNumIfSAuthrtCd(paramsMap);
+		paramsMap.put("crno", crno);
 		paramsMap.put("userSn", getUserSn());
 		return driveService.selectCarList(paramsMap);
 	}
+
 
 	/**
 	 * 운전자격 확인 코드
@@ -450,16 +453,52 @@ public class DriveController extends CmmnAbstractServiceImpl {
 	}
 
 	/**
-	 *  해당 법인 차량 유무 조회   24.10.28 jeonghyewon
+	 *  해당 법인 차량 및 결함 유무 조회  24.11.05 jeonghyewon : S권한일 경우만 법인 번호 조회
 	 * @param paramsMap
 	 * @return
 	 * @throws RimsException
 	 */
-	@RequestMapping("drive/selectBzmnCarYn")
+	@RequestMapping("drive/selectBzmnCarAndDefectedCarInfo")
 	@ResponseBody
-	public Map<String, Object> selectBzmnCarYn(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+	public Map<String, Object> selectBzmnCarAndDefectedCarInfo(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		// S권한일 경우만 법인 번호 조회
+		String crno = selectCorpNumIfSAuthrtCd(paramsMap);
+		
+		paramsMap.put("crno", crno);
 		paramsMap.put("userSn", getUserSn());
-		return (Map<String, Object>) driveService.selectBzmnCarYn(paramsMap); //("bzmnCarYn","Y");
+		return (Map<String, Object>) driveService.selectBzmnCarAndDefectedCarInfo(paramsMap);
+	}
+
+	/**
+	 *  해당 법인 차량 유무 조회   24.11.05 jeonghyewon 테스트용 추후 삭제 요망 
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping("drive/selectBzmnCarYnTest")
+	@ResponseBody
+	public Map<String, Object> selectBzmnCarYnTest(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		paramsMap.put("userSn", getUserSn());
+		return (Map<String, Object>) driveService.selectBzmnCarYnTest(paramsMap);
+	}
+
+	/**
+	 * S권한 일 경우만 법인번호 가져오기
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	private String selectCorpNumIfSAuthrtCd (Map<String, Object> paramsMap){
+		String authrtCd = getAuthrtCd();
+		String crno = "";
+		//1. S권한 일 경우만 법인번호 가져오기
+		if(authrtCd.startsWith("S")){
+			List<Map<String,Object>> response =driveService.selectCorpNumIfSAuthrtCd(paramsMap);
+			if(!response.isEmpty()){
+				crno = (String) response.get(0).get("crno");
+			}
+		}
+		return crno;
 	}
 
 }

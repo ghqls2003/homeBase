@@ -337,7 +337,7 @@
 	</select>
 
 		<!--  해당 법인 차량 유무 조회 (차량결함상관없음)  24.11.05 jeonghyewon-->
-		<select id="selectBzmnCarYn1111" resultType="int">
+		<select id="selectBzmnCarYn" resultType="int">
 			select count(1)
 			from
 			dqvs.dvs_rac_mt_car drmc
@@ -356,51 +356,10 @@
 			</choose>
 		</select>
 
-		<!--  해당 법인 차량 결함 유무 조회   24.11.05 jeonghyewon-->
-		<select id="selectBzmnDefectedCarYn" resultType="resultMap">
-			select
-				vhcl_reg_no,
-				drmc.vin,
-				carmdl,
-				mdlyr,
-				vhcl_nm,
-				bzmn_sn,
-				engine_fom,
-				use_yn,
-				sgg_cd,
-				ownr_nm,
-				to_char(reg_dt,
-				'yyyy-mm-dd') as reg_dt,
-<!--			여기체크하기-->
-				case when fvrts.reg_yn is null then 'N' else 'Y' end as reg_yn
-			from
-				dqvs.dvs_rac_mt_car drmc
-			left join (
-			select
-				vin ,
-				mdfr_sn,
-				'Y' as reg_yn
-			from
-			dqvs.dvs_rac_mt_fvrts ) as fvrts  on drmc.vin = fvrts.vin
-			where
-				drmc.use_yn = 'Y'
-			<if test="carNum != '' and carNum != null">
-				and vhcl_reg_no = #{carNum}
-			</if>
-			<choose>
-				<when test= "crno != '' and crno != null">
-					AND crno = #{crno}
-				</when>
-				<otherwise>
-					AND 1 != 1
-				</otherwise>
-			</choose>
-		</select>
-
-	<!--  todo 해당 법인 차량 결함 유무 조회  이걸로 테스트 하기 !!!   24.11.05 jeonghyewon-->
-	<select id="selectBzmnDefectedCarYn1" resultType="resultMap">
-	select case when T.reg_yn is null then 'Y' else 'N' end as reg_yn
-	from
+	<!--  해당 법인 차량 결함 유무 조회  24.11.05 jeonghyewon-->
+	<select id="selectBzmnDefectedCarYn" resultType="resultMap">
+		select case when T.reg_yn is null  then 'Y' else 'N' end as reg_yn
+		from
 		(	select
 				vhcl_reg_no,
 				drmc.vin,
@@ -415,17 +374,17 @@
 				to_char(reg_dt,
 				'yyyy-mm-dd') as reg_dt,
 				fvrts.reg_yn
-				from
-				dqvs.dvs_rac_mt_car drmc
-				left join (
+			from
+			dqvs.dvs_rac_mt_car drmc
+			left join (
 				select
 				vin ,
 				mdfr_sn,
 				'Y' as reg_yn
-			from
-			dqvs.dvs_rac_mt_fvrts ) as fvrts  on drmc.vin = fvrts.vin
+				from
+				dqvs.dvs_rac_mt_fvrts ) as fvrts  on drmc.vin = fvrts.vin
 			where
-				drmc.use_yn = 'Y'
+			drmc.use_yn = 'Y'
 			<if test="carNum != '' and carNum != null">
 				and vhcl_reg_no = #{carNum}
 			</if>
@@ -436,9 +395,18 @@
 				<otherwise>
 					AND 1 != 1
 				</otherwise>
-		</choose>
+			</choose>
 		) as T
 	</select>
+
+	<!-- S권한 일 경우만 법인번호 가져오기 24.11.06 jeonghyewon-->
+	<select id="selectCorpNumIfSAuthrtCd" resultType="resultMap">
+		<if test="bzmnSn != null and bzmnSn != ''">
+			select crno from dqvs.dvs_rac_mt_agency
+			where bzmn_sn = #{bzmnSn}
+		</if>
+	</select>
+
 	<!--  면허번호에 해당하는 최근 7일간의 대여이력 조회 건수 24.10.25 jeonghyewon-->
 	<select id="drvListViewCnt" resultType="int">
 		SELECT count(1) AS cnt
@@ -447,6 +415,5 @@
 		LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn
 		where  ddhv.dln_enc = dqvs.pca_encrypt(#{dln}, '200')
 			AND vrfc_dmnd_dt <![CDATA[>]]> now() - interval '7days'
-
 	</select>
 </mapper>
