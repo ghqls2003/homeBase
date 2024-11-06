@@ -443,7 +443,7 @@
 			params.periodRsv = $("#periodRsv").val();
 			params.startDt = $("#start-picker02").val();
 			params.endtDt = $("#rsvEndTime").val();
-			params.lastCfRst = $("#lastCfRst").val();
+//			params.lastCfRst = $("#lastCfRst").val();
 			params.dln = $("#regRgtrDln").val();
 			//			params.lcnsFlnm = $("#lcnsFlnm").val();
 			params.lcnsAsortCd = $("#ReglcnsAsortCd").val();
@@ -624,8 +624,7 @@
 				params.detaiCLick = detaiCLick;
 
 				ajax(true, contextPath + '/vfc/drvRsvMag/selectCheckRentRsvf', 'body', '확인 중입니다.', params, function(data2) {
-					$("#lastCfRst").val(data2[0].vrfcRslt);
-					//					$("#lcnsFlnm").val(data2[0].lcnsFlnm);
+//					$("#lastCfRst").val(data2[0].vrfcRslt);
 					$("#ReglcnsAsortCd").val(data2[0].lcnsAsortCd);
 					$("#RsvedlastRst").val(data2[0].vrfcCd);
 					$("#regRgtrDln").val(data2[0].dln);
