@@ -46,7 +46,10 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
     //차량정보 조회
 	public Map<String, Object> selectCarList(Map<String, Object> paramsMap)
 			throws RimsException {
+
 		Map<String, Object> result = new HashMap<>();
+		String crno = selectCorpNumIfSAuthrtCd(paramsMap);
+		paramsMap.put("crno",crno);
 		List<Map<String, Object>> list = driveDao.selectCarList(paramsMap);
 		int total = driveDao.selectCarListCnt(paramsMap);
 		result.put("data", list);
@@ -352,8 +355,8 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	public Object selectBzmnCarAndDefectedCarInfo(Map<String, Object> paramsMap) throws RimsException {
         Map<String,Object> result = new HashMap<>();
 		String bzmnCarType = "";
-		String crno = (String) paramsMap.get("crno");
-
+		String crno = selectCorpNumIfSAuthrtCd(paramsMap);
+		paramsMap.put("crno",crno);
 		//1. 로그인 유저의 해당하는 법인번호 유무 : S권한일 경우만 법인 번호 조회됨
 		if(crno.isEmpty()) {
 			bzmnCarType = "법인없음";
@@ -387,22 +390,31 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	@Override
 	public Object selectBzmnCarYnTest(Map<String, Object> paramsMap) throws RimsException {
 		Map<String,Object> result = new HashMap<>();
-		String message = "N";
+		String bzmnCarType = "N";
 		List<Map<String, Object>> list  = driveDao.selectCarList(paramsMap);
 		if(!list.isEmpty()){
-			message = "Y";
+			bzmnCarType = "Y";
 		}
 
-		result.put("message",message);
+		result.put("bzmnCarType",bzmnCarType);
 		return result;
 	}
 
 
 	//S권한 일 경우만 법인번호 가져오기 24.11.06 jeonghyewon
 	@Override
-	public List<Map<String, Object>> selectCorpNumIfSAuthrtCd(Map<String, Object> paramsMap) {
+	public String selectCorpNumIfSAuthrtCd(Map<String, Object> paramsMap) {
 		paramsMap.put("bzmnSn", getBzmnSn());
-		return driveDao.selectCorpNumIfSAuthrtCd(paramsMap);
+		String authrtCd = getAuthrtCd();
+		String crno = "";
+		//1. S권한 일 경우만 법인번호 가져오기
+		if(authrtCd.startsWith("S")){
+			List<Map<String,Object>> response = driveDao.selectCorpNumIfSAuthrtCd(paramsMap);
+			if(!response.isEmpty()){
+				crno = (String) response.get(0).get("crno");
+			}
+		}
+		return crno;
 	}
 
 }

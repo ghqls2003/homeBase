@@ -50,5 +50,5 @@ public interface DriveService {
 
 
 	//S권한 일 경우만 법인번호 가져오기 24.11.06 jeonghyewon조회
-	public List<Map<String, Object>> selectCorpNumIfSAuthrtCd(Map<String, Object> paramsMap);
+	public String selectCorpNumIfSAuthrtCd(Map<String, Object> paramsMap);
 }
