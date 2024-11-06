@@ -44,7 +44,7 @@
 								진행이 원활하지 않는 경우 운전자격확인시스템 전용 상담센터 <br>
 								<spen style="font-weight:700;">054-459-7565</spen>를 통해서 지원이 가능합니다.<br>
                             </p>
-                            <button class="blue_btn cer_login_btn" onClick="location.href='https://www.kotsa.or.kr/tsum/mbs/insFrmMemberType.do?menuCode=08020000'">가입하기</button>
+                            <button class="blue_btn cer_login_btn" onClick="location.href='https://tsum.kotsa.or.kr/tsum/mbs/insFrmMemberType.do?menuCode=08020000'">가입하기</button>
                         </div>
                     </div>
 <!--                     <div class="contBox flex-box"> -->

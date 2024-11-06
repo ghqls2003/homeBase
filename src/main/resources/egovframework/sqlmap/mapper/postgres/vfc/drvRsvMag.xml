@@ -23,7 +23,6 @@
 					select
 						base.rent_no,
 						base.rent_prcs_dt,
-						base.lcns_idntf_cd,
 						base.vhcl_reg_no,
 						base.bzmn_sn,
 						base.rent_bgng_dt,
@@ -91,7 +90,6 @@
 					select
 						base.rent_no,
 						base.rent_prcs_dt,
-						base.lcns_idntf_cd,
 						base.vhcl_reg_no,
 						base.bzmn_sn,
 						base.rent_bgng_dt,
@@ -196,6 +194,7 @@
 							ddvr.rgtr_sn)as reg_nm,
 							agency.co_nm ,
 							rent.bzmn_sn,
+							ddvr.lcns_asort_cd,
 							ddvr.lcns_asort_cd
 <!-- 						from dqvs.dvs_dqv_mt_rent_dump rent -->
 						from dqvs.dvs_dqv_mt_rent rent
@@ -360,7 +359,6 @@
 				vhcl_reg_no,
 				dln,
 				lcns_asort_cd,
-	
 				lcns_flnm,
 				vrfc_period,
 				rsvt_bgng_ymd,
@@ -474,11 +472,11 @@
 	</select>
 	<select id="CheckRentRsvf" resultType="resultMap">
 			select 
-		        ddhv.vrfc_rslt,
-		        ddhv.vrfc_cd,
-		        dqvs.fn_get_cdnm('verify_cd', ddhv.vrfc_cd) as last_vrfc_rslt,
-		        ddhv.lcns_asort_cd,
-		        ddhv.dln,  <!-- dln사용관련 -->
+		        ddhv.vrfc_rslt_cd as vrfc_cd,
+				 COALESCE(CASE WHEN ddhv.vrfc_rslt_cd IN('00', '1', '0') THEN dqvs.fn_get_cdnm('verify_cd', ddhv.vrfc_rslt_cd)
+		    		ELSE dqvs.fn_get_cdnm('vrfc_rslt', ddhv.req_rslt_cd) END, '-') vrfc_rslt,
+		    	ddhv.lcns_asort_cd,
+		        ddhv.dln,  
 		        ddhv.vrfc_dmnd_dt,
 		        case
 				ddhv.lcns_asort_cd when '11' then '1종대형'
@@ -495,4 +493,5 @@
 		    FROM dqvs.dvs_dqv_hs_verf as ddhv
 			WHERE ddhv.vrfc_hstry_sn = #{detaiCLick}
 	</select>
+	
 </mapper>

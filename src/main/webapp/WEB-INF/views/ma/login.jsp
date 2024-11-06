@@ -86,9 +86,9 @@ var mode = '${mode}'
 	                    <ul class="login_link">
 	                    	<li><label for="remember_id"></label> <input type="checkbox" name="remember_id" id="remember_id" style="line-height: 26px; color: #888888; font-size: 1.6rem;"></input> <spen style="line-height: 26px; color: #888888; font-size: 1.6rem;"> 아이디 저장</spen></li>
 							<li class="line"></li>
-	                        <li><button onClick="location.href='https://www.kotsa.or.kr/tsum/mbs/inqFrmFindMemberId.do?menuCode=08030000'" style="line-height: 26px; color: #888888; font-size: 1.6rem;">아이디 찾기</button></li>
+	                        <li><button onClick="location.href='https://tsum.kotsa.or.kr/tsum/mbs/inqFrmFindMemberId.do?menuCode=08030000'" style="line-height: 26px; color: #888888; font-size: 1.6rem;">아이디 찾기</button></li>
 	                        <li class="line"></li>
-	                        <li><button onClick="location.href='https://www.kotsa.or.kr/tsum/mbs/inqFrmFindMemberPw.do?menuCode=08040000'" style="line-height: 26px; color: #888888; font-size: 1.6rem;">비밀번호 찾기</button></li>
+	                        <li><button onClick="location.href='https://tsum.kotsa.or.kr/tsum/mbs/inqFrmFindMemberPw.do?menuCode=08040000'" style="line-height: 26px; color: #888888; font-size: 1.6rem;">비밀번호 찾기</button></li>
 	                        <li class="line"></li>
 	                        <li><button onClick="location.href='${ contextPath }/ma/join'" style="line-height: 26px; color: #888888; font-size: 1.6rem;">회원가입</button></li>
 	                    </ul>
