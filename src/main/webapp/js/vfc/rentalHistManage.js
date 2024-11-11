@@ -642,7 +642,7 @@
 			ajax(true, contextPath + '/vfc/rentalHistManage/selectDetailRentInfo', 'body', '확인중입니다.', params, function (data) {
 				$("#detailFileDown").off('click');  //기존 클릭이벤트 핸들러 제거
 				
-//				$("#verfDln").val('');
+//				$("#verfDln").val(''); 
 //				$("#verfDmnd").val('');
 //				$("#verfMthd").val('');
 //				$("#verfRslt").val('');
@@ -652,6 +652,11 @@
 				$("#detailRentSttsNm").val(data[0].rentSttsNm);
 				$("#detailRentHstryNo").val(data[0].rentHstryNo);
 				$("#delYnVal").val(data[0].delYn);
+				if(data[0].onewayYn == 'Y') {
+					$("#onewayY").prop("checked", true);
+				} else {
+					$("#onewayN").prop("checked", true);
+				}
 				
 				//Z관리자, G지자체, K공단 만 삭제여부 컬럼 노출
 				if (authrtCd.includes("Z") || authrtCd.includes("G") || authrtCd.includes("K")) {
@@ -780,6 +785,15 @@
 					html += '					</div>';
 					html += '				</td>';
 					html += '			</tr>';
+					html += '			<tr>';
+					html += '				<th scope="col">편도/왕복</th>';
+					html += '				<td>';
+					html += '					<div class="tb_flex">';
+					html += '						<label for="start-picker03">편도/왕복</label>';
+					html += '						<input type="text" id="" name="" class="input no_line" value="'+nvl(data[i].onewayYn == 'Y'?'편도':'왕복',' ')+'" readonly/>';
+					html += '					</div>';
+					html += '				</td>';
+					html += '			</tr>';
 					/*html += '			<tr id="" style="display: none;">';
 					html += '				<th scope="col">삭제여부</th>';
 					html += '				<td>';
@@ -851,6 +865,8 @@
 				params.modelYear = $("#detailModelYear").val();
 
 				params.rentSttsCd = '';
+				
+				params.onewayYn = $("input[name='onewayYn']:checked").val();
 
 				ajax(true, contextPath + '/vfc/rentalHistManage/updateRentInfo', 'body', '확인인중입니다.', params, function (data) {
 					alert("대여이력이 수정되었습니다.")

@@ -341,6 +341,23 @@
                                                        </div>
                                                    </td>
                                                </tr>
+                                               <tr id="onewayYn">
+                                                   <th scope="col">편도/왕복</th>
+                                                   <td>
+														 <div class="tb_flex">
+							                                <ul class="" style ="align-self: flex-start; display: flex; align-items: center; gap: 24px;">
+							                                    <li style="display: flex; align-items: center;">
+							                                        <input id="onewayY" value="Y" type="radio" name="onewayYn" value="Y">&nbsp;
+							                                        <label for="onewayY" style="display: block;">편도</label>
+							                                    </li>
+							                                    <li style="display: flex; align-items: center;">
+							                                        <input id="onewayN" value="N" type="radio" name="onewayYn" value="N">&nbsp;
+							                                        <label for="onewayN" style="display: block;">왕복</label>
+							                                    </li>
+							                                </ul>
+							                            </div>
+                                                   </td>
+                                               </tr>
                                            </table>
                                            <table class="tb rental_tb01">
                                                <tr>
