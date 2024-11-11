@@ -111,10 +111,7 @@ public class InspectionHistServiceImpl extends CmmnAbstractServiceImpl implement
             File dir = new File(savePath);
             
             //디렉토리 권한 설정
-            dir.setExecutable(true, true);
     		dir.setReadable(true);
-    		dir.setWritable(true, true);
-    		
     		
     		// 디렉토리가 존재하지 않으면 생성
             if (!dir.exists()) {
