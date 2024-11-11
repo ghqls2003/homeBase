@@ -431,6 +431,15 @@
                                                    </div>
                                                    </td>
                                                </tr>
+                                               <tr class="verfClass" style="display: none;">
+                                                   <th scope="col">유사도결과</th>
+                                                   <td>
+                                                   <div class="tb_flex">
+                                                       <label for="verfSimilarity">유사도결과</label>
+                                                       <input type="text" id="verfSimilarity" name="verfSimilarity" class="input no_line" readonly/>
+                                                   </div>
+                                                   </td>
+                                               </tr>
                                            </table>
                                            <table class="tb rental_tb01">
                                                <tr>
@@ -448,6 +457,15 @@
                                                    <div class="tb_flex">
                                                        <label for="verfRslt">자격확인결과</label>
                                                        <input type="text" id="verfRslt" name="verfRslt" class="input no_line" readonly/>
+                                                   </div>
+                                                   </td>
+                                               </tr>
+                                               <tr class="verfClass" style="display: none;">
+                                                   <th scope="col">활성도결과</th>
+                                                   <td>
+                                                   <div class="tb_flex">
+                                                       <label for="verfLiveness">활성도결과</label>
+                                                       <input type="text" id="verfLiveness" name="verfLiveness" class="input no_line" readonly/>
                                                    </div>
                                                    </td>
                                                </tr>
