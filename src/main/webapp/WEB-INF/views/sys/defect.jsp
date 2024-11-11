@@ -138,7 +138,7 @@ button.red_btn {
 	        <div class="search_top">
 		        <form action="#" name="searchForm" id="searchForm" method="post">
 		        	<input type="hidden" id="elxExcelDownReason" name="excelDownReason" />
-					<input type="hidden" class="_csrf" name="${_csrf.parameterName}" value="${_csrf.token}" />
+					<input type="hidden" class="_csrf" name="${_csrf.parameterName}" value="<c:out value='${_csrf.token}'/>" />
 			            <div class="selec_wr">
 			                <div class="mo_flex">
 			                	<ul class="selec_box">

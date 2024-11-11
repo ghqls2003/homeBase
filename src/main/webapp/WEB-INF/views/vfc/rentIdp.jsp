@@ -169,7 +169,7 @@ button.red_btn:hover {
 	        </div>
 	        <div class="search_top">
 	        	<input type="hidden" id="elxExcelDownReason" name="excelDownReason" />
-				<input type="hidden" class="_csrf" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				<input type="hidden" class="_csrf" name="${_csrf.parameterName}" value="<c:out value='${_csrf.token}'/>" />
                 <div class="selec_wr">
                     <div class="mo_flex">
                         <div class="year_picker">
