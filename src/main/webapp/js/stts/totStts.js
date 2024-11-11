@@ -328,7 +328,7 @@
 							{title: " ", field: "sttsNormal"},
 							{title: " ", field: "accession"},
 							{title: " ", field: "accessionPer"},
-							{title: " ", field: "dedan"},
+							{title: " ", field: "sedan"},
 							{title: " ", field: "van"},
 							{title: " ", field: "special"},
 							{title: " ", field: "conn", hidden: "true"}
