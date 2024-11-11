@@ -362,7 +362,8 @@ table.tb .tb_flex23 {
 					<li>대여사업자 관리</li>
 					<li class="mid"><img
 						src="${contextPath}/images/sub/ico_menuLine.png" alt="라인"></li>
-					<li class="current">${tableName}</li>
+					<li class="current"><c:out value='${tableName}'/></li>
+					
 				</ul>
 			</div>
 			<!-- 			<div class="search_top"> -->

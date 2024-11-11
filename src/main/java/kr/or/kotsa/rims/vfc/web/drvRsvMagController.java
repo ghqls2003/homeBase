@@ -247,7 +247,7 @@ public class drvRsvMagController extends CmmnAbstractServiceImpl {
 
 		String colName[] = { "번호", "대여번호", "면허번호", "면허 소유자", "면허종별", "회사명", "예약자", "예약 지정일","수정자","수정일"};
 		String valName[] = { "rn", "rentNo", "dln2", "lcnsFlnm", "lcnsAsortCd", "coNm",
-				"regNm", "regDt", "mdfrNm", "mdfcnDt"};
+				"regNm2", "regDt", "mdfrNm2", "mdfcnDt"};
 
 
 		modelMap.put("excelName", fileName);
