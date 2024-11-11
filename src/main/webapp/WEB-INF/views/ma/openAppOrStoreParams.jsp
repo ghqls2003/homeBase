@@ -1,62 +1,48 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<html lang="ko">
-<style>
-.header {
-	display: none;
-}
-.footerWrap {
-	display: none;
-}
-#title {
-	position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-</style>
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
+<%@ include file="../cmm/include_gis.jsp" %>
 <script>
 	top.document.title = 'openAppOrStoreParams'
 	
 	$(document).ready(function() {
-
-        // openAppOrStore();
+// 		$("#forcingClick").click();
 	});
-    function openAppOrStore() {
-        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-        console.log("userAgent.js >>", userAgent);
-        var userAgent = '${userAgent}';
-        console.log("userAgent.java >>", userAgent);
-
-        const url = new URLSearchParams(window.location.search);
-        url.set('rentNo', 'R24-000927638');
-
-        var rentNo = null;
-
-        url.get('rentNo') != null ? rentNo = url.get('rentNo') : rentNo;
-
-        console.log(rentNo);
-
-        if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-            window.location = "rimsapp://?rentNumber="+rentNo;
-
-            setTimeout(function() {
-                if (!document.webkitHidden || !document.hidden) {
-                    window.location.href = "https://apps.apple.com/kr/app/해양교통안전정보/id6462842483";
-                }
-            }, 1000);
-        } else if (/android/i.test(userAgent)) {
-            // window.location = "intent://kr.or.kotsa.rims#Intent;scheme=rimsapp;package=kr.or.kotsa.rims;S.rentNumber="+rentNo+";end";
-            window.location = "rimsapp://kr.or.kotsa.rims?rentNumber="+rentNo;
-
-            setTimeout(function() {
-                if (!document.webkitHidden || !document.hidden) {
-                    window.location.href = "https://play.google.com/store/apps/details?id=kr.or.kotsa.rims";
-                }
-            }, 1000);
-        }
-    }
+	    function openAppOrStore() {
+	        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+	
+	        const url = new URLSearchParams(window.location.search);
+	        url.set('rentNo', 'R24-000927638');
+	
+	        var rentNo = null;
+	
+	        url.get('rentNo') != null ? rentNo = url.get('rentNo') : rentNo;
+	
+	        console.log(rentNo);
+	
+	        if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+	            window.location = "rimsapp://?rentNumber="+rentNo;
+	
+	            setTimeout(function() {
+	                if (!document.webkitHidden || !document.hidden) {
+	                    window.location.href = "https://apps.apple.com/kr/app/해양교통안전정보/id6462842483"; 
+	                }
+	            }, 1000);
+	        } else if (/android/i.test(userAgent)) {
+	            window.location = "rimsapp://kr.or.kotsa.rims?rentNumber="+rentNo;
+	
+	            setTimeout(function() {
+	                if (!document.webkitHidden || !document.hidden) {
+	                    window.location.href = "https://play.google.com/store/apps/details?id=kr.or.kotsa.rims";
+	                }
+	            }, 1000);
+	        }
+	    }
 </script>
-<h2 id="title">페이지 이동중입니다.</h2>
 
-<button onclick="openAppOrStore()">Open App Or Store</button>
+<div style="display: flex; justify-content: center; margin: 300px 0px 180px 0px;">
+	<button id="forcingClick" class="yellow_btn searchBtn" type="button" onclick="openAppOrStore()"
+					style="width: 240px; height: 80px; font-size:20px; font-weight: bold;">
+		운전자격확인시스템 앱 열기
+	</button>
+<!-- 	<h2>페이지 이동중입니다.</h2> -->
+</div>

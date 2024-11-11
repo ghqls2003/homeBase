@@ -19,9 +19,6 @@ public class OpenAppOrStoreParamsController {
 
 	@RequestMapping("openAppOrStoreParams")
 	public ModelAndView openAppOrStoreParamsView(@RequestParam Map<String, Object> paramsMap, HttpServletRequest request, ModelAndView mav) throws RimsException {
-		String userAgent = request.getHeader("User-Agent").toUpperCase();
-		
-		mav.addObject("userAgent", userAgent);
 		mav.setViewName("ma/openAppOrStoreParams");
 		System.out.println(paramsMap);
 		
