@@ -25,13 +25,13 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	private DriveDao driveDao;
 	private MipDidVpService mipDidVpService;
 
-	@Value(value="${app.sp-server}")
-    private String spServer;
+	@Value(value = "${app.sp-server}")
+	private String spServer;
 
-	@Value(value="${app.sp-bi-image-url}")
+	@Value(value = "${app.sp-bi-image-url}")
 	private String spBiImageUrl;
 
-	@Value(value="${app.sp-ci}")
+	@Value(value = "${app.sp-ci}")
 	private String spCi;
 
 	String svcCode;
@@ -43,13 +43,13 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 		this.mipDidVpService = mipDidVpService;
 	}
 
-    //차량정보 조회
+	//차량정보 조회
 	public Map<String, Object> selectCarList(Map<String, Object> paramsMap)
 			throws RimsException {
 
 		Map<String, Object> result = new HashMap<>();
 		String crno = selectCorpNumIfSAuthrtCd(paramsMap);
-		paramsMap.put("crno",crno);
+		paramsMap.put("crno", crno);
 		List<Map<String, Object>> list = driveDao.selectCarList(paramsMap);
 		int total = driveDao.selectCarListCnt(paramsMap);
 		result.put("data", list);
@@ -67,16 +67,16 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 		result.putAll(rentNo);
 		paramsMap.putAll(rentNo);
 		result.put("code", driveDao.selectVerifyCd(paramsMap));
-		if(vin != null) {
+		if (vin != null) {
 			paramsMap.putAll(vin);
 			result.putAll(selectDefectList(paramsMap));
 		}
 		String successCode = (String) paramsMap.get("cd");
-		
-		if("00".equals(successCode)) {
+
+		if ("00".equals(successCode)) {
 			insertRent(paramsMap);
 		}
-		
+
 		// 최근 7일 운전자격이력 건수
 		int VfcHistCnt = driveDao.selectVfcHistCnt(paramsMap);
 		result.put("VfcHistCnt", VfcHistCnt);
@@ -104,7 +104,6 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 		driveDao.insertRentHstryInfo(paramsMap);
 		return "success";
 	}
-
 
 
 //	//운전자격검증 부가정보 등록
@@ -146,7 +145,7 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	public Map<String, Object> selectDefectList(Map<String, Object> paramsMap) {
 		Map<String, Object> result = new HashMap<>();
 
-		List<Map<String, Object>> list  = driveDao.selectDefectList(paramsMap);
+		List<Map<String, Object>> list = driveDao.selectDefectList(paramsMap);
 		int total = driveDao.selectDefectListCnt(paramsMap);
 		result.put("data", list);
 		result.put("total", total);
@@ -171,7 +170,7 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 
 		JSONObject jsonObject = new JSONObject();
 
-		for(Map.Entry<String, Object> entry : m200.entrySet()) {
+		for (Map.Entry<String, Object> entry : m200.entrySet()) {
 			jsonObject.put(entry.getKey(), entry.getValue());
 		}
 
@@ -185,9 +184,9 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	/**
 	 * QR-MPM 시작(Direct 모드)
 	 *
-	 * @MethodName : directStart
-	 * @param trxInfo
+	 * @param paramsMap trxInfo
 	 * @return
+	 * @MethodName : directStart
 	 */
 	private Map<String, Object> directStart(Map<String, Object> paramsMap) {
 		trxcode = genTrxcode();
@@ -210,8 +209,8 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	/**
 	 * 거래코드 생성 - 현재시간 yyyyMMddhhmmssSSS + 시큐어난수 (8자리)
 	 *
-	 * @MethodName : genTrxcode
 	 * @return 거래코드
+	 * @MethodName : genTrxcode
 	 */
 	public static String genTrxcode() {
 		Date today = new Date();
@@ -226,9 +225,9 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	/**
 	 * 난수 생성
 	 *
-	 * @MethodName : SecRandom
 	 * @param genNum
 	 * @return 난수
+	 * @MethodName : SecRandom
 	 */
 	public static String secRandom(int genNum) {
 		SecureRandom random = new SecureRandom();
@@ -240,15 +239,17 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 		return bytesToHexString(bytes);
 	}
 
-	/** Base Hex Chars */
+	/**
+	 * Base Hex Chars
+	 */
 	private static final char[] HEX_CHARS = "0123456789ABCDEF".toCharArray();
 
 	/**
 	 * Byte Array to Hex String
 	 *
-	 * @MethodName : bytesToHexString
 	 * @param bytes Byte Array
 	 * @return Hex String
+	 * @MethodName : bytesToHexString
 	 */
 	public static String bytesToHexString(byte[] bytes) {
 		if (bytes == null) {
@@ -270,9 +271,9 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	/**
 	 * Profile 요청
 	 *
-	 * @MethodName : getProfile
-	 * @param m310 M310 메세지
+	 * @param paramsMap m310 M310 메세지
 	 * @return M310 메세지 + Profile
+	 * @MethodName : getProfile
 	 */
 	@Override
 	public String getProfile(Map<String, Object> paramsMap) {
@@ -293,7 +294,7 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	/**
 	 * VP 검증
 	 *
-	 * @param mipApiData {"data":"Base64로 인코딩된 M400 메시지"}
+	 * @param paramsMap mipApiData {"data":"Base64로 인코딩된 M400 메시지"}
 	 * @return {"result":true}
 	 * @throws ParseException
 	 */
@@ -311,12 +312,12 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	/**
 	 * 오류 전송
 	 *
-	 * @MethodName : sendError
-	 * @param  M900 메세지
+	 * @param paramsMap M900 메세지
 	 * @throws
+	 * @MethodName : sendError
 	 */
 	@Override
-	public void sendError(Map<String, Object> paramsMap){
+	public void sendError(Map<String, Object> paramsMap) {
 		Map<String, Object> trxInfo = new HashMap<>();
 
 		trxInfo.put("trxcode", paramsMap.get("trxcode"));
@@ -337,7 +338,7 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	}
 
 
-    // 면허번호에 해당하는 최근 7일간의 대여이력 조회  24.10.25 jeonghyewon
+	// 면허번호에 해당하는 최근 7일간의 대여이력 조회  24.10.25 jeonghyewon
 	@Override
 	public List<Map<String, Object>> drvListView(Map<String, Object> paramsMap) {
 		return driveDao.drvListView(paramsMap);
@@ -346,57 +347,57 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	// 면허번호에 해당하는 최근 7일간의 대여이력 조회 건수 24.10.25 jeonghyewon
 	@Override
 	public int drvListViewCnt(Map<String, Object> paramsMap) {
-		return  driveDao.drvListViewCnt(paramsMap);
+		return driveDao.drvListViewCnt(paramsMap);
 	}
 
 
 	// 해당 법인 차량 유무 조회   24.10.28 ->수정 24.11.06 jeonghyewon
 	@Override
 	public Object selectBzmnCarAndDefectedCarInfo(Map<String, Object> paramsMap) throws RimsException {
-        Map<String,Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<>();
 		String bzmnCarType = "";
 		String crno = selectCorpNumIfSAuthrtCd(paramsMap);
-		paramsMap.put("crno",crno);
+		paramsMap.put("crno", crno);
 		//1. 로그인 유저의 해당하는 법인번호 유무 : S권한일 경우만 법인 번호 조회됨
-		if(crno.isEmpty()) {
+		if (crno.isEmpty()) {
 			bzmnCarType = "법인없음";
 			result.put("bzmnCarType", bzmnCarType);
 			return result;
-		}else{
-			paramsMap.put("crno",crno);
+		} else {
+			paramsMap.put("crno", crno);
 		}
 		//2. 해당 법인 차량 유무
 		int carCnt = driveDao.selectBzmnCarYn(paramsMap);
-		if(carCnt == 0) {
+		if (carCnt == 0) {
 			bzmnCarType = "미등록차량";
 			result.put("bzmnCarType", bzmnCarType);
 			return result;
 		}
 		// 3. 해당 법인 차량의 결함 유무
-		Map<String,Object> res  = driveDao.selectBzmnDefectedCarYn(paramsMap).get(0);
-		if(res != null){
+		Map<String, Object> res = driveDao.selectBzmnDefectedCarYn(paramsMap).get(0);
+		if (res != null) {
 			String regYn = (String) res.get("regYn");
-			if(regYn.equals("Y")){
+			if (regYn.equals("Y")) {
 				bzmnCarType = "결함차량존재";
-			}else{
+			} else {
 				bzmnCarType = "결함차량미존재";
 			}
 		}
-		result.put("bzmnCarType",bzmnCarType);
+		result.put("bzmnCarType", bzmnCarType);
 		return result;
 	}
 
 	// 해당 법인 차량 유무 조회   24.11.06 jeonghyewon
 	@Override
 	public Object selectBzmnCarYnTest(Map<String, Object> paramsMap) throws RimsException {
-		Map<String,Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<>();
 		String bzmnCarType = "N";
-		List<Map<String, Object>> list  = driveDao.selectCarList(paramsMap);
-		if(!list.isEmpty()){
+		List<Map<String, Object>> list = driveDao.selectCarList(paramsMap);
+		if (!list.isEmpty()) {
 			bzmnCarType = "Y";
 		}
 
-		result.put("bzmnCarType",bzmnCarType);
+		result.put("bzmnCarType", bzmnCarType);
 		return result;
 	}
 
@@ -408,14 +409,15 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 		String authrtCd = getAuthrtCd();
 		String crno = "";
 		//1. S권한 일 경우만 법인번호 가져오기
-		if(authrtCd.startsWith("S")){
-			List<Map<String,Object>> response = driveDao.selectCorpNumIfSAuthrtCd(paramsMap);
-			if(!response.isEmpty()){
+		if (authrtCd.startsWith("S")) {
+			List<Map<String, Object>> response = driveDao.selectCorpNumIfSAuthrtCd(paramsMap);
+
+			if (response != null && !response.isEmpty() && response.get(0) != null) {
+				Map<String, Object> firstElement = response.get(0);
 				crno = (String) response.get(0).get("crno");
 			}
 		}
 		return crno;
 	}
-
 }
 

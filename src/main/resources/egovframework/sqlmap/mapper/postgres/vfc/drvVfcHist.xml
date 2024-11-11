@@ -186,22 +186,11 @@
         </if>
     </select>
 
-
-
     <!-- 확인결과 리스트 -->
     <select id="ckResults" resultType="resultMap">
-        SELECT *
-        FROM (
-            (select cd_nm,concat(cd_group,'_', cd) as cd
-            FROM dqvs.dvs_cmm_mt_code
-            WHERE cd_group = 'verify_cd' and use_yn ='Y' and del_yn='N'
-            )
-             UNION ALL
-            (SELECT cd_nm,concat(cd_group,'_', cd) as cd
-            FROM dqvs.dvs_cmm_mt_code
-            WHERE cd_group = 'req_rslt_cd' and use_yn ='Y' and del_yn='N'
-            )
-        ) AS rescd
+        select cd_nm,concat(cd_group,'_', cd) as cd
+        FROM dqvs.dvs_cmm_mt_code
+        WHERE cd_group in ('verify_cd','req_rslt_cd') and use_yn ='Y' and del_yn='N'
         order by cd_nm asc
     </select>
 

@@ -362,7 +362,8 @@ table.tb .tb_flex23 {
 					<li>대여사업자 관리</li>
 					<li class="mid"><img
 						src="${contextPath}/images/sub/ico_menuLine.png" alt="라인"></li>
-					<li class="current">${tableName}</li>
+					<li class="current"><c:out value='${tableName}'/></li>
+					
 				</ul>
 			</div>
 			<!-- 			<div class="search_top"> -->
@@ -510,7 +511,7 @@ table.tb .tb_flex23 {
 			<p>* 반복조회는 대여 종료 시기까지 반복됩니다.</p>
 			<p>* 예약 종료일은 대여 종료일입니다.</p>
 			<p>* 차량번호를 먼저 검색하시고 예약을 진행해주세요.</p>
-			<p>* 대여번호는 차량번호 검색 버튼을 클릭하시면 조회 됩니다.</p>
+			<p>* 대여번호는 검색 버튼을 클릭하시면 조회 됩니다.</p>
 			<p>* 예약 설정은 시작일자와 종료일자 간의 차이가 최소 7일 이상이어야 가능합니다.</p>
 		</div>
 		<div class="content">

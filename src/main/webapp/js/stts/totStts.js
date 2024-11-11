@@ -83,7 +83,7 @@
 	// 접근 권한
 	var authParams = {};
 	
-	/* 지자체별 가입 사용자 현황 동적 데이터*/
+	/* 지자체별 가입 사용자 현황 동적 데이터 */
 	var gvData = null, gvDetailData = null; 
 	
 	var detailParams = null;
@@ -126,19 +126,7 @@
 			});
 
 			// 대여사업자 등록 현황
-			ajax(false, contextPath + '/stts/totStts/agencyAccessionChart', 'body', '조회중입니다', authParams, function(data) {
-				var randomColors = 
-					[
-						"#FF6F61", "#FFB347", "#FFD700", "#90EE90", "#87CEFA", "#FF69B4", "#BA55D3", "#32CD32", "#FFB6C1",
-						"#FFA07A", "#98FB98", "#FFD700", "#40E0D0", "#9370DB", "#FFDAB9", "#7B68EE", "#FF1493", "#66CDAA"
-					];
-				    
-				data.agencyAccessionChart.forEach(function(item, index) {
-				    item.color = randomColors[index % randomColors.length];  // 색상 할당
-				});
-				
-				$statistics.kendo.createChartMulti(data.agencyAccessionChart);
-			});
+			$statistics.kendo.setChart(authParams);
 			
 			//  지자체별 가입 사용자 현황 권한 드롭다운
 			ajax(true, contextPath + '/stts/totStts/authrt', 'body', '조회중입니다', authParams, function(data) {
@@ -205,6 +193,7 @@
 					
 					loadCk++;
 					kendo.ui.progress($(gridId), false);
+					kendo.ui.progress($("#areaGrid"), false);
 				},
 //                pageable: { pageSize: 5, buttonCount: 5 },
 //                noRecords: { template : "데이터가 없습니다." },
@@ -301,9 +290,13 @@
 						        }
 						        
 						        if(gridId == "#grid01") {
+									var ckNm = "";
+									if($("#se1").is(":checked")) {
+										ckNm = "(주사무소)";
+									}
 							        kendo.saveAs({
 										dataURI: new kendo.ooxml.Workbook(workbook).toDataURL(),
-										fileName: "대여사업자 현황.xlsx"
+										fileName: "대여사업자 현황"+ckNm+".xlsx"
 							        });
 								} else {
 							        kendo.saveAs({
@@ -335,7 +328,7 @@
 							{title: " ", field: "sttsNormal"},
 							{title: " ", field: "accession"},
 							{title: " ", field: "accessionPer"},
-							{title: " ", field: "dedan"},
+							{title: " ", field: "sedan"},
 							{title: " ", field: "van"},
 							{title: " ", field: "special"},
 							{title: " ", field: "conn", hidden: "true"}
@@ -554,7 +547,24 @@
 					loadCk++;
 				}
 			});
-		}		
+		},
+		
+		/* 차트 세팅 */
+		setChart: function(key) {
+			ajax(false, contextPath + '/stts/totStts/agencyAccessionChart', 'body', '조회중입니다', key, function(data) {
+				var randomColors = 
+					[
+						"#FF6F61", "#FFB347", "#FFD700", "#90EE90", "#87CEFA", "#FF69B4", "#BA55D3", "#32CD32", "#FFB6C1",
+						"#FFA07A", "#98FB98", "#FFD700", "#40E0D0", "#9370DB", "#FFDAB9", "#7B68EE", "#FF1493", "#66CDAA"
+					];
+						    
+				data.agencyAccessionChart.forEach(function(item, index) {
+					item.color = randomColors[index % randomColors.length];  // 색상 할당
+				});
+						
+				$statistics.kendo.createChartMulti(data.agencyAccessionChart);
+			});
+		}
     }
     
 	$statistics.event = {
@@ -583,6 +593,32 @@
 				$(".detail_popup").removeClass("view");
 				$("body").css("overflow", "auto");
 			});
+			// 주사무소만 보기
+			$("#se1").change(function() {
+				kendo.ui.progress($("#areaGrid"), true);
+				
+				$("#grid01").data("kendoGrid").destroy(); // Kendo Grid 인스턴스 파괴
+				$("#areaGrid > div.k-grid.k-widget.k-grid-display-block").remove();
+				$("#areaGrid").append(`
+				    <table id="grid01">
+				        <caption>대여사업자현황</caption>
+				    </table>
+				`);
+				
+				var key = {"checkBox": this.value};
+				
+				if($("#se1").is(":checked")) {
+					ajax(true, contextPath + '/stts/totStts/agencyAreaGrid', 'body', '조회중입니다', key, function(data) {
+						$statistics.kendo.createExpandGrid("#grid01", gridAreaColumns, gridAreaDetailColumns, data.agencyAreaGrid, data.agencyAreaDetailGrid);
+					});
+					$statistics.kendo.setChart(key);
+				} else {
+					ajax(true, contextPath + '/stts/totStts/agencyAreaGrid', 'body', '조회중입니다', {}, function(data) {
+						$statistics.kendo.createExpandGrid("#grid01", gridAreaColumns, gridAreaDetailColumns, data.agencyAreaGrid, data.agencyAreaDetailGrid);
+					});
+					$statistics.kendo.setChart({});
+				}
+			})
 		},
 		
 		excelDown: function(event) {

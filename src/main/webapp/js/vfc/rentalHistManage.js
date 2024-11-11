@@ -590,7 +590,6 @@
 			}else if(params.rentEndDt == null || params.rentEndDt == ''){
 				alert("대여종료일시를 등록해 주세요");
 			}else{
-				console.log(params)
 				ajax(true, contextPath + '/vfc/rentalHistManage/insertRentReg.do', 'body', '확인인중입니다.', params, function (data) {
 					alert("대여이력에 등록을 성공하셨습니다");
 					$("#regi").removeClass("view");
@@ -664,24 +663,6 @@
 					$(".red_btn").css("display", "block");
 				}
 
-//				//국제 면허의 경우 첨부된 면허증 사본(다운로드) 필드 노출 여부
-//				$("#detailFileDown").val(data[0].atchFileNm);
-//				//파일이 존재하는 경우
-//				if(data[0].atchFileSn && data[0].atchFileNm !== '-'){
-//					$("#detailFileDown").css("cursor", "pointer").hover(function () {
-//						$(this).css("color", "#364BC6");
-//					}, function() {
-//						$(this).css("color", "");
-//					});
-//					$("#detailFileDown").click(function(){
-//						decryptFileDownload(data[0].atchFileSn, data[0].atchFileNm);
-//					});
-//				//파일이 없는 경우
-//				} else{
-//					$("#detailFileDown").off('mouseenter mouseleave');
-//					$("#detailFileDown").css("cursor", "default");
-//				}
-
 				$("#start-picker03").data("kendoDateTimePicker").value(data[0].rentBgngDt);
 				$("#end-picker03").data("kendoDateTimePicker").value(data[0].rentEndDt);
 				// 권한처리 필요한지 여부 물어보고 필요한 내용 추가
@@ -726,6 +707,11 @@
 					$("#verfDmnd").val(dmndYear+"-"+dmndMonth+"-"+dmndDay+" "+dmndHour+":"+dmndMin+":"+dmndSec);
 					$("#verfMthd").val(data[0].vrfcMthd);
 					$("#verfRslt").val(data[0].vrfcRslt);
+					if(data[0].faceSimilarity != null || data[0].faceLiveness != null) {
+						$("#verfSimilarity").val(data[0].faceSimilarity+"%");
+						$("#verfLiveness").val(data[0].faceLiveness+"%");
+						$(".verfClass").show();
+					}
 				} else {
 					$("#verfDln").val('-'); $("#verfDmnd").val('-'); $("#verfMthd").val('-'); $("#verfRslt").val('-');
 				}
@@ -744,6 +730,7 @@
 			});
 			
 		},
+		
 		// 대여정보이력 수정 후, 갱신을 위해 따로 뺌 - 김경룡
 		hsDetailRent: function(params) {
 			ajax(true, contextPath + '/vfc/rentalHistManage/selectHisDetailRentInfo', 'body', '처리중입니다.', params, function(data) {
@@ -903,6 +890,7 @@
 			}
 		},
 		detailDeleteBtn: function(){
+			$(".verfClass").hide();
 			$("#rentSttsCdUpdateBtn").remove();
 			$("#rentSttsCdConfUpdateBtn").remove();
 			$('#rentalHistGrid').data('kendoGrid').dataSource.read();

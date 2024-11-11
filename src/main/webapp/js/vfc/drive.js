@@ -1265,6 +1265,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 				similarityConfidence: similarityData.similarityConfidence,
 				livenessConfidence: similarityData.livenessConfidence
 			};
+			console.log(param)
 
             var num02Pattern = /^\d{2}$/;
             var num03Pattern = /^\d{6}$/;
