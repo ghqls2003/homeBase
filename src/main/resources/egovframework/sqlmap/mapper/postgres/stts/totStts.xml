@@ -34,6 +34,9 @@
 				FROM 
 					dqvs.dvs_rac_mt_agency mstr
 				WHERE mstr.bsn_stts_cd = '0'
+				<if test="checkBox != null and checkBox != ''">
+					AND mstr.bzmn_se_cd = '1'
+				</if>
 				) AS t1
 			GROUP BY ROLLUP((t1.sd_cd, t1.sd_nm))
 			) AS t2
@@ -72,6 +75,9 @@
 				FROM 
 					dqvs.dvs_rac_mt_agency mstr
 				WHERE mstr.bsn_stts_cd = '0'
+				<if test="checkBox != null and checkBox != ''">
+					AND mstr.bzmn_se_cd = '1'
+				</if>
 				) AS t1
 			GROUP BY t1.sgg_nm, t1.sgg_cd
 			ORDER BY t1.sgg_cd ASC
@@ -288,6 +294,9 @@
 				FROM 
 					dqvs.dvs_rac_mt_agency mstr
 				WHERE mstr.bsn_stts_cd = '0'
+				<if test="checkBox != null and checkBox != ''">
+					AND mstr.bzmn_se_cd = '1'
+				</if>
 				) AS t1
 			GROUP BY t1.sd_cd, t1.sd_nm
 			) AS t2

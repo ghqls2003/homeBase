@@ -312,7 +312,10 @@ public class DriveController extends CmmnAbstractServiceImpl {
 				"&f_vrfc_mthd=" + paramsMap.get("vrfcMthd").toString() +
 				"&f_from_date=" + paramsMap.get("startDt").toString() + "&f_to_date=" + paramsMap.get("endDt").toString() +
 				"&face_liveness=" + live + "&face_similarity=" + simil +
+//				"&vhcl_reg_no=" + paramsMap.get("carNum").toString() +
 				"&user_sn=" + getUserSn() + "&userType=" + encoded;
+		
+		System.out.println("맞는데"+verifyUrl);
 
 		HttpURLConnection connection = null;
 

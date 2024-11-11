@@ -83,6 +83,10 @@ button.red_btn:hover {
     	width: 123px !important;
     }
 }
+#se1 {
+	width: 17px;
+    height: 17px;	
+}
 </style>
 
 <script>
@@ -116,7 +120,10 @@ button.red_btn:hover {
 	        	<div id="zone1" class="left-bx cmn-bx" style="width: 80%">
 	            	<div id="areaGrid"  class="contBox flex-box">
 	                	<div class="nameBox" style="display: flex; justify-content: space-between;">
-	                    	<h4 class="name">대여사업자 현황</h4>
+	                		<div style="display: flex; align-items: flex-end;">
+		                    	<h4 class="name">대여사업자 현황</h4>&ensp;
+		                    	<div>주사무소만 보기<input id="se1" type="checkbox"  style="vertical-align: text-top;" value="chch" /></div>
+	                		</div>
 	                    	<div id="mdAppC" style="display: flex;  align-items: center;">
 	                    		기준일자 ： <span id="nowTime"></span>&nbsp;
 		                    	<button class="download-btn" onClick="javaScript:$statistics.event.excelDown(event);">
