@@ -316,8 +316,6 @@ public class DriveController extends CmmnAbstractServiceImpl {
 				"&vhcl_reg_no=" + encodeCarNum +
 				"&user_sn=" + getUserSn() + "&userType=" + encoded;
 		
-		System.out.println("맞는데"+verifyUrl);
-
 		HttpURLConnection connection = null;
 
 		try {
