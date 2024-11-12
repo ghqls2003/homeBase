@@ -301,8 +301,9 @@ var authrtCd = '${authrtCd}'
 						                <img src="${contextPath}/images/sub/ico_tooltip.png" alt="" />
 						            </button>
 						            <span class="tooltiptext tooltip-right">
-						            	편도: 서울-김천 <br />
-										왕복: 서울-김천-서울 <br />
+						            	예) 편도: 서울-김천 <br />
+						            	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 왕복: 서울-김천-서울 <br />
+										※ 왕복은 대여한 장소에 다시 반납하는 개념입니다. <br />
 						            </span>
 						        </div>
                             </div>
