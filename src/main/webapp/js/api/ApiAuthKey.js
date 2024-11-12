@@ -822,7 +822,7 @@
 			var param = {
 				userSn: userData.userSn,
 				cert: userData.certKey,
-				//				autzr: UserSn
+				operSeCd : userData.operSeCd
 			};
 
 			if (confirm("중지 해제 하시겠습니까?")) {
