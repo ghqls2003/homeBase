@@ -11,6 +11,7 @@
 			, rent.rent_stts_cd
 			, NULL dln
 			, rent.vhcl_reg_no
+			, rent.rgtr_sn
 			, car.vin
 			, car.carmdl
 			, car.mdlyr
