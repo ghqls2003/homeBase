@@ -255,7 +255,7 @@ $(function(){
 				</div>
 				<div class="label_desc_btm">
 					<figure style="margin-top:0px;">
-						<img id="personInfo4" src="/images/privacy/privacyPolicy_labeling01.png" style="width:400px; height:300px;">
+						<img id="personInfo4" alt = "personInfo4" src="/images/privacy/privacyPolicy_labeling01.png" style="width:400px; height:300px;">
 						<figurecaption>
 							<div id="label_layer_0" class="label_layer num4">
 								<div class="label_desc_top">
@@ -430,7 +430,7 @@ $(function(){
 							</tr>
 							<tr>
 								<td style="border:none; text-align:left; padding-left:40px">
-								<img alt="" src="/images/privacy/privacyPolicy_icon03.png" alt="14세 미만 아동의 개인정보 처리에 관한 사항" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">	
+								<img  src="/images/privacy/privacyPolicy_icon03.png" alt="14세 미만 아동의 개인정보 처리에 관한 사항" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">	
 								</td>							
 								<td style="border:none; text-align:left; padding-left:40px">
 									<a href="#next4">제4조 (14세 미만 아동의 개인정보 처리에 관한 사항)</a>
@@ -571,7 +571,7 @@ $(function(){
 	
 	<article>
 			<h5 class="mt0" id="next1">제1조 (개인정보의 처리 목적)
-				<img src="/images/privacy/privacyPolicy_icon01.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon01.png" alt="privacyPolicy_icon01" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 한국교통안전공단은 대국민 서비스 제공 및 민원처리, 소관업무 수행 등의 목적으로 필요에 의한 최소한의 개인정보를 처리하고 있습니다.</p>
 			<p>② 한국교통안전공단에서 처리하고 있는 개인정보는 수집 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 개인정보 보호법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.</p>
@@ -625,11 +625,11 @@ $(function(){
 			<br>
 		
 			<h5 class="mt0" id="next2">제2조 (개인정보파일 등록 현황)
-				<img src="/images/privacy/privacyPolicy_icon19.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon19.png" alt ="privacyPolicy_icon19" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 한국교통안전공단은 개인정보를 개인정보 처리방침에서 명시한 범위 내에서 처리하고 있으며, 「개인정보 보호법」 제32조에 따라 개인정보파일을 운영하고 있습니다.</p>
 			<p>② 개인정보파일의 처리목적⋅보유기간 및 항목은 개인정보파일의 특성에 따라 달리 규정하고 있으며, 개인정보파일별 상세한 내용은 아래의 링크를 통해 확인할 수 있습니다.</p>
-			<p>※ <한국교통안전공단>의 개인정보 파일 등록사항 공개는 개인정보보호위원회 개인정보포털(www.privacy.go.kr)의 개인서비스→ 정보주체 권리행사 → 개인정보의 열람 등 요구 → 개인정보파일 검색 → 기관명에 “한국교통안전공단”으로 입력 후 조회하시면 확인하실 수 있습니다.</p>
+			<p>※ &lt;한국교통안전공단&gt;의 개인정보 파일 등록사항 공개는 개인정보보호위원회 개인정보포털(www.privacy.go.kr)의 개인서비스→ 정보주체 권리행사 → 개인정보의 열람 등 요구 → 개인정보파일 검색 → 기관명에 “한국교통안전공단”으로 입력 후 조회하시면 확인하실 수 있습니다.</p>
 			<div class="btn">
 				<a class="button blue" href="https://www.privacy.go.kr/front/wcp/dcl/per/personalInfoFileSrhList.do" target="_blank">개인정보파일 검색</a>
 			</div>
@@ -637,8 +637,8 @@ $(function(){
 			<br>
 			
 			<h5 class="mt0" id="next3">제3조 (개인정보의 처리 항목 및 보유기간)
-				<img src="/images/privacy/privacyPolicy_icon02-1.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
-				<img src="/images/privacy/privacyPolicy_icon02-2.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon02-1.png" alt="privacyPolicy_icon02-1" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon02-2.png" alt="privacyPolicy_icon02-2" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 한국교통안전공단에서 처리하는 개인정보는 수집·이용 목적으로 명시한 범위 내에서 처리하며, 개인정보 보호법 및 관련 법령에서 정하는 보유기간을 준용하여 이행하고 있습니다.</p>
 			<p>② 한국교통안전공단은 법률의 특별한 규정을 준수하거나 법령 등에서 정하는 소관 업무의 수행하기 위하여 다음과 같이 개인정보를 수집⋅이용합니다.</p>
@@ -722,7 +722,7 @@ $(function(){
 			<br>
 			
 			<h5 class="mt0" id="next4">제4조 (14세 미만 아동의 개인정보 처리에 관한 사항)
-				<img src="/images/privacy/privacyPolicy_icon03.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon03.png" alt="privacyPolicy_icon03" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 한국교통안전공단은 14세 미만 아동에 대해 개인정보를 수집할 때 법정대리인의 동의를 얻어 해당 서비스 수행에 필요한 최소한의 개인정보를 수집합니다.</p>
 			<p>② 한국교통안전공단은 “자동차사고 피해자 가족 등 지원업무” 및 “교육신청 및 수강(무인비행장치교육)” 목적과 관련하여 아동의 개인정보를 수집할 경우에는 법정대리인으로부터 별도의 동의를 얻습니다.</p>	
@@ -730,7 +730,7 @@ $(function(){
 			<br>
 			
 			<h5 class="mt0" id="next5">제5조 (개인정보 영향평가의 수행 결과)
-				<img src="/images/privacy/privacyPolicy_icon04.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon04.png" alt="privacyPolicy_icon04" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 한국교통안전공단은 운영하고 있는 개인정보처리시스템이 정보주체의 개인정보파일에 미칠 영향에 대해 조사, 분석, 평가하기 위해 ｢개인정보 보호법｣ 제33조에 따라 “개인정보 영향평가”받고 있습니다.</p>
 			<p>② 한국교통안전공단은 다음 개인정보파일에 대해 영향평가를 수행하였습니다.</p>
@@ -784,7 +784,7 @@ $(function(){
 			<br>
 			
 			<h5 class="mt0" id="next6">제6조 (개인정보의 파기절차 및 파기방법)
-				<img src="/images/privacy/privacyPolicy_icon05.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon05.png" alt="privacyPolicy_icon05" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 한국교통안전공단은 원칙적으로 개인정보 처리목적이 달성된 개인정보는 지체 없이 파기합니다. 별도의 공간에 옮겨져 내부 방침 및 기타 관련법령에 따라 일정기간 저장된 후 파기됩니다.</p>
 			<p>② 개인정보 파기의 절차 및 방법은 다음과 같습니다.</p>
@@ -804,10 +804,10 @@ $(function(){
 			<br>
 			
 			<h5 class="mt0" id="next7">제7조 (개인정보의 제3자 제공)
-				<img src="/images/privacy/privacyPolicy_icon06.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon06.png" alt="privacyPolicy_icon06" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 한국교통안전공단은 개인정보를 제3자에게 제공하지 않습니다. </p>
-			<p>※ 보다 상세한 <한국교통안전공단>의 개인정보 목적 외 이용⋅제공에 관한 사항은 공단 홈페이지(www.kotsa.or.kr)의 이용안내 → 개인정보처리방침 → 개인정보 목적 외 이용⋅제공 게시판에서 조회 및 확인하실 수 있습니다.</p>
+			<p>※ 보다 상세한 &lt;한국교통안전공단&gt;의 개인정보 목적 외 이용⋅제공에 관한 사항은 공단 홈페이지(www.kotsa.or.kr)의 이용안내 → 개인정보처리방침 → 개인정보 목적 외 이용⋅제공 게시판에서 조회 및 확인하실 수 있습니다.</p>
 			<div class="btn">
 				<a class="button blue" href="https://www.kotsa.or.kr/portal/bbs/privprovision_list.do?menuCode=07020300" target="_blank">개인정보 목적 외 이용⋅제공</a>
 			</div>
@@ -829,7 +829,7 @@ $(function(){
 			<br>
 
 			<h5 class="mt0" id="next9">제9조 (개인정보 처리의 위탁)
-				<img src="/images/privacy/privacyPolicy_icon08.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon08.png" alt="privacyPolicy_icon08" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 한국교통안전공단은 원활한 업무처리를 위하여 다음과 같이 개인정보 처리업무를 위탁 하고 있습니다.</p>
 					<table style="width:100%; table-layout:fixed;" class="table" id="table06">
@@ -871,7 +871,7 @@ $(function(){
 			<br>
 			
 			<h5 class="mt0" id="next10">제10조 (개인정보의 안전성 확보 조치)
-				<img src="/images/privacy/privacyPolicy_icon09.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon09.png" alt="privacyPolicy_icon09" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>한국교통안전공단은 개인정보의 안전성 확보를 위해 다음과 같은 조치를 취하고 있습니다.</p>
 			<h6 class="title_none">- 개인정보 취급 직원의 최소화 및 교육</h6>
@@ -894,23 +894,23 @@ $(function(){
 			<br>
 
 			<h5 class="mt0" id="next11">제11조 (민감정보의 공개 가능성 및 비공개를 선택하는 방법)
-				<img src="/images/privacy/privacyPolicy_icon10.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon10.png" alt="privacyPolicy_icon10" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 한국교통안전공단은 일부 개인정보처리시스템에서 정보주체의 민감정보를 법령 또는 정보주체의 동의에 따라 수집하고 있으며, 수집 목적 이외에는 공개하고 있지 않습니다.</p>
 			
 			<br>			
 
 			<h5 class="mt0" id="next12">제12조 (가명정보 처리에 관한 사항)
-				<img src="/images/privacy/privacyPolicy_icon20.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon20.png" alt="privacyPolicy_icon20" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 한국교통안전공단은 가명정보를 처리하지 않고 있습니다.</p>
 				
 			<br>
 				
 			<h5 class="mt0" id="next13">제13조 (개인정보 자동 수집하는 장치의 설치ㆍ운영 및 거부에 관한 사항)
-				<img src="/images/privacy/privacyPolicy_icon11.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon11.png" alt="privacyPolicy_icon11" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
-			<h6 class="title_none">< 설치·운영하는 개인정보 자동 수집 장치 ></h6>
+			<h6 class="title_none">&lt; 설치·운영하는 개인정보 자동 수집 장치 &gt;</h6>
 			<p style="margin-left:0px;">① 한국교통안전공단은 이용자에게 개별적인 맞춤서비스를 제공하기 위해 이용정보를 저장하고 수시로 불러오는 '쿠키(cookie)'를 사용합니다.</p>
 			<p>② 쿠키는 웹사이트를 운영하는데 이용되는 서버(http)가 이용자의 컴퓨터 브라우저에 보내는 소량의 정보이며 이용자의 PC 컴퓨터 내의 하드디스크에 저장되기도 합니다.</p>
 			<ul>
@@ -932,14 +932,14 @@ $(function(){
 					</ul>
 				</li>
 			</ul>			
-			<h6 class="title_none">< 행태정보의 수집・이용・제공 및 거부 등에 관한 사항 ></h6>			
+			<h6 class="title_none">&lt; 행태정보의 수집・이용・제공 및 거부 등에 관한 사항 &gt;</h6>			
 			<p style="margin-left:0px;">① 한국교통안전공단은 서비스 이용과정에서 정보주체에게 최적화된 맞춤형 서비스 및 혜택, 온라인 맞춤형 광고 등을 제공하기 위하여 쿠키를 활용하여 개인을 식별하고, 행태정보를 수집・이용하지 않습니다.</p>	
 			<p>② 한국교통안전공단은 사상, 신념, 학력・병력 등 개인의 권리・이익이나 사생활을 침해할 우려가 있는 민감한 행태정보를 수집하지 않습니다.</p>	
 
 			<br>
 				
 			<h5 class="mt0" id="next14">제14조 (정보주체와 법정대리인의 권리 · 의무 및 그 행사 방법에 관한 사항)
-				<img src="/images/privacy/privacyPolicy_icon12.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon12.png" alt="privacyPolicy_icon12" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 정보주체는 한국교통안전공단에 대해 언제든지 개인정보 열람·정정·삭제·처리정지 및 철회 요구, 자동화된 결정에 대한 거부 또는 설명 요구 등의 권리를 행사할 수 있습니다.<br/>
 			※ 14세 미만의 아동에 관한 개인정보의 열람등 요구는 법정대리인이 직접해야 하며, 14세 이상의 미성년자인 정보주체는 정보주체의 개인정보에 관하여 미성년자 본인이 권리를 행사하거나 법정대리인을 통하여 권리를 행사할 수도 있습니다.
@@ -951,7 +951,7 @@ $(function(){
 					<li>- 정보주체는 언제든지 홈페이지 ‘민원⋅신고 > 상담문의’를 통해 자동화된 결정의 설명 및 거부 요구가 가능합니다.</li>
 				</ul>
 				<ul>
-					<li>< 개인정보 열람 요구 >
+					<li>&lt; 개인정보 열람 요구 &gt;
 						<p>한국교통안전공단에서 보유하고 있는 개인정보파일은 「개인정보보호법」 제35조(개인정 보의 열람)에 따라 자신의 개인정보에 대한 열람을 요구할 수 있습니다. 다만, 개인정보 열람 요구는 법 제35조 4항에 의하여 아래와 같이 제한될 수 있습니다.</p>
 						<ul>
 							<li>- 법률에 따라 열람이 금지되거나 제한되는 경우</li>
@@ -968,12 +968,12 @@ $(function(){
 					</li>
 				</ul>			
 				<ul>
-					<li>< 개인정보 정정·삭제 요구 >
+					<li>&lt; 개인정보 정정·삭제 요구 &gt;
 						<p>한국교통안전공단에서 보유하고 있는 개인정보파일은 「개인정보보호법」 제36조(개인 정보의 정정·삭제)에 따라 정정·삭제를 요구할 수 있습니다. 다만, 다른 법령에서 그 개인정보가 수집 대상으로 명시되어 있는 경우에는 그 삭제를 요구할 수 없습니다. 정보주체가 개인정보의 오류 등에 대한 정정 또는 삭제를 요구한 경우에는 정정 또는 삭제를 완료할 때까지 당해 개인정보를 이용하거나 제공하지 않습니다.</p>
 					</li>
 				</ul>
 				<ul>
-					<li>< 개인정보 처리정지 등 요구 >
+					<li>&lt; 개인정보 처리정지 등 요구 &gt;
 						<p>한국교통안전공단에서 보유하고 있는 개인정보파일은 「개인정보보호법」 제37조(개인 정보의 처리정지 등)에 따라 처리정지 또는 동의철회를 요구할 수 있습니다. 다만, 개인정보 처리정 지 요구 시 법 제37조 2항에 의하여 처리정지 또는 동의철회 요구가 거절될 수 있습니다.</p>
 						<ul>
 							<li>- 법률에 특별한 규정이 있거나 법령상 의무를 준수하기 위하여 불가피한 경우 </li>
@@ -988,7 +988,7 @@ $(function(){
 				한국교통안전공단은 정보주체의 요구에 따라 처리가 정지된 개인정보에 대하여 지체없이 해당 개인정보의 파기등 필요한 조치를 합니다.
 				</p>
 				<ul>
-					<li>< 정보주체의 권리행사 요구 거절 시 불복을 위한 이의제기 절차 >
+					<li>&lt; 정보주체의 권리행사 요구 거절 시 불복을 위한 이의제기 절차 &gt;
 						<p>개인정보 관리책임자는 열람 등 요구에 대한 연기 또는 거절 시, 요구 받은 날로부터 10일 이내에 연기 또는 거절의 정당한 사유 및 이의제기 방법 등을 통지합니다. 정 보주체는 열람등 요구에 대한 거절 등 조치에 대하여 불복이 있는 경우 개인정보 열 람등 요구 결정 이의신청서 서식으로 이의신청할 수 있습니다.</p>
 					</li>
 				</ul>				
@@ -1005,12 +1005,11 @@ $(function(){
 			<br>
 
 			<h5 class="mt0" id="next15">제15조 (개인정보의 열람등 청구를 접수·처리하는 부서)
-				<img src="/images/privacy/privacyPolicy_icon13.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon13.png" alt="privacyPolicy_icon13" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<h6 class="title_none">① 개인정보 열람 등 요구 방법</h6>
 			<p>정보주체는 개인정보의 열람, 정정 · 삭제, 처리정지, 동의철회 청구를 한국교통안전공단에 직접 신청하시거나 개인정보보호위원회를 통하여 하실 수 있습니다.</p>
-			<ul>
-				<li>
+			
 					- 한국교통안전공단 개인정보 보호담당자 또는 개인정보파일별 운영담당자를 통한 신청
 					<div class="box_blue">
 						<ul>
@@ -1072,8 +1071,8 @@ $(function(){
 			<h6 class="title_none">② 개인정보보호위원회 개인정보보호종합포털 웹사이트(www.privacy.go.kr) → 개인서비스 → 정보주체 권리행사 → 개인정보 열람등요구 → 열람등요구(본인인증 필요)</h6>		
 			<br>
 			<h5 class="mt0" id="next16">제16조 (개인정보 보호책임자의 성명 또는 개인정보보호 업무 및 관련 고충사항을 처리하는 부서의 명칭과 전화번호 등 연락처 및 담당자 연락처)
-				<img src="/images/privacy/privacyPolicy_icon14-1.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
-				<img src="/images/privacy/privacyPolicy_icon14-2.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon14-1.png" alt="privacyPolicy_icon14-1" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon14-2.png" alt="privacyPolicy_icon14-2" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 한국교통안전공단은 개인정보 처리에 관한 업무를 총괄해서 책임지고, 개인정보 처리와 관련한 정보주체의 불만처리 및 피해구제 등을 위하여 아래와 같이 개인정보 보호책임자 및 고충처리 담당자를 지정하고 있습니다.</p>
 			<div class="box_blue">
@@ -1105,7 +1104,7 @@ $(function(){
 			<br>
 			
 			<h5 class="mt0" id="next17">제17조 (정보주체의 권익침해에 대한 구제 방법)
-				<img src="/images/privacy/privacyPolicy_icon15.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon15.png" alt="privacyPolicy_icon15" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 정보주체는 개인정보침해로 인한 구제를 받기 위하여 개인정보분쟁조정위원회, 한국인터넷진흥원 개인정보침해신고센터 등에 분쟁해결이나 상담 등을 신청할 수 있습니다. 이 밖에 기타 개인정보침해의 신고, 상담에 대하여는 아래의 기관에 문의하시기 바랍니다.</p>
 			<p>② 한국교통안전공단은 정보주체의 개인정보자기결정권을 보장하고, 개인정보침해로 인한 상담 및 피해 구제를 위해 노력하고 있으며, 신고나 상담이 필요한 경우 제16조의 담당부서로 연락해 주시기 바랍니다.</p>
@@ -1127,7 +1126,7 @@ $(function(){
 			<br>
 			
 			<h5 class="mt0" id="next18">제18조 (개인정보 보호수준 평가 결과)
-				<img src="/images/privacy/privacyPolicy_icon16.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon16.png" alt="privacyPolicy_icon16" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 한국교통안전공단은 개인정보를 안전하게 관리하기 위해 「개인정보 보호법」 제11조의2에 따라 매년 개인정보위에서 실시하는 “개인정보 보호수준 평가”를 받고 있습니다.</p>
 			<p>② 한국교통안전공단은 2023년 개인정보 보호수준 평가 결과 ‘A’ 등급을 획득하였습니다.</p>
@@ -1136,10 +1135,10 @@ $(function(){
 			<br>
 			
 			<h5 class="mt0" id="next19">제19조 (고정형·이동형 영상정보처리기기 운영·관리에 관한 사항)
-				<img src="/images/privacy/privacyPolicy_icon17.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon17.png" alt="privacyPolicy_icon17" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>① 한국교통안전공단은 ｢개인정보 보호법｣ 제25조제1항에 따라 시설안전 및 화재, 범죄 예방을 목적으로 고정형⋅이동형 영상정보처리기기를 설치·운영하고 있으며, 자세한 내용은 "고정형⋅이동형 영상정보처리기기 운영·관리 방침"을 통해 확인하시기 바랍니다.</p>
-			<p>※ 보다 상세한 <한국교통안전공단>의 영상정보처기기기 운영·관리 방침에 관한 사항은 공단 홈페이지(www.kotsa.or.kr)의 이용안내 → 개인정보처리방침 → 고정형⋅이동형 영상정보처기기기 운영·관리 방침 게시판에서 조회 및 확인하실 수 있습니다.</p>
+			<p>※ 보다 상세한 &lt;한국교통안전공단&gt;의 영상정보처기기기 운영·관리 방침에 관한 사항은 공단 홈페이지(www.kotsa.or.kr)의 이용안내 → 개인정보처리방침 → 고정형⋅이동형 영상정보처기기기 운영·관리 방침 게시판에서 조회 및 확인하실 수 있습니다.</p>
 			<div class="btn">
 				<a class="button blue" href="https://www.kotsa.or.kr/portal/contents.do?menuCode=07030000" target="_blank">고정형⋅이동형 영상정보처리기기 운영·관리 방침</a>
 			</div>
@@ -1147,7 +1146,7 @@ $(function(){
 			<br>
 			
 			<h5 class="mt0" id="next20">제20조 (개인정보 처리방침의 변경)
-				<img src="/images/privacy/privacyPolicy_icon18.png" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
+				<img src="/images/privacy/privacyPolicy_icon18.png" alt="privacyPolicy_icon18" style="width:50px; height: 50px; bottom:0px; vertical-align:middle;">
 			</h5>
 			<p>이 개인정보 처리방침은 2024. 10. 14 부터 적용됩니다.</p>
 			<p>정보주체는 개인정보 처리방침 신·구 대비표를 통해 개정된 내용을 확인하실 수 있습니다.</p>
