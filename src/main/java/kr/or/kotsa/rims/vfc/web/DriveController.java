@@ -315,7 +315,7 @@ public class DriveController extends CmmnAbstractServiceImpl {
 				"&face_liveness=" + live + "&face_similarity=" + simil +
 				"&vhcl_reg_no=" + encodeCarNum +
 				"&user_sn=" + getUserSn() + "&userType=" + encoded +
-				"&rgtr_sn="  + paramsMap.get("rgtr_sn").toString();
+				"&rgtr_sn="  + paramsMap.get("rgtrSn").toString();
 		
 		HttpURLConnection connection = null;
 
