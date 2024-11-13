@@ -397,7 +397,7 @@
 			<if test="userSn != null and userSn != ''">
 				user_sn = #{userSn}::NUMERIC
 				AND cert_key = #{cert}
-				and oper_se_cd = '1'
+				and oper_se_cd = #{operSeCd}
 			</if>
 
      </update> 

@@ -314,10 +314,9 @@ public class DriveController extends CmmnAbstractServiceImpl {
 				"&f_from_date=" + paramsMap.get("startDt").toString() + "&f_to_date=" + paramsMap.get("endDt").toString() +
 				"&face_liveness=" + live + "&face_similarity=" + simil +
 				"&vhcl_reg_no=" + encodeCarNum +
-				"&user_sn=" + getUserSn() + "&userType=" + encoded;
+				"&user_sn=" + getUserSn() + "&userType=" + encoded +
+				"&rgtr_sn="  + paramsMap.get("rgtrSn").toString();
 		
-		System.out.println("맞는데"+verifyUrl);
-
 		HttpURLConnection connection = null;
 
 		try {
@@ -467,18 +466,6 @@ public class DriveController extends CmmnAbstractServiceImpl {
 		return (Map<String, Object>) driveService.selectBzmnCarAndDefectedCarInfo(paramsMap);
 	}
 
-	/**
-	 *  해당 법인 차량 유무 조회   24.11.05 jeonghyewon 테스트용 추후 삭제 요망
-	 * @param paramsMap
-	 * @return
-	 * @throws RimsException
-	 */
-	@RequestMapping("drive/selectBzmnCarYnTest")
-	@ResponseBody
-	public Map<String, Object> selectBzmnCarYnTest(@RequestBody Map<String, Object> paramsMap) throws RimsException {
-		paramsMap.put("userSn", getUserSn());
-		return (Map<String, Object>) driveService.selectBzmnCarYnTest(paramsMap);
-	}
 
 
 }

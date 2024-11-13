@@ -12,10 +12,16 @@
 		$drvRsvMag.ui.pageLoad();		//최초 페이지 로드 시
 		$drvRsvMag.event.setUIEvent();
 	});
+	var nowYear = new Date().getFullYear();
+	var nowMonth = new Date().getMonth();
+	var nowDate = new Date().getDate();
+	var nowHours = new Date().getHours();
+	var nowMinutes = new Date().getMinutes();
 	var popClick = 0;
 	var detaiCLick = null;
 	var rentNoClick = null;
 	var rsvStrData = null;
+	var rsvEndData = null;
 	var detailstartDate = null;
 	var detailEndDate = null;
 	var ClickSearchRsv = 0;
@@ -103,28 +109,57 @@
 					width: "250px"
 				});
 			});
+			$("#start-picker02").kendoDateTimePicker({
+			    format: "yyyy-MM-dd HH:mm",
+			    value: new Date(nowYear, nowMonth, nowDate)
+			});
 
-			if (rsvStrData) {
-				$("#start-picker02").kendoDateTimePicker({
-					format: "yyyy-MM-dd HH:mm",
-					parseFormats: ["yyyy-MM-dd HH:mm"],
-					value: rsvStrData,
-					min: rsvStrData,
-					change: function() {
-						var selectedDate = this.value();
-						if (selectedDate < rsvStrData) {
-							this.value(rsvStrData);
-						}
-					}
-				});
-			} else {
-				$("#start-picker02").kendoDateTimePicker({
-					format: "yyyy-MM-dd HH:mm",
-					parseFormats: ["yyyy-MM-dd HH:mm"],
+			$("#end-picker02").kendoDateTimePicker({
+			    format: "yyyy-MM-dd HH:mm",
+			    value: new Date(rsvEndData)  
+			});
 
+			// start-picker02에서 값이 변경될 때
+			$('#start-picker02').on('change', function() {
+			    if (new Date($('#start-picker02').val()) > rsvEndData) {
+			        alert("시작일은 종료일보다 늦을 수 없습니다.");
+			        // 시작일이 종료일보다 늦을 경우, end-picker02 값을 start-picker02 값으로 설정
+			        $('#start-picker02').data("kendoDateTimePicker").value(new Date($('#end-picker02').val()));
+			    }
+			});
 
-				});
-			}
+			// end-picker02에서 값이 변경될 때
+			$('#end-picker02').on('change', function() {
+			    if (new Date($('#end-picker02').val()) < new Date($('#start-picker02').val())) {
+			        alert("종료일은 시작일보다 빠를 수 없습니다.");
+			        // 종료일이 시작일보다 빠를 경우, start-picker02 값을 end-picker02 값으로 설정
+			        $('#end-picker02').data("kendoDateTimePicker").value(new Date($('#start-picker02').val()));
+			    }
+			});
+
+//			if (rsvStrData) {
+//				$("#start-picker02").kendoDatePicker({
+//					value: rsvStrData,
+//					format: "yyyy-MM-dd HH:mm",
+//					parseFormats: ["yyyy-MM-dd HH:mm"],
+//					min: rsvStrData,
+//					max: new Date(new Date(rsvStrData).setDate(new Date(rsvStrData).getDate() - 7)), // endDate의 7일 전까지 설정
+//					change: function() {
+//						var selectedDate = this.value();
+//						if (selectedDate < rsvStrData) {
+//							this.value(rsvStrData);
+//						} else if (selectedDate > new Date(new Date(rsvStrData).setDate(new Date(rsvStrData).getDate() - 7))) {
+//							this.value(new Date(new Date(rsvStrData).setDate(new Date(rsvStrData).getDate() - 7)));
+//						}
+//					}
+//				});
+//			} else {
+//			    // rsvStrData가 없을 경우, Kendo DateTimePicker를 초기화하지 않고 그냥 input만 보여줌
+//			    $("#start-picker02").replaceWith(
+//			        '<input id="start-picker02" class="input" title="datepicker" aria-label="시작기간검색" readonly />'
+//			    );
+//			}
+
 			$("#start-picker01").kendoDatePicker({
 			    value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 30),
 			    dateInput: true,
@@ -518,9 +553,8 @@
 			});
 			$("#carVhclRegNoVal").on("click", function() {
 
-				if ($("#start-picker02").data("kendoDateTimePicker")) {
-					$("#start-picker02").data("kendoDateTimePicker").destroy();
-				}
+				$('#start-picker02').data("kendoDateTimePicker").value(new Date(nowYear, nowMonth, nowDate));
+
 				$drvRsvMag.event.carNoval();
 
 			});
@@ -649,6 +683,7 @@
 				grid.dataSource.data([]);
 			}
 			rsvStrData = new Date(carRegNoVal3);
+			rsvEndData = new Date(carRegNoVal2);
 		},
 		detailDeleteBtn: function() {
 
@@ -681,4 +716,4 @@
 		},
 	};
 
-}(window, document, jQuery));
+}(window, document, jQuery));;;

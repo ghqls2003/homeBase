@@ -270,6 +270,7 @@
 		FROM(
 			SELECT T.*
 			FROM (
+				WITH end_de AS (SELECT dqvs.pca_encrypt(#{dln}, '200') as dln_de)
 				SELECT row_number() over( order by vrfc_dmnd_dt desc) as SN
 					, vrfc_hstry_sn
 					, rqstr_sn
@@ -310,8 +311,8 @@
 					, drma.bzmn_sn
 				FROM dqvs.dvs_dqv_hs_verf AS ddhv
 				LEFT OUTER JOIN dqvs.v_intg_user_info AS viui  ON ddhv.rqstr_sn = viui.user_sn
-				LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn
-				where  ddhv.dln_enc = dqvs.pca_encrypt(#{dln}, '200')
+				LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn, end_de
+				where  ddhv.dln_enc = end_de.dln_de
 					AND vrfc_dmnd_dt <![CDATA[>=]]> now() - interval '7days'
 				) T
 			<choose>
@@ -358,44 +359,26 @@
 
 	<!--  해당 법인 차량 결함 유무 조회  24.11.05 jeonghyewon-->
 	<select id="selectBzmnDefectedCarYn" resultType="resultMap">
-		select case when T.reg_yn is null  then 'Y' else 'N' end as reg_yn
-		from
-		(	select
-				vhcl_reg_no,
-				drmc.vin,
-				carmdl,
-				mdlyr,
-				vhcl_nm,
-				bzmn_sn,
-				engine_fom,
-				use_yn,
-				sgg_cd,
-				ownr_nm,
-				to_char(reg_dt,
-				'yyyy-mm-dd') as reg_dt,
-				fvrts.reg_yn
-			from
-			dqvs.dvs_rac_mt_car drmc
-			left join (
-				select
-				vin ,
-				mdfr_sn,
-				'Y' as reg_yn
-				from
-				dqvs.dvs_rac_mt_fvrts ) as fvrts  on drmc.vin = fvrts.vin
-			where
-			drmc.use_yn = 'Y'
-			<if test="carNum != '' and carNum != null">
-				and vhcl_reg_no = #{carNum}
-			</if>
-			<choose>
-				<when test= "crno != '' and crno != null">
-					AND crno = #{crno}
-				</when>
-				<otherwise>
-					AND 1 != 1
-				</otherwise>
-			</choose>
+		select T.vhcl_reg_no,case when T.reg_yn ='Y'  then 'Y'  else 'N' end as reg_yn
+		from(  select
+					vhcl_reg_no,
+					drmd.reg_yn
+				from dqvs.dvs_rac_mt_car drmc
+				left join (	select vin ,'Y' as reg_yn
+				from dvs_rac_mt_defect)as drmd on drmd.vin = drmc.vin
+				where
+					drmc.use_yn = 'Y'
+						<if test="carNum != '' and carNum != null">
+							and vhcl_reg_no = #{carNum}
+						</if>
+						<choose>
+							<when test= "crno != '' and crno != null">
+								AND crno = #{crno}
+							</when>
+							<otherwise>
+								AND 1 != 1
+							</otherwise>
+						</choose>
 		) as T
 	</select>
 
@@ -409,11 +392,12 @@
 
 	<!--  면허번호에 해당하는 최근 7일간의 대여이력 조회 건수 24.10.25 jeonghyewon-->
 	<select id="drvListViewCnt" resultType="int">
+		WITH end_de AS (SELECT dqvs.pca_encrypt(#{dln}, '200') as dln_de)
 		SELECT count(1) AS cnt
 		FROM dqvs.dvs_dqv_hs_verf AS ddhv
 		LEFT OUTER JOIN dqvs.v_intg_user_info AS viui  ON ddhv.rqstr_sn = viui.user_sn
-		LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn
-		where  ddhv.dln_enc = dqvs.pca_encrypt(#{dln}, '200')
+		LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn, end_de
+		where  ddhv.dln_enc = end_de.dln_de
 			AND vrfc_dmnd_dt <![CDATA[>]]> now() - interval '7days'
 	</select>
 </mapper>

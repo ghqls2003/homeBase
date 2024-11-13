@@ -27,35 +27,37 @@
 				, rent.rgtr_sn 
 				, TO_CHAR(rent.reg_dt, 'YYYY-MM-DD HH24:MI') reg_dt
 				, rent.mdfcn_dt
-				, rent.dln
 			FROM
 				(
 				SELECT base.rent_no, base.vhcl_reg_no, base.bzmn_sn, base.rent_bgng_dt, base.rent_end_dt
-			        , base.rent_stts_cd, base.vrfc_hstry_sn, base.del_yn, base.rgtr_sn, base.reg_dt, base.mdfcn_dt, verf.dln
+			        , base.rent_stts_cd, base.vrfc_hstry_sn, base.del_yn, base.rgtr_sn, base.reg_dt, base.mdfcn_dt
 				FROM
 					dqvs.dvs_dqv_mt_rent base
-				LEFT JOIN
-					dqvs.dvs_dqv_hs_verf verf
-				ON verf.vrfc_hstry_sn = base.vrfc_hstry_sn
+				<if test="dln != '' and dln != null">
+					RIGHT JOIN
+						(WITH encrypted_dln AS (SELECT dqvs.pca_encrypt(#{dln}, '200') AS enc_dln) SELECT vrfc_hstry_sn FROM dqvs.dvs_dqv_hs_verf, encrypted_dln WHERE dln_enc = encrypted_dln.enc_dln) verf
+					ON verf.vrfc_hstry_sn = base.vrfc_hstry_sn
+				</if>
 				WHERE (#{rentDt}::DATE  BETWEEN base.rent_bgng_dt::DATE AND base.rent_end_dt::DATE)
 					AND base.reg_dt <![CDATA[ <= ]]> NOW()
-				<if test="startDt != '' and startDt != null and endDt != '' and endDt != null">  <!-- 넣을지 고민... -->
+				<if test="startDt != '' and startDt != null and endDt != '' and endDt != null">
 	            	AND (base.reg_dt BETWEEN #{startDt}::TIMESTAMP AND #{endDt}::DATE + '23:59:59'::INTERVAL)
 				</if>
 				<if test="rentSttsCd != '' and rentSttsCd != null">
 	            	AND base.rent_stts_cd = #{rentSttsCd}
 				</if>
-				<if test="dln != '' and dln != null">
-	            	AND verf.dln_enc = dqvs.pca_encrypt(#{dln}, '200')
-				</if>
 				) AS rent 
 			LEFT OUTER JOIN
 				dqvs.dvs_rac_mt_agency agency
 			ON rent.bzmn_sn = agency.bzmn_sn			
-			WHERE 1=1
-			<if test='authrtCd.indexOf("Z") == -1 and authrtCd.indexOf("M") == -1 and authrtCd.indexOf("K") == -1'>
-				AND rent.del_yn = 'N'
-			</if>
+			<choose>
+				<when test='authrtCd.indexOf("Z") == -1 and authrtCd.indexOf("M") == -1 and authrtCd.indexOf("K") == -1'>
+					WHERE rent.del_yn = 'N'
+				</when>
+				<otherwise>
+					WHERE 1=1
+				</otherwise>
+			</choose>
 			<if test="vhclRegNo != '' and vhclRegNo != null">
             	AND rent.vhcl_reg_no LIKE '%' || #{vhclRegNo} || '%'
 			</if>
@@ -63,9 +65,9 @@
             	AND agency.co_nm LIKE '%' || #{coNm} || '%'
 			</if>			
 			<choose>
-		        <when test='authrtCd.indexOf("Z") != -1 or authrtCd.indexOf("M") != -1 or authrtCd.indexOf("K") != -1'> <!-- 관리자/공단/국토부 : 전체목록 -->
-		       		AND 1=1
-		        </when>
+<!-- 		        <when test='authrtCd.indexOf("Z") != -1 or authrtCd.indexOf("M") != -1 or authrtCd.indexOf("K") != -1'> 관리자/공단/국토부 : 전체목록 -->
+<!-- 		       		AND 1=1 -->
+<!-- 		        </when> -->
 		        <when test='authrtCd.indexOf("G") != -1'> <!-- 지자체 : 관할지역 내 사업자의 대여이력 -->
 		        	AND agency.reg_cmptnc_cd LIKE #{cmptncZoneCd} || '%'
 		        </when>

@@ -147,16 +147,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			});
 
 			$(".datePicker").prop("readonly", true);
-// todo 반영 잘될 경우 삭제 요망 hyewon 24.11.06=======================================
-//			if(authrtCd.includes('S')){ // 대여사업자여도 법인번호가 없을 경우 있음 crno = '';
-//				ajax(false, contextPath+'/vfc/drive/selectCrno', 'body', '처리중입니다.', {}, function (data) {
-//					if(data[0] != null) {
-//						$("#crno").val(data[0].crno);
-//					}
-//				});
-//			}
-//=================================================================================
-
 			// 운전면허번호 (-) 추가
 			/*var lastValue = '';
 			document.getElementById('license_num').addEventListener('keyup', function (e) {
@@ -235,7 +225,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 						},
 						parameterMap: function(options){
 							options.carNum = $("#car_num_pop").val();
-//							options.crno = $("#crno").val();// todo 반영 잘될 경우 삭제 요망 hyewon 24.11.06
 							return JSON.stringify(options);
 						}
 					},
@@ -282,7 +271,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 			$('#useYn').val(data.useYn);
 			$('#signguCd').val(data.sggCd);
 			$('#regDt').val(data.regDt);
-//			$("#crno").val(data.crno);
 		},
 
 	popupGridLoad : function(gridId,selectedUrl,columns) {
@@ -319,7 +307,6 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                             total: "total",
                         },
                         pageSize: 5,
-//                        serverPaging: true, //xml 페이징 처리없이 켄두그리드에서 자동 페이징 처리
                     },
                     navigatable: true,
                     pageable: {
@@ -1270,15 +1257,11 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
             var num02Pattern = /^\d{2}$/;
             var num03Pattern = /^\d{6}$/;
             var num04Pattern = /^\d{2}$/;
-//              운전자격확인 이전 해당법인 차량인지 유무 확인  --> 결과 저장
-//====================================================================================================================
-            	ajax(false, contextPath+"/vfc/drive/selectBzmnCarAndDefectedCarInfo", 'body', '처리중입니다.', param, function(data) {
-// todo 반영 잘될 경우 삭제 요망 hyewon 24.11.06=========================================================================
-//            	param.crno =  $("#crno").val();
-//            	ajax(false, contextPath+"/vfc/drive/selectBzmnCarYnTest", 'body', '처리중입니다.', param, function(data) {
-//====================================================================================================================
-            	    bzmnCarType = data.bzmnCarType; //bzmnCarType = "법인없음" / "미등록차량" / "결함차량미존재" / "결함차량존재";
-            	});
+
+            // 운전자격확인 이전 해당법인 차량인지 유무 확인  --> 결과 저장
+            ajax(false, contextPath+"/vfc/drive/selectBzmnCarAndDefectedCarInfo", 'body', '처리중입니다.', param, function(data) {
+                bzmnCarType = data.bzmnCarType; //bzmnCarType = "법인없음" / "미등록차량" / "결함차량미존재" / "결함차량존재";
+            });
 			if(param.carNum == ''){
 				alert('차량번호를 입력해 주십시오.')
             } else if( !num02Pattern.test($('#num02').val()) || !num03Pattern.test($('#num03').val()) || !num04Pattern.test($('#num04').val())){
@@ -1346,28 +1329,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                                                         </p>`;
                                                 $('#result').prepend(html);
                                            }
-                                           // todo 반영 잘될 경우 삭제 요망 hyewon 24.11.06 =================================================
-//                                            if(bzmnCarType === "N"){
-//                                            var html = `<p class="current_info" >
-//                                                      <span style = "color:red";> 로그인 한 사용자의 법인에 소속된 차량이 아닙니다.</span>
-//                                                    </p>`;
-//                                            $('#result').prepend(html);
-//                                            } else if(result.data != undefined && result.total != 0){
-//                                            var html = `<p class="current_info" >
-//                                                           차량 결함 정보가
-//                                                           <span class = "popupSpan" id ="rslt_vehicleDefect" onclick =$drive.event.popupVhclDfctListClick()>존재</span> 합니다.
-//                                                       </p>`;
-//                                            $('#result').prepend(html);
-//                                            } else{
-//                                            var html = `<p class="current_info">
-//                                                           차량 결함 정보가 없습니다.
-//                                                       </p>`;
-//                                            $('#result').prepend(html);
-//                                            }
-                                          // =============================================================================================
 
-
-                                            //  현재 운전자격이력 건수 는 운전자격확인 이력 건수로 진행중 result.VfcHistCnt
                                             if(result.VfcHistCnt == 0){
                                                 var html = `<p class="current_info" >
                                                     최근 7일 운전자격확인 이력이 없습니다.

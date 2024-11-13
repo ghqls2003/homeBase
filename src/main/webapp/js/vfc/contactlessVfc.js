@@ -97,6 +97,7 @@ var updateRentNo = "";
 			$('#useYn').val(element[0].useYn);
 			$('#signguCd').val(element[0].sggCd);
 			$('#regDt').val(element[0].regDt);
+			$('#rgtrSn').val(element[0].rgtrSn);
 			
 		},
 
@@ -313,6 +314,7 @@ var updateRentNo = "";
 				useYn: $("#useYn").val(),
 				signguCd: $("#signguCd").val(),
 				regDt: $("#regDt").val(),
+				rgtrSn: $("#rgtrSn").val(),
 				vrfcMthd: vrfcMthd,
 				similarityConfidence: similarityData.similarityConfidence,
 				livenessConfidence: similarityData.livenessConfidence

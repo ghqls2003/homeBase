@@ -517,8 +517,7 @@ var authrtCd = '${authrtCd}'
                        </div>
                 </div>
             </div>
-            <!-- 대여 미포함 -->
-            <!-- <div class="contBox" id = "rentalTypeBox" style = "margin-top: 10px;display: none;" >-->
+
             <!-- 대여 포함 -->
             <div class="contBox" id = "rentalTypeBox" style = "margin-top: 10px;" >
                             <div class="nameBox nameTolltip" >
@@ -528,12 +527,13 @@ var authrtCd = '${authrtCd}'
 						                <img src="${contextPath}/images/sub/ico_tooltip.png" alt="" />
 						            </button>
 						            <span class="tooltiptext tooltip-right">
-						            	편도: 서울-김천 <br />
-										왕복: 서울-김천-서울 <br />
+						            	예) 편도: 서울-김천 <br />
+						            	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 왕복: 서울-김천-서울 <br />
+										※ 왕복은 대여한 장소에 다시 반납하는 개념입니다. <br />
 						            </span>
 						        </div>
                             </div>
-                            <div class="cont" id="result" style="height: auto; justify-content: flex-start;">
+                            <div class="cont" id="rentalTypeCond" style="height: auto; justify-content: flex-start;">
                                 <ul class="" style ="align-self: flex-start; display: flex; align-items: center; gap: 24px;">
                                     <li>
                                         <input id="rentalType_1" value="Y" type="radio" name="category02">
