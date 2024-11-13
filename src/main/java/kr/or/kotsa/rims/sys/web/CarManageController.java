@@ -281,7 +281,7 @@ public class CarManageController extends CmmnAbstractServiceImpl {
 		try {
 			response.flushBuffer();
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("IOException Occured");
 		}
 
 		return new GenericExcelView();

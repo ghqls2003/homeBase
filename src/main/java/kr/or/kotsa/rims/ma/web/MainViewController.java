@@ -146,8 +146,8 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 			        }
 		        }
 		    }
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("exception Occured");
 		}
 		
 		mav.addObject("busine", busine);
