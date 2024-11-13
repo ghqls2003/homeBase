@@ -314,7 +314,8 @@ public class DriveController extends CmmnAbstractServiceImpl {
 				"&f_from_date=" + paramsMap.get("startDt").toString() + "&f_to_date=" + paramsMap.get("endDt").toString() +
 				"&face_liveness=" + live + "&face_similarity=" + simil +
 				"&vhcl_reg_no=" + encodeCarNum +
-				"&user_sn=" + getUserSn() + "&userType=" + encoded;
+				"&user_sn=" + getUserSn() + "&userType=" + encoded +
+				"&rgtr_sn="  + paramsMap.get("rgtr_sn").toString();
 		
 		HttpURLConnection connection = null;
 

@@ -64,6 +64,7 @@ var authrtCd = '${authrtCd}'
 	                                <input id="useYn" placeholder="사용여부" style="display:none">
 	                                <input id="signguCd" placeholder="시군구코드" style="display:none">
 	                                <input id="regDt" placeholder="등록일" style="display:none">
+	                                <input id="rgtr_sn" placeholder="사용자일련번호" style="display:none">
 	                                <button class="yellow_btn rentInfoNo_btn">
 	                                    확인
 	                                </button>
