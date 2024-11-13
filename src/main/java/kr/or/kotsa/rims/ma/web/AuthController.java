@@ -54,7 +54,7 @@ public class AuthController {
 	            w.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("IOException Occured");
 			}
 		}
 

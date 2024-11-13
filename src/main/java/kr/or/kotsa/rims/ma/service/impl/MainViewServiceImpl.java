@@ -171,8 +171,7 @@ public class MainViewServiceImpl extends CmmnAbstractServiceImpl implements Main
     			}
         
     		} catch (NumberFormatException e){
-    			e.printStackTrace();
-    			
+    			System.out.println("NumberFormatException Occured");
     		}
         }
         

@@ -65,15 +65,15 @@
 						</colgroup>
 						<tr>
 		                    <th>권한</th>
-		                    <td id="authrtCd">${authrtCd}</td>
+		                    <td id="authrtCd"><c:out value='${authrtCd}'/></td>
 		                </tr>
 						<tr>
 							<th>성명</th>
-							<td id="userNm">${ssoUserNm} (${ssoUserId})</td>
+							<td id="userNm"><c:out value='${ssoUserNm}'/> (<c:out value='${ssoUserId}'/>)</td>
 						</tr>
 						<tr>
 							<th>사업자번호</th>
-							<td id="bzmnSn">${bzmnSn}</td>
+							<td id="bzmnSn"><c:out value='${bzmnSn}'/></td>
 						</tr>
 					</table>
 				</div>

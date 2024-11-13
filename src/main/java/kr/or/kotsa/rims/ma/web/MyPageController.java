@@ -61,7 +61,7 @@ public class MyPageController extends CmmnAbstractServiceImpl {
 	            w.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("IOException Occured");
 			}
 		} else {
 			mav.setViewName("ma/myPage");
@@ -101,7 +101,7 @@ public class MyPageController extends CmmnAbstractServiceImpl {
 	            w.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("IOException Occured");
 			}
 		}
 
