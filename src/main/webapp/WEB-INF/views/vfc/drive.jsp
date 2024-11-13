@@ -435,44 +435,6 @@ var authrtCd = '${authrtCd}'
 	</div>
 </div>
 
-<%-- <div class="subPage sub02_04" style="display : none">
-	<div class="container">
-		<div class="wrap">
-			<div class="titBox">
-	            <div class="tit01">
-	                <img src="${contextPath}/images/sub/ico_tit.png" alt="타이틀아이콘" class="ico_tit">
-	                <h2>운전자격확인</h2>
-	            </div>
-	            <ul class="tit02">
-	                <li class="home"><img src="${contextPath}/images/sub/ico_home.png" alt="홈아이콘"></li>
-	                <li class="mid"><img src="${contextPath}/images/sub/ico_menuLine.png" alt="라인"></li>
-	                <li class="current">운전자격확인</li>
-	            </ul>
-	        </div>
-
-   			<div class="content_result">
-	            <div class="contBox">
-	                <div class="nameBox">
-	                    <h4 class="name">운전자격확인 결과</h4>
-	                </div>
-	                <div class="cont" id="result" style="flex-direction: column">
-	                	<div class="grid_wr" style="display: none;">
-		                	<table id="defectGrid">
-	                            <caption>차량 결함 조회</caption>
-	                        </table>
-                        </div>
-	                </div>
-	            </div>
-	            <p class="p_info">※ 본 웹사이트에 게시된 정보는 프로그램이나 그 밖의 기술적 장치를 이용하여 무단으로 사용할 수 없습니다.</p>
-	            <div class="btn_flex">
-	                <button class="blue_btn" id="rentCfm">대여처리</button>
-	                <button class="gray_btn" id="homeBtn">초기화면</button>
-	            </div>
-			</div>
-		</div>
-	</div>
-</div> --%>
-
 <!-- 모바일 면허증 팝업 -->
 <div class="popup policy_popup drvie_popup" style="display : none">
     <div class="box">
@@ -517,8 +479,6 @@ var authrtCd = '${authrtCd}'
                        </div>
                 </div>
             </div>
-            <!-- 대여 미포함 -->
-            <!-- <div class="contBox" id = "rentalTypeBox" style = "margin-top: 10px;display: none;" >-->
             <!-- 대여 포함 -->
             <div class="contBox" id = "rentalTypeBox" style = "margin-top: 10px;" >
                             <div class="nameBox nameTolltip" >
@@ -534,7 +494,7 @@ var authrtCd = '${authrtCd}'
 						            </span>
 						        </div>
                             </div>
-                            <div class="cont" id="result" style="height: auto; justify-content: flex-start;">
+                            <div class="cont" id="rentalTypeCond" style="height: auto; justify-content: flex-start;">
                                 <ul class="" style ="align-self: flex-start; display: flex; align-items: center; gap: 24px;">
                                     <li>
                                         <input id="rentalType_1" value="Y" type="radio" name="category02">
