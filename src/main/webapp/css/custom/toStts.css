@@ -1,0 +1,79 @@
+#grid01 > tbody > tr.k-detail-row > td.k-detail-cell > div > div.k-grid-norecords, 
+#gvAccGrid > tbody > tr.k-detail-row > td.k-detail-cell > div > div.k-grid-norecords,
+#carShare > div.k-grid.k-widget.k-grid-display-block > div.k-grid-content.k-auto-scrollable > div.k-grid-norecords {
+	justify-content: center;
+	font-size: 16px;
+}
+#areaGrid > div.k-grid.k-widget.k-grid-display-block > div.k-toolbar.k-grid-toolbar,
+#gvAccession > div.k-grid.k-widget.k-grid-display-block > div.k-toolbar.k-grid-toolbar,
+#carShare > div.k-grid.k-widget.k-grid-display-block > div.k-toolbar.k-grid-toolbar  {
+	display: none;
+}
+#grid01 > thead, 
+#gvAccGrid > thead,
+#carShareGrid > thead {
+	font-weight: bold;
+}
+@media (max-width: 950px) {
+	#zone1 {
+		width: 100% !important;
+	}
+}
+#areaGrid, #areaChart {
+	height : 570px;;
+}
+.k-picker-solid {
+	height: 30px;
+}
+.contBox .cont {
+    padding: 11px 25px 12px;
+}
+table.rental_tb01 {
+    margin-right: 50px;
+}
+/* .popup .k-picker-solid {
+    width: 206.2px !important;
+} */
+button.red_btn {
+    width: 152px;
+    height: 54px;
+    background-color: #ff3838;
+    border-radius: 8px;
+    font-size: 1.8rem;
+    line-height: 26px;
+    color: #fff;
+    margin-right: 10px;
+}
+button.red_btn:hover {
+    background-color: #fff;
+    color: #ff3838;
+    border: 1px solid #ff3838;
+}
+#insertPopup > div.info_wr > div > div:nth-child(1) > table:nth-child(1) > tbody > tr:nth-child(1) > td > div > span {
+	padding: 0px;
+}
+@media (max-width: 480px) {
+    #mdAppC {
+    	display: block !important;
+    }
+    #areaGrid > div.nameBox {
+    	height: 57px;
+    }
+    #multi-chart {
+    	width: 550px !important;
+    }
+    #gvAccession > div.search_top > div {
+    	height: 100px !important;
+    }
+    #gvAccession > div.search_top > div > button {
+    	margin-top: 0px !important;
+    }
+    .deleteConfirmBtn {
+    	height: 42px !important;
+    	width: 123px !important;
+    }
+}
+#se1 {
+	width: 17px;
+    height: 17px;	
+}

@@ -29,15 +29,6 @@
 
 </script>
 
-<style>
-#container > div > div.contBox.lastBox02 > div.k-grid.k-widget.k-grid-display-block > div.k-grid-content.k-auto-scrollable > div.k-grid-norecords {
-	justify-content: center;
-}
-#compCar > div > div.content > div > div > div > div.k-grid-norecords {
-	justify-content: center;
-}
-</style>
-
 <div class="subPage sub03">
 
     <!-- 콘텐츠 시작 -->

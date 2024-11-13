@@ -90,3 +90,11 @@ button.red_btn:hover{background-color: #fff;color: #ff3838;border: 1px solid #ff
 #compCar > div > div.content > div > div > div > div.k-grid-content.k-auto-scrollable > div {
 	justify-content: center;
 }
+
+
+#container > div > div.contBox.lastBox02 > div.k-grid.k-widget.k-grid-display-block > div.k-grid-content.k-auto-scrollable > div.k-grid-norecords {
+	justify-content: center;
+}
+#compCar > div > div.content > div > div > div > div.k-grid-norecords {
+	justify-content: center;
+}

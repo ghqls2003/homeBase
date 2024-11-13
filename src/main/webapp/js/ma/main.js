@@ -874,9 +874,11 @@
                 },
                 attr: {
                     frameborder: '0',
-                    allowfullscreen: ''
+                    allowfullscreen: '',
+					title : 'youtubeVideo'
                 }
             });
+
             box.append(iframe);
             
 //            var player = new YT.Player('player', {
@@ -927,7 +929,8 @@
                 },
                 attr: {
                     frameborder: '0',
-                    allowfullscreen: ''
+                    allowfullscreen: '',
+					title : 'youtubeVideo'
                 }
             });
             box.append(iframe);

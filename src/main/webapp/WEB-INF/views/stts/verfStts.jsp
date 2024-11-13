@@ -6,63 +6,12 @@
 
 <script src="${contextPath}/js/stts/verfStts.js"></script>
 <script src="${contextPath}/ext-lib/kendoui.for.jquery.2021.3.1207.commercial/js/jszip.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${contextPath}/css/custom/verfStts.css" />
 
 <script>
 	var authrtCd        = "${authrtCd}";
 	var cmptncZoneCd    = "${cmptncZoneCd}";
 </script>
-
-<style>
-.dayoff {
-	color: red;
-}
-.sub05_01 .select button.select-btn {
-    padding: 2px 12px;
-    background-color: #F5F8FE;
-    border: 1px solid #DBE0EC;
-    border-radius: 8px;
-    font-size: 2.4rem;
-    line-height: 26px;
-    color: #040404;
-    font-weight: 500;
-    margin-right: 10px;
-}
-.sub05_01 .select button.select-btn:hover {
-	background-color: #364BC6; color: #fff;
-}
-.sub05_01 .select button.selected {
-	background-color: #364BC6; color: #fff;
-}
-
-/* 종합표출 테이블 */
-.tg  {
-	border-collapse:collapse;border-spacing:0;
-}
-.tg td {
-	border-color:black;
-	border-style:solid;
-	border-width:1px;
- 	overflow:hidden;
- 	padding:10px 5px;
- 	word-break:normal;
- }
-.tg .tg-qodv {
-	background-color:#f5f8fe;
-	border-color:#c1cadf;
-	text-align:center;
-}
-.tg .tg-dh8m {
-	border-color:#c1cadf;
-	text-align:center;
-}
-.tg .tg-vq54 {
-	border-color:#f5f8fe;
-	text-align:center;
-}
-.tg .darker {
-	background-color: #e4e8f0;
-}
-</style>
 
 <div class="subPage sub03 sub05_01 sub05_02">
 	<div id="container">
