@@ -359,29 +359,26 @@
 
 	<!--  해당 법인 차량 결함 유무 조회  24.11.05 jeonghyewon-->
 	<select id="selectBzmnDefectedCarYn" resultType="resultMap">
-		select case when T.reg_yn is null  then 'N' else 'Y' end as reg_yn,T.reg_yn
-		from( select
-				vhcl_reg_no,
-				to_char(reg_dt,
-				'yyyy-mm-dd') as reg_dt,
-				drmd.reg_yn
-				from
-				dqvs.dvs_rac_mt_car drmc
+		select T.vhcl_reg_no,case when T.reg_yn ='Y'  then 'Y'  else 'N' end as reg_yn
+		from(  select
+					vhcl_reg_no,
+					drmd.reg_yn
+				from dqvs.dvs_rac_mt_car drmc
 				left join (	select vin ,'Y' as reg_yn
 				from dvs_rac_mt_defect)as drmd on drmd.vin = drmc.vin
-			where
-				drmc.use_yn = 'Y'
-					<if test="carNum != '' and carNum != null">
-						and vhcl_reg_no = #{carNum}
-					</if>
-					<choose>
-						<when test= "crno != '' and crno != null">
-							AND crno = #{crno}
-						</when>
-						<otherwise>
-							AND 1 != 1
-						</otherwise>
-					</choose>
+				where
+					drmc.use_yn = 'Y'
+						<if test="carNum != '' and carNum != null">
+							and vhcl_reg_no = #{carNum}
+						</if>
+						<choose>
+							<when test= "crno != '' and crno != null">
+								AND crno = #{crno}
+							</when>
+							<otherwise>
+								AND 1 != 1
+							</otherwise>
+						</choose>
 		) as T
 	</select>
 
