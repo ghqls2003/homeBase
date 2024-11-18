@@ -308,14 +308,26 @@ public class DriveController extends CmmnAbstractServiceImpl {
 		}
 		String encodeCarNum = URLEncoder.encode(paramsMap.get("carNum").toString(), "UTF-8");
 		
-		String verifyUrl = verifyLicense + "/drvAuth?f_license_no=" + paramsMap.get("num").toString() +
-				"&f_resident_name=" + encodeName + "&f_licn_con_code=" + paramsMap.get("type").toString() +
-				"&f_vrfc_mthd=" + paramsMap.get("vrfcMthd").toString() +
-				"&f_from_date=" + paramsMap.get("startDt").toString() + "&f_to_date=" + paramsMap.get("endDt").toString() +
-				"&face_liveness=" + live + "&face_similarity=" + simil +
-				"&vhcl_reg_no=" + encodeCarNum +
-				"&user_sn=" + getUserSn() + "&userType=" + encoded +
-				"&rgtr_sn="  + paramsMap.get("rgtrSn").toString();
+		String verifyUrl;
+		
+		if(paramsMap.get("rgtrSn") == null) {
+			verifyUrl = verifyLicense + "/drvAuth?f_license_no=" + paramsMap.get("num").toString() +
+					"&f_resident_name=" + encodeName + "&f_licn_con_code=" + paramsMap.get("type").toString() +
+					"&f_vrfc_mthd=" + paramsMap.get("vrfcMthd").toString() +
+					"&f_from_date=" + paramsMap.get("startDt").toString() + "&f_to_date=" + paramsMap.get("endDt").toString() +
+					"&face_liveness=" + live + "&face_similarity=" + simil +
+					"&vhcl_reg_no=" + encodeCarNum +
+					"&user_sn=" + getUserSn() + "&userType=" + encoded;
+		} else {
+			verifyUrl = verifyLicense + "/drvAuth?f_license_no=" + paramsMap.get("num").toString() +
+					"&f_resident_name=" + encodeName + "&f_licn_con_code=" + paramsMap.get("type").toString() +
+					"&f_vrfc_mthd=" + paramsMap.get("vrfcMthd").toString() +
+					"&f_from_date=" + paramsMap.get("startDt").toString() + "&f_to_date=" + paramsMap.get("endDt").toString() +
+					"&face_liveness=" + live + "&face_similarity=" + simil +
+					"&vhcl_reg_no=" + encodeCarNum +
+					"&user_sn=" + paramsMap.get("rgtrSn").toString() + "&userType=" + encoded;
+		}
+		
 		
 		HttpURLConnection connection = null;
 
