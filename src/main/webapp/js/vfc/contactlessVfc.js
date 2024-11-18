@@ -172,7 +172,13 @@ var updateRentNo = "";
 			}
 			$('input[type=radio][value='+asort+']').prop("checked", true);
 			vrfcMthd = 2;
-		}
+		},
+		
+		//app에서 web 호출 하는 함수 사용중 삭제 금지
+		getRentNo: function(json) {
+            const data = JSON.parse(json);
+			$('#rentInfoNo').val(data.rentNo);
+        },
 	};
 
 	//이벤트 정의
