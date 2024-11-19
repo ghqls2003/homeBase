@@ -77,7 +77,7 @@
 					{ field: "defects_reg_no", title: "결함등록번호", width: "100px", template: "#= defects_reg_no != null ? defects_reg_no : '-' #", sortable: true },
 					{ field: "ocrn_dt", title: "발생일시", width: "100px", template: "#: $defect.event.dateFomat(ocrn_dt) #", sortable: true },
 					{ field: "defects_recall_no", title: "결함리콜번호", width: "100px", template: "#= defects_recall_no != null ? defects_recall_no : '-' #", sortable: true },
-					{ field: "recall_cmptn_yn", title: "리콜완료여부", width: "100px", template: "#= recall_cmptn_yn != null ? recall_cmptn_yn : '-' #", sortable: true },
+					{ field: "recall_cmptn_yn_nm", title: "리콜완료여부", width: "100px", template: "#= recall_cmptn_yn_nm != null ? recall_cmptn_yn_nm : '-' #", sortable: true },
 					{ field: "defects_cn", title: "결함내용", width: "100px", template: "#= defects_cn != null ? defects_cn : '-' #", sortable: true },
 					{ field: "actn_yn_nm", title: "시정조치 결과", width: "100px", template: "#= actn_yn_nm != null ? actn_yn_nm : '-' #", sortable: true },
 				],
