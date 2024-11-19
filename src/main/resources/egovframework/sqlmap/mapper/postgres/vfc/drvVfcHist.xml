@@ -2,107 +2,108 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="vfc.drvVfcHist">
 
-    <!-- 자격확인이력 조회 -->
+    <!-- 자격확인이력 조회 개선 -->
     <select id="listView" parameterType="paraMap" resultType="resultMap">
+    /* 운전자격확인이력 */
         SELECT TT.*
-        FROM(
+        FROM
+        	(
             SELECT T.*
-            FROM (
-                SELECT row_number() over( order by vrfc_dmnd_dt desc) as SN
-                    , vrfc_hstry_sn
-                    , rqstr_sn
+            FROM
+            	(
+                SELECT ROW_NUMBER() OVER(ORDER BY verf.vrfc_dmnd_dt DESC) SN
+                    , verf.vrfc_hstry_sn
+                    , verf.rqstr_sn
                     , drma.co_nm
-                    , case
-                        WHEN vrfc_mthd = '4' THEN
-                            REPEAT('*', LENGTH(viui.sso_user_nm))
-                        when viui.sso_user_nm is not null then
-                            concat(left(viui.sso_user_nm, 1), repeat('*', length(viui.sso_user_nm) - 2), right(viui.sso_user_nm, 1))
-                        when viui.onepass_user_nm is not null then
-                            concat(left(viui.onepass_user_nm, 1), repeat('*', length(viui.onepass_user_nm) - 2), right(viui.onepass_user_nm, 1))
-                        else null
-                    end as rqstr_nm
-                    , CONCAT(dqvs.pca_decrypt(dln, '150'), '******') AS dln  <!-- dln사용관련 -->
-                    , lcns_asort_cd
-                    , CASE ddhv.lcns_asort_cd
-                    WHEN '11' THEN '1종대형'
-                    WHEN '12' THEN '1종보통'
-                    WHEN '13' THEN '1종소형'
-                    WHEN '14' THEN '대형견인'
-                    WHEN '15' THEN '구난차'
-                    WHEN '16' THEN '소형견인'
-                    WHEN '32' THEN '2종보통'
-                    WHEN '33' THEN '2종소형'
-                    WHEN '38' THEN '원동기'
-                    ELSE lcns_asort_cd END AS lcns_type
-                    , vrfc_dmnd_dt
-                    , rent_bgng_dt
-                    , rent_end_dt
-                    , (CASE vrfc_mthd WHEN '1' THEN '직접입력' WHEN '2' THEN 'OCR' WHEN '3' THEN '모바일면허증' when '4' then 'API' end) as vrfc_mthd
-                    , ddhv.vrfc_rslt_cd as verify_cd
-                    ,       CASE
-                    when ddhv.req_rslt_cd = '00'or ddhv.req_rslt_cd = '1' or ddhv.req_rslt_cd = '0'
-                    then dqvs.fn_get_cdnm('verify_cd', ddhv.vrfc_rslt_cd)
-                    else dqvs.fn_get_cdnm('req_rslt_cd', ddhv.req_rslt_cd)
-                    end as verify_nm
-                    , ddhv.req_rslt_cd
-                    , prcs_se
-                    , drma.bzmn_sn
-                FROM dqvs.dvs_dqv_hs_verf AS ddhv
-                LEFT OUTER JOIN dqvs.v_intg_user_info AS viui  ON ddhv.rqstr_sn = viui.user_sn
-                LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn
-                <!-- 권한처리 -->
-                <choose>
-                    <when test='authrtCd.indexOf("Z") != -1 or authrtCd.indexOf("M") != -1 or authrtCd.indexOf("K") != -1 or authrtCd.indexOf("D") != -1'> <!-- 관리자/공단/국토부/개발자 -->
-                        WHERE 1 = 1
-                    </when>
-                    <when test='authrtCd.indexOf("G") != -1'> <!-- 지자체,대여사업조합 : 관할지역 내 사업자의 사용자 -->
-                        WHERE viui.user_sn IN (
-                        SELECT user_sn
-                        FROM  dqvs.v_intg_user_info AS viui1
-                        <choose>
-                            <when test="subSignguCd != null  and subSignguCd != ''">
-                                WHERE viui1.cmptnc_zone_cd like  #{subSignguCd} ||'%'
-                            </when>
-                            <otherwise> <!-- 지자체,조합 권한인데 관할구역코드가 없으면 데이터 조회 안되게 -->
-                                WHERE viui1.cmptnc_zone_cd = '999999998888333'
-                            </otherwise>
-                        </choose>
-                        )
-                    </when>
-                    <when test='authrtCd.equals("S01")'> <!-- 주사무소관리자면 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
-                        WHERE viui.bzmn_sn IN (select bzmn_sn from dqvs.dvs_rac_mt_agency where up_brno = #{bzmnSn} or bzmn_sn = #{bzmnSn})
-                    </when>
-                    <when test='authrtCd.equals("S02")'> <!-- 영업소관리자면 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시 -->
-                        WHERE viui.bzmn_sn = #{bzmnSn}
-                    </when>
-                    <otherwise> <!-- 그 외(일반사용자 포함)는 로그인 당사자의 조회 건만 표시 -->
-                        WHERE viui.user_sn = #{userSn}::numeric
-                    </otherwise>
-                </choose>
+                    , CASE WHEN verf.vrfc_mthd = '4' THEN REPEAT('*', LENGTH(viui.sso_user_nm))
+                        	WHEN viui.sso_user_nm NOTNULL THEN CONCAT(LEFT(viui.sso_user_nm, 1), REPEAT('*', LENGTH(viui.sso_user_nm) - 2), RIGHT(viui.sso_user_nm, 1))
+                        	WHEN viui.onepass_user_nm NOTNULL THEN CONCAT(LEFT(viui.onepass_user_nm, 1), REPEAT('*', LENGTH(viui.onepass_user_nm) - 2), RIGHT(viui.onepass_user_nm, 1))
+                        	ELSE NULL
+                    		END rqstr_nm
+                    , CONCAT(dqvs.pca_decrypt(verf.dln, '150'), '******') dln  <!-- dln사용관련 -->
+                    , verf.lcns_asort_cd
+                    , CASE verf.lcns_asort_cd
+                    		WHEN '11' THEN '1종대형'
+                    		WHEN '12' THEN '1종보통'
+                    		WHEN '13' THEN '1종소형'
+                    		WHEN '14' THEN '대형견인'
+                    		WHEN '15' THEN '구난차'
+                    		WHEN '16' THEN '소형견인'
+                    		WHEN '32' THEN '2종보통'
+                    		WHEN '33' THEN '2종소형'
+                    		WHEN '38' THEN '원동기'
+                    		ELSE lcns_asort_cd
+                    		END lcns_type
+                    , verf.vrfc_dmnd_dt
+                    , CASE verf.vrfc_mthd WHEN '1' THEN '직접입력'
+                    									WHEN '2' THEN 'OCR' 
+                    									WHEN '3' THEN '모바일면허증'
+                    									WHEN '4' THEN 'API'
+                    									END vrfc_mthd
+                    , verf.vrfc_rslt_cd verify_cd
+                    , CASE WHEN verf.req_rslt_cd = '00' OR verf.req_rslt_cd = '1' OR verf.req_rslt_cd = '0' THEN dqvs.fn_get_cdnm('verify_cd', verf.vrfc_rslt_cd)
+                    		ELSE dqvs.fn_get_cdnm('req_rslt_cd', verf.req_rslt_cd)
+                    		END verify_nm
+                    , verf.req_rslt_cd
+                    , verf.prcs_se
+                FROM
+                	dqvs.dvs_dqv_hs_verf verf
+                LEFT OUTER JOIN
+                	dqvs.v_intg_user_info AS viui
+                ON verf.rqstr_sn = viui.user_sn
+                LEFT OUTER JOIN
+                	dqvs.dvs_rac_mt_agency AS drma
+                ON viui.bzmn_sn = drma.bzmn_sn
                 <!-- 조회조건 -->
-                <if test="startDtTm != null and startDtTm != '' and endDtTm != null and endDtTm != ''">
-                    AND vrfc_dmnd_dt <![CDATA[>=]]> #{startDtTm}::timestamp AND vrfc_dmnd_dt <![CDATA[<=]]> #{endDtTm}::timestamp
-                </if>
+                WHERE verf.vrfc_dmnd_dt BETWEEN #{startDtTm}::TIMESTAMP AND #{endDtTm}::TIMESTAMP
                 <if test="vrfcMthd != null and vrfcMthd != ''">
-                    AND vrfc_mthd = #{vrfcMthd}
+                    AND verf.vrfc_mthd = #{vrfcMthd}
                 </if>
                 <if test="cd != null and cd != '' ">
                     <choose>
                         <when test="codeType =='verify'"><!--요청 성공 후 확인결과 실패(vrfc_rslt_cd 컬럼 조회시 ) 일때 -->
-                            AND ddhv.vrfc_rslt_cd = #{cd}
+                            AND verf.vrfc_rslt_cd = #{cd}
                         </when>
                         <when test="codeType =='req'"><!--요청 실패 일때 (req_rslt_cd 컬럼 조회시 )-->
-                            AND ddhv.req_rslt_cd = #{cd}
+                            AND verf.req_rslt_cd = #{cd}
                         </when>
                     </choose>
                 </if>
-
                 <if test="bzmnSnKwd != null and bzmnSnKwd != ''">
                     AND (drma.bzmn_sn LIKE '%' || #{bzmnSnKwd} || '%' OR drma.co_nm LIKE '%' || #{bzmnSnKwd} || '%')
                 </if>
                 <if test="rqstrNm != null  and rqstrNm != ''">
                     AND (viui.sso_user_nm LIKE '%' || #{rqstrNm} || '%' OR viui.onepass_user_nm LIKE '%' || #{rqstrNm} || '%')
                 </if>
+                <!-- 권한처리 -->
+                <choose>
+                    <when test='authrtCd.indexOf("Z") != -1 or authrtCd.indexOf("M") != -1 or authrtCd.indexOf("K") != -1 or authrtCd.indexOf("D") != -1'> <!-- 관리자/공단/국토부/개발자 -->
+                        AND 1 = 1
+                    </when>
+                    <when test='authrtCd.indexOf("G") != -1'> <!-- 지자체,대여사업조합 : 관할지역 내 사업자의 사용자 -->
+                        AND viui.user_sn IN (
+								                        SELECT user_sn
+								                        FROM  dqvs.v_intg_user_info AS viui1
+								                        <choose>
+								                            <when test="subSignguCd != null  and subSignguCd != ''">
+								                                WHERE viui1.cmptnc_zone_cd like  #{subSignguCd} ||'%'
+								                            </when>
+								                            <otherwise> <!-- 지자체,조합 권한인데 관할구역코드가 없으면 데이터 조회 안되게 -->
+								                                WHERE viui1.cmptnc_zone_cd = '999999998888333'
+								                            </otherwise>
+								                        </choose>
+								                        )
+                    </when>
+                    <when test='authrtCd.equals("S01")'> <!-- 주사무소관리자면 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
+                        AND viui.bzmn_sn IN (SELECT a.bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE a.up_brno = #{bzmnSn} OR a.bzmn_sn = #{bzmnSn})
+                    </when>
+                    <when test='authrtCd.equals("S02")'> <!-- 영업소관리자면 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시 -->
+                        AND viui.bzmn_sn = #{bzmnSn}
+                    </when>
+                    <otherwise> <!-- 그 외(일반사용자 포함)는 로그인 당사자의 조회 건만 표시 -->
+                        AND viui.user_sn = #{userSn}::NUMERIC
+                    </otherwise>
+                </choose>
             ) T
             <choose>
                 <when test="take != '' and take != null">
@@ -126,55 +127,30 @@
         ) AS TT
     </select>
 
-    <!-- 자격확인이력 건수 조회 -->
+    <!-- 운전자격확인이력 건수 조회 개선 -->
     <select id="listViewCnt" resultType="int">
-        SELECT count(1) AS cnt
-        FROM dqvs.dvs_dqv_hs_verf AS ddhv
-        LEFT OUTER JOIN dqvs.v_intg_user_info AS viui  ON ddhv.rqstr_sn = viui.user_sn
-        LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn
-        <!-- 권한처리 -->
-        <choose>
-            <when test='authrtCd.indexOf("Z") != -1 or authrtCd.indexOf("M") != -1 or authrtCd.indexOf("K") != -1 or authrtCd.indexOf("D") != -1'> <!-- 관리자/공단/국토부/개발자 -->
-                WHERE 1 = 1
-            </when>
-            <when test='authrtCd.indexOf("G") != -1'> <!-- 지자체,대여사업조합 : 관할지역 내 사업자의 사용자 -->
-                WHERE viui.user_sn IN (
-                SELECT user_sn
-                FROM  dqvs.v_intg_user_info AS viui1
-                <choose>
-                    <when test="subSignguCd != null  and subSignguCd != ''">
-                        WHERE viui1.cmptnc_zone_cd like  #{subSignguCd} ||'%'
-                    </when>
-                    <otherwise> <!-- 지자체,조합 권한인데 관할구역코드가 없으면 데이터 조회 안되게 -->
-                        WHERE viui1.cmptnc_zone_cd = '999999998888333'
-                    </otherwise>
-                </choose>
-                )
-            </when>
-            <when test='authrtCd.equals("S01")'> <!-- 주사무소관리자면 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
-                WHERE viui.bzmn_sn IN (select bzmn_sn from dqvs.dvs_rac_mt_agency where up_brno = #{bzmnSn} or bzmn_sn = #{bzmnSn})
-            </when>
-            <when test='authrtCd.equals("S02")'> <!-- 영업소관리자면 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시 -->
-                WHERE viui.bzmn_sn = #{bzmnSn}
-            </when>
-            <otherwise> <!-- 그 외는 로그인 당사자의 조회 건만 표시 -->
-                WHERE viui.user_sn = #{userSn}::numeric
-            </otherwise>
-        </choose>
+    /* 운전자격확인이력 건수 */
+        SELECT COUNT(1) AS cnt
+        FROM
+        	dqvs.dvs_dqv_hs_verf verf
+        LEFT OUTER JOIN
+        	dqvs.v_intg_user_info AS viui
+        ON verf.rqstr_sn = viui.user_sn
+        LEFT OUTER JOIN
+        	dqvs.dvs_rac_mt_agency AS drma
+        ON viui.bzmn_sn = drma.bzmn_sn
         <!-- 조회조건 -->
-        <if test="startDtTm != null and startDtTm != '' and endDtTm != null and endDtTm != ''">
-            AND vrfc_dmnd_dt <![CDATA[>=]]> #{startDtTm}::timestamp AND vrfc_dmnd_dt <![CDATA[<=]]> #{endDtTm}::timestamp
-        </if>
+		WHERE verf.vrfc_dmnd_dt BETWEEN #{startDtTm}::TIMESTAMP AND #{endDtTm}::TIMESTAMP
         <if test="vrfcMthd != null and vrfcMthd != ''">
-            AND vrfc_mthd = #{vrfcMthd}
+            AND verf.vrfc_mthd = #{vrfcMthd}
         </if>
         <if test="cd != null and cd != '' ">
             <choose>
                 <when test="codeType =='verify'"><!--요청 성공 후 확인결과 실패(vrfc_rslt_cd 컬럼 조회시 ) 일때 -->
-                    AND ddhv.vrfc_rslt_cd = #{cd}
+                    AND verf.vrfc_rslt_cd = #{cd}
                 </when>
                 <when test="codeType =='req'"><!--요청 실패 일때 (req_rslt_cd 컬럼 조회시 )-->
-                    AND ddhv.req_rslt_cd = #{cd}
+                    AND verf.req_rslt_cd = #{cd}
                 </when>
             </choose>
         </if>
@@ -184,7 +160,224 @@
         <if test="rqstrNm != null  and rqstrNm != ''">
             AND (viui.sso_user_nm LIKE '%' || #{rqstrNm} || '%' OR viui.onepass_user_nm LIKE '%' || #{rqstrNm} || '%')
         </if>
+        <!-- 권한처리 -->
+        <choose>
+            <when test='authrtCd.indexOf("Z") != -1 or authrtCd.indexOf("M") != -1 or authrtCd.indexOf("K") != -1 or authrtCd.indexOf("D") != -1'> <!-- 관리자/공단/국토부/개발자 -->
+                AND 1 = 1
+            </when>
+            <when test='authrtCd.indexOf("G") != -1'> <!-- 지자체,대여사업조합 : 관할지역 내 사업자의 사용자 -->
+                AND viui.user_sn IN (
+								                SELECT user_sn
+								                FROM  dqvs.v_intg_user_info AS viui1
+								                <choose>
+								                    <when test="subSignguCd != null  and subSignguCd != ''">
+								                        WHERE viui1.cmptnc_zone_cd like  #{subSignguCd} ||'%'
+								                    </when>
+								                    <otherwise> <!-- 지자체,조합 권한인데 관할구역코드가 없으면 데이터 조회 안되게 -->
+								                        WHERE viui1.cmptnc_zone_cd = '999999998888333'
+								                    </otherwise>
+								                </choose>
+								                )
+            </when>
+            <when test='authrtCd.equals("S01")'> <!-- 주사무소관리자면 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
+                AND viui.bzmn_sn IN (SELECT a.bzmn_sn FROM dqvs.dvs_rac_mt_agency a WHERE a.up_brno = #{bzmnSn} OR a.bzmn_sn = #{bzmnSn})
+            </when>
+            <when test='authrtCd.equals("S02")'> <!-- 영업소관리자면 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시 -->
+                AND viui.bzmn_sn = #{bzmnSn}
+            </when>
+            <otherwise> <!-- 그 외는 로그인 당사자의 조회 건만 표시 -->
+                AND viui.user_sn = #{userSn}::NUMERIC
+            </otherwise>
+        </choose>
     </select>
+    
+    
+<!--     기존 자격확인이력 조회 -->
+<!--     <select id="listView" parameterType="paraMap" resultType="resultMap"> -->
+<!--         SELECT TT.* -->
+<!--         FROM( -->
+<!--             SELECT T.* -->
+<!--             FROM ( -->
+<!--                 SELECT row_number() over( order by vrfc_dmnd_dt desc) as SN -->
+<!--                     , vrfc_hstry_sn -->
+<!--                     , rqstr_sn -->
+<!--                     , drma.co_nm -->
+<!--                     , case -->
+<!--                         WHEN vrfc_mthd = '4' THEN -->
+<!--                             REPEAT('*', LENGTH(viui.sso_user_nm)) -->
+<!--                         when viui.sso_user_nm is not null then -->
+<!--                             concat(left(viui.sso_user_nm, 1), repeat('*', length(viui.sso_user_nm) - 2), right(viui.sso_user_nm, 1)) -->
+<!--                         when viui.onepass_user_nm is not null then -->
+<!--                             concat(left(viui.onepass_user_nm, 1), repeat('*', length(viui.onepass_user_nm) - 2), right(viui.onepass_user_nm, 1)) -->
+<!--                         else null -->
+<!--                     end as rqstr_nm -->
+<!--                     , CONCAT(dqvs.pca_decrypt(dln, '150'), '******') AS dln  dln사용관련 -->
+<!--                     , lcns_asort_cd -->
+<!--                     , CASE ddhv.lcns_asort_cd -->
+<!--                     WHEN '11' THEN '1종대형' -->
+<!--                     WHEN '12' THEN '1종보통' -->
+<!--                     WHEN '13' THEN '1종소형' -->
+<!--                     WHEN '14' THEN '대형견인' -->
+<!--                     WHEN '15' THEN '구난차' -->
+<!--                     WHEN '16' THEN '소형견인' -->
+<!--                     WHEN '32' THEN '2종보통' -->
+<!--                     WHEN '33' THEN '2종소형' -->
+<!--                     WHEN '38' THEN '원동기' -->
+<!--                     ELSE lcns_asort_cd END AS lcns_type -->
+<!--                     , vrfc_dmnd_dt -->
+<!--                     , rent_bgng_dt -->
+<!--                     , rent_end_dt -->
+<!--                     , (CASE vrfc_mthd WHEN '1' THEN '직접입력' WHEN '2' THEN 'OCR' WHEN '3' THEN '모바일면허증' when '4' then 'API' end) as vrfc_mthd -->
+<!--                     , ddhv.vrfc_rslt_cd as verify_cd -->
+<!--                     ,       CASE -->
+<!--                     when ddhv.req_rslt_cd = '00'or ddhv.req_rslt_cd = '1' or ddhv.req_rslt_cd = '0' -->
+<!--                     then dqvs.fn_get_cdnm('verify_cd', ddhv.vrfc_rslt_cd) -->
+<!--                     else dqvs.fn_get_cdnm('req_rslt_cd', ddhv.req_rslt_cd) -->
+<!--                     end as verify_nm -->
+<!--                     , ddhv.req_rslt_cd -->
+<!--                     , prcs_se -->
+<!--                     , drma.bzmn_sn -->
+<!--                 FROM dqvs.dvs_dqv_hs_verf AS ddhv -->
+<!--                 LEFT OUTER JOIN dqvs.v_intg_user_info AS viui  ON ddhv.rqstr_sn = viui.user_sn -->
+<!--                 LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn -->
+<!--                 권한처리 -->
+<!--                 <choose> -->
+<!--                     <when test='authrtCd.indexOf("Z") != -1 or authrtCd.indexOf("M") != -1 or authrtCd.indexOf("K") != -1 or authrtCd.indexOf("D") != -1'> 관리자/공단/국토부/개발자 -->
+<!--                         WHERE 1 = 1 -->
+<!--                     </when> -->
+<!--                     <when test='authrtCd.indexOf("G") != -1'> 지자체,대여사업조합 : 관할지역 내 사업자의 사용자 -->
+<!--                         WHERE viui.user_sn IN ( -->
+<!--                         SELECT user_sn -->
+<!--                         FROM  dqvs.v_intg_user_info AS viui1 -->
+<!--                         <choose> -->
+<!--                             <when test="subSignguCd != null  and subSignguCd != ''"> -->
+<!--                                 WHERE viui1.cmptnc_zone_cd like  #{subSignguCd} ||'%' -->
+<!--                             </when> -->
+<!--                             <otherwise> 지자체,조합 권한인데 관할구역코드가 없으면 데이터 조회 안되게 -->
+<!--                                 WHERE viui1.cmptnc_zone_cd = '999999998888333' -->
+<!--                             </otherwise> -->
+<!--                         </choose> -->
+<!--                         ) -->
+<!--                     </when> -->
+<!--                     <when test='authrtCd.equals("S01")'> 주사무소관리자면 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
+<!--                         WHERE viui.bzmn_sn IN (select bzmn_sn from dqvs.dvs_rac_mt_agency where up_brno = #{bzmnSn} or bzmn_sn = #{bzmnSn}) -->
+<!--                     </when> -->
+<!--                     <when test='authrtCd.equals("S02")'> 영업소관리자면 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시 -->
+<!--                         WHERE viui.bzmn_sn = #{bzmnSn} -->
+<!--                     </when> -->
+<!--                     <otherwise> 그 외(일반사용자 포함)는 로그인 당사자의 조회 건만 표시 -->
+<!--                         WHERE viui.user_sn = #{userSn}::numeric -->
+<!--                     </otherwise> -->
+<!--                 </choose> -->
+<!--                 조회조건 -->
+<!--                 <if test="startDtTm != null and startDtTm != '' and endDtTm != null and endDtTm != ''"> -->
+<!--                     AND vrfc_dmnd_dt <![CDATA[>=]]> #{startDtTm}::timestamp AND vrfc_dmnd_dt <![CDATA[<=]]> #{endDtTm}::timestamp -->
+<!--                 </if> -->
+<!--                 <if test="vrfcMthd != null and vrfcMthd != ''"> -->
+<!--                     AND vrfc_mthd = #{vrfcMthd} -->
+<!--                 </if> -->
+<!--                 <if test="cd != null and cd != '' "> -->
+<!--                     <choose> -->
+<!--                         <when test="codeType =='verify'">요청 성공 후 확인결과 실패(vrfc_rslt_cd 컬럼 조회시 ) 일때 -->
+<!--                             AND ddhv.vrfc_rslt_cd = #{cd} -->
+<!--                         </when> -->
+<!--                         <when test="codeType =='req'">요청 실패 일때 (req_rslt_cd 컬럼 조회시 ) -->
+<!--                             AND ddhv.req_rslt_cd = #{cd} -->
+<!--                         </when> -->
+<!--                     </choose> -->
+<!--                 </if> -->
+
+<!--                 <if test="bzmnSnKwd != null and bzmnSnKwd != ''"> -->
+<!--                     AND (drma.bzmn_sn LIKE '%' || #{bzmnSnKwd} || '%' OR drma.co_nm LIKE '%' || #{bzmnSnKwd} || '%') -->
+<!--                 </if> -->
+<!--                 <if test="rqstrNm != null  and rqstrNm != ''"> -->
+<!--                     AND (viui.sso_user_nm LIKE '%' || #{rqstrNm} || '%' OR viui.onepass_user_nm LIKE '%' || #{rqstrNm} || '%') -->
+<!--                 </if> -->
+<!--             ) T -->
+<!--             <choose> -->
+<!--                 <when test="take != '' and take != null"> -->
+<!--                     <choose> -->
+<!--                         <when test="skip != '' and skip != null"> Keyset Pagination 우선 적용 -->
+<!--                             WHERE T.SN <![CDATA[>]]> #{skip} -->
+<!--                         </when> -->
+<!--                         <when test="page != '' and page != null"> skip 없으면 Offset Pagination -->
+<!--                             OFFSET ((#{page} - 1) * #{take}) -->
+<!--                         </when> -->
+<!--                         <otherwise> -->
+<!--                             WHERE T.SN <![CDATA[>]]> 0 -->
+<!--                         </otherwise> -->
+<!--                     </choose> -->
+<!--                     LIMIT #{take} -->
+<!--                 </when> -->
+<!--                 <otherwise> -->
+<!--                     LIMIT 50000	아무런 조건이 없을 경우 최대 5만건 까지만 조회되도록 제한 -->
+<!--                 </otherwise> -->
+<!--             </choose> -->
+<!--         ) AS TT -->
+<!--     </select> -->
+
+<!--     기존 자격확인이력 건수 조회 -->
+<!--     <select id="listViewCnt" resultType="int"> -->
+<!--         SELECT count(1) AS cnt -->
+<!--         FROM dqvs.dvs_dqv_hs_verf AS ddhv -->
+<!--         LEFT OUTER JOIN dqvs.v_intg_user_info AS viui  ON ddhv.rqstr_sn = viui.user_sn -->
+<!--         LEFT OUTER JOIN dqvs.dvs_rac_mt_agency AS drma ON viui.bzmn_sn = drma.bzmn_sn -->
+<!--         권한처리 -->
+<!--         <choose> -->
+<!--             <when test='authrtCd.indexOf("Z") != -1 or authrtCd.indexOf("M") != -1 or authrtCd.indexOf("K") != -1 or authrtCd.indexOf("D") != -1'> 관리자/공단/국토부/개발자 -->
+<!--                 WHERE 1 = 1 -->
+<!--             </when> -->
+<!--             <when test='authrtCd.indexOf("G") != -1'> 지자체,대여사업조합 : 관할지역 내 사업자의 사용자 -->
+<!--                 WHERE viui.user_sn IN ( -->
+<!--                 SELECT user_sn -->
+<!--                 FROM  dqvs.v_intg_user_info AS viui1 -->
+<!--                 <choose> -->
+<!--                     <when test="subSignguCd != null  and subSignguCd != ''"> -->
+<!--                         WHERE viui1.cmptnc_zone_cd like  #{subSignguCd} ||'%' -->
+<!--                     </when> -->
+<!--                     <otherwise> 지자체,조합 권한인데 관할구역코드가 없으면 데이터 조회 안되게 -->
+<!--                         WHERE viui1.cmptnc_zone_cd = '999999998888333' -->
+<!--                     </otherwise> -->
+<!--                 </choose> -->
+<!--                 ) -->
+<!--             </when> -->
+<!--             <when test='authrtCd.equals("S01")'> 주사무소관리자면 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
+<!--                 WHERE viui.bzmn_sn IN (select bzmn_sn from dqvs.dvs_rac_mt_agency where up_brno = #{bzmnSn} or bzmn_sn = #{bzmnSn}) -->
+<!--             </when> -->
+<!--             <when test='authrtCd.equals("S02")'> 영업소관리자면 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시 -->
+<!--                 WHERE viui.bzmn_sn = #{bzmnSn} -->
+<!--             </when> -->
+<!--             <otherwise> 그 외는 로그인 당사자의 조회 건만 표시 -->
+<!--                 WHERE viui.user_sn = #{userSn}::numeric -->
+<!--             </otherwise> -->
+<!--         </choose> -->
+<!--         조회조건 -->
+<!--         <if test="startDtTm != null and startDtTm != '' and endDtTm != null and endDtTm != ''"> -->
+<!--             AND vrfc_dmnd_dt <![CDATA[>=]]> #{startDtTm}::timestamp AND vrfc_dmnd_dt <![CDATA[<=]]> #{endDtTm}::timestamp -->
+<!--         </if> -->
+<!--         <if test="vrfcMthd != null and vrfcMthd != ''"> -->
+<!--             AND vrfc_mthd = #{vrfcMthd} -->
+<!--         </if> -->
+<!--         <if test="cd != null and cd != '' "> -->
+<!--             <choose> -->
+<!--                 <when test="codeType =='verify'">요청 성공 후 확인결과 실패(vrfc_rslt_cd 컬럼 조회시 ) 일때 -->
+<!--                     AND ddhv.vrfc_rslt_cd = #{cd} -->
+<!--                 </when> -->
+<!--                 <when test="codeType =='req'">요청 실패 일때 (req_rslt_cd 컬럼 조회시 ) -->
+<!--                     AND ddhv.req_rslt_cd = #{cd} -->
+<!--                 </when> -->
+<!--             </choose> -->
+<!--         </if> -->
+<!--         <if test="bzmnSnKwd != null and bzmnSnKwd != ''"> -->
+<!--             AND (drma.bzmn_sn LIKE '%' || #{bzmnSnKwd} || '%' OR drma.co_nm LIKE '%' || #{bzmnSnKwd} || '%') -->
+<!--         </if> -->
+<!--         <if test="rqstrNm != null  and rqstrNm != ''"> -->
+<!--             AND (viui.sso_user_nm LIKE '%' || #{rqstrNm} || '%' OR viui.onepass_user_nm LIKE '%' || #{rqstrNm} || '%') -->
+<!--         </if> -->
+<!--     </select> -->
+
+
+
 
     <!-- 확인결과 리스트 -->
     <select id="ckResults" resultType="resultMap">

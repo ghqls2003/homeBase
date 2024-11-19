@@ -21,7 +21,6 @@ public class DrvVfcHistDao extends CmmnAbstractMapper {
 		return selectList("vfc.drvVfcHist.listView", paramsMap);
 	}
 
-	
     /**
      * 목록 카운트 조회
      * @param paramsMap
@@ -32,19 +31,6 @@ public class DrvVfcHistDao extends CmmnAbstractMapper {
 		return selectOne("vfc.drvVfcHist.listViewCnt", paramsMap);
 	}
 
-
-
-	/**
-	 * 소속자업자명 리스트 조회
-	 * @param paramsMap
-	 * @return
-	 * @throws RimsException
-	 */
-	public Object selectCoNm(Map<String, Object> paramsMap) {
-		return selectList("vfc.drvVfcHist.coNmList", paramsMap);
-	}
-
-
 	/**
 	 * 확인결과리스트
 	 * @param paramsMap
@@ -54,6 +40,4 @@ public class DrvVfcHistDao extends CmmnAbstractMapper {
 	public Object ckResults(Map<String, Object> paramsMap) {
 		return selectList("vfc.drvVfcHist.ckResults", paramsMap);
 	}
-
-
 }

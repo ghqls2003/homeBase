@@ -55,7 +55,6 @@ public class DrvVfcHistServiceImpl extends CmmnAbstractServiceImpl implements Dr
 		return drvVfcHistDao.listView(paramsMap);
 	}
 
-
     /**
      * 목록 카운트 조회
      * @return
@@ -64,57 +63,6 @@ public class DrvVfcHistServiceImpl extends CmmnAbstractServiceImpl implements Dr
 	@Override
 	public int listViewCnt(Map<String, Object> paramsMap) {
 		return drvVfcHistDao.listViewCnt(paramsMap);
-	}
-
-
-
-
-	/**
-	 * 소속자업자명 리스트 조회
-	 * @param paramsMap
-	 * @return
-	 * @throws RimsException
-	 */
-	@Override
-	public Object selectCoNm(Map<String, Object> paramsMap) {
-		paramsMap.put("authrtCd", getAuthrtCd());
-
-		if (getAuthrtCd().startsWith("S") ) { // 주사무소, 영업소
-			paramsMap.put("bzmnSn", getBzmnSn());
-		}
-
-		if (getAuthrtCd().startsWith("G")) { // 지자체
-			String cmptncZone = getCmptncZoneCd();
-			String objSub = cmptncZone.substring(2, 4);
-			if(objSub.equals("00")) {
-				paramsMap.put("subSignguCd", cmptncZone.substring(0,2)); //  광역자치단체 일 경우
-			}else {
-				if(getCmptncZoneCd().substring(4,10).equals("000000")) {
-					if(getCmptncZoneCd().substring(1,4).equals("4374")) {
-						paramsMap.put("subSignguCd", cmptncZone.substring(0,5));// 충정북도 영동군
-					}else {
-						paramsMap.put("subSignguCd", cmptncZone.substring(0,4));// 기초자치단체 일 경우
-					}
-				}else {
-					paramsMap.put("subSignguCd", cmptncZone.substring(0,5));// 기초자치단체 일 경우
-				}
-			}
-		}
-
-		return drvVfcHistDao.selectCoNm(paramsMap);
-	}
-
-
-	/**
-	 * 현재 사용자 권한코드 조회
-	 * @param
-	 * @return
-	 * @throws RimsException
-	 */
-	@Override
-	public String curAuthrtCd() {
-		 String authrtCd = getAuthrtCd();
-		return authrtCd;
 	}
 
 	/**

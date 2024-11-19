@@ -50,7 +50,7 @@ public class DrvVfcHistController extends CmmnAbstractServiceImpl {
 		paramsMap.put("url", "vfc/drvVfcHist");
 		List<Map<String, Object>> tableNameData = cmmnService.findTableNameByUrl(paramsMap);
 		String tableName = tableNameData.get(0).get("menu_nm").toString();
-		String authrtCd = drvVfcHistService.curAuthrtCd();
+		String authrtCd = getAuthrtCd();
 		mav.addObject("authrtCd",authrtCd);
 		mav.addObject("tableName",tableName);
 		mav.setViewName("vfc/drvVfcHist");
@@ -99,22 +99,6 @@ public class DrvVfcHistController extends CmmnAbstractServiceImpl {
         
         return new GenericExcelView();
     }
-
-	/**
-	 * 소속자업자명 리스트 조회
-	 * @param paramsMap
-	 * @return
-	 * @throws RimsException
-	 */
-	@RequestMapping("drvVfcHist/coNmList.do")
-	@ResponseBody
-	public Map<String, Object> coNmList(@RequestBody Map<String, Object> paramsMap) throws RimsException {
-		Map<String, Object> result = new HashMap<String, Object>();
-
-		result.put("coNmList" , drvVfcHistService.selectCoNm(paramsMap));
-		return result;
-	}
-
 
 	/**
 	 * 확인결과리스트
