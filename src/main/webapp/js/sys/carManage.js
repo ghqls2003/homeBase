@@ -696,9 +696,11 @@
 				},
 				columns: [
                      { title: "순번", width: "40px", field: "rn", template: "#: rn #" },
-					 {title: "결함유형", width: "60px", field: "defectNm", template: "#: defectNm #" },
-					 {title: "처리상태코드", width: "150px", field: "prcsSttsCd",	template: "#: prcsSttsCd #"},
-                     {title: "발생일시", width: "130px", field: "ocrnDt", template: "#: ocrnDt #"}
+//					 {title: "결함유형", width: "60px", field: "defectNm", template: "#: defectNm #" },
+                     {title: "발생일시", width: "100px", field: "ocrnDt", template: "#: ocrnDt #"},
+					 {title: "결함내용", width: "150px", field: "defectsCn", template: "#: defectsCn #"},
+					 {title: "조치여부", width: "60px", field: "actnYn",	template: "#: actnYn #"},
+                     
                 ],
 				scrollable: true,
 				editable: false,

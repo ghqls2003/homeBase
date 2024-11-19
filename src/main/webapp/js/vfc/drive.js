@@ -71,9 +71,9 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                     { field: "rn", title: "순번", width:"50px", template: "#= !rn ? '' : rn #" },
                     { field: "vhclRegNo", title: "차량등록번호", width: "100px", template: "#= !vhclRegNo ? '-' : vhclRegNo #"},
                     { field: "coNm", title: "회사명", width: "100px", template: "#= !coNm ? '-': coNm #" },
-                    { field: "prcsSttsCd", title: "처리상태코드", width: "150px", attributes: {"class": "table-cell",style: "white-space: normal;text-align: left;"}, template:"#= !prcsSttsCd ? '-': prcsSttsCd #"},
+//                    { field: "prcsSttsCd", title: "처리상태코드", width: "150px", attributes: {"class": "table-cell",style: "white-space: normal;text-align: left;"}, template:"#= !prcsSttsCd ? '-': prcsSttsCd #"},
                     { field: "defectsCn", title: "결함내용", width: "150px", attributes: {"class": "table-cell ",style: "white-space: normal;text-align: left;" },  template:"#= !defectsCn ? '-': defectsCn #"},
-					{ field: "defectYn", title: "결함여부", width: "40px", template: "#= !defectYn ? '-' : defectYn #", hidden:true},
+					{ field: "actnYn", title: "조치여부", width: "40px", template: "#= !actnYn ? '-' : actnYn #", hidden:true},
     ];
 
     // 운전자격이력 그리드 컬럼

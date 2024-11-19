@@ -70,7 +70,7 @@
 			DISTINCT joinAgency.*,
 			CASE WHEN defect.vin IS NOT NULL THEN 'Y' ELSE 'N' END AS defect_yn,
 			defect.defects_cn,
-			prcs_stts_cd
+			actn_yn
 		FROM 
 			joinAgency
 		LEFT JOIN dqvs.dvs_rac_mt_defect AS defect ON
@@ -279,12 +279,8 @@
 				row_number() over() as rn,
 				vin,
 				to_char(ocrn_dt, 'YYYY-MM-DD HH24:MI') as ocrn_dt,
-				CASE 
-			        WHEN defects_type_cd = '1' THEN '리콜'
-			        WHEN defects_type_cd = '2' THEN '무상수리'
-			        ELSE '기타'
-			    END AS defect_nm,
-				prcs_stts_cd
+				actn_yn,
+				defects_cn
 			from dqvs.dvs_rac_mt_defect
 				where 1=1
 				<if test="vin != null and vin != ''">
@@ -307,8 +303,7 @@
 				row_number() over() as rn,
 				vin,
 				ocrn_dt,
-				defects_type_cd,
-				prcs_stts_cd
+				actn_yn
 			from dqvs.dvs_rac_mt_defect
 				where 1=1
 				<if test="vin != null and vin != ''">

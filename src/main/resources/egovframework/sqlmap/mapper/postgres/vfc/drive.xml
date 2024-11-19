@@ -185,8 +185,6 @@
 			SELECT ROW_NUMBER() OVER(ORDER BY d.ocrn_dt DESC) as rn
 				, d.vin
 				, TO_CHAR(ocrn_dt, 'YYYY-MM-DD HH24:MI') AS ocrn_dt
-				, d.defects_type_cd
-				, d.prcs_stts_cd
 			FROM
 				dqvs.dvs_rac_mt_defect d
 				<choose>

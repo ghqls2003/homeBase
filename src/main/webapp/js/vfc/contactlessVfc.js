@@ -128,6 +128,7 @@ var updateRentNo = "";
 			$('.license_bg input').removeAttr('readonly');
 			$('.license_bg input[type="radio"]').removeAttr('disabled');
 			$('.license_bg input').css('background-color', '');
+			$('.license_bg span').css('background-color', '');
 			
 			$('#name').val(data.idName);
 			$("#num01").data("kendoDropDownList").value(data.idLicenseNumber.substr(0,2));
@@ -225,10 +226,10 @@ var updateRentNo = "";
 			$(".photo_btn").on("click",function(){
 				$drive.ui.showAndroidToast();
 		  	});
-			 $(".photo_popup .cancel_btn").on("click",function(){
+			$(".photo_popup .cancel_btn").on("click",function(){
 			    $(".photo_popup").removeClass("view");
 		  	});
-			  $(".photo_popup .close").on("click",function(){
+			$(".photo_popup .close").on("click",function(){
 			    $(".photo_popup").removeClass("view");
 		  	});
 
@@ -263,7 +264,7 @@ var updateRentNo = "";
 
 			$(".similarity_pop .close").on("click",function(){
 			    $(".similarity_pop").css("display", "none");
-			 });
+			});
 		
 		},
 

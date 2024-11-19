@@ -775,8 +775,8 @@
 				, COALESCE(car.mdlyr, '-') model_year
 				, COALESCE(car.use_yn, '-') use_yn
 				, COALESCE(car.stts_cd, '-') sttscd
-				, COALESCE(defect.defects_type_cd, '-') defects_type_cd
-				, COALESCE(defect.prcs_stts_cd, '-') prcs_stts_cd
+<!-- 				, COALESCE(defect.defects_type_cd, '-') defects_type_cd -->
+<!-- 				, COALESCE(defect.prcs_stts_cd, '-') prcs_stts_cd -->
 				, COALESCE(TO_CHAR(car.reg_dt, 'YYYY-MM-DD'), '-') reg_dt
 			FROM 
 				dqvs.dvs_rac_mt_car car
