@@ -147,7 +147,8 @@ public class MainViewServiceImpl extends CmmnAbstractServiceImpl implements Main
    		authMap.put("S02", 128);
    		authMap.put("S03", 256);
    		authMap.put("S04", 512);
-   		authMap.put("A01", 1024);
+   		authMap.put("S05", 1024);
+   		authMap.put("A01", 2048);
    		
         String currentUserCd = authrtCd;
         if (currentUserCd == null || currentUserCd.isEmpty()) {
