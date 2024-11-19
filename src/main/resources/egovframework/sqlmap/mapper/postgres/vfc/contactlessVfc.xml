@@ -38,6 +38,9 @@
 			UPDATE dqvs.dvs_dqv_mt_rent
 			SET vrfc_hstry_sn = #{sn}
 				, rent_stts_cd = '2'
+				, rent_prcs_dt = NOW()
+				, mdfr_sn = 0
+				, mdfcn_dt = NOW()
 			WHERE rent_no = #{updateRentNo}
 		</if>
     </update>
