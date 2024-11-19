@@ -92,12 +92,12 @@
 			//					width: "250px"
 			//				});
 			//			});
-				$("#lncdDrop").kendoDropDownList({
-					dataTextField: "text",
-					dataSource: dropData2,
-					dataValueField: "value",
-					value: '' // 초기값을 ''로 설정합니다.
-				});
+			$("#lncdDrop").kendoDropDownList({
+				dataTextField: "text",
+				dataSource: dropData2,
+				dataValueField: "value",
+				value: '' // 초기값을 ''로 설정합니다.
+			});
 			ajax(false, contextPath + '/vfc/drvRsvMag/selectPeriodCd', 'body', '처리중입니다.', {}, function(data) {
 				$("#periodRsv").kendoDropDownList({
 					optionLabel: '예약 주기(설정)',
@@ -110,110 +110,113 @@
 				});
 			});
 			$("#start-picker02").kendoDateTimePicker({
-			    format: "yyyy-MM-dd HH:mm",
-			    value: new Date(nowYear, nowMonth, nowDate)
+				format: "yyyy-MM-dd HH:mm",
+				value: new Date(nowYear, nowMonth, nowDate)
 			});
 
 			$("#end-picker02").kendoDateTimePicker({
-			    format: "yyyy-MM-dd HH:mm",
-			    value: new Date(rsvEndData)  
+				format: "yyyy-MM-dd HH:mm",
+				value: new Date(rsvEndData)
 			});
 
 			// start-picker02에서 값이 변경될 때
 			$('#start-picker02').on('change', function() {
-			    if (new Date($('#start-picker02').val()) > rsvEndData) {
-			        alert("시작일은 종료일보다 늦을 수 없습니다.");
-			        // 시작일이 종료일보다 늦을 경우, end-picker02 값을 start-picker02 값으로 설정
-			        $('#start-picker02').data("kendoDateTimePicker").value(new Date($('#end-picker02').val()));
-			    }
+				if (new Date($('#start-picker02').val()) > rsvEndData) {
+					alert("시작일은 종료일보다 늦을 수 없습니다.");
+					// 시작일이 종료일보다 늦을 경우, end-picker02 값을 start-picker02 값으로 설정
+					$('#start-picker02').data("kendoDateTimePicker").value(new Date($('#end-picker02').val()));
+				}
 			});
 
 			// end-picker02에서 값이 변경될 때
 			$('#end-picker02').on('change', function() {
-			    if (new Date($('#end-picker02').val()) < new Date($('#start-picker02').val())) {
-			        alert("종료일은 시작일보다 빠를 수 없습니다.");
-			        // 종료일이 시작일보다 빠를 경우, start-picker02 값을 end-picker02 값으로 설정
-			        $('#end-picker02').data("kendoDateTimePicker").value(new Date($('#start-picker02').val()));
-			    }
+				if (new Date($('#end-picker02').val()) < new Date($('#start-picker02').val())) {
+					alert("종료일은 시작일보다 빠를 수 없습니다.");
+					// 종료일이 시작일보다 빠를 경우, start-picker02 값을 end-picker02 값으로 설정
+					$('#end-picker02').data("kendoDateTimePicker").value(new Date($('#start-picker02').val()));
+				}
 			});
 
-//			if (rsvStrData) {
-//				$("#start-picker02").kendoDatePicker({
-//					value: rsvStrData,
-//					format: "yyyy-MM-dd HH:mm",
-//					parseFormats: ["yyyy-MM-dd HH:mm"],
-//					min: rsvStrData,
-//					max: new Date(new Date(rsvStrData).setDate(new Date(rsvStrData).getDate() - 7)), // endDate의 7일 전까지 설정
-//					change: function() {
-//						var selectedDate = this.value();
-//						if (selectedDate < rsvStrData) {
-//							this.value(rsvStrData);
-//						} else if (selectedDate > new Date(new Date(rsvStrData).setDate(new Date(rsvStrData).getDate() - 7))) {
-//							this.value(new Date(new Date(rsvStrData).setDate(new Date(rsvStrData).getDate() - 7)));
-//						}
-//					}
-//				});
-//			} else {
-//			    // rsvStrData가 없을 경우, Kendo DateTimePicker를 초기화하지 않고 그냥 input만 보여줌
-//			    $("#start-picker02").replaceWith(
-//			        '<input id="start-picker02" class="input" title="datepicker" aria-label="시작기간검색" readonly />'
-//			    );
-//			}
+			//			if (rsvStrData) {
+			//				$("#start-picker02").kendoDatePicker({
+			//					value: rsvStrData,
+			//					format: "yyyy-MM-dd HH:mm",
+			//					parseFormats: ["yyyy-MM-dd HH:mm"],
+			//					min: rsvStrData,
+			//					max: new Date(new Date(rsvStrData).setDate(new Date(rsvStrData).getDate() - 7)), // endDate의 7일 전까지 설정
+			//					change: function() {
+			//						var selectedDate = this.value();
+			//						if (selectedDate < rsvStrData) {
+			//							this.value(rsvStrData);
+			//						} else if (selectedDate > new Date(new Date(rsvStrData).setDate(new Date(rsvStrData).getDate() - 7))) {
+			//							this.value(new Date(new Date(rsvStrData).setDate(new Date(rsvStrData).getDate() - 7)));
+			//						}
+			//					}
+			//				});
+			//			} else {
+			//			    // rsvStrData가 없을 경우, Kendo DateTimePicker를 초기화하지 않고 그냥 input만 보여줌
+			//			    $("#start-picker02").replaceWith(
+			//			        '<input id="start-picker02" class="input" title="datepicker" aria-label="시작기간검색" readonly />'
+			//			    );
+			//			}
 
 			$("#start-picker01").kendoDatePicker({
-			    value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 30),
-			    dateInput: true,
-			    format: "yyyy-MM-dd",
-			    parseFormats: ["yyyy-MM-dd"],
-			    max: new Date(),
-			    change: function() {
-			        var startDate = this.value();
-			        var endDatePicker = $("#end-picker01").data("kendoDatePicker");
-			        var endDate = endDatePicker.value();
+				value: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 30),
+				dateInput: true,
+				format: "yyyy-MM-dd",
+				parseFormats: ["yyyy-MM-dd"],
+				max: new Date(),
+				change: function() {
+					var startDate = this.value();
+					var endDatePicker = $("#end-picker01").data("kendoDatePicker");
+					var endDate = endDatePicker.value();
 
-			        if (startDate && endDate && startDate > endDate) {
-			            alert("시작일이 종료일보다 늦을 수 없습니다.");
-			            this.value(endDate);  // 종료일보다 빠른 시작일을 선택하면 시작일을 종료일로 맞춤
-			            return;
-			        }
+					if (startDate && endDate && startDate > endDate) {
+						alert("시작일이 종료일보다 늦을 수 없습니다.");
+						this.value(endDate);  // 종료일보다 빠른 시작일을 선택하면 시작일을 종료일로 맞춤
+						return;
+					}
 
-			        if (startDate) {
-			            var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 30);
-			            endDatePicker.min(startDate);
-			            endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
-			            endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
-			        }
-			    }
+					if (startDate) {
+						var newEndDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 30);
+						endDatePicker.min(startDate);
+						endDatePicker.max(newEndDate > new Date() ? new Date() : newEndDate);
+						endDatePicker.value(newEndDate > new Date() ? new Date() : newEndDate);
+					}
+				}
 			});
 
 			$("#end-picker01").kendoDatePicker({
-			    value: new Date(),
-			    dateInput: true,
-			    format: "yyyy-MM-dd",
-			    parseFormats: ["yyyy-MM-dd"],
-			    max: new Date(),
-			    change: function() {
-			        var endDate = this.value();
-			        var startDatePicker = $("#start-picker01").data("kendoDatePicker");
-			        var startDate = startDatePicker.value();
+				value: new Date(),
+				dateInput: true,
+				format: "yyyy-MM-dd",
+				parseFormats: ["yyyy-MM-dd"],
+				max: new Date(),
+				change: function() {
+					var endDate = this.value();
+					var startDatePicker = $("#start-picker01").data("kendoDatePicker");
+					var startDate = startDatePicker.value();
 
-			        if (startDate && endDate && startDate > endDate) {
-			            alert("종료일이 시작일보다 빠를 수 없습니다.");
-			            this.value(startDate);  // 시작일보다 빠른 종료일을 선택하면 종료일을 시작일로 맞춤
-			            return;
-			        }
+					if (startDate && endDate && startDate > endDate) {
+						alert("종료일이 시작일보다 빠를 수 없습니다.");
+						this.value(startDate);  // 시작일보다 빠른 종료일을 선택하면 종료일을 시작일로 맞춤
+						return;
+					}
 
-			        if (startDate) {
-			            var diffInDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
-			            if (diffInDays > 30) {
-			                alert("30일 이내만 조회 가능합니다.");
-			                this.value(new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 30));
-			            }
-			        }
-			    }
+					if (startDate) {
+						var diffInDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+						if (diffInDays > 30) {
+							alert("30일 이내만 조회 가능합니다.");
+							this.value(new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 30));
+						}
+					}
+				}
 			});
+			$(document).ready(function() {
+				kendo.ui.progress($(document.body), true);
 
-			$drvRsvMag.ui.kendoGrid();
+				$drvRsvMag.ui.kendoGrid();
+			});
 		},
 
 		kendoGrid: function() {
@@ -408,7 +411,10 @@
 				grid.dataSource.page(1);
 			}
 		},
+
 		carGridModule: function(gridId) {
+			var loadingContainer = $("#carGrid").closest(".k-grid");
+
 			$('#carGrid').kendoGrid({
 				dataSource: {
 					data: null,
@@ -420,13 +426,13 @@
 							type: "POST",
 							beforeSend: function(xhr) {
 								// Loading 창 표시
-								kendo.ui.progress($("#carGrid"), true);
+								kendo.ui.progress(loadingContainer, true);
 
 								xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
 							},
 							complete: function() {
 								// Loading 창 숨김
-								kendo.ui.progress($("#carGrid"), false);
+								kendo.ui.progress(loadingContainer, false);
 							}
 						},
 						parameterMap: function(options) {
@@ -478,7 +484,7 @@
 			params.periodRsv = $("#periodRsv").val();
 			params.startDt = $("#start-picker02").val();
 			params.endtDt = $("#rsvEndTime").val();
-//			params.lastCfRst = $("#lastCfRst").val();
+			//			params.lastCfRst = $("#lastCfRst").val();
 			params.dln = $("#regRgtrDln").val();
 			//			params.lcnsFlnm = $("#lcnsFlnm").val();
 			params.lcnsAsortCd = $("#ReglcnsAsortCd").val();
@@ -658,7 +664,7 @@
 				params.detaiCLick = detaiCLick;
 
 				ajax(true, contextPath + '/vfc/drvRsvMag/selectCheckRentRsvf', 'body', '확인 중입니다.', params, function(data2) {
-//					$("#lastCfRst").val(data2[0].vrfcRslt);
+					//					$("#lastCfRst").val(data2[0].vrfcRslt);
 					$("#ReglcnsAsortCd").val(data2[0].lcnsAsortCd);
 					$("#RsvedlastRst").val(data2[0].vrfcCd);
 					$("#regRgtrDln").val(data2[0].dln);
