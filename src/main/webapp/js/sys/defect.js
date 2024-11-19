@@ -48,7 +48,7 @@
 							options.startDt = startDt;
 							options.endDt = endDt;
 							options.vhclRegNo = $("#searchCarNum").val();
-							options.crrtvactRslt = $("#crrtvactRslt").val();
+							options.defectActnYn = $("#defectActnYn").val();
 
 							return JSON.stringify(options);
 						}
@@ -74,12 +74,12 @@
 					{ field: "co_nm", title: "회사명", width: "75px", template: "#= co_nm != null ? co_nm : '-' #", sortable: false },
 					{ field: "vin", title: "차대번호", width: "100px", template: "#= vin != null ? vin : '-' #", sortable: true },
 					{ field: "vhcl_reg_no", title: "차량번호", width: "100px", template: "#= vhcl_reg_no != null ? vhcl_reg_no : '-' #", sortable: true },
-					{ field: "defects_sn", title: "결함일련번호", width: "100px", template: "#= defects_sn != null ? defects_sn : '-' #", sortable: true },
+					{ field: "defects_reg_no", title: "결함등록번호", width: "100px", template: "#= defects_reg_no != null ? defects_reg_no : '-' #", sortable: true },
 					{ field: "ocrn_dt", title: "발생일시", width: "100px", template: "#: $defect.event.dateFomat(ocrn_dt) #", sortable: true },
-					{ field: "defects_type_cd", title: "결함유형", width: "100px", template: "#= defects_type_cd != null ? defects_type_cd : '-' #", sortable: true },
-					{ field: "prcs_stts_cd", title: "처리상태코드", width: "100px", template: "#= prcs_stts_cd != null ? prcs_stts_cd : '-' #", sortable: true },
+					{ field: "defects_recall_no", title: "결함리콜번호", width: "100px", template: "#= defects_recall_no != null ? defects_recall_no : '-' #", sortable: true },
+					{ field: "recall_cmptn_yn", title: "리콜완료여부", width: "100px", template: "#= recall_cmptn_yn != null ? recall_cmptn_yn : '-' #", sortable: true },
 					{ field: "defects_cn", title: "결함내용", width: "100px", template: "#= defects_cn != null ? defects_cn : '-' #", sortable: true },
-					{ field: "crrtvact_rslt_nm", title: "시정조치 결과", width: "100px", template: "#= crrtvact_rslt_nm != null ? crrtvact_rslt_nm : '-' #", sortable: true },
+					{ field: "actn_yn_nm", title: "시정조치 결과", width: "100px", template: "#= actn_yn_nm != null ? actn_yn_nm : '-' #", sortable: true },
 				],
 				scrollable: true,
 				editable: false,
@@ -158,7 +158,7 @@
 			});
 
 			// 조치 여부
-			var crrtvactRslt = [
+			var defectActnYn = [
 				{ value: "Y", text: "조치" },
 				{ value: "N", text: "미조치" },
 			];
@@ -188,11 +188,11 @@
 			];
 			
 			
-			$("#crrtvactRslt").kendoDropDownList({
+			$("#defectActnYn").kendoDropDownList({
 				optionLabel: '조치여부(전체)',
 				dataTextField: "text",
 				dataValueField: "value",
-				dataSource: crrtvactRslt
+				dataSource: defectActnYn
 			});
 			
 			
@@ -208,7 +208,7 @@
 				optionLabel: '조치여부(전체)',
 				dataTextField: "text",
 				dataValueField: "value",
-				dataSource: crrtvactRslt
+				dataSource: defectActnYn
 			});
 			
 			$("#insertActnTyCd").kendoDropDownList({
@@ -330,28 +330,30 @@
 			var params = {
 				vin : dataItem.vin,
 				defects_sn : dataItem.defects_sn, 
+				defects_reg_no : dataItem.defects_reg_no
 			};
 			vin = dataItem.vin;
 			defects_sn = dataItem.defects_sn;
 			
 	
-			$("#actnVin").val(dataItem.vin);
-			$("#actnDefectsSn").val(dataItem.defects_sn);
-			$("#actnPrcsSttsCd").val(dataItem.prcs_stts_cd);
-			$("#actnDefectsCn").val(dataItem.defects_cn);
-			$("#actnDefectsTypeCd").val(dataItem.defects_type_cd);
-			$("#actnOcrnDt").val(dataItem.ocrn_dt);
+			$("#defectVin").val(dataItem.vin);							//차대번호
+			$("#defectsRegNo").val(dataItem.defects_reg_no);	    	//결함등록번호
+			$("#defectRecallCmptnYn").val(dataItem.recall_cmptn_yn_nm); //리콜완료여부
+			$("#defectActnRecallNo").val(dataItem.defects_recall_no); 	//결함리콜번호
+			$("#defectActnOcrnDt").val(dataItem.ocrn_dt);			 	//발생일시
+			$("#defectActnDefectsCn").val(dataItem.defects_cn);		 	//결함내용
+			
 			
 			
 			ajax(true, contextPath + '/sys/defect/selectDetailDefectInfo', 'body', '확인중입니다.', params, function(data) {
 		
-				$("#detaildefectsRegNo").val(data.data[0].defectsRegNo);      //시정조치 일련번호
-				$("#detailVin").val(data.data[0].vin);            			  //차대번호
-				$("#detailCarRegNo").val(data.data[0].vhclRegNo); 			  //차량번호
-				$("#detailCmptnYnNm").val(data.data[0].cmptnYnNm);     		  //시정조치 결과
-				$("#detailActnDefectSn").val(data.data[0].defectsSn); 		  //결함일련번호
-				$('#detailActnCrrtvActTtl').val(data.data[0].crrtvactTtl);    //시정조치 유형
-				$('#detailActnCrrtvActYnNm').val(data.data[0].crrtvactYnNm);  //조치여부
+				$("#actnDefectsRegNo").val(data.data[0].defectActnRegNo);   //시정조치 일련번호
+				$("#actnDetailVin").val(data.data[0].vin);            			  //차대번호
+				$("#actnDetailCarRegNo").val(data.data[0].vhclRegNo); 			  //차량번호
+				$("#actnDetailCmptnYnNm").val(data.data[0].cmptnYnNm);     		  //시정조치 결과
+				$("#actnDetailActnDefectSn").val(data.data[0].defectsRegNo); 	  //결함등록번호
+				$('#actnDetailActnCrrtvActTtl').val(data.data[0].crrtvactTtl);    //시정조치 유형
+				$('#actnDetailActnCrrtvActYnNm').val(data.data[0].crrtvactYnNm);  //조치여부
 				
 				//$("#detailActnNm").val(data.data[0].usersn);        		  //등록자
 				//$("#detailActnRmrk").val(data.); 		 					  //비고
@@ -359,16 +361,16 @@
 				
 				const crrtvactStrtDay = data.data[0].crrtvactStrtDay;				
 				if (!crrtvactStrtDay) {
-					$("#detailActnCrrTvActStrtDay").val('0000-00-00');
+					$("#actnDetailActnCrrTvActStrtDay").val('0000-00-00');
 				} else {
-					$("#detailActnCrrTvActStrtDay").val(crrtvactStrtDay);
+					$("#actnDetailActnCrrTvActStrtDay").val(crrtvactStrtDay);
 				}
 					
 				const regDt = data.data[0].regDt;
 				if (!regDt) {
-					$("#detailActnRegDt").val('0000-00-00');
+					$("#actnDetailActnRegDt").val('0000-00-00');
 				} else {
-					$("#detailActnRegDt").val(regDt);
+					$("#actnDetailActnRegDt").val(regDt);
 				}
 			
 				$(".viewDefect_popup").addClass("view");

@@ -171,7 +171,7 @@ button.red_btn {
 			                    <ul class="selec_box">
 			                        <li class="li_slec">
 			                            <label for="send_slec_01" hidden>조치여부</label>
-			                            <input type="text" id="crrtvactRslt" class="sendType" aria-label="조치여부" placeholder="조치여부">
+			                            <input type="text" id="defectActnYn" class="sendType" aria-label="조치여부" placeholder="조치여부">
 			                        </li>
 			                    </ul>
 			                </div>
@@ -589,37 +589,37 @@ button.red_btn {
 								                <th scope="col">차대번호</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="">차대번호</label>
-								                        <input type="text" id="actnVin" class="input " maxLength="200" readonly="readonly"/>
+								                        <label for="defectVin">차대번호</label>
+								                        <input type="text" id="defectVin" class="input " maxLength="200" readonly="readonly"/>
 								                    </div>
 								                </td>
 								            </tr>
 								         	<tr>
-								                <th scope="col">결함일련번호</th>
+								                <th scope="col">결함등록번호</th>
 								                <td>
 								                	<div  class="tb_flex admin">
-								                        <label for="actnDefectsSn">결함일련번호</label>
-								                        <input type="text" id="actnDefectsSn" class="input " aria-label="결함일련번호" readonly="readonly"/>
+								                        <label for="defectsRegNo">결함등록번호</label>
+								                        <input type="text" id="defectsRegNo" class="input " aria-label="결함등록번호" readonly="readonly"/>
 								                    </div>
 								                </td>
 								            </tr>
 								          	<tr>
-								                <th scope="col">처리상태코드</th>
+								                <th scope="col">리콜완료여부</th>
 								                <td>
 								                	<div  class="tb_flex admin">
-								                        <label for="actnPrcsSttsCd">처리상태코드</label>
-								                        <input type="text" id="actnPrcsSttsCd" class="input clear" aria-label="처리상태코드" readonly="readonly"/>
+								                        <label for="defectRecallCmptnYn">리콜완료여부</label>
+								                        <input type="text" id="defectRecallCmptnYn" class="input clear" aria-label="리콜완료여부" readonly="readonly"/>
 								                    </div>
 								                </td>
 								            </tr>
 								        </table>
 								        <table class="tb rental_tb01">
 								            <tr>
-								                <th scope="col">결함유형코드</th>
+								                <th scope="col">결함리콜번호</th>
 								                <td>
 								                	<div  class="tb_flex admin">
-								                        <label for="actnDefectsTypeCd">결함유형코드</label>
-								                        <input type="text" id="actnDefectsTypeCd" class="input clear" aria-label="결함유형코드" readonly="readonly"/>
+								                        <label for="defectActnRecallNo">결함리콜번호</label>
+								                        <input type="text" id="defectActnRecallNo" class="input clear" aria-label="결함리콜번호" readonly="readonly"/>
 								                    </div>
 								                </td>
 								            </tr>
@@ -627,8 +627,8 @@ button.red_btn {
 								                <th scope="col">발생일시</th>
 								                <td>
 								                	<div  class="tb_flex ">
-								                        <label for="actnOcrnDt">발생일시</label>
-								                        <input type="text" id="actnOcrnDt" class="input clear"  aria-label="발생일시"  title="datepicker" readonly="readonly"/>
+								                        <label for="defectActnOcrnDt">발생일시</label>
+								                        <input type="text" id="defectActnOcrnDt" class="input clear"  aria-label="발생일시"  title="datepicker" readonly="readonly"/>
 								                    </div>
 								                </td>
 								            </tr>
@@ -636,8 +636,8 @@ button.red_btn {
 								                <th scope="col" class="note_name">결함내용</th>
 								                <td>
 								                	<div  class="tb_flex admin">
-								                        <label for="actnDefectsCn">결함내용</label>
-								                        <textarea id="actnDefectsCn" name="actnDefectsCn" class="input clear noteBox" maxlength="1000" cols="10" rows="5" aria-label="결함내용" oninput="content(this)" readonly=""></textarea>
+								                        <label for="defectActnDefectsCn">결함내용</label>
+								                        <textarea id="defectActnDefectsCn" name="defectActnDefectsCn" class="input clear noteBox" maxlength="1000" cols="10" rows="5" aria-label="결함내용" oninput="content(this)" readonly=""></textarea>
 								                    </div>
 								                </td>
 								            </tr>
@@ -654,8 +654,8 @@ button.red_btn {
 								    			<th scope="col">시정조치 일련번호</th>
 								    			<td>
 								    				<div class="tb_flex aprv">
-								    				<label for="detailActnSn">시정조치 일련번호</label>
-								    				<input type="text" id="detaildefectsRegNo" class="input" aria-label="시정조치 일련번호" readonly="readonly"/>
+								    				<label for="actnDefectsRegNo">시정조치 일련번호</label>
+								    				<input type="text" id="actnDefectsRegNo" class="input" aria-label="시정조치 일련번호" readonly="readonly"/>
 							    					</div>
 							    				</td>
 							    			</tr>
@@ -663,8 +663,8 @@ button.red_btn {
 								    			<th scope="col">차대번호</th>
 								    			<td>
 								    				<div class="tb_flex aprv">
-								    				<label for="detailActnVin">차대번호</label>
-								    				<input type="text" id="detailVin" class="input" aria-label="차대번호" readonly="readonly"/>
+								    				<label for="actnDetailVin">차대번호</label>
+								    				<input type="text" id="actnDetailVin" class="input" aria-label="차대번호" readonly="readonly"/>
 							    					</div>
 							    				</td>
 							    			</tr>
@@ -672,8 +672,8 @@ button.red_btn {
 								    			<th scope="col">차량번호</th>
 								    			<td>
 								    				<div class="tb_flex aprv">
-								    				<label for="detailActnCarRegNo">차량번호</label>
-								    				<input type="text" id="detailCarRegNo"  class="input" aria-label="차량번호" readonly="readonly"/>
+								    				<label for="actnDetailCarRegNo">차량번호</label>
+								    				<input type="text" id="actnDetailCarRegNo"  class="input" aria-label="차량번호" readonly="readonly"/>
 							    					</div>
 							    				</td>
 							    			</tr>
@@ -690,8 +690,8 @@ button.red_btn {
 								    			<th scope="col">시정조치일</th>
 								    			<td>
 								    				<div class="tb_flex aprv">
-								    				<label for="detailActnDt">시정조치일</label>
-								    				<input type="text" id="detailActnCrrTvActStrtDay"  class="input" aria-label="시정조치일" readonly="readonly"/>
+								    				<label for="actnDetailActnCrrTvActStrtDay">시정조치일</label>
+								    				<input type="text" id="actnDetailActnCrrTvActStrtDay"  class="input" aria-label="시정조치일" readonly="readonly"/>
 							    					</div>
 							    				</td>
 							    			</tr>
@@ -699,8 +699,8 @@ button.red_btn {
 								                <th scope="col">등록일자</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="detailActnRegDt">등록일자</label>
-								                        <input type="text" id="detailActnRegDt"  class="input" maxLength="200" aria-label="등록일자" readonly="readonly"/>
+								                        <label for="actnDetailActnRegDt">등록일자</label>
+								                        <input type="text" id="actnDetailActnRegDt"  class="input" maxLength="200" aria-label="등록일자" readonly="readonly"/>
 								                    </div>
 								                </td>
 								            </tr>
@@ -720,8 +720,8 @@ button.red_btn {
 								                <th scope="col">시정조치 유형</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="detailActnTyCd">시정조치 유형</label>
-								                        <input type="text" id="detailActnCrrtvActTtl" class="input" maxLength="200" readonly="readonly"/>
+								                        <label for="actnDetailActnCrrtvActTtl">시정조치 유형</label>
+								                        <input type="text" id="actnDetailActnCrrtvActTtl" class="input" maxLength="200" readonly="readonly"/>
 								                    </div>
 								                </td>
 								            </tr>
@@ -729,17 +729,17 @@ button.red_btn {
 								                <th scope="col">시정조치 결과</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="detailActnRsCd">시정조치 결과</label>
-								                        <input type="text" id="detailCmptnYnNm" class="input" maxLength="200" aria-label="시정조치 결과코드" readonly="readonly"/>
+								                        <label for="actnDetailCmptnYnNm">시정조치 결과</label>
+								                        <input type="text" id="actnDetailCmptnYnNm" class="input" maxLength="200" aria-label="시정조치 결과코드" readonly="readonly"/>
 								                    </div>
 								                </td>
 								            </tr>
 								    		<tr>
-								    			<th scope="col">결함일련번호</th>
+								    			<th scope="col">결함등록번호</th>
 								    			<td>
 								    				<div class="tb_flex aprv">
-								    				<label for="detailActnDefectSn">결함일련번호</label>
-								    				<input type="text" id="detailActnDefectSn"  class="input " aria-label="결함일련번호" readonly="readonly"/>
+								    				<label for="actnDetailActnDefectSn">결함등록번호</label>
+								    				<input type="text" id="actnDetailActnDefectSn"  class="input " aria-label="결함등록번호" readonly="readonly"/>
 							    					</div>
 							    				</td>
 							    			</tr>
@@ -756,8 +756,8 @@ button.red_btn {
 								                <th scope="col">조치여부</th>
 								                <td>
 								                    <div class="tb_flex">
-								                        <label for="detailActnYn">조치여부</label>
-								                        <input type="text" id="detailActnCrrtvActYnNm"  class="input clear" maxLength="200" aria-label="조치여부"  readonly="readonly"/>
+								                        <label for="actnDetailActnCrrtvActYnNm">조치여부</label>
+								                        <input type="text" id="actnDetailActnCrrtvActYnNm"  class="input clear" maxLength="200" aria-label="조치여부"  readonly="readonly"/>
 								                    </div>
 								                </td>
 								            </tr>
