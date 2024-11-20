@@ -38,15 +38,15 @@ public interface DriveService {
 	// 해당 코드에 대한 공통코드 테이블에서 메시지 가져오기
 	List<Map<String, Object>> getRtnMsg(Map<String, Object> paramsMap);
 
-	// 면허번호에 해당하는 최근 7일간의 대여이력 조회 24.10.25 jeonghyewon
+	// 면허번호에 해당하는 최근 7일간의 운전자격확인이력 조회 24.10.25 jeonghyewon
 	List<Map<String, Object>> drvListView(Map<String, Object> paramsMap);
 
-	// 면허번호에 해당하는 최근 7일간의 대여이력 조회 건수 24.10.25 jeonghyewon
+	// 면허번호에 해당하는 최근 7일간의 운전자격확인이력 조회 건수 24.10.25 jeonghyewon
 	int drvListViewCnt(Map<String, Object> paramsMap);
 
 	// 해당 법인 차량 및 결함 유무 조회  24.11.05 jeonghyewon
 	Object selectBzmnCarAndDefectedCarInfo(Map<String, Object> paramsMap) throws RimsException;
 
-	//S권한 일 경우만 법인번호 가져오기 24.11.06 jeonghyewon조회
+	//S권한 일 경우만 법인번호 가져오기 24.11.06 jeonghyewon
 	public String selectCorpNumIfSAuthrtCd(Map<String, Object> paramsMap);
 }

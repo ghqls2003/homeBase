@@ -238,7 +238,7 @@
 		</if>
 	</select>
 
-<!--	해당 코드에 대한 공통코드 테이블에서 메시지 가져오기 -->
+	<!--해당 코드에 대한 공통코드 테이블에서 메시지 가져오기 -->
 	<select id="getRtnMsg" resultType="resultMap">
 		select cd, cd_nm
 		from dqvs.dvs_cmm_mt_code dcmc
@@ -250,7 +250,7 @@
 		</if>
 	</select>
 
-<!-- 최근 7일 운전자격이력 건수(팝업에 이거 사용함) -->
+	<!-- 최근 7일 운전자격이력 건수(팝업에 이거 사용함) -->
 	<select id="selectVfcHistCnt" parameterType="paraMap" resultType="int">
 		/* 최근 7일 운전자격이력 건수(팝업용) */
 		WITH dln_with AS (SELECT dqvs.pca_encrypt(#{dln}, '200') AS dln)
@@ -262,7 +262,7 @@
 	</select>
 
 
-	<!-- 면허번호에 해당하는 최근 7일간의 대여이력 조회 24.10.25 jeonghyewon -->
+	<!-- 면허번호에 해당하는 최근 7일간의 운전자격확인이력 조회 24.10.25 jeonghyewon -->
 	<select id="drvListView" parameterType="paraMap" resultType="resultMap">
 		SELECT *
 		FROM(
@@ -335,25 +335,25 @@
 			) AS TT
 	</select>
 
-		<!--  해당 법인 차량 유무 조회 (차량결함상관없음)  24.11.05 jeonghyewon-->
-		<select id="selectBzmnCarYn" resultType="int">
-			select count(1)
-			from
-			dqvs.dvs_rac_mt_car drmc
-			where
-			drmc.use_yn = 'Y'
-			<if test="carNum != '' and carNum != null">
-				and vhcl_reg_no = #{carNum}
-			</if>
-			<choose>
-				<when test= "crno != '' and crno != null">
-					AND crno = #{crno}
-				</when>
-				<otherwise>
-					AND 1 != 1
-				</otherwise>
-			</choose>
-		</select>
+	<!--  해당 법인 차량 유무 조회 (차량결함상관없음)  24.11.05 jeonghyewon-->
+	<select id="selectBzmnCarYn" resultType="int">
+		select count(1)
+		from
+		dqvs.dvs_rac_mt_car drmc
+		where
+		drmc.use_yn = 'Y'
+		<if test="carNum != '' and carNum != null">
+			and vhcl_reg_no = #{carNum}
+		</if>
+		<choose>
+			<when test= "crno != '' and crno != null">
+				AND crno = #{crno}
+			</when>
+			<otherwise>
+				AND 1 != 1
+			</otherwise>
+		</choose>
+	</select>
 
 	<!--  해당 법인 차량 결함 유무 조회  24.11.05 jeonghyewon-->
 	<select id="selectBzmnDefectedCarYn" resultType="resultMap">

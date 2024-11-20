@@ -450,7 +450,7 @@ public class DriveController extends CmmnAbstractServiceImpl {
 
 
 	/**
-	 *  면허번호에 해당하는 최근 7일간의 대여이력 조회  24.10.25 jeonghyewon
+	 *  면허번호에 해당하는 최근 7일간의 운전자격확인이력 조회  24.10.25 jeonghyewon
 	 * @param paramsMap
 	 * @return
 	 * @throws RimsException
