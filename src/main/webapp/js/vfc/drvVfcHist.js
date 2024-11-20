@@ -237,23 +237,21 @@
 
 		// 검색 조회
 		btnApplyClickHandler : function(e) {
+			var param = $drvfc.event.filter();
 			var start = new Date($("#start-picker01").val());
             var end = new Date($("#end-picker01").val());
-
-			// 최대 7일 제한
-			if(end > new Date(new Date(start).setDate(start.getDate() + 7))){
+            
+			if(new Date($("#end-picker01").val()) > new Date(new Date(start).setDate(start.getDate() + 7))){  // 최대 7일 제한
                  alert("7일 이상 으로 선택할 수 없습니다.");
                  $('#end-picker01').data("kendoDatePicker").value(new Date(start.setDate(start.getDate() + 7)));
-            }
-
-			// 종료일 역치 제한
-            if(new Date($('#start-picker01').val()) > new Date($('#end-picker01').val())){
-              alert("시작일은 종료일보다 늦을 수 없습니다.\n종료일은 시작일보다 빠를 수 없습니다.");
-               $('#start-picker01').data("kendoDatePicker").value(new Date($('#end-picker01').val()));
-            }
-            
-            var grid = $('#grid').data('kendoGrid');
-            grid.dataSource.page(1);
+            } else if(new Date(param.startDtTm) > new Date(param.endDtTm)){  // 종료일 역치 제한
+              alert("종료일시가 시작일시보다 빠를 수 없습니다.");
+               $("#start-picker01").data("kendoDatePicker").value(new Date(end));
+               $("#start-timePicker01").data("kendoTimePicker").value($("#end-timePicker01").val())
+            } else {
+	            var grid = $('#grid').data('kendoGrid');
+	            grid.dataSource.page(1);
+			}
 		}
     };
 
