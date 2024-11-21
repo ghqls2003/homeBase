@@ -23,7 +23,8 @@
 			use_yn,
 			ownr_nm,
 			crno,
-			fvrts.reg_yn
+			fvrts.reg_yn,
+			use_srhld
 		from
 			dqvs.dvs_rac_mt_car as car
 		left join (select vin
@@ -68,9 +69,7 @@
 		joinDefect AS (
 		SELECT 
 			DISTINCT joinAgency.*,
-			CASE WHEN defect.vin IS NOT NULL THEN 'Y' ELSE 'N' END AS defect_yn,
-			defect.defects_cn,
-			actn_yn
+			CASE WHEN defect.vin IS NOT NULL THEN 'Y' ELSE 'N' END AS defect_yn
 		FROM 
 			joinAgency
 		LEFT JOIN dqvs.dvs_rac_mt_defect AS defect ON
@@ -88,7 +87,7 @@
 				    </when>
 	
 				    <when test='searchChk == "location" and regCmptncCd != "" and regCmptncCd != null'>
-				        AND sgg_cd LIKE CONCAT(#{regCmptncCd}, '%')
+				        AND use_srhld LIKE CONCAT(#{regCmptncCd}, '%')
 				    </when>
 				</choose>
 			</if>
@@ -153,7 +152,7 @@
 				        </when>
 				        
 				        <when test='searchChk == "location" and searchCol != "vhclRegNoFull"'>
-				            AND sgg_cd LIKE CONCAT(#{regCmptncCd}, '%')
+				            AND use_srhld LIKE CONCAT(#{regCmptncCd}, '%')
 				        </when>
 					</choose>
 			    </when>
