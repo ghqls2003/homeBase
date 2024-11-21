@@ -72,6 +72,12 @@ button.red_btn:hover {
     	height: 42px !important;
     	width: 123px !important;
     }
+    #areaGrid > div.nameBox > div:nth-child(1) {
+        /* display: flex; */
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: center;
+ }
 }
 #se1 {
 	width: 17px;

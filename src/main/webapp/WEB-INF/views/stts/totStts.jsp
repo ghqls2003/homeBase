@@ -5,7 +5,7 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath }" />
 <script src="${contextPath}/js/stts/totStts.js"></script>
 <link rel="stylesheet" type="text/css" href="${contextPath}/css/custom/mainView.css" />
-<link rel="stylesheet" type="text/css" href="${contextPath}/css/custom/toStts.css" />
+<link rel="stylesheet" type="text/css" href="${contextPath}/css/custom/totStts.css" />
 <script src="${contextPath}/ext-lib/kendoui.for.jquery.2021.3.1207.commercial/js/jszip.min.js"></script>
 
 <script>

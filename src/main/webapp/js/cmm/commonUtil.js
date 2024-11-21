@@ -1561,13 +1561,11 @@ function excelDownAjax(excelPath, downFormName, fileNm) {
 
 /**
  * @name			: kendoExcelAOPAcc
- * @description	: kendoExcelExport AOP 접근제어 테스트중
+ * @description	: kendoExcelExport AOP 접근제어
  * @date				: 2024. 11. 04
  * @author			: 김경룡
  */
 function kendoExcelAOPAcc(a_data, accUrl) {
-	console.log('연결')
-	console.log(sessionMenuId)
 	return new Promise((resolve, reject) => {
 		syncAjax(false, false, contextPath + "/cmmn/selectPrvYn", "", "", {menuCd: sessionMenuId}, function(result) {
 	        if (result != null) {  // 여기 조건문 메뉴ID가 없으면 에러날수있음. 체크 필요
