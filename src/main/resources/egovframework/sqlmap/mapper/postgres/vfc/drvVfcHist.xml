@@ -8,6 +8,8 @@
 		SELECT main.* 
         FROM
         		(
+				WITH w_vi AS (SELECT COALESCE(vi.sso_user_nm, vi.onepass_user_nm, NULL) user_nm, vi.user_sn FROM dqvs.v_intg_user_info vi)
+					, w_agency AS (SELECT co_nm, bzmn_sn, brno FROM dqvs.dvs_rac_mt_agency)
 				SELECT ROW_NUMBER() OVER(ORDER BY verf.vrfc_dmnd_dt DESC) SN
 					, verf.vrfc_dmnd_dt
 					, CASE WHEN verf.vrfc_mthd = '4' THEN REPEAT('*', LENGTH(vi.user_nm))
@@ -26,12 +28,8 @@
                     , agency.co_nm
                 FROM
                 	dqvs.dvs_dqv_hs_verf_old verf
-				LEFT OUTER JOIN
-                	(SELECT COALESCE(vi.sso_user_nm, vi.onepass_user_nm, NULL) user_nm, vi.user_sn FROM dqvs.v_intg_user_info vi) AS vi
-                ON verf.rqstr_sn = vi.user_sn
-                LEFT OUTER JOIN
-                	(SELECT co_nm, bzmn_sn, brno FROM dqvs.dvs_rac_mt_agency) AS agency
-                ON verf.bzmn_sn = agency.bzmn_sn
+				LEFT OUTER JOIN w_vi AS vi ON verf.rqstr_sn = vi.user_sn
+                LEFT OUTER JOIN w_agency AS agency ON verf.bzmn_sn = agency.bzmn_sn
                 <!-- 조회조건 -->
                 WHERE verf.vrfc_dmnd_dt BETWEEN #{startDtTm}::TIMESTAMP AND #{endDtTm}::TIMESTAMP
                 <if test="vrfcMthd != null and vrfcMthd != ''">
@@ -105,15 +103,13 @@
     <!-- 운전자격확인이력 건수 조회 개선 -->
     <select id="listViewCnt" resultType="int">
     /* 운전자격확인이력 건수 */
-        SELECT COUNT(1) AS cnt
-        FROM
-        	dqvs.dvs_dqv_hs_verf_old verf
-        LEFT OUTER JOIN
-			(SELECT COALESCE(vi.sso_user_nm, vi.onepass_user_nm, NULL) user_nm, vi.user_sn FROM dqvs.v_intg_user_info vi) AS vi
-		ON verf.rqstr_sn = vi.user_sn
-        LEFT OUTER JOIN
-        	(SELECT co_nm, bzmn_sn, brno FROM dqvs.dvs_rac_mt_agency) AS agency
-        ON verf.bzmn_sn = agency.bzmn_sn
+        WITH w_vi AS (SELECT COALESCE(vi.sso_user_nm, vi.onepass_user_nm, NULL) user_nm, vi.user_sn FROM dqvs.v_intg_user_info vi)
+			, w_agency AS (SELECT co_nm, bzmn_sn, brno FROM dqvs.dvs_rac_mt_agency)
+		SELECT COUNT(1) AS cnt
+		FROM
+			dqvs.dvs_dqv_hs_verf_old verf
+		LEFT OUTER JOIN w_vi AS vi ON verf.rqstr_sn = vi.user_sn
+        LEFT OUTER JOIN w_agency AS agency ON verf.bzmn_sn = agency.bzmn_sn
         <!-- 조회조건 -->
 		WHERE verf.vrfc_dmnd_dt BETWEEN #{startDtTm}::TIMESTAMP AND #{endDtTm}::TIMESTAMP
         <if test="vrfcMthd != null and vrfcMthd != ''">
