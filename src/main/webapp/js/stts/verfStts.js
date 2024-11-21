@@ -258,100 +258,111 @@
 					$(".excelDownBtn").attr("disabled", false);
 				},
                 excel: { allPages: true },
-                excelExport : function(e){
+                excelExport : async function(e){
 					if($("#verfResult-grid").data("kendoGrid").dataSource.total() == 1) {
 						e.preventDefault();
 						alert("데이터가 없어 다운로드를 할 수 없습니다.");
 					} else {
+						e.preventDefault();
 						
-//						/* 테이블 강제주입 테스트 */
-//						var sheet = e.workbook.sheets[0];
-//                
-//                		// 랜덤값
-//		                var values = {
-//		                    cd_tot: 50, cd_nrml: 30, cd_ab_nrml: 20,
-//		                    cd01: 5, cd02: 4, cd03: 3, cd04: 2,
-//		                    cd11: 1, cd12: 0, cd13: 2, cd14: 1,
-//		                    cd21: 4, cd22: 3, cd23: 2, cd24: 1, cd25: 0,
-//		                    cd31: 3, cd51: 2
-//		                };
-//		
-//		                // Create the custom header with dynamic values
-//		                var customHeader = [
-//		                    {
-//		                        cells: [
-//		                            { value: "총 건수", rowSpan: 2 },
-//		                            { value: "정상", rowSpan: 2 },
-//		                            { value: "비정상 (전체)", rowSpan: 2 },
-//		                            { value: "비정상 항목상세", rowSpan: 4 },
-//		                            { value: "면허정보없음" },
-//		                            { value: "재발급된면허" },
-//		                            { value: "분실된면허" },
-//		                            { value: "사망취소된면허" },
-//		                            { value: "취소된면허" },
-//		                            { value: "정지된면허" },
-//		                            { value: "기간중취소면허" },
-//		                            { value: "기간중정지면허" }
-//		                        ]
-//		                    },
-//		                    {
-//		                        cells: [
-//		                            { value: values.cd01 }, { value: values.cd02 }, { value: values.cd03 },
-//		                            { value: values.cd04 }, { value: values.cd11 }, { value: values.cd12 },
-//		                            { value: values.cd13 }, { value: values.cd14 }
-//		                        ]
-//		                    },
-//		                    {
-//		                        cells: [
-//		                            { value: values.cd_tot, rowSpan: 2 },
-//		                            { value: values.cd_nrml, rowSpan: 2 },
-//		                            { value: values.cd_ab_nrml, rowSpan: 2 },
-//		                            { value: "정보불일치(이름)" },
-//		                            { value: "정보불일치(생년월일)" },
-//		                            { value: "정보불일치(암호일련번호)" },
-//		                            { value: "정보불일치(종별)" },
-//		                            { value: "필수값누락(대여기간)" },
-//		                            { value: "암호화안된면허" },
-//		                            { value: "검증실패" }
-//		                        ]
-//		                    },
-//		                    {
-//		                        cells: [
-//		                            { value: values.cd21 }, { value: values.cd22 }, { value: values.cd23 },
-//		                            { value: values.cd24 }, { value: values.cd25 }, { value: values.cd31 },
-//		                            { value: values.cd51 }
-//		                        ]
-//		                    }
-//		                ];
-//		                // Insert the custom header at the top of the sheet
-//		                sheet.rows.splice(0, 0, ...customHeader);
-                
-                
-                
-                
-                
-                
+						var a_data = e.data;
+						var accUrl = "/stts/verfStts/excelDown";
+						var success = await kendoExcelAOPAcc(a_data, accUrl);
 						
-						var sheet = e.workbook.sheets[0];
-						var columnVal = sheet.rows[0].cells;
-						
-						// 엑셀에 HTML태그가 표시되어서 모든 열 타이틀에서 HTML 태그 제거
-				        for(var i=0; i<columnVal.length; i++) {
-							columnVal[i].value = columnVal[i].value.replace(/<[^>]+>/g, '');
-						}
-						// 엑셀에 천자리 콤마. 쿼리에서 처리할 수도 있음
-						for(var i=0; i<sheet.rows.length; i++) {
-							for(var j=0; j<sheet.rows[i].cells.length; j++) {
-								if(sheet.rows[i].cells[j].value > 999) {
-									sheet.rows[i].cells[j].value = FormatNumber(sheet.rows[i].cells[j].value);
-								} else {
-									sheet.rows[i].cells[j].value = sheet.rows[i].cells[j].value.toString();
+						if(success) {
+							var sheet = e.workbook.sheets[0];
+							var columnVal = sheet.rows[0].cells;
+							
+							// 엑셀에 HTML태그가 표시되어서 모든 열 타이틀에서 HTML 태그 제거
+					        for(var i=0; i<columnVal.length; i++) {
+								columnVal[i].value = columnVal[i].value.replace(/<[^>]+>/g, '');
+							}
+							// 엑셀에 천자리 콤마. 쿼리에서 처리할 수도 있음
+							for(var i=0; i<sheet.rows.length; i++) {
+								for(var j=0; j<sheet.rows[i].cells.length; j++) {
+									if(sheet.rows[i].cells[j].value > 999) {
+										sheet.rows[i].cells[j].value = FormatNumber(sheet.rows[i].cells[j].value);
+									} else {
+										sheet.rows[i].cells[j].value = sheet.rows[i].cells[j].value.toString();
+									}
 								}
 							}
-						}
-						
-						e.workbook.fileName = "운전자격확인 사업자별 통계("+resultExcelMonth+/*"~"+resultExcelMonth2+*/").xlsx";
-						e.workbook.sheets[0].title = "운전자격확인결과";
+							
+							/* 종합 테이블 강제주입 */
+							// 종합표 값
+							var val = a_data[e.data.length-1];
+							var values = {
+							    cd_tot: FormatNumber(val.tot), cd_nrml: FormatNumber(val.cd00), cd_ab_nrml: FormatNumber((val.tot-val.cd00)),
+							    cd01: FormatNumber(val.cd01), cd02: FormatNumber(val.cd02), cd03: FormatNumber(val.cd03), cd04: FormatNumber(val.cd04),
+							    cd11: FormatNumber(val.cd11), cd12: FormatNumber(val.cd12), cd13: FormatNumber(val.cd13), cd14: FormatNumber(val.cd14),
+							    cd21: FormatNumber(val.cd21), cd22: FormatNumber(val.cd22), cd23: FormatNumber(val.cd23), cd24: FormatNumber(val.cd24),
+							    cd25: FormatNumber(val.cd25), cd31: FormatNumber(val.cd31), cd51: FormatNumber(val.cd51)
+							};
+							
+							// 두 번째 시트를 생성하고 데이터 추가
+							var secondSheet = {
+							    title: "운전자격확인결과표(종합)",
+							    rows: [
+							        {
+							            cells: [
+							                { value: "총 건수", rowSpan: 2, background: "#f5f8fe" },
+							                { value: "정상", rowSpan: 2, background: "#f5f8fe" },
+							                { value: "비정상\n(전체)", rowSpan: 2, background: "#f5f8fe", wrap: true },
+							                { value: "비정상\n항목상세", rowSpan: 4, background: "#e4e8f0", wrap: true },
+							                { value: "면허정보없음", background: "#e4e8f0" },
+							                { value: "재발급된면허", background: "#e4e8f0" },
+							                { value: "분실된면허", background: "#e4e8f0" },
+							                { value: "사망취소된면허", background: "#e4e8f0" },
+							                { value: "취소된면허", background: "#e4e8f0" },
+							                { value: "정지된면허", background: "#e4e8f0" },
+							                { value: "기간중취소면허", background: "#e4e8f0" },
+							                { value: "기간중정지면허", background: "#e4e8f0" }
+							            ]
+							        },
+							        {
+							            cells: [
+							                { value: values.cd01 }, { value: values.cd02 }, { value: values.cd03 },
+							                { value: values.cd04 }, { value: values.cd11 }, { value: values.cd12 },
+							                { value: values.cd13 }, { value: values.cd14 }
+							            ]
+							        },
+							        {
+							            cells: [
+							                { value: values.cd_tot, rowSpan: 2 },
+							                { value: values.cd_nrml, rowSpan: 2 },
+							                { value: values.cd_ab_nrml, rowSpan: 2 },
+							                { value: "정보불일치(이름)", background: "#e4e8f0" },
+							                { value: "정보불일치(생년월일)", background: "#e4e8f0" },
+							                { value: "정보불일치(암호일련번호)", background: "#e4e8f0" },
+							                { value: "정보불일치(종별)", background: "#e4e8f0" },
+							                { value: "필수값누락(대여기간)", background: "#e4e8f0" },
+							                { value: "암호화안된면허", background: "#e4e8f0" },
+							                { value: "검증실패", background: "#e4e8f0" }
+							            ]
+							        },
+							        {
+							            cells: [
+							                { value: values.cd21 }, { value: values.cd22 }, { value: values.cd23 },
+							                { value: values.cd24 }, { value: values.cd25 }, { value: values.cd31 },
+							                { value: values.cd51 }
+							            ]
+							        }
+							    ]
+							};
+							
+							// 두 번째 시트를 추가
+							e.workbook.sheets.push(secondSheet);
+
+
+							
+							e.workbook.fileName = "운전자격확인 사업자별 통계("+resultExcelMonth+/*"~"+resultExcelMonth2+*/").xlsx";
+							e.workbook.sheets[0].title = "운전자격확인결과(상세)";
+							
+							kendo.saveAs({
+								dataURI: new kendo.ooxml.Workbook(e.workbook).toDataURL(),
+				                   fileName: e.workbook.fileName
+						    });
+						}						
 					}
 				}
 			});

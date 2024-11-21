@@ -5,8 +5,6 @@
 	<!-- 자격검증통계(시간별) -->
 	<select id="verfCount" parameterType="paraMap" resultType="resultMap">
 	/* 자격검증통계 카운트(시간별) */
-	
-	<!-- 신규 작업중 -->
 		SELECT dt_use
 			, dt
 			, '1' nrml
