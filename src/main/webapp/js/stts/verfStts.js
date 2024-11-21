@@ -89,8 +89,6 @@
 						e.preventDefault();
 						alert("데이터가 없어 다운로드를 할 수 없습니다.");
 					} else {
-						
-						// 켄도 aop 테스트 중
 						e.preventDefault();
 						
 						var a_data = e.data;

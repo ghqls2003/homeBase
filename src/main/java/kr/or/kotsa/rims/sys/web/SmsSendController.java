@@ -1,6 +1,7 @@
 package kr.or.kotsa.rims.sys.web;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -124,30 +125,17 @@ public class SmsSendController extends CmmnAbstractServiceImpl{
 	}
 	
 	/**
-     * 문자발송 이력 엑셀다운로드
+     * 문자발송이력 켄도엑셀다운로드
      * @param
      * @return
      * @throws RimsException
      */
-	@PostMapping("/smsSend/excelDown")
-    public GenericExcelView excelDown(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
+	@RequestMapping("/smsSend/excelDown")
+	@ResponseBody
+    public Map<String, Object> excelDown(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
                                       HttpServletRequest request, HttpServletResponse response) throws RimsException {
-		paramsMap.put("userSn", getUserSn());
-		String fileName = "smsSend" + (new java.text.SimpleDateFormat("yyyyMMddHHmmss")).format(new java.util.Date());
-        String colName[] = {"순번", "내용", "발송등록일", "발송일", "수신자명", "연락처"};
-        String valName[] = {"rn", "cn", "sndng_dt", "sndng_rsvt_dt", "rcvr", "rcvr_telno"};
-
-
-        List<Map<String, Object>> colValue = SmsSendDao.selectSmsSendInfo(paramsMap);
-		int total = SmsSendDao.selectSmsSendInfoCnt(paramsMap);
-
-        modelMap.put("excelName", fileName);
-        modelMap.put("colName", colName);
-        modelMap.put("valName", valName);
-        modelMap.put("colValue", colValue);
-        paramsMap.put("total", total);
-
-        return new GenericExcelView();
+		Map<String, Object> result = new HashMap<>();
+		return result;
     }
 	
 

@@ -5,6 +5,7 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath }" />
 
 <script src="${contextPath}/js/sys/smsSend.js"></script>
+<script src="${contextPath}/ext-lib/kendoui.for.jquery.2021.3.1207.commercial/js/jszip.min.js"></script>
 
 <script>
     var authrtCd = '${authrtCd}';

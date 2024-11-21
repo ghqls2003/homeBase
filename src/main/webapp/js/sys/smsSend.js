@@ -353,6 +353,13 @@
 		
 		// 발송 이력 그리드
 		smsSendInfo: function(){
+			// 초기 파라미터값 세팅
+			excelDownArc.dateType = $("#dateType").val();
+			excelDownArc.startDt = $("#start-picker01").val();
+			excelDownArc.endDt = $("#end-picker01").val();
+			excelDownArc.sendType = $("#sendType").val();
+			excelDownArc.searchType = $("#searchType").val();
+			excelDownArc.searchWrd = $("#searchWrd").val();
 			$("#smsSendGrid").kendoGrid({
 				dataSource: {
 					data: null,
@@ -367,13 +374,12 @@
 							},
 						},
 						parameterMap: function(options){
-							options.dateType = $("#dateType").val();
-							options.startDt = $("#start-picker01").val();
-							options.endDt = $("#end-picker01").val();
-							options.sendType = $("#sendType").val();
-							options.searchType = $("#searchType").val();
-							options.searchWrd = $("#searchWrd").val();
-							
+							options.dateType = excelDownArc.dateType
+							options.startDt = excelDownArc.startDt
+							options.endDt = excelDownArc.endDt
+							options.sendType = excelDownArc.sendType
+							options.searchType = excelDownArc.searchType
+							options.searchWrd = excelDownArc.searchWrd
 							return JSON.stringify(options);
 						}
 					},
@@ -401,6 +407,30 @@
 					{ field: "rcvr", title: "수신자명", width: "100px", template: "#= rcvr != null ? rcvr : '-' #", sortable: true },
 					{ field: "rcvr_telno", title: "연락처", width: "100px", template: "#= rcvr_telno != null ? $smsSend.ui.telnoFormat(rcvr_telno) : '-' #", sortable: true },
 				],
+				excelExport: async function(e) {
+					if($("#smsSendGrid").data("kendoGrid").dataSource.total() == 0) {
+						e.preventDefault();
+						alert("데이터가 없어 다운로드를 할 수 없습니다.");
+					} else {
+						e.preventDefault();
+						
+						var a_data = e.data;
+						var accUrl = "/sys/smsSend/excelDown";
+						var success = await kendoExcelAOPAcc(a_data, accUrl);
+						
+						if(success) {
+							e.workbook.fileName = "문자발송이력.xlsx";
+							e.workbook.sheets[0].title = "문자발송이력";
+								
+							kendo.saveAs({
+								dataURI: new kendo.ooxml.Workbook(e.workbook).toDataURL(),
+				                   fileName: e.workbook.fileName
+						    });
+						} else {
+							alert("엑셀다운로드에 실패하였습니다.");
+						}
+					}
+				},
 				scrollable: true,
 				editable: false,
 				resizable: true,
@@ -709,23 +739,6 @@
 		    return date;
 		},
 
-		excelDownBtn: function() {
-			var totalRowCount = $("#smsSendGrid").data("kendoGrid").dataSource.total();
-			if(totalRowCount == 0) {
-				alert("데이터가 존재하지 않습니다.");
-			} else {
-				if(Object.keys(excelDownArc).length === 0) {
-					excelDownArc.dateType = $("#dateType").val();
-					excelDownArc.startDt = $("#start-picker01").val();
-					excelDownArc.endDt = $("#end-picker01").val();
-					excelDownArc.sendType = $("#sendType").val();
-					excelDownArc.searchType = $("#searchType").val();
-					excelDownArc.searchWrd = $("#searchWrd").val();
-				}
-				excelDown("/sys/smsSend/excelDown", excelDownArc, "smsSendInfo", totalRowCount);
-			}
-        },
-
 		setUIEvent: function() {
 			// 그룹별 작동
 			$('input[name="selec_target"]').on('change', function() {
@@ -979,7 +992,7 @@
 		    });
 
 			$(".excelDownBtn").on("click", function() {
-            	$smsSend.event.excelDownBtn();
+            	$("#smsSendGrid").data("kendoGrid").saveAsExcel();
         	});
 
 			$("#inc_selec_01").on("change",function(){
