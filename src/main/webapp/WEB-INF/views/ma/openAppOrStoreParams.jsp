@@ -24,7 +24,7 @@
 	
 	            setTimeout(function() {
 	                if (!document.webkitHidden || !document.hidden) {
-	                    window.location.href = "https://apps.apple.com/kr/app/해양교통안전정보/id6462842483"; 
+	                    window.location.href = "https://apps.apple.com/kr/app/운전자격확인시스템/id6462968145"; 
 	                }
 	            }, 1000);
 	        } else if (/android/i.test(userAgent)) {
