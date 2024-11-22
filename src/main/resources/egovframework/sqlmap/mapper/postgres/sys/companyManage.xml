@@ -778,6 +778,7 @@
 <!-- 				, COALESCE(defect.defects_type_cd, '-') defects_type_cd -->
 <!-- 				, COALESCE(defect.prcs_stts_cd, '-') prcs_stts_cd -->
 				, COALESCE(TO_CHAR(car.reg_dt, 'YYYY-MM-DD'), '-') reg_dt
+				, CASE WHEN defect.vin IS NOT NULL THEN 'Y' ELSE 'N' END AS defect_yn
 			FROM 
 				dqvs.dvs_rac_mt_car car
 			LEFT OUTER JOIN

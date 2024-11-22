@@ -614,7 +614,7 @@
 					{template: "#=modelYear #", title: "연식", field: "modelYear"},
 					{template: "#=useYn #", title: "사용여부", field: "useYn"},
 					{template: "#=sttscd #", title: "차량상태", field: "sttscd"},
-//					{template: "#=prcsSttsCd #", title: "결함여부", field: "prcsSttsCd"},
+					{template: "#=defectYn #", title: "결함여부", field: "defectYn"},
 					{template: "#=regDt #", title: "최초등록일", width: 130, field: "regDt"},
 				],
 				navigatable: true,
