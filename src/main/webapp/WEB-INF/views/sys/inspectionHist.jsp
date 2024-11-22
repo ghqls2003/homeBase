@@ -4,10 +4,9 @@
 <%@ taglib prefix="sec"	uri="http://www.springframework.org/security/tags"%>
 <c:set var="contextPath" value="${pageContext.request.contextPath }" />
 
-
 <script src="${contextPath}/js/sys/inspectionHist.js"></script>
-<link rel="stylesheet" type="text/css"
-	href="${contextPath}/css/custom/inspectionHist.css" />
+<script src="${contextPath}/ext-lib/kendoui.for.jquery.2021.3.1207.commercial/js/jszip.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${contextPath}/css/custom/inspectionHist.css" />
 	
 <script>
     var authrtCd = '${authrtCd}';

@@ -354,6 +354,14 @@
 		},
 		
 		inspectionHistInfo: function() {
+			// 초기 파라미터값 세팅
+			excelDownArc.cmptncZoneCd = $("#searchCtpvNm").val()+$("#searchSggNm").val();
+			excelDownArc.searchChk    = $("input[name='searchChk']:checked").val();
+			excelDownArc.bzmnSeCd     = $('#searchBzmnSeCd').val();
+			excelDownArc.bsnSttsCd    = $('#searchBsnSttsCd').val();
+			excelDownArc.chckRslt     = $('#searchRslt').val();
+			excelDownArc.selectCond   = $("#selectCond").val();
+			excelDownArc.searchWrd    = $('#searchWrd').val().trim();
 			$("#inspectionHistGrid").kendoGrid({
 				dataSource: {
 					data: null,
@@ -368,16 +376,13 @@
 							}
 						},
 						parameterMap: function(options) {
-							var sd = $("#searchCtpvNm").val();
-							var sgg = $("#searchSggNm").val();
-							
-							options.searchChk    = $("input[name='searchChk']:checked").val();
-							options.cmptncZoneCd = sd+sgg;
-							options.bzmnSeCd     = $('#searchBzmnSeCd').val();
-							options.bsnSttsCd    = $('#searchBsnSttsCd').val();
-							options.chckRslt     = $('#searchRslt').val();
-							options.selectCond   = $('#selectCond').val();
-							options.searchWrd    = $('#searchWrd').val().trim();
+							options.searchChk         = excelDownArc.searchChk
+							options.cmptncZoneCd 	= excelDownArc.cmptncZoneCd
+							options.bzmnSeCd        	= excelDownArc.bzmnSeCd
+							options.bsnSttsCd   		= excelDownArc.bsnSttsCd
+							options.chckRslt     		= excelDownArc.chckRslt
+							options.selectCond   		= excelDownArc.selectCond
+							options.searchWrd    		= excelDownArc.searchWrd
 							
 							return JSON.stringify(options);
 						}
@@ -404,6 +409,30 @@
 					{ field: "chckRslt", title: "결과", width: "30px", template: "#= chckRslt != null ? chckRslt : '-' #", sortable: true },
 					{ title: "결과서", width: "30px", exportable: false, template: "<button class='gray_btn' style='width: 70px;height: 30px;' onclick='javascript:$inspectionHist.event.issued(`#:bzmnSn#&#:regDt#`);'>발급</button>" },
 				],
+				excelExport: async function(e) {
+					if($("#inspectionHistGrid").data("kendoGrid").dataSource.total() == 0) {
+						e.preventDefault();
+						alert("데이터가 없어 다운로드를 할 수 없습니다.");
+					} else {
+						e.preventDefault();
+						
+						var a_data = e.data;
+						var accUrl = "/sys/inspectionHist/excelDown";
+						var success = await kendoExcelAOPAcc(a_data, accUrl);
+						
+						if(success) {
+							e.workbook.fileName = "지도점검이력.xlsx";
+							e.workbook.sheets[0].title = "지도점검이력";
+								
+							kendo.saveAs({
+								dataURI: new kendo.ooxml.Workbook(e.workbook).toDataURL(),
+				                   fileName: e.workbook.fileName
+						    });
+						} else {
+							alert("엑셀다운로드에 실패하였습니다.");
+						}
+					}
+				},
 				navigatable: true,
 				scrollable: true,
 				pageable: {
@@ -527,7 +556,7 @@
 
 			//엑셀 다운로드 버튼
 			$(".excelDownBtn").on("click", function() {
-            	$inspectionHist.event.excelDownBtn();
+            	$("#inspectionHistGrid").data("kendoGrid").saveAsExcel();
         	});
 			
 			//수정 버튼
@@ -908,26 +937,6 @@
 			}
 
 		},
-		
-		excelDownBtn: function() {
-			var totalRowCount = $("#inspectionHistGrid").data("kendoGrid").dataSource.total();
-			if(totalRowCount == 0) {
-				alert("데이터가 존재하지 않습니다.");
-			} else {
-				if(Object.keys(excelDownArc).length === 0) {
-					var sd = $("#searchCtpvNm").val();
-					var sgg = $("#searchSggNm").val();
-					excelDownArc.cmptncZoneCd = sd+sgg;
-					excelDownArc.searchChk    = $("input[name='searchChk']:checked").val();
-					excelDownArc.bzmnSeCd     = $('#searchBzmnSeCd').val();
-					excelDownArc.bsnSttsCd    = $('#searchBsnSttsCd').val();
-					excelDownArc.chckRslt     = $('#searchRslt').val();
-					excelDownArc.selectCond   = $("#selectCond").val();
-					excelDownArc.searchWrd    = $('#searchWrd').val().trim();
-				}
-				excelDown("/sys/inspectionHist/excelDown", excelDownArc, "inspectionHist", totalRowCount);
-			}
-        },
 
 		updateBtn : function(){
 			var params ={};

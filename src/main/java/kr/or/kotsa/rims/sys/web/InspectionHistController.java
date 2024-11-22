@@ -1,6 +1,7 @@
 package kr.or.kotsa.rims.sys.web;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,11 +41,12 @@ public class InspectionHistController extends CmmnAbstractServiceImpl{
 		
  		String [] validAuth = {"Z01", "K01", "M01", "G01"};
 		if(Arrays.asList(validAuth).contains(getAuthrtCd())) {
+			mav.setViewName("sys/inspectionHist");
+			mav.addObject("userCmptncZoneCd", getCmptncZoneCd()); // 관할지
 		} else {
 			mav.setViewName("redirect:/");
 		}		
 		
-		mav.addObject("userCmptncZoneCd", getCmptncZoneCd()); // 관할지
 		
 		return mav;
 	}
@@ -104,25 +106,13 @@ public class InspectionHistController extends CmmnAbstractServiceImpl{
 	
 	
 	//엑셀다운
-	@PostMapping("/inspectionHist/excelDown")
-    public GenericExcelView excelDown(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
+	@RequestMapping("/inspectionHist/excelDown")
+	@ResponseBody
+    public Map<String, Object> excelDown(@RequestBody Map<String, Object> paramsMap, Map<String, Object> modelMap,
                                       HttpServletRequest request, HttpServletResponse response) throws RimsException {
 
-		String fileName = "inspectionHist" + (new java.text.SimpleDateFormat("yyyyMMddHHmmss")).format(new java.util.Date());
-        String colName[] = {"순번", "회사명", "관할지역", "지도원", "권한", "사업자등록번호", "법인등록번호", "점검일", "점검결과"};
-        String valName[] = {"rn", "coNm", "jurisdiction", "exmnrs", "bzmnSeNm", "brno", "crno", "chckYmd", "chckRslt"};
-
-
-        List<Map<String, Object>> colValue = inspectionHistDao.selectInspectionHistInfo(paramsMap);
-		int total = inspectionHistDao.selectInspectionHistInfoCnt(paramsMap);
-
-        modelMap.put("excelName", fileName);
-        modelMap.put("colName", colName);
-        modelMap.put("valName", valName);
-        modelMap.put("colValue", colValue);
-        paramsMap.put("total", total);
-
-        return new GenericExcelView();
+		Map<String, Object> result = new HashMap<>();
+		return result;
     }
 	
 	//지도점검이력 수정
