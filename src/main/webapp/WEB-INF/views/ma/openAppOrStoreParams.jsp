@@ -8,16 +8,13 @@
 // 		$("#forcingClick").click();
 	});
 	    function openAppOrStore() {
-	        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-	
-	        const url = new URLSearchParams(window.location.search);
-	        url.set('rentNo', 'R24-000927638');
-	
+	    	var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+		        
+	        const url = new URL(window.location.href);
+
 	        var rentNo = null;
 	
-	        url.get('rentNo') != null ? rentNo = url.get('rentNo') : rentNo;
-	
-	        console.log(rentNo);
+	        url.searchParams.get('rentNo') != null ? rentNo = url.searchParams.get('rentNo') : rentNo;
 	
 	        if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
 	            window.location = "rimsapp://?rentNumber="+rentNo;
