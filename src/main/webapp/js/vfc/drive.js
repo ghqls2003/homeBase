@@ -69,11 +69,10 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
     // 차량결함 그리드 컬럼
 	var defectColumns =[
                     { field: "rn", title: "순번", width:"50px", template: "#= !rn ? '' : rn #" },
-                    { field: "vhclRegNo", title: "차량등록번호", width: "100px", template: "#= !vhclRegNo ? '-' : vhclRegNo #"},
-                    { field: "ownrNm", title: "회사명", width: "100px", template: "#= !ownrNm ? '-': ownrNm #" },
-                    { field: "ocrnDt", title: "발생일시", width: "150px",  template:"#= !ocrnDt ? '-': ocrnDt #"},
-//                    { field: "defectsCn", title: "결함내용", width: "150px", attributes: {"class": "table-cell ",style: "white-space: normal;text-align: left;" }, template:"#= !defectsCn ? '-': defectsCn #"},
-                    { field: "defectsCn", title: "결함내용", width: "150px", template:"#= !defectsCn ? '-': defectsCn #"},
+                    { field: "vhclRegNo", title: "차량등록번호", width: "90px", template: "#= !vhclRegNo ? '-' : vhclRegNo #"},
+                    { field: "ownrNm", title: "회사명", width: "120px", template: "#= !ownrNm ? '-': ownrNm #" },
+                    { field: "ocrnDt", title: "발생일시", width: "130px",  template:"#= !ocrnDt ? '-': ocrnDt #"},
+                    { field: "defectsCn", title: "결함내용", width: "170px", template:"#= !defectsCn ? '-': defectsCn #"},
 					{ field: "actnYn", title: "조치여부", width: "40px", template: "#= !actnYn ? '-' : actnYn #", hidden:true},
     ];
 
@@ -363,11 +362,11 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                 },
                 columns: [
                     { title: "순번", width: "40px", field: "rn", template: "#: rn #" },
-                    //					 {title: "결함유형", width: "60px", field: "defectNm", template: "#: defectNm #" },
-                    {title: "발생일시", width: "100px", field: "ocrnDt", template: "#: ocrnDt #"},
-                    {title: "결함내용", width: "150px", field: "defectsCn", template: "#: defectsCn #"},
+                    {title: "발생일시", width: "100px", field: "ocrnDt", attributes: {"class": "table-cell ",style: "white-space: normal;text-align: center;" }, template: "#: ocrnDt #"},
+                    {title: "결함내용", width: "150px", field: "defectsCn", attributes: {"class": "table-cell ",style: "white-space: normal;text-align: center;" }, template: "#: defectsCn #"},
                     {title: "조치여부", width: "60px", field: "actnYn",	template: "#: actnYn #"},
                 ],
+
                 scrollable: true,
                 editable: false,
                 resizable: true,
