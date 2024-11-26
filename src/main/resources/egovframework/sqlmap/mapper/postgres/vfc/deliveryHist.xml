@@ -86,6 +86,9 @@
             <when test='authrtCd.equals("S01")'> <!-- 주사무소관리자면 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
                 WHERE viui.bzmn_sn IN (select bzmn_sn from dqvs.dvs_rac_mt_agency where up_brno = #{bzmnSn} or bzmn_sn = #{bzmnSn})
             </when>
+            <when test='authrtCd.equals("S05")'> <!-- 주사무소관리자면 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
+                WHERE viui.bzmn_sn IN (select bzmn_sn from dqvs.dvs_rac_mt_agency where up_brno = #{bzmnSn} or bzmn_sn = #{bzmnSn})
+            </when>
             <when test='authrtCd.equals("S02")'> <!-- 영업소관리자면 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시 -->
                 WHERE viui.bzmn_sn = #{bzmnSn}
             </when>
