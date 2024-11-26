@@ -261,8 +261,11 @@
 			//예 cd = "verify_cd_test"
 			var ckResults = $("#ckResults").val();
 			codeType = ckResults.split("_")[0];
-			var cd = ckResults.split("_")[2];
-
+			if (ckResults.includes("verify_cd")) {
+			   var cd = ckResults.split("_")[2];
+			} else {
+			   var cd = ckResults.split("_")[3];
+			}
 			param.vrfcMthd = $("#searchMthd").val();
 			param.bzmnSnKwd = $("#searchCoNm").val();
 			param.startDtTm = startDtTm;

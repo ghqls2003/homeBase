@@ -27,7 +27,7 @@
                     		END verify_nm
                     , agency.co_nm
                 FROM
-                	dqvs.dvs_dqv_hs_verf_old verf
+                	dqvs.dvs_dqv_hs_verf verf
 				LEFT OUTER JOIN w_vi AS vi ON verf.rqstr_sn = vi.user_sn
                 LEFT OUTER JOIN w_agency AS agency ON verf.bzmn_sn = agency.bzmn_sn
                 <!-- 조회조건 -->
@@ -69,7 +69,7 @@
 								                        )
                     </when>
                     <when test='authrtCd.equals("S01")'> <!-- 주사무소관리자면 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
-                        AND verf.bzmn_sn IN (SELECT a.bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE a.up_brno = #{bzmnSn} OR a.bzmn_sn = #{bzmnSn})
+                        AND verf.bzmn_sn IN (SELECT a.bzmn_sn FROM dqvs.dvs_rac_mt_agency a WHERE a.up_brno = #{bzmnSn} OR a.bzmn_sn = #{bzmnSn})
                     </when>
                     <when test='authrtCd.equals("S02")'> <!-- 영업소관리자면 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시 -->
                         AND verf.bzmn_sn = #{bzmnSn}
@@ -107,7 +107,7 @@
 			, w_agency AS (SELECT co_nm, bzmn_sn, brno FROM dqvs.dvs_rac_mt_agency)
 		SELECT COUNT(1) AS cnt
 		FROM
-			dqvs.dvs_dqv_hs_verf_old verf
+			dqvs.dvs_dqv_hs_verf verf
 		LEFT OUTER JOIN w_vi AS vi ON verf.rqstr_sn = vi.user_sn
         LEFT OUTER JOIN w_agency AS agency ON verf.bzmn_sn = agency.bzmn_sn
         <!-- 조회조건 -->
@@ -151,10 +151,10 @@
 								                )
             </when>
             <when test='authrtCd.equals("S01")'> <!-- 주사무소관리자면 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
-                AND vi.bzmn_sn IN (SELECT a.bzmn_sn FROM dqvs.dvs_rac_mt_agency a WHERE a.up_brno = #{bzmnSn} OR a.bzmn_sn = #{bzmnSn})
+                AND verf.bzmn_sn IN (SELECT a.bzmn_sn FROM dqvs.dvs_rac_mt_agency a WHERE a.up_brno = #{bzmnSn} OR a.bzmn_sn = #{bzmnSn})
             </when>
             <when test='authrtCd.equals("S02")'> <!-- 영업소관리자면 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시 -->
-                AND vi.bzmn_sn = #{bzmnSn}
+                AND verf.bzmn_sn = #{bzmnSn}
             </when>
             <otherwise> <!-- 그 외는 로그인 당사자의 조회 건만 표시 -->
                 AND vi.user_sn = #{userSn}::NUMERIC

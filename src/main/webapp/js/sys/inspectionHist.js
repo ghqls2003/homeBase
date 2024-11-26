@@ -401,7 +401,7 @@
 					{ field: "rn", title: "순번", width: "30px", template: "#: rn #", sortable: false },
 					{ field: "coNm", title: "회사명", width: "50px", template: "#= coNm != null ? coNm : '-' #", sortable: true },
 					{ field: "jurisdiction", title: "관할지역", width: "50px", template: "#= jurisdiction != null && jurisdiction.trim() !== '' ? jurisdiction : '-' #", sortable: true },
-					{ field: "exmnr", title: "지도원", width: "30px", template: "#= exmnrs != null ? exmnrs : '-' #", sortable: true },
+					{ field: "exmnrs", title: "지도원", width: "30px", template: "#= exmnrs != null ? exmnrs : '-' #", sortable: true },
 					{ field: "bzmnSeNm", title: "권한", width: "30px", template: "#= bzmnSeNm != null ? bzmnSeNm : '-' #", sortable: true },
 					{ field: "brno", title: "사업자등록번호", width: "40px", template: "#= (brno != null && brno != '          ' ) ? brno : '-' #", sortable: true },
 					{ field: "crno", title: "법인등록번호", width: "40px", template: "#= (crno != null && crno != '             ' ) ? crno : '-' #", sortable: true },

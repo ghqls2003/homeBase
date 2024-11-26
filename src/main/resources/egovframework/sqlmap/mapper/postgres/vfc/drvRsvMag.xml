@@ -2,61 +2,146 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="vfc.drvRsvMag">
 
-	<sql id ='RentalistSql'>
-			select
-				row_number() over(order by rent.rent_prcs_dt desc) rn,
-				rent.rent_no,
-				rent.vhcl_reg_no,
-				rent.vrfc_hstry_sn,
-				agency.co_nm,
-				to_char(rent.rent_bgng_dt,
-				'YYYY-MM-DD HH24:MI') as rent_bgng_dt,
-				to_char(rent.rent_end_dt,
-				'YYYY-MM-DD HH24:MI') as rent_end_dt,
-				to_char(rent.rent_prcs_dt,
-				'YYYY-MM-DD HH24:MI') as rent_prcs_dt,
-				rent.bzmn_sn,
-				to_char(rent.reg_dt,
-				'YYYY-MM-DD HH24:MI') as reg_dt
-			from
-				(
-					select
-						base.rent_no,
-						base.rent_prcs_dt,
-						base.vhcl_reg_no,
-						base.bzmn_sn,
-						base.rent_bgng_dt,
-						base.rent_end_dt ,
-						base.rent_stts_cd,
-						base.vrfc_hstry_sn,
-						base.del_yn,
-						base.rgtr_sn,
-						base.reg_dt,
-						base.mdfcn_dt
-					from
-<!-- 						dqvs.dvs_dqv_mt_rent_dump base -->
-						dqvs.dqvs.dvs_dqv_mt_rent base
-					where
-						1 = 1
-						and base.rent_prcs_dt is not null
-						and base.rent_stts_cd = '2'
-						and (base.rent_end_dt::timestamp - base.rent_bgng_dt::timestamp) > interval '7 days' ) as rent
-				left outer join dqvs.dvs_rac_mt_agency agency on
-					rent.bzmn_sn = agency.bzmn_sn
-		   WHERE 
-		   		 (CURRENT_TIMESTAMP between rent.rent_bgng_dt and rent.rent_end_dt)
-		   <if test = 'searchWrd != null and searchWrd != ""'>
-   					AND rent.rent_no like '%' || #{searchWrd} || '%'
-		   </if>		 
+
+	<!-- 원본 -->
+<!-- 	<sql id ='RentalistSql'> -->
+<!-- 			select -->
+<!-- 				row_number() over(order by rent.rent_prcs_dt desc) rn, -->
+<!-- 				rent.rent_no, -->
+<!-- 				rent.vhcl_reg_no, -->
+<!-- 				rent.vrfc_hstry_sn, -->
+<!-- 				agency.co_nm, -->
+<!-- 				to_char(rent.rent_bgng_dt, -->
+<!-- 				'YYYY-MM-DD HH24:MI') as rent_bgng_dt, -->
+<!-- 				to_char(rent.rent_end_dt, -->
+<!-- 				'YYYY-MM-DD HH24:MI') as rent_end_dt, -->
+<!-- 				to_char(rent.rent_prcs_dt, -->
+<!-- 				'YYYY-MM-DD HH24:MI') as rent_prcs_dt, -->
+<!-- 				rent.bzmn_sn, -->
+<!-- 				to_char(rent.reg_dt, -->
+<!-- 				'YYYY-MM-DD HH24:MI') as reg_dt -->
+<!-- 			from -->
+<!-- 				( -->
+<!-- 					select -->
+<!-- 						base.rent_no, -->
+<!-- 						base.rent_prcs_dt, -->
+<!-- 						base.vhcl_reg_no, -->
+<!-- 						base.bzmn_sn, -->
+<!-- 						base.rent_bgng_dt, -->
+<!-- 						base.rent_end_dt , -->
+<!-- 						base.rent_stts_cd, -->
+<!-- 						base.vrfc_hstry_sn, -->
+<!-- 						base.del_yn, -->
+<!-- 						base.rgtr_sn, -->
+<!-- 						base.reg_dt, -->
+<!-- 						base.mdfcn_dt -->
+<!-- 					from -->
+<!-- 						dqvs.dqvs.dvs_dqv_mt_rent base -->
+<!-- 					where -->
+<!-- 						1 = 1 -->
+<!-- 						and base.rent_prcs_dt is not null -->
+<!-- 						and base.rent_stts_cd = '2' -->
+<!-- 						and (base.rent_end_dt::timestamp - base.rent_bgng_dt::timestamp) > interval '7 days' ) as rent -->
+<!-- 				left outer join dqvs.dvs_rac_mt_agency agency on -->
+<!-- 					rent.bzmn_sn = agency.bzmn_sn -->
+<!-- 		   WHERE  -->
+<!-- 		   		 (CURRENT_TIMESTAMP between rent.rent_bgng_dt and rent.rent_end_dt) -->
+<!-- 		   <if test = 'searchWrd != null and searchWrd != ""'> -->
+<!--    					AND rent.rent_no like '%' || #{searchWrd} || '%' -->
+<!-- 		   </if>		  -->
+<!-- 		   <choose> -->
+<!-- 		        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'>  -->
+<!-- 					AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn}) -->
+<!-- 					OR rent.bzmn_sn = #{bzmnSn}) -->
+<!-- 		        </when> -->
+<!-- 		        <when test='authrtCd.equals("S02")'>  -->
+<!-- 					AND rent.bzmn_sn = #{bzmnSn} -->
+<!-- 		        </when> -->
+<!-- 		        <when test='authrtCd.equals("S03")'>  -->
+<!-- 		            <if test="bzauthCd == 1"> -->
+<!-- 		                AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno = #{bzmnSn}) -->
+<!-- 		                OR rent.bzmn_sn = #{bzmnSn}) -->
+<!-- 		            </if> -->
+<!-- 		            <if test="bzauthCd == 2"> -->
+<!-- 		                AND rent.bzmn_sn = #{bzmnSn} -->
+<!-- 		            </if> -->
+<!-- 		        </when> -->
+<!-- 		        <otherwise> -->
+<!-- 					<if test="bzmnSn != '' and bzmnSn != null"> -->
+<!-- 	                	AND rent.bzmn_sn = #{bzmnSn} -->
+<!-- 					</if> -->
+<!-- 		        </otherwise> -->
+<!-- 			</choose> -->
+<!-- 	</sql> -->
+<!-- 	<select id="RsvNoList" resultType="resultMap"> -->
+<!-- 		select *  -->
+<!-- 		 from( -->
+<!-- 		 <include refid="RentalistSql"></include> -->
+<!-- 		 ) as T  -->
+<!-- 			<if test="take != '' and take != null"> -->
+<!-- 				LIMIT #{take} OFFSET #{skip} -->
+<!-- 			</if> -->
+<!-- 	</select> -->
+	<!-- 원본 끝 -->
+	
+	
+		<!-- 수정 본 시작-->	
+	<select id="RsvNoList" resultType="resultMap">
+			WITH filtered_agency AS (
+			    SELECT bzmn_sn, co_nm
+			    FROM dqvs.dvs_rac_mt_agency
+			),
+			filtered_rent AS (
+			    SELECT
+			        base.rent_no,
+			        base.rent_prcs_dt,
+			        base.vhcl_reg_no,
+			        base.bzmn_sn,
+			        base.rent_bgng_dt,
+			        base.rent_end_dt,
+			        base.rent_stts_cd,
+			        base.vrfc_hstry_sn,
+			        base.del_yn,
+			        base.rgtr_sn,
+			        base.reg_dt,
+			        base.mdfcn_dt
+			    FROM dqvs.dvs_dqv_mt_rent base
+			    WHERE
+			        base.rent_prcs_dt IS NOT NULL
+			        AND base.rent_stts_cd = '2'
+			        AND (base.rent_end_dt::timestamp - base.rent_bgng_dt::timestamp) > INTERVAL '7 days'
+			)
+			SELECT 
+			    row_number() OVER (ORDER BY rent.rent_prcs_dt DESC) AS rn,
+			    rent.rent_no,
+			    rent.vhcl_reg_no,
+			    rent.vrfc_hstry_sn,
+			    agency.co_nm,
+			    TO_CHAR(rent.rent_bgng_dt, 'YYYY-MM-DD HH24:MI') AS rent_bgng_dt,
+			    TO_CHAR(rent.rent_end_dt, 'YYYY-MM-DD HH24:MI') AS rent_end_dt,
+			    TO_CHAR(rent.rent_prcs_dt, 'YYYY-MM-DD HH24:MI') AS rent_prcs_dt,
+			    rent.bzmn_sn,
+			    TO_CHAR(rent.reg_dt, 'YYYY-MM-DD HH24:MI') AS reg_dt
+			FROM 
+			    filtered_rent rent
+			LEFT JOIN 
+			    filtered_agency agency 
+			ON 
+			    rent.bzmn_sn = agency.bzmn_sn
+			WHERE 
+			    CURRENT_TIMESTAMP BETWEEN rent.rent_bgng_dt AND rent.rent_end_dt
+			<if test = 'searchWrd != null and searchWrd != ""'>
+			    AND rent.rent_no LIKE '%' || #{searchWrd} || '%'
+			</if>
 		   <choose>
-		        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> <!-- 주사무소관리자 : 해당 사용자의 사업자일련번호를 가진 사용자 또는 해당 사업자 일련번호를 상위 사업자로 가지는 업체의 사용자가 조회한 건까지 표시 -->
+		        <when test='authrtCd.equals("S01") or authrtCd.equals("S04")'> 
 					AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno  = #{bzmnSn})
 					OR rent.bzmn_sn = #{bzmnSn})
 		        </when>
-		        <when test='authrtCd.equals("S02")'> <!-- 영업소관리자 : 해당 사업자일련번호를 가진 사용자가 조회한 건만 표시  -->
+		        <when test='authrtCd.equals("S02")'> 
 					AND rent.bzmn_sn = #{bzmnSn}
 		        </when>
-		        <when test='authrtCd.equals("S03")'> <!-- 주사무소 일반회원, 영업소 일반회원에 따라 조건처리  -->
+		        <when test='authrtCd.equals("S03")'> 
 		            <if test="bzauthCd == 1">
 		                AND (rent.bzmn_sn IN (SELECT bzmn_sn FROM dqvs.dvs_rac_mt_agency WHERE up_brno = #{bzmnSn})
 		                OR rent.bzmn_sn = #{bzmnSn})
@@ -65,23 +150,18 @@
 		                AND rent.bzmn_sn = #{bzmnSn}
 		            </if>
 		        </when>
-		        <otherwise> <!-- 그 외는 소속 회사의 대여 건만 표시 -->
+		        <otherwise> 
 					<if test="bzmnSn != '' and bzmnSn != null">
 	                	AND rent.bzmn_sn = #{bzmnSn}
 					</if>
 		        </otherwise>
 			</choose>
-	</sql>
-	<select id="RsvNoList" resultType="resultMap">
-		select * 
-		 from(
-		 <include refid="RentalistSql"></include>
-		 ) as T 
-			<if test="take != '' and take != null">
-				LIMIT #{take} OFFSET #{skip}
-			</if>
-
+<if test="take != '' and take != null">
+    LIMIT #{take} OFFSET #{skip}
+</if>
 	</select>
+		<!-- 수정 본 끝-->	
+
 	<select id="RsvNoListCnt" resultType="int">
 			select
 				COUNT(*)

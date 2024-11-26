@@ -63,7 +63,7 @@
 				//				{ value: "E2", text: "면허 소유자" }
 			];
 			var dropData2 = [
-				{ value: '', text: "먼허 종별(설정)" },
+				{ value: '', text: "면허 종별(설정)" },
 				{ value: "12", text: "1종보통" },
 				{ value: "13", text: "1종소형" },
 				{ value: "14", text: "대형견인" },

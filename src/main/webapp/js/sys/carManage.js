@@ -425,7 +425,8 @@
                     { field: "vin", title: "차대번호", width: "101px", template: "#= !vin ? '-' : vin #" },
                     { field: "carmdl", title: "차종", width: "60px", template: "#= !carmdl ? '-' : carmdl #" },
                     { field: "mdlyr", title: "연식", width: "50px", template: "#= !mdlyr ? '-' : mdlyr #" },
-                    { field: "sggNm", title: "소재지", width: "100px", template: "#= !sggNm ? '-' : sggNm #" },
+                    { field: "regNm", title: "관할지", width: "100px", template: "#= !regNm ? '-' : regNm #" },
+                    { field: "locationNm", title: "소재지", width: "100px", template: "#= !locationNm ? '-' : locationNm #" },
                     { field: "crno", title: "법인등록번호", width: "100px", template: "#= !crno ? '-' : toCorporateNumFormat(crno) #" },
                     { field: "coNm", title: "법인명", width: "100px", template: "#= !coNm ? '-': coNm #" },
                     { field: "ownrNm", title: "소유자명", width: "100px", template: "#= !ownrNm ? '-' : ownrNm #" },
@@ -518,7 +519,7 @@
                     { field: "vin", title: "차대번호", width: "101px", template: "#= !vin ? '-' : vin #" },
                     { field: "carmdl", title: "차종", width: "60px", template: "#= !carmdl ? '-' : carmdl #" },
                     { field: "mdlyr", title: "연식", width: "50px", template: "#= !mdlyr ? '-' : mdlyr #" },
-                    { field: "sggNm", title: "소재지", width: "100px", template: "#= !sggNm ? '-' : sggNm #" },
+                    { field: "locationNm", title: "소재지", width: "100px", template: "#= !locationNm ? '-' : locationNm #" },
                     { field: "crno", title: "법인등록번호", width: "100px", template: "#= !crno ? '-' : toCorporateNumFormat(crno) #" },
                     { field: "coNm", title: "법인명", width: "100px", template: "#= !coNm ? '-': coNm #" },
                     { field: "ownrNm", title: "소유자명", width: "100px", template: "#= !ownrNm ? '-' : ownrNm #" },
@@ -650,7 +651,7 @@
 			$('#engineFom').val(!data.engineFom ? "-" : data.engineFom );
 			
 			/** car info  right */
-			$('#sggNm').val(!data.sggNm ? "-" : data.sggNm);
+			$('#sggNm').val(!data.locationNm ? "-" : data.locationNm);
 			$('#frstRegYmd').val(!data.frstRegYmd ? "-" : data.frstRegYmd);
 			$('#expryYmd').val(!data.expryYmd ? "-" : data.expryYmd);
 			$('#regDt').val(!data.regDt ? "-" : data.regDt);
