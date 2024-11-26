@@ -368,10 +368,10 @@
 				from dqvs.dvs_rac_mt_car drmc
 				left join (	select vin ,'Y' as reg_yn
 					from dvs_rac_mt_defect
-					where actn_yn  ='N''<!--조치여부 = N 인것만 출력 -->
+					where actn_yn  ='N'<!--조치여부 = N 인것만 출력 -->
 					)as drmd on drmd.vin = drmc.vin
 				where
-					drmc.use_yn = 'Y
+					drmc.use_yn = 'Y'
 						<if test="carNum != '' and carNum != null">
 							and vhcl_reg_no = #{carNum}
 						</if>
