@@ -24,9 +24,13 @@
 			ownr_nm,
 			crno,
 			fvrts.reg_yn,
+			car.sgg_cd as location,
+			area.ctpv_nm||' '||area.sgg_nm as location_nm,
 			use_srhld
 		from
 			dqvs.dvs_rac_mt_car as car
+		left join dqvs.dvs_cmm_mt_area area
+			on SUBSTRING(car.sgg_cd, 1, 5) = SUBSTRING(area.stdg_cd, 1, 5)
 		left join (select vin
 					, mdfr_sn
 					, mdfcn_dt
@@ -87,7 +91,7 @@
 				    </when>
 	
 				    <when test='searchChk == "location" and regCmptncCd != "" and regCmptncCd != null'>
-				        AND use_srhld LIKE CONCAT(#{regCmptncCd}, '%')
+				        AND location LIKE CONCAT(#{regCmptncCd}, '%')
 				    </when>
 				</choose>
 			</if>
@@ -152,7 +156,7 @@
 				        </when>
 				        
 				        <when test='searchChk == "location" and searchCol != "vhclRegNoFull"'>
-				            AND use_srhld LIKE CONCAT(#{regCmptncCd}, '%')
+				            AND location LIKE CONCAT(#{regCmptncCd}, '%')
 				        </when>
 					</choose>
 			    </when>
@@ -198,8 +202,11 @@
 			<if test="bookmarkOrder == '' or bookmarkOrder == null">
 				ROW_NUMBER() OVER(ORDER BY vhcl_reg_no) AS rn
 			</if>
-				, * 
+				, *,
+			area2.ctpv_nm||' '||area2.sgg_nm as reg_nm 
 			FROM auth
+			left join dqvs.dvs_cmm_mt_area area2
+			on reg_cmptnc_cd = area2.stdg_cd
 		),
 		<!-- 페이징 처리 -->
 		page AS (
