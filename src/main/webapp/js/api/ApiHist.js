@@ -318,15 +318,19 @@ var expryYmd;
 							var resultTime3 = startTime2.replace(/-/g, '')
 							var resultTime4 = endtime2.replace(/-/g, '')
 							if (Auth == 'K01' || Auth == 'D01' || Auth == 'Z01') {
-								options.endPicker02 = resultTime2;
-								options.startPicker02 = resultTime;
+//								options.endPicker02 = resultTime2;  // 튜닝본 안되면 풀기
+//								options.startPicker02 = resultTime;  // 튜닝보 안되면 풀기
+								options.endPicker02 = endtime;
+								options.startPicker02 = startTime;
 								options.searchSttsCd = $("#search_stts_cd").val() || "1";  // 빈 문자열일 경우 1로 설정
 								options.searchSttsCd2 = $("#search_stts_cd2").val();
 								options.detailYN = $("#search_stts_cd3").val();
 								options.searchReq = $("#search_box").val();
 							} else {
-								options.endPicker02 = resultTime4;
-								options.startPicker02 = resultTime3;
+//								options.endPicker02 = resultTime4;  // 튜닝본 안되면 풀기
+//								options.startPicker02 = resultTime3;  // 튜닝본 안되면 풀기
+								options.endPicker02 = endtime2;
+								options.startPicker02 = startTime2;
 								options.searchSttsCd = $("#search_stts_cd_api").val();
 								options.detailYN = $("#search_stts_cd_error").val();
 							}

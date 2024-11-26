@@ -346,7 +346,7 @@ if (authrtCd != null && !authrtCd.isEmpty() && authrtCd.equals("K01")) {
 						<div class="status_icon_wrap">
 							<div class="status_icon"></div>
 						</div>
-						<p class="server_name">RIMS 서버</p>
+						<p class="server_name">운전자격확인시스템 서버</p>
 						<div class="status">
 							<p class="status_text">확인중</p>
 						</div>
@@ -357,7 +357,7 @@ if (authrtCd != null && !authrtCd.isEmpty() && authrtCd.equals("K01")) {
 						<div class="status_icon_wrap">
 							<div class="status_icon"></div>
 						</div>
-						<p class="server_name">공단 서버</p>
+						<p class="server_name">도로교통공단 서버</p>
 						<div class="status">
 							<p class="status_text">확인중</p>
 						</div>

@@ -2,46 +2,82 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="api.apiHist">
 
-<sql id = "listViewMain">
-		
-		        SELECT
-		            dami.api_nm,
-		            dahr.dmnd_dt,
-		            COALESCE(dcms.sso_user_id, dcms.onepass_di) AS S4Id,
-		            dcms.bzmn_sn AS S4BZSN,
-		            dahr.rqstr_sn,
-		            COALESCE(dcms2.sso_user_id, dcms2.onepass_di) AS S1Id,
-		            dcms2.bzmn_sn AS S1BZSN,
-		            dcmc.cd_expln AS rslt_msg,
-		            dahr.dmnd_cnt,
-					CASE WHEN dahr.dln ISNULL THEN NULL   <!-- dln사용관련 -->
-						WHEN LENGTH(dahr.dln) <![CDATA[ = ]]> 6 THEN CONCAT(dqvs.pca_decrypt(dahr.dln, '150'), REPEAT('*', 6))
-						ELSE CONCAT(SUBSTRING(dqvs.pca_decrypt(dahr.dln, '150'), 1, 6), REPEAT('*', 6))
-					END AS dln2,
+<!-- 튜닝본 -->
+<sql id="listViewMain">
+	WITH dcms AS (SELECT user_sn, sso_user_id, onepass_di, bzmn_sn FROM dqvs.v_intg_user_admin_info)
+	SELECT dami.api_nm
+		, dahr.dmnd_dt
+		, COALESCE(dcms.sso_user_id, dcms.onepass_di) AS S4Id
+		, dcms.bzmn_sn AS S4BZSN
+		, dahr.rqstr_sn
+		, COALESCE(dcms2.sso_user_id, dcms2.onepass_di) AS S1Id
+		, dcms2.bzmn_sn AS S1BZSN
+		, dcmc.cd_expln AS rslt_msg
+		, dahr.dmnd_cnt
+		, CASE WHEN dahr.dln ISNULL THEN NULL
+			WHEN LENGTH(dahr.dln) <![CDATA[ = ]]> 6 THEN CONCAT(dqvs.pca_decrypt(dahr.dln, '150'), REPEAT('*', 6))
+			ELSE CONCAT(SUBSTRING(dqvs.pca_decrypt(dahr.dln, '150'), 1, 6), REPEAT('*', 6))
+			END AS dln2
+		, dahr.req_hr
+	FROM dqvs.dvs_api_hs_req AS dahr
+	LEFT JOIN (SELECT api_nm, api_sn FROM dqvs.dvs_api_mt_info) AS dami ON dami.api_sn = dahr.api_sn
+	LEFT JOIN (SELECT cd_expln, cd FROM dqvs.dvs_cmm_mt_code) AS dcmc ON dcmc.cd = dahr.dmnd_rslt_cd
+	LEFT JOIN dcms AS dcms ON dcms.user_sn = dahr.user_sn
+	LEFT JOIN dcms AS dcms2 ON dcms2.user_sn = dahr.rqstr_sn
+	WHERE dahr.dmnd_dt::DATE <![CDATA[>=]]> #{startPicker02}::DATE AND dahr.dmnd_dt::DATE <![CDATA[<=]]> #{endPicker02}::DATE
+	<if test="userSn != '' and userSn != Null">
+		AND dahr.user_sn = #{userSn}::NUMERIC  
+	</if>
+	<if test = "searchSttsCd != '' and searchSttsCd != null">
+		AND dahr.api_sn = #{searchSttsCd}::NUMERIC 
+	</if>
+	<if test="detailYN == 'E1'">
+		AND dahr.dmnd_rslt_cd = '200'
+	</if>
+	<if test="detailYN == 'E2'">
+		AND dahr.dmnd_rslt_cd != '200'
+	</if>
+</sql>
 
-                	dahr.dln,
-		            dahr.req_hr
-		        FROM dqvs.dvs_api_hs_req AS dahr
-		        LEFT JOIN dqvs.dvs_api_mt_info AS dami ON dami.api_sn = dahr.api_sn
-		        LEFT JOIN dqvs.dvs_cmm_mt_code AS dcmc ON dcmc.cd = dahr.dmnd_rslt_cd
-		        LEFT JOIN dqvs.v_intg_user_admin_info AS dcms ON dcms.user_sn = dahr.user_sn
-		        LEFT JOIN dqvs.v_intg_user_admin_info AS dcms2 ON dcms2.user_sn = dahr.rqstr_sn
-		        WHERE 
-		           	dahr.dmnd_ymd <![CDATA[>=]]> #{startPicker02} and dahr.dmnd_ymd <![CDATA[<=]]> #{endPicker02}
-						<if test="userSn != '' and userSn != Null">
-							and dahr.user_sn = #{userSn}::numeric  
-			        	</if>
-			        	<if test = "searchSttsCd != '' and searchSttsCd != null">
-							and dahr.api_sn = #{searchSttsCd}::numeric 
-						</if>
-						<if test="detailYN == 'E1'">
-						and dahr.dmnd_rslt_cd = '200'
-						</if>
-						<if test="detailYN == 'E2'">
-						and dahr.dmnd_rslt_cd != '200'
-						</if>
+<!-- <sql id = "listViewMain"> -->
+		
+<!-- 		        SELECT -->
+<!-- 		            dami.api_nm, -->
+<!-- 		            dahr.dmnd_dt, -->
+<!-- 		            COALESCE(dcms.sso_user_id, dcms.onepass_di) AS S4Id, -->
+<!-- 		            dcms.bzmn_sn AS S4BZSN, -->
+<!-- 		            dahr.rqstr_sn, -->
+<!-- 		            COALESCE(dcms2.sso_user_id, dcms2.onepass_di) AS S1Id, -->
+<!-- 		            dcms2.bzmn_sn AS S1BZSN, -->
+<!-- 		            dcmc.cd_expln AS rslt_msg, -->
+<!-- 		            dahr.dmnd_cnt, -->
+<!-- 					CASE WHEN dahr.dln ISNULL THEN NULL   dln사용관련 -->
+<!-- 						WHEN LENGTH(dahr.dln) <![CDATA[ = ]]> 6 THEN CONCAT(dqvs.pca_decrypt(dahr.dln, '150'), REPEAT('*', 6)) -->
+<!-- 						ELSE CONCAT(SUBSTRING(dqvs.pca_decrypt(dahr.dln, '150'), 1, 6), REPEAT('*', 6)) -->
+<!-- 					END AS dln2, -->
+<!--                 	dahr.dln, -->
+<!-- 		            dahr.req_hr -->
+<!-- 		        FROM dqvs.dvs_api_hs_req AS dahr -->
+<!-- 		        LEFT JOIN dqvs.dvs_api_mt_info AS dami ON dami.api_sn = dahr.api_sn -->
+<!-- 		        LEFT JOIN dqvs.dvs_cmm_mt_code AS dcmc ON dcmc.cd = dahr.dmnd_rslt_cd -->
+<!-- 		        LEFT JOIN dqvs.v_intg_user_admin_info AS dcms ON dcms.user_sn = dahr.user_sn -->
+<!-- 		        LEFT JOIN dqvs.v_intg_user_admin_info AS dcms2 ON dcms2.user_sn = dahr.rqstr_sn -->
+<!-- 		        WHERE  -->
+<!-- 		           	dahr.dmnd_ymd <![CDATA[>=]]> #{startPicker02} and dahr.dmnd_ymd <![CDATA[<=]]> #{endPicker02} -->
+<!-- 						<if test="userSn != '' and userSn != Null"> -->
+<!-- 							and dahr.user_sn = #{userSn}::numeric   -->
+<!-- 			        	</if> -->
+<!-- 			        	<if test = "searchSttsCd != '' and searchSttsCd != null"> -->
+<!-- 							and dahr.api_sn = #{searchSttsCd}::numeric  -->
+<!-- 						</if> -->
+<!-- 						<if test="detailYN == 'E1'"> -->
+<!-- 						and dahr.dmnd_rslt_cd = '200' -->
+<!-- 						</if> -->
+<!-- 						<if test="detailYN == 'E2'"> -->
+<!-- 						and dahr.dmnd_rslt_cd != '200' -->
+<!-- 						</if> -->
 		        
-	</sql>
+<!-- 	</sql> -->
 	<sql id = "listViewWith">
 		 (
 		    SELECT 
