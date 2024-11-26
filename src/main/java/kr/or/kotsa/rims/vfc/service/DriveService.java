@@ -47,6 +47,12 @@ public interface DriveService {
 	// 해당 법인 차량 및 결함 유무 조회  24.11.05 jeonghyewon
 	Object selectBzmnCarAndDefectedCarInfo(Map<String, Object> paramsMap) throws RimsException;
 
-	//S권한 일 경우만 법인번호 가져오기 24.11.06 jeonghyewon
+	// S권한 일 경우만 법인번호 가져오기 24.11.06 jeonghyewon
 	public String selectCorpNumIfSAuthrtCd(Map<String, Object> paramsMap);
+
+	// 해당 차량 결함정보 상세팝업 출력  24.11.26 jeonghyewon
+	Map<String, Object> selectDefectList(Map<String, Object> paramsMap);
+
+	// 해당 차량 상세 조회 :24.11.26 jeonghyewon
+	Map<String, Object> selectDetailCarList(Map<String, Object> paramsMap) throws RimsException;
 }

@@ -70,9 +70,10 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 	var defectColumns =[
                     { field: "rn", title: "순번", width:"50px", template: "#= !rn ? '' : rn #" },
                     { field: "vhclRegNo", title: "차량등록번호", width: "100px", template: "#= !vhclRegNo ? '-' : vhclRegNo #"},
-                    { field: "coNm", title: "회사명", width: "100px", template: "#= !coNm ? '-': coNm #" },
-//                    { field: "prcsSttsCd", title: "처리상태코드", width: "150px", attributes: {"class": "table-cell",style: "white-space: normal;text-align: left;"}, template:"#= !prcsSttsCd ? '-': prcsSttsCd #"},
-                    { field: "defectsCn", title: "결함내용", width: "150px", attributes: {"class": "table-cell ",style: "white-space: normal;text-align: left;" },  template:"#= !defectsCn ? '-': defectsCn #"},
+                    { field: "ownrNm", title: "회사명", width: "100px", template: "#= !ownrNm ? '-': ownrNm #" },
+                    { field: "ocrnDt", title: "발생일시", width: "150px",  template:"#= !ocrnDt ? '-': ocrnDt #"},
+//                    { field: "defectsCn", title: "결함내용", width: "150px", attributes: {"class": "table-cell ",style: "white-space: normal;text-align: left;" }, template:"#= !defectsCn ? '-': defectsCn #"},
+                    { field: "defectsCn", title: "결함내용", width: "150px", template:"#= !defectsCn ? '-': defectsCn #"},
 					{ field: "actnYn", title: "조치여부", width: "40px", template: "#= !actnYn ? '-' : actnYn #", hidden:true},
     ];
 
@@ -291,9 +292,9 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
             // 검색 차량의 결함 정보
             }else if(gridId == '#mobiDefect_grid'){
                 var gridOptions = {};
-                gridOptions.searchCol = 'vhclRegNo'; // 차량번호 조건
-                gridOptions.searchWrd = $("#car_num").val(); //
-                options.searchYn = 'Y';//	and defect_yn = #{searchYn} // 결함 여부
+//                gridOptions.searchCol = 'vhclRegNo'; // 차량번호 조건
+                gridOptions.vhclRegNo = $("#car_num").val(); //
+                options.defectYn = 'Y';//	and defect_yn = #{searchYn} // 결함 여부
                 Object.assign(options, gridOptions);
             }
 
@@ -361,10 +362,11 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                     template: "데이터가 없습니다."
                 },
                 columns: [
-                     { title: "순번", width: "40px", field: "rn", template: "#: rn #" },
-                     {title: "결함유형", width: "60px", field: "defectNm", template: "#: defectNm #" },
-                     {title: "처리상태코드", width: "150px", field: "prcsSttsCd",	template: "#: prcsSttsCd #"},
-                     {title: "발생일시", width: "130px", field: "ocrnDt", template: "#: ocrnDt #"}
+                    { title: "순번", width: "40px", field: "rn", template: "#: rn #" },
+                    //					 {title: "결함유형", width: "60px", field: "defectNm", template: "#: defectNm #" },
+                    {title: "발생일시", width: "100px", field: "ocrnDt", template: "#: ocrnDt #"},
+                    {title: "결함내용", width: "150px", field: "defectsCn", template: "#: defectsCn #"},
+                    {title: "조치여부", width: "60px", field: "actnYn",	template: "#: actnYn #"},
                 ],
                 scrollable: true,
                 editable: false,
@@ -1084,7 +1086,7 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 
         // 2024.10.17 jeonghyewon code add
         popupVhclDfctListClick : function(){
-            $drive.ui.popupGridLoad('#mobiDefect_grid','/sys/carManage/selectCarList',defectColumns);
+            $drive.ui.popupGridLoad('#mobiDefect_grid','/vfc/drive/selectDetailCarList',defectColumns);
             $('.result_popup').css('display', 'none');
             $(".result_popup").removeClass("view");
 
@@ -1177,9 +1179,9 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
                         }
 
                        /** 결함정보 표출여부 */
-                        if(data.defectYn === 'Y'){
+                        if(data.defectYn === 'Y' && data.actnYn === 'N'){
                             $("#defectInfo").show();
-                            ajax(true, contextPath+'/sys/carManage/selectDefectList', 'body', '처리중입니다.', {vin : data.vin}, function (data1) {
+                            ajax(true, contextPath+'/vfc/drive/selectDefectInfo', 'body', '처리중입니다.', {vin : data.vin}, function (data1) {
                                 $("#detail_defectGrid").data("kendoGrid").setDataSource(data1.data);
                             });
                         } else {

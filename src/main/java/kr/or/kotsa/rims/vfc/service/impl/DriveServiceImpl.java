@@ -80,7 +80,6 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 		// 최근 7일 운전자격이력 건수
 		int VfcHistCnt = driveDao.selectVfcHistCnt(paramsMap);
 		result.put("VfcHistCnt", VfcHistCnt);
-//		result.putAll(selectEtcInfo(paramsMap));  주석할꺼면 연관되는거 다 처리좀하지
 		return result;
 	}
 
@@ -89,15 +88,12 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 		paramsMap.put("rgtrSn", getUserSn());
 		paramsMap.put("regIp", getClientIP());
 		paramsMap.put("bzmnSn", getBzmnSn());
-
 		driveDao.insertRentInfo(paramsMap);
-//		driveDao.insertRentHstryInfo(paramsMap);
 	}
 
 	public String updateRentSttsCd(Map<String, Object> paramsMap) {
 		paramsMap.put("mdfrSn", getUserSn());
 		paramsMap.put("mdfcnIp", getClientIP());
-		String rentalTypeYn = (String) paramsMap.get("rentalTypeYn");
 		// 대여정보 대여확정처리 : dvs_dqv_mt_rent update
 		driveDao.updateRentSttsCd(paramsMap);
 		// 대여정보 대여확정처리 : dvs_dqv_hs_rent insert
@@ -106,11 +102,11 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	}
 
 
+
 //	//운전자격검증 부가정보 등록
 //	public void insertEtcInfo(Map<String, Object> paramsMap) {
 //		driveDao.insertEtcInfo(paramsMap);
 //	}
-
 //	//운전자격 확인 결과
 //	public Map<String, Object> selectEtcInfo(Map<String, Object> paramsMap) {
 //		Map<String, Object> result = new HashMap<>();
@@ -141,7 +137,8 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 //		return result;
 //	}
 
-	//결함정보 조회
+	// 해당 차량 결함정보 상세팝업 출력 :24.11.26 jeonghyewon
+	@Override
 	public Map<String, Object> selectDefectList(Map<String, Object> paramsMap) {
 		Map<String, Object> result = new HashMap<>();
 
@@ -152,6 +149,25 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 
 		return result;
 	}
+
+	// 해당 차량 상세 조회 :24.11.26 jeonghyewon
+	@Override
+	public Map<String, Object> selectDetailCarList(Map<String, Object> paramsMap) throws RimsException {
+		Map<String, Object> result = new HashMap<>();
+
+		List<Map<String, Object>> list;
+		int total = 0;
+
+		String crno = selectCorpNumIfSAuthrtCd(paramsMap); // S 권한만 법인번호 조회
+		paramsMap.put("crno", crno);
+		paramsMap.put("authrtCd", getAuthrtCd());
+		list  = driveDao.selectDetailCarList(paramsMap);
+		total = driveDao.selectDetailCarListCnt(paramsMap);
+		result.put("data", list);
+		result.put("total", total);
+		return result;
+	}
+
 
 	//지역 코드
 	public List<Map<String, Object>> selectAreaCd(Map<String, Object> paramsMap) {
@@ -405,5 +421,7 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 		}
 		return crno;
 	}
+
+
 }
 

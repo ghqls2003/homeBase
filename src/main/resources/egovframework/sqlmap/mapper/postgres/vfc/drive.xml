@@ -41,7 +41,7 @@
 						from
 							dqvs.dvs_rac_mt_fvrts
 						where
-							mdfr_sn = #{userSn}::numeric ) as fvrts 
+							mdfr_sn = #{userSn}::numeric ) as fvrts
 						on drmc.vin = fvrts.vin
 					where
 						use_yn = 'Y'
@@ -56,13 +56,13 @@
 								AND 1 != 1
 							</otherwise>
 						</choose>
-						 ) T1 
+						 ) T1
 					) T2
 					order by
 						case
 							when reg_yn = 'Y' then 0
 						else 1
-					end, vhcl_reg_no 
+					end, vhcl_reg_no
 		 		) T3
 			where
 				1 = 1
@@ -141,6 +141,7 @@
 		</if>
 	</insert>
 
+
 	<!-- 대여정보 대여확정 처리  -->
 	<update id="updateRentSttsCd">
         <if test="rentno != null and rentno != ''">
@@ -185,18 +186,21 @@
 			SELECT ROW_NUMBER() OVER(ORDER BY d.ocrn_dt DESC) as rn
 				, d.vin
 				, TO_CHAR(ocrn_dt, 'YYYY-MM-DD HH24:MI') AS ocrn_dt
+			   ,d.actn_yn,d.defects_cn
 			FROM
 				dqvs.dvs_rac_mt_defect d
+				where d.actn_yn  ='N'
 				<choose>
 					<when test="vin != null and vin != ''">
-						WHERE vin LIKE '%' || rpad(#{vin}, 17) || '%'
+						and vin LIKE '%' || rpad(#{vin}, 17) || '%'
 					</when>
 					<otherwise>
-						WHERE 1!=1
+						and 1!=1
 					</otherwise>
 				</choose>
 		) AS T
 	</sql>
+
 	<!-- 결함정보 -->
 	<select id="selectDefectList" resultType="resultMap">
 	/* 결함정보 */
@@ -363,9 +367,11 @@
 					drmd.reg_yn
 				from dqvs.dvs_rac_mt_car drmc
 				left join (	select vin ,'Y' as reg_yn
-				from dvs_rac_mt_defect)as drmd on drmd.vin = drmc.vin
+					from dvs_rac_mt_defect
+					where actn_yn  ='N'
+					)as drmd on drmd.vin = drmc.vin
 				where
-					drmc.use_yn = 'Y'
+					drmc.use_yn = 'Y'<!--조치여부 = N 인것만 출력 -->
 						<if test="carNum != '' and carNum != null">
 							and vhcl_reg_no = #{carNum}
 						</if>
@@ -398,4 +404,165 @@
 		where  ddhv.dln_enc = end_de.dln_de
 			AND vrfc_dmnd_dt <![CDATA[>]]> now() - interval '7days'
 	</select>
+
+
+	<!-- 차량 그리드 목록 SQL -->
+	<sql id="detailCarListSql">
+		with carList as (
+			select
+				vhcl_reg_no,
+				car.vin,
+				carmdl,
+				vhcl_nm,
+				mdlyr,
+				engine_fom,
+				TO_CHAR(TO_DATE(frst_reg_ymd, 'YYYYMMDD'), 'YYYY-MM-DD') as frst_reg_ymd,
+				TO_CHAR(TO_DATE(expry_ymd, 'YYYYMMDD') , 'YYYY-MM-DD') as expry_ymd,
+				TO_CHAR(car.reg_dt, 'YYYY-MM-DD') as reg_dt,
+				use_yn,
+				ownr_nm,
+				crno,
+				fvrts.reg_yn,
+				use_srhld
+			from
+			dqvs.dvs_rac_mt_car as car
+			left join (select vin
+							, mdfr_sn
+							, mdfcn_dt
+							, mdfcn_ip
+							, 'Y' as reg_yn
+					from dqvs.dvs_rac_mt_fvrts
+					where mdfr_sn = #{userSn}::numeric
+			) as fvrts
+			on car.vin = fvrts.vin),
+		<!--대여사업자 추출-->
+		filteredAgency as (
+			select
+				distinct on
+				(crno) bzmn_sn,
+				crno as agencyCrno,
+				bzmn_se_cd ,
+				brno ,
+				co_nm,
+				sgg_cd ,
+				reg_cmptnc_cd ,
+				ctpv_nm||' '||sgg_nm as sgg_nm
+			from
+			dqvs.dvs_rac_mt_agency
+			left join dqvs.dvs_cmm_mt_area
+			on sgg_cd = stdg_cd
+			where
+				bzmn_se_cd = '1'
+				and bzmn_sn like 'RCC' || '%'
+		),
+		<!--join 추출한 대여사업자 -->
+		joinAgency AS (
+		SELECT
+			*
+		FROM
+		carList
+		LEFT JOIN
+		filteredAgency
+		ON carList.crno = filteredAgency.agencyCrno
+		),
+		<!--join 결함정보 -->
+		joinDefect AS (
+			SELECT
+				DISTINCT joinAgency.*,
+				CASE WHEN defect.vin IS NOT NULL THEN 'Y' ELSE 'N' END AS defect_yn,
+				defect.vin ,defect.defects_cn,
+				TO_CHAR(defect.ocrn_dt, 'YYYY-MM-DD HH24:MI') as ocrn_dt,
+				defect.actn_yn
+			FROM
+			joinAgency
+			LEFT JOIN dqvs.dvs_rac_mt_defect AS defect ON
+			joinAgency.vin = defect.vin
+		    where defect.actn_yn = 'N'
+		    order by ocrn_dt desc
+		),
+		<!-- 조회조건 -->
+		searchParams AS (
+			SELECT * FROM joinDefect
+			WHERE actn_yn = 'N'
+			<if test="vhclRegNo != null and vhclRegNo != ''">
+				and vhcl_reg_no = #{vhclRegNo}
+			</if>
+			<if test="crno != null and crno != ''">
+				and crno = #{crno}
+			</if>
+			<if test="defectYn != null and defectYn != ''">
+				and defect_yn = #{defectYn}
+			</if>
+		),
+		<!-- 권한 -->
+		auth AS (
+		SELECT * FROM searchParams
+		WHERE 1 = 1
+		<choose>
+			<!--S01 S02 S03 사업자 -->
+			<when test='authrtCd.equals("S01") or authrtCd.equals("S02") or authrtCd.equals("S03")'>
+				AND bzmn_sn = #{bzmnSn}
+			</when>
+			<!-- S04 플랫폼 : 미정-->
+			<when test='authrtCd.equals("S04")'>
+				AND crno = 'xxx'
+			</when>
+			<!-- 권한이 없을 경우 -->
+			<otherwise>
+				AND crno = 'xxx'
+			</otherwise>
+		</choose>
+	</sql>
+
+	<!--  해당 차량 상세 조회 :24.11.26 jeonghyewon-->
+	<select id="detailCarList" resultType="resultMap">
+		/* 차량 그리드 */
+		<if test='
+		authrtCd.equals("S01") or
+		authrtCd.equals("S02") or
+		authrtCd.equals("S03")
+		'>
+
+			<include refid="detailCarListSql" />
+			<!-- 순번 추가 -->
+			),
+			rowNum AS (
+			SELECT
+			<if test="bookmarkOrder != '' and bookmarkOrder != null">
+				ROW_NUMBER() OVER(ORDER BY CASE WHEN reg_yn = 'Y' THEN 0 ELSE 1 END, vhcl_reg_no) AS rn
+			</if>
+			<if test="bookmarkOrder == '' or bookmarkOrder == null">
+				ROW_NUMBER() OVER(ORDER BY vhcl_reg_no) AS rn
+			</if>
+			, *
+			FROM auth
+			),
+			<!-- 페이징 처리 -->
+			page AS (
+			SELECT * FROM rowNum
+			WHERE 1=1
+			<if test="take != '' and take != null">
+				AND rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+			</if>
+			<if test="skip != '' and skip != null">
+				AND rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+			</if>
+			)
+			SELECT * FROM page
+		</if>
+	</select>
+
+	<select id="detailCarListCnt" resultType="int">
+		/* 해당 차량 상세 조회 :24.11.26 jeonghyewon */
+		<if test='
+		authrtCd.equals("S01") or
+		authrtCd.equals("S02") or
+		authrtCd.equals("S03")
+		'>
+			<include refid="detailCarListSql" />
+			)
+			SELECT COUNT(1) FROM auth
+		</if>
+	</select>
+
 </mapper>

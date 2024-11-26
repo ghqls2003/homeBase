@@ -113,10 +113,19 @@ public class DriveDao extends CmmnAbstractMapper {
 		return selectList("vfc.drive.selectBzmnDefectedCarYn", paramsMap);
 	}
 
-
 	//S권한 일 경우만 법인번호 가져오기 24.11.06 jeonghyewon
 	public List<Map<String, Object>> selectCorpNumIfSAuthrtCd(Map<String, Object> paramsMap) {
 		return selectList("vfc.drive.selectCorpNumIfSAuthrtCd", paramsMap);
+	}
+
+	// 해당 차량 상세 조회 :24.11.26 jeonghyewon
+	public List<Map<String, Object>> selectDetailCarList(Map<String, Object> paramsMap) throws RimsException {
+		return selectList("vfc.drive.detailCarList", paramsMap);
+	}
+
+	// 해당 차량 상세 조회 cnt :24.11.26 jeonghyewon
+	public int selectDetailCarListCnt(Map<String, Object> paramsMap) throws RimsException {
+		return selectOne("vfc.drive.detailCarListCnt", paramsMap);
 	}
 
 }

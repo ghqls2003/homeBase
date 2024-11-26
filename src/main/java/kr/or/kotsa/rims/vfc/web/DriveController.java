@@ -131,7 +131,6 @@ public class DriveController extends CmmnAbstractServiceImpl {
 	
 	public static boolean isAccMthd(HttpServletRequest req) {
 		String userAgent = req.getHeader("User-Agent").toUpperCase();
-//		System.out.println("뭐야"+userAgent);
 		if(userAgent.contains("INRIMSAPP")) {
 			return IS_MW;
 		} else if(userAgent.contains("WV")) {
@@ -351,7 +350,6 @@ public class DriveController extends CmmnAbstractServiceImpl {
 					if( resultMap.get("header") == null ){
 						String errorMsg = "일시적인 시스템 문제로 운전자격 확인이 지연되고 있습니다.\n 잠시 후 다시 시도해 주세요.";
 						response.put("errorMsg",errorMsg);
-
 				   }else{
 						Map<String, Object> header = new HashMap<>();
 						f_rtn_cd = (String) ((Map<String, Object>) resultMap.get("header")).get("f_rtn_cd");
@@ -478,6 +476,35 @@ public class DriveController extends CmmnAbstractServiceImpl {
 		return (Map<String, Object>) driveService.selectBzmnCarAndDefectedCarInfo(paramsMap);
 	}
 
+	/**
+	 * 해당 차량 상세 조회 :24.11.26 jeonghyewon
+	 *
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping("drive/selectDetailCarList")
+	@ResponseBody
+	public Object selectDetailCarList(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		paramsMap.put("userSn", getUserSn());
+		Map<String, Object> result = driveService.selectDetailCarList(paramsMap);
+		return result;
+	}
 
+
+	/**
+	 * 해당 차량 결함정보 상세팝업 출력 :24.11.26 jeonghyewon
+	 *
+	 * @param paramsMap
+	 * @return
+	 * @throws RimsException
+	 */
+	@RequestMapping("drive/selectDefectInfo")
+	@ResponseBody
+	public Object selectDefectInfo(@RequestBody Map<String, Object> paramsMap) throws RimsException {
+		paramsMap.put("userSn", getUserSn());
+		Map<String, Object> result = driveService.selectDefectList(paramsMap);
+		return result;
+	}
 
 }
