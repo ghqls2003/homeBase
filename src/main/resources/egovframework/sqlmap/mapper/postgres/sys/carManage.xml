@@ -28,7 +28,7 @@
 			area.ctpv_nm||' '||area.sgg_nm as location_nm,
 			use_srhld
 		from
-			dqvs.dvs_rac_mt_car_2024110510584vt4zesb_20241112130557 as car
+			dqvs.dvs_rac_mt_car as car
 		left join dqvs.dvs_cmm_mt_area area
 			on SUBSTRING(car.sgg_cd, 1, 5) = SUBSTRING(area.stdg_cd, 1, 5)
 		left join (select vin
