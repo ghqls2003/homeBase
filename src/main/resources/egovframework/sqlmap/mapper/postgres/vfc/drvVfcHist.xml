@@ -27,7 +27,7 @@
                     		END verify_nm
                     , agency.co_nm
                 FROM
-                	dqvs.dvs_dqv_hs_verf_old verf
+                	dqvs.dvs_dqv_hs_verf verf
 				LEFT OUTER JOIN w_vi AS vi ON verf.rqstr_sn = vi.user_sn
                 LEFT OUTER JOIN w_agency AS agency ON verf.bzmn_sn = agency.bzmn_sn
                 <!-- 조회조건 -->
@@ -107,7 +107,7 @@
 			, w_agency AS (SELECT co_nm, bzmn_sn, brno FROM dqvs.dvs_rac_mt_agency)
 		SELECT COUNT(1) AS cnt
 		FROM
-			dqvs.dvs_dqv_hs_verf_old verf
+			dqvs.dvs_dqv_hs_verf verf
 		LEFT OUTER JOIN w_vi AS vi ON verf.rqstr_sn = vi.user_sn
         LEFT OUTER JOIN w_agency AS agency ON verf.bzmn_sn = agency.bzmn_sn
         <!-- 조회조건 -->
