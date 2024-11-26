@@ -28,7 +28,7 @@
 			area.ctpv_nm||' '||area.sgg_nm as location_nm,
 			use_srhld
 		from
-			dqvs.dvs_rac_mt_car as car
+			dqvs.dvs_rac_mt_car_2024110510584vt4zesb_20241112130557 as car
 		left join dqvs.dvs_cmm_mt_area area
 			on SUBSTRING(car.sgg_cd, 1, 5) = SUBSTRING(area.stdg_cd, 1, 5)
 		left join (select vin
@@ -51,11 +51,14 @@
 				co_nm,
 				sgg_cd ,
 				reg_cmptnc_cd ,
-				ctpv_nm||' '||sgg_nm as sgg_nm
+				area1.ctpv_nm || ' ' || area1.sgg_nm as sgg_nm ,
+				area2.ctpv_nm || ' ' || area2.sgg_nm as reg_nm
 			from
 				dqvs.dvs_rac_mt_agency
-				left join dqvs.dvs_cmm_mt_area
-				on sgg_cd = stdg_cd
+			left join dqvs.dvs_cmm_mt_area area1 on
+				sgg_cd = area1.stdg_cd
+			left join dqvs.dvs_cmm_mt_area area2 on
+				reg_cmptnc_cd = area2.stdg_cd 
 			where
 				bzmn_se_cd = '1'
 				and bzmn_sn like 'RCC' || '%' ),
@@ -202,11 +205,8 @@
 			<if test="bookmarkOrder == '' or bookmarkOrder == null">
 				ROW_NUMBER() OVER(ORDER BY vhcl_reg_no) AS rn
 			</if>
-				, *,
-			area2.ctpv_nm||' '||area2.sgg_nm as reg_nm 
+				, * 
 			FROM auth
-			left join dqvs.dvs_cmm_mt_area area2
-			on reg_cmptnc_cd = area2.stdg_cd
 		),
 		<!-- 페이징 처리 -->
 		page AS (
