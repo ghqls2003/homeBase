@@ -41,7 +41,7 @@ public class RentIdpController extends CmmnAbstractServiceImpl{
 	String author = "";
 	
 	@RequestMapping("rentIdp")
-	public ModelAndView rentIdpView(@RequestParam Map<String, Object> paramsMap, ModelAndView mav,
+	public ModelAndView viewRentIdp(@RequestParam Map<String, Object> paramsMap, ModelAndView mav,
 			HttpServletRequest request, HttpServletResponse response) throws RimsException {
 		
 		mav.setViewName("vfc/rentIdp");
