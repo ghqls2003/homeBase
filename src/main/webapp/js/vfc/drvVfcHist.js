@@ -218,7 +218,6 @@
             var ckResults = $("#ckResults").val();
             var parts = ckResults.split("_");
             var codeType = parts[0];
-            codeType = (codeType == "req") ? "req" : "verify" ;
             var cd = parts[parts.length - 1]; // "99"
             param.vrfcMthd = $("#searchMthd").val();
             param.bzmnSnKwd = $("#searchCoNm").val();

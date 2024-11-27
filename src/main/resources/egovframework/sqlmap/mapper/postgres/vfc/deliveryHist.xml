@@ -50,13 +50,13 @@
 			ddhv.vrfc_cd as verify_cd , 
 			vrfc_rslt,
 			<choose>
-                <when test='codeType.equals("verify")'><!--요청 성공 후 확인결과 실패(vrfc_cd 컬럼 조회시 ) 일때 -->
+                <when test='codeType.equals("verify")'>
                 	dqvs.fn_get_cdnm('verify_cd', #{cd}) as verify_nm,
                 </when>
                 <when test='codeType.equals("")'>
                 	dqvs.fn_get_cdnm('verify_cd', ddhv.vrfc_cd) as verify_nm,
                 </when>
-                <otherwise><!--요청 실패 일때 (vrfc_rslt 컬럼 조회시 )-->
+                <otherwise>
 					dqvs.fn_get_cdnm('vrfc_rslt',#{cd}) as verify_nm,
 				</otherwise>
 			</choose>
