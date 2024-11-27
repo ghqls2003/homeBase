@@ -15,7 +15,7 @@
     var verfCountDataAb = [];
     var verfCountDataTot = [];
     
-    var excelDate = null, excelMthd = null;
+    var excelDate = null, excelMthd = null, excelTotCk = null;
     
     var resultExcelMthd = null, resultExcelAuth = null, resultExcelcmpNm = null, resultExcelMonth = null, 
 //    resultExcelMonth2 = null,
@@ -115,8 +115,12 @@
 									}
 								}
 							}
-								
-							e.workbook.fileName = "운전자격확인 시간별 통계("+excelDate+").xlsx";
+							if(excelTotCk == "ck") {
+								e.workbook.fileName = "운전자격확인 시간별 통계("+excelDate+")(합계만).xlsx";
+							} else {
+								e.workbook.fileName = "운전자격확인 시간별 통계("+excelDate+").xlsx";
+							}
+							
 							e.workbook.sheets[0].title = "운전자격확인결과("+excelMthd+")";
 								
 							kendo.saveAs({
@@ -472,6 +476,7 @@
 			$("#verfDatePick").attr("readonly", true);
 			excelDate = $("#verfDatePick").val();	
 			excelMthd = $("#checkMthd").data("kendoDropDownList").text();
+			excelTotCk = $("#totalVal").is(":checked") ? "ck" : "none";
 		},
 		
 		/**
@@ -536,124 +541,165 @@
 				"bsM"  : $("#verfDatePick").val(),
 				"mthd" : $("#checkMthd").val(),
 				"authrtCd" : authrtCd,
-				"cmptncCd" : cmptncZoneCd
+				"cmptncCd" : cmptncZoneCd,
+				"totCk": $("#totalVal").is(":checked") ? "ck" : "none"
 			};
 
-			$statistics.event.verfColumn();
+			$statistics.event.verfColumn(param);
 			$statistics.ui.verfCountGrid();
 			
 			ajax(true, contextPath + '/stts/verfStts/verfCount', 'body', '조회중입니다', param, function(data) {
-				
 				if(data != null) {
-					verfCountData = [];
-					verfCountDataAb = [];
-					verfCountDataTot = [];
-					
-					var dayTotalObj = {};
-					var dayTotalObjAb = {};
-					var dayTotalObjTot = {};
-					
-					for(var t=0; t<24; t++) {
-						var objNrml = {"str": (t < 10 ? "0"+t : t)+":00", "end": ((t+1) < 10 ? "0"+(t+1) : (t+1))+":00" == "24:00" ? "00:00" : ((t+1) < 10 ? "0"+(t+1) : (t+1))+":00"};
-						var objAbNrml = {};  // 병합위함
-						var objTot = {};  // 병합위함
-//						var objAbNrml = {"str": (t < 10 ? "0"+t : t)+":00", "end": ((t+1) < 10 ? "0"+(t+1) : (t+1))+":00" == "24:00" ? "00:00" : ((t+1) < 10 ? "0"+(t+1) : (t+1))+":00"};
-
-						for (var i = 0; i < data.length; i += 3) {objNrml[Math.floor(i / 3) + 1] = data[i][t]; if (data[i+3] == null) {break;}}
-						objNrml.nrml = data[i].nrml == '1' ?  '정상' : data[i].nrml == '2' ? '비정상' : '합계';
-						for (var i = 1; i < data.length; i += 3) {objAbNrml[Math.floor(i / 3) + 1] = data[i][t]; if (data[i+3] == null) {break;}}
-						objAbNrml.nrml = data[i].nrml == '1' ?  '정상' : data[i].nrml == '2' ? '비정상' : '합계';
-						for (var i = 2; i < data.length; i += 3) {objTot[Math.floor(i / 3) + 1] = data[i][t]; if (data[i+3] == null) {break;}}
-						objTot.nrml = data[i].nrml == '1' ?  '정상' : data[i].nrml == '2' ? '비정상' : '합계';
+					if(data.length > 31) {
+						verfCountData = [];
+						verfCountDataAb = [];
+						verfCountDataTot = [];
 						
-						// 시간별 토탈 값 더하기
+						var dayTotalObj = {};
+						var dayTotalObjAb = {};
+						var dayTotalObjTot = {};
+						
+						for(var t=0; t<24; t++) {
+							var objNrml = {"str": (t < 10 ? "0"+t : t)+":00", "end": ((t+1) < 10 ? "0"+(t+1) : (t+1))+":00" == "24:00" ? "00:00" : ((t+1) < 10 ? "0"+(t+1) : (t+1))+":00"};
+							var objAbNrml = {};  // 병합위함
+							var objTot = {};  // 병합위함
+	//						var objAbNrml = {"str": (t < 10 ? "0"+t : t)+":00", "end": ((t+1) < 10 ? "0"+(t+1) : (t+1))+":00" == "24:00" ? "00:00" : ((t+1) < 10 ? "0"+(t+1) : (t+1))+":00"};
+	
+							for (var i = 0; i < data.length; i += 3) {objNrml[Math.floor(i / 3) + 1] = data[i][t]; if (data[i+3] == null) {break;}}
+							objNrml.nrml = data[i].nrml == '1' ?  '정상' : data[i].nrml == '2' ? '비정상' : '합계';
+							for (var i = 1; i < data.length; i += 3) {objAbNrml[Math.floor(i / 3) + 1] = data[i][t]; if (data[i+3] == null) {break;}}
+							objAbNrml.nrml = data[i].nrml == '1' ?  '정상' : data[i].nrml == '2' ? '비정상' : '합계';
+							for (var i = 2; i < data.length; i += 3) {objTot[Math.floor(i / 3) + 1] = data[i][t]; if (data[i+3] == null) {break;}}
+							objTot.nrml = data[i].nrml == '1' ?  '정상' : data[i].nrml == '2' ? '비정상' : '합계';
+							
+							// 시간별 토탈 값 더하기
+							// 정상
+							var objSum = 0;
+							for(var i in objNrml) {if(i != 'str' && i != 'end' && i != 'nrml') {objSum += objNrml[i];}}
+							objNrml.hourTotal = objSum;
+							// 비정상
+							var objSumAb = 0;
+							for(var i in objAbNrml) {if(i != 'str' && i != 'end' && i != 'nrml') {objSumAb += objAbNrml[i];}}
+							objAbNrml.hourTotal = objSumAb;
+							// 합계
+							var objSumTot = 0;
+							for(var i in objTot) {if(i != 'str' && i != 'end' && i != 'nrml') {objSumTot += objTot[i];}}
+							objTot.hourTotal = objSumTot;
+							
+							// 시간별 평균 값
+							var avg1 = Math.round(objSum/(data.length/3) * 100) / 100;
+							var avg2 = Math.round(objSumAb/(data.length/3) * 100) / 100;
+							var avg3 = Math.round(objSumTot/(data.length/3) * 100) / 100;
+							objNrml.avg = avg1;
+							objAbNrml.avg = avg2;
+							objTot.avg = avg3;
+							
+							verfCountData.push(objNrml);
+							verfCountDataAb.push(objAbNrml);
+							verfCountDataTot.push(objTot);
+						}
+						
+						// 일별 토탈 값 더하기
 						// 정상
-						var objSum = 0;
-						for(var i in objNrml) {if(i != 'str' && i != 'end' && i != 'nrml') {objSum += objNrml[i];}}
-						objNrml.hourTotal = objSum;
+						for(var i in verfCountData[0]) {
+						var daySum = 0;
+							if(i != 'str' && i != 'end' && i != 'nrml') {for(var j=0; j<verfCountData.length; j++) {daySum += verfCountData[j][i];}}
+							dayTotalObj[i] = daySum;
+						}
+						dayTotalObj.avg = dayTotalObj.avg !== 0 && dayTotalObj.avg.toString().split(".")[1].length > 2 ? dayTotalObj.avg.toFixed(2) : dayTotalObj.avg;
+						dayTotalObj.str = "일별";
+						dayTotalObj.end = "합계";
+						dayTotalObj.nrml = "정상";
+						
+						verfCountData.unshift(dayTotalObj);
 						// 비정상
-						var objSumAb = 0;
-						for(var i in objAbNrml) {if(i != 'str' && i != 'end' && i != 'nrml') {objSumAb += objAbNrml[i];}}
-						objAbNrml.hourTotal = objSumAb;
+						for(var i in verfCountDataAb[0]) {
+						var daySumAb = 0;
+							if(i != 'str' && i != 'end' && i != 'nrml') {for(var j=0; j<verfCountDataAb.length; j++) {daySumAb += verfCountDataAb[j][i];}}
+							dayTotalObjAb[i] = daySumAb;
+						}
+						dayTotalObjAb.avg = dayTotalObjAb.avg !== 0 && dayTotalObjAb.avg.toString().split(".")[1].length > 2 ? dayTotalObjAb.avg.toFixed(2) : dayTotalObjAb.avg;
+						dayTotalObjAb.nrml = "비정상";
+						
+						verfCountDataAb.unshift(dayTotalObjAb);
 						// 합계
-						var objSumTot = 0;
-						for(var i in objTot) {if(i != 'str' && i != 'end' && i != 'nrml') {objSumTot += objTot[i];}}
-						objTot.hourTotal = objSumTot;
+						for(var i in verfCountDataTot[0]) {
+						var daySumTot = 0;
+							if(i != 'str' && i != 'end' && i != 'nrml') {for(var j=0; j<verfCountDataTot.length; j++) {daySumTot += verfCountDataTot[j][i];}}
+							dayTotalObjTot[i] = daySumTot;
+						}
+						dayTotalObjTot.avg = dayTotalObjTot.avg !== 0 && dayTotalObjTot.avg.toString().split(".")[1].length > 2 ? dayTotalObjTot.avg.toFixed(2) : dayTotalObjTot.avg;
+						dayTotalObjTot.nrml = "합계";
 						
-						// 시간별 평균 값
-						var avg1 = Math.round(objSum/(data.length/3) * 100) / 100;
-						var avg2 = Math.round(objSumAb/(data.length/3) * 100) / 100;
-						var avg3 = Math.round(objSumTot/(data.length/3) * 100) / 100;
-						objNrml.avg = avg1;
-						objAbNrml.avg = avg2;
-						objTot.avg = avg3;
+						verfCountDataTot.unshift(dayTotalObjTot);
 						
-						verfCountData.push(objNrml);
-						verfCountDataAb.push(objAbNrml);
-						verfCountDataTot.push(objTot);
-					}
-					
-					// 일별 토탈 값 더하기
-					// 정상
-					for(var i in verfCountData[0]) {
-					var daySum = 0;
-						if(i != 'str' && i != 'end' && i != 'nrml') {for(var j=0; j<verfCountData.length; j++) {daySum += verfCountData[j][i];}}
-						dayTotalObj[i] = daySum;
-					}
-					dayTotalObj.avg = dayTotalObj.avg !== 0 && dayTotalObj.avg.toString().split(".")[1].length > 2 ? dayTotalObj.avg.toFixed(2) : dayTotalObj.avg;
-					dayTotalObj.str = "일별";
-					dayTotalObj.end = "합계";
-					dayTotalObj.nrml = "정상";
-					
-					verfCountData.unshift(dayTotalObj);
-					// 비정상
-					for(var i in verfCountDataAb[0]) {
-					var daySumAb = 0;
-						if(i != 'str' && i != 'end' && i != 'nrml') {for(var j=0; j<verfCountDataAb.length; j++) {daySumAb += verfCountDataAb[j][i];}}
-						dayTotalObjAb[i] = daySumAb;
-					}
-					dayTotalObjAb.avg = dayTotalObjAb.avg !== 0 && dayTotalObjAb.avg.toString().split(".")[1].length > 2 ? dayTotalObjAb.avg.toFixed(2) : dayTotalObjAb.avg;
-					dayTotalObjAb.nrml = "비정상";
-					
-					verfCountDataAb.unshift(dayTotalObjAb);
-					// 합계
-					for(var i in verfCountDataTot[0]) {
-					var daySumTot = 0;
-						if(i != 'str' && i != 'end' && i != 'nrml') {for(var j=0; j<verfCountDataTot.length; j++) {daySumTot += verfCountDataTot[j][i];}}
-						dayTotalObjTot[i] = daySumTot;
-					}
-					dayTotalObjTot.avg = dayTotalObjTot.avg !== 0 && dayTotalObjTot.avg.toString().split(".")[1].length > 2 ? dayTotalObjTot.avg.toFixed(2) : dayTotalObjTot.avg;
-					dayTotalObjTot.nrml = "합계";
-					
-					verfCountDataTot.unshift(dayTotalObjTot);
-					
-					// 비정상비율
-					var perData = {"str": "비정상", "end": "비율(%)", "nrml": "(비정상/합계)"};
-					for(var i in dayTotalObjTot) {
-						if(dayTotalObjAb.hasOwnProperty(i)) {
-							var valTot = dayTotalObjTot[i];
-							var valAb = dayTotalObjAb[i];
-							if(i != 'nrml') {
-								if(valTot == 0 && valAb == 0) {
-									perData[i] = 0;
-								} else {
-									var val = Math.round((valAb/valTot)*10000)/100;
-									perData[i] = val;
+						// 비정상비율
+						var perData = {"str": "비정상", "end": "비율(%)", "nrml": "(비정상/합계)"};
+						for(var i in dayTotalObjTot) {
+							if(dayTotalObjAb.hasOwnProperty(i)) {
+								var valTot = dayTotalObjTot[i];
+								var valAb = dayTotalObjAb[i];
+								if(i != 'nrml') {
+									if(valTot == 0 && valAb == 0) {
+										perData[i] = 0;
+									} else {
+										var val = Math.round((valAb/valTot)*10000)/100;
+										perData[i] = val;
+									}
 								}
 							}
 						}
-					}
-				
-					// 최종 데이터 형식
-					var endData = []
-					for(var i=0; i<verfCountData.length; i++) {
-						endData.push(verfCountData[i])
-						endData.push(verfCountDataAb[i])
-						endData.push(verfCountDataTot[i])
-					}
-					endData.unshift(perData)
 					
-					$("#verf-grid").data("kendoGrid").setDataSource(endData);
+						// 최종 데이터 형식
+						var endData = []
+						for(var i=0; i<verfCountData.length; i++) {
+							endData.push(verfCountData[i])
+							endData.push(verfCountDataAb[i])
+							endData.push(verfCountDataTot[i])
+						}
+						endData.unshift(perData)
+						
+						$("#verf-grid").data("kendoGrid").setDataSource(endData);
+					} else {
+						verfCountDataTot = [];
+						
+						var dayTotalObjTot = {};
+						
+						for(var t=0; t<24; t++) {
+							var objTot = {"str": (t < 10 ? "0"+t : t)+":00", "end": ((t+1) < 10 ? "0"+(t+1) : (t+1))+":00" == "24:00" ? "00:00" : ((t+1) < 10 ? "0"+(t+1) : (t+1))+":00"};
+	
+							for (var i = 0; i < data.length; i++) {objTot[i + 1] = data[i][t]; if (data[i+1] == null) {break;}}
+							objTot.nrml = '합계';
+							
+							// 시간별 토탈 값 더하기
+							// 합계
+							var objSumTot = 0;
+							for(var i in objTot) {if(i != 'str' && i != 'end' && i != 'nrml') {objSumTot += objTot[i];}}
+							objTot.hourTotal = objSumTot;
+							
+							// 시간별 평균 값
+							var avg = Math.round(objSumTot/(data.length) * 100) / 100;
+							objTot.avg = avg;
+							
+							verfCountDataTot.push(objTot);
+						}
+						
+						// 일별 토탈 값 더하기
+						// 합계
+						for(var i in verfCountDataTot[0]) {
+						var daySumTot = 0;
+							if(i != 'str' && i != 'end' && i != 'nrml') {for(var j=0; j<verfCountDataTot.length; j++) {daySumTot += verfCountDataTot[j][i];}}
+							dayTotalObjTot[i] = daySumTot;
+						}
+						dayTotalObjTot.avg = dayTotalObjTot.avg !== 0 && dayTotalObjTot.avg.toString().split(".")[1].length > 2 ? dayTotalObjTot.avg.toFixed(2) : dayTotalObjTot.avg;
+						dayTotalObjTot.str = "일별";
+						dayTotalObjTot.end = "합계";
+						dayTotalObjTot.nrml = "합계";
+						
+						verfCountDataTot.unshift(dayTotalObjTot);
+						
+						$("#verf-grid").data("kendoGrid").setDataSource(verfCountDataTot);
+					}
 				}
 			});
 		},
@@ -664,7 +710,10 @@
 		 * @date         : 2024. 01. 31
 		 * @author       : 김경룡
 		 */
-		verfColumn: function() {
+		verfColumn: function(param) {
+//			if(param.totCk == "ck") {
+//				
+//			}
 			dayColumns = [
 //				{"field": "str", "title": "시작시각", "locked": true, "template": "<span style='color: black;'>#=str #</span>", "width": "70px;"},
 //				{"field": "end", "title": "종료시각", "locked": true, "template": "<span style='color: black;'>#=end #</span>", "width": "70px;"},
@@ -735,6 +784,7 @@
 				
 				excelDate = $("#verfDatePick").val();
 				excelMthd = $("#checkMthd").data("kendoDropDownList").text();
+				excelTotCk = $("#totalVal").is(":checked") ? "ck" : "none";
 				
 				$("#verf-grid").empty();
 				$statistics.event.verfCountData();
@@ -814,6 +864,7 @@
 					
 					$("#verfDatePick").val(toMonth);
 					$("#checkMthd").data("kendoDropDownList").select(0);
+					$("#totalVal").prop("checked", true);
 				}
 			});
 		},

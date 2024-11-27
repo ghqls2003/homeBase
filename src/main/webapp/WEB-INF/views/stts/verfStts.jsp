@@ -55,6 +55,12 @@
 		                        <input type="text" id="checkMthd" class="checkMthd" aria-label="검증방법" placeholder="검증방법" />
 							</li>
 						</ul>
+		            	<ul class="selec_box">
+		                	<li class="li_slec" style="display: flex; align-items: center">
+		                    	<label for="totalVal" style="margin-right:5px;">합계만 보기</label>
+		                        <input type="checkbox" id="totalVal" class="totalVal" aria-label="합계" placeholder="합계" checked />
+							</li>
+						</ul>
 					</div>
 					<button id="searchTimeBtn" class="yellow_btn searchBtn" type="button">
 						조회 <img src="${contextPath}/images/sub/ico_search02.png" alt="조회아이콘" />

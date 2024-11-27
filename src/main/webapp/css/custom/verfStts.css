@@ -47,3 +47,8 @@
 .tg .darker {
 	background-color: #e4e8f0;
 }
+input[type="checkbox"] {
+      width: 15px; /* 너비 */
+      height: 15px; /* 높이 */
+      transform: scale(1.2); /* 크기 배율 조정 */
+    }
