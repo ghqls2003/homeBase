@@ -47,14 +47,19 @@
 				when '3' then '모바일면허증'
 				when '4' then 'API'
 			end) as vrfc_mthd ,
-			ddhv.vrfc_cd as verify_cd ,
+			ddhv.vrfc_cd as verify_cd , 
 			vrfc_rslt,
-			case
-				when ddhv.vrfc_rslt = '00'
-				or ddhv.vrfc_rslt = '1'
-				or ddhv.vrfc_rslt = '0' then dqvs.fn_get_cdnm('verify_cd',ddhv.vrfc_cd)
-				else dqvs.fn_get_cdnm('vrfc_rslt',ddhv.vrfc_rslt)
-			end as verify_nm ,
+			<choose>
+                <when test='codeType.equals("verify")'><!--요청 성공 후 확인결과 실패(vrfc_cd 컬럼 조회시 ) 일때 -->
+                	dqvs.fn_get_cdnm('verify_cd', #{cd}) as verify_nm,
+                </when>
+                <when test='codeType.equals("undefined")'>
+                	dqvs.fn_get_cdnm('verify_cd', ddhv.vrfc_cd) as verify_nm,
+                </when>
+                <otherwise><!--요청 실패 일때 (vrfc_rslt 컬럼 조회시 )-->
+                    dqvs.fn_get_cdnm('vrfc_rslt',#{cd}) as verify_nm,
+                </otherwise>
+			</choose>
 			ddhv.vrfc_rslt as vrfc_rslt_cd ,
 			prcs_se ,
 			drma.bzmn_sn
@@ -209,7 +214,7 @@
     <select id="ckResults" resultType="resultMap">
         select cd_nm,concat(cd_group,'_', cd) as cd
         FROM dqvs.dvs_cmm_mt_code
-        WHERE cd_group in ('verify_cd','req_rslt_cd') and use_yn ='Y' and del_yn='N'
+        WHERE cd_group in ('verify_cd','vrfc_rslt') and use_yn ='Y' and del_yn='N'
         order by cd_nm asc
     </select>
 </mapper>
