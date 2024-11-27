@@ -618,7 +618,9 @@
 							if(i != 'str' && i != 'end' && i != 'nrml') {for(var j=0; j<verfCountDataAb.length; j++) {daySumAb += verfCountDataAb[j][i];}}
 							dayTotalObjAb[i] = daySumAb;
 						}
-						dayTotalObjAb.avg = dayTotalObjAb.avg !== 0 && dayTotalObjAb.avg.toString().split(".")[1].length > 2 ? dayTotalObjAb.avg.toFixed(2) : dayTotalObjAb.avg;
+						if(typeof dayTotalObjAb.avg.toString().split(".")[1] != 'undefined') {
+							dayTotalObjAb.avg = dayTotalObjAb.avg !== 0 && dayTotalObjAb.avg.toString().split(".")[1].length > 2 ? dayTotalObjAb.avg.toFixed(2) : dayTotalObjAb.avg;
+						} 
 						dayTotalObjAb.nrml = "비정상";
 						
 						verfCountDataAb.unshift(dayTotalObjAb);
