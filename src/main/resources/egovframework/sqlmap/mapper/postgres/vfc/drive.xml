@@ -2,21 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="vfc.drive">
 
-
-	<select id="selectCarList" resultType="resultMap">
-		select
-			T3.*
-		from
-			(
+<!--검색차량리스트sql 24.11.28 jeonghyewon -->
+	<sql id="selectCarListSql">
+		(
 			select
-				row_number() over() as rn,
-				T2.*
+			row_number() over() as rn,
+			T2.*
 			from
-				(
+			(
 				select
 					T1.*
 				from
-					(
+				(
 					select
 						vhcl_reg_no,
 						drmc.vin,
@@ -28,83 +25,58 @@
 						use_yn,
 						sgg_cd,
 						ownr_nm,
-						to_char(reg_dt,
-						'yyyy-mm-dd') as reg_dt,
+						to_char(reg_dt, 'yyyy-mm-dd') as reg_dt,
 						fvrts.reg_yn
 					from
-						dqvs.dvs_rac_mt_car drmc
+					dqvs.dvs_rac_mt_car drmc
 					left join (
 						select
-							vin ,
-							mdfr_sn,
-							'Y' as reg_yn
+						vin ,
+						mdfr_sn,
+						'Y' as reg_yn
 						from
-							dqvs.dvs_rac_mt_fvrts
+						dqvs.dvs_rac_mt_fvrts
 						where
-							mdfr_sn = #{userSn}::numeric ) as fvrts
-						on drmc.vin = fvrts.vin
-					where
-						use_yn = 'Y'
-						<if test="carNum != '' and carNum != null">
-							and vhcl_reg_no like '%' || #{carNum} || '%'
-						</if>
-						<choose>
-							<when test= "crno != '' and crno != null">
-								AND crno = #{crno}
-							</when>
-							<otherwise>
-								AND 1 != 1
-							</otherwise>
-						</choose>
-						 ) T1
-					) T2
-					order by
-						case
-							when reg_yn = 'Y' then 0
-						else 1
-					end, vhcl_reg_no
-		 		) T3
-			where
-				1 = 1
-				<if test="take != '' and take != null">
-					AND T3.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
-				</if>
-				<if test="skip != '' and skip != null">
-					AND T3.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
-				</if>
-			order by T3.rn asc
+						mdfr_sn = #{userSn}::numeric ) as fvrts on drmc.vin = fvrts.vin
+				where
+					use_yn = 'Y'
+					<if test="carNum != '' and carNum != null">
+						and vhcl_reg_no like '%' || #{carNum} || '%'
+					</if>
+					<choose>
+						<when test= "crno != '' and crno != null">
+							AND crno = #{crno}
+						</when>
+						<otherwise>
+							AND 1 != 1
+						</otherwise>
+					</choose>
+				) T1
+			) T2
+			order by case when T2.reg_yn = 'Y' then 0 else 1 end, T2.vhcl_reg_no
+		) T3
+
+	</sql>
+
+	<!--검색차량리스트 24.11.28 jeonghyewon -->
+	<select id="selectCarList" resultType="resultMap">
+		select T3.*
+		from <include refid="selectCarListSql"/>
+		where
+			1 = 1
+			<if test="take != '' and take != null">
+				AND T3.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+			</if>
+			<if test="skip != '' and skip != null">
+				AND T3.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+			</if>
+		order by T3.rn asc
 	</select>
 
+	<!--검색차량리스트cnt 24.11.28 jeonghyewon -->
 	<select id="selectCarListCnt" resultType="int">
-		select count(*)
-		from(
-			select
-				vhcl_reg_no,
-				vin,
-				carmdl,
-				mdlyr,
-				vhcl_nm,
-				bzmn_sn,
-				engine_fom,
-				use_yn,
-				sgg_cd,
-				ownr_nm,
-				reg_dt
-			from
-				dqvs.dvs_rac_mt_car
-			where use_yn='Y'
-				<if test="carNum != '' and carNum != null">
-					and vhcl_reg_no like '%' || #{carNum} || '%'
-				</if>
-				<choose>
-					<when test= "crno != '' and crno != null">
-						AND crno = #{crno}
-					</when>
-					<otherwise>
-						AND 1 != 1
-					</otherwise>
-				</choose>
-		)a
+		select count(T3.*)
+		from <include refid="selectCarListSql"/>
 	</select>
 
 	<select id="selectVerifyCd" resultType="resultMap">
@@ -189,7 +161,7 @@
 			   ,d.actn_yn,d.defects_cn
 			FROM
 				dqvs.dvs_rac_mt_defect d
-				where d.actn_yn  ='N'
+			where d.actn_yn  ='N'
 				<choose>
 					<when test="vin != null and vin != ''">
 						and vin LIKE '%' || rpad(#{vin}, 17) || '%'
@@ -422,19 +394,10 @@
 				use_yn,
 				ownr_nm,
 				crno,
-				fvrts.reg_yn,
 				use_srhld
 			from
 			dqvs.dvs_rac_mt_car as car
-			left join (select vin
-							, mdfr_sn
-							, mdfcn_dt
-							, mdfcn_ip
-							, 'Y' as reg_yn
-					from dqvs.dvs_rac_mt_fvrts
-					where mdfr_sn = #{userSn}::numeric
-			) as fvrts
-			on car.vin = fvrts.vin),
+			),
 		<!--대여사업자 추출-->
 		filteredAgency as (
 			select
@@ -522,7 +485,6 @@
 		authrtCd.equals("S02") or
 		authrtCd.equals("S03")
 		'>
-
 			<include refid="detailCarListSql" />
 			<!-- 순번 추가 -->
 			),
