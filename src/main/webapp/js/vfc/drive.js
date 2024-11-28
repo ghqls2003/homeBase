@@ -88,7 +88,10 @@ var similarityImage = false; // 유사도 검증 이미지유무 전역변수
 
 	$drive.ui = {
 		pageLoad : function() {
-			
+
+
+
+
 			if(userType=="PC"){  // 신규 앱 배포 시 주석 해제
 				$(".similarityChkBox").css("display", "none");  // 신규 앱 배포 시 주석 해제
 				$("#similarity_tb_top").css("display", "none");  // 신규 앱 배포 시 주석 해제

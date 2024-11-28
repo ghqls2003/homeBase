@@ -380,151 +380,111 @@
 
 	<!-- 차량 그리드 목록 SQL -->
 	<sql id="detailCarListSql">
-		with carList as (
-			select
-				vhcl_reg_no,
-				car.vin,
-				carmdl,
-				vhcl_nm,
-				mdlyr,
-				engine_fom,
-				TO_CHAR(TO_DATE(frst_reg_ymd, 'YYYYMMDD'), 'YYYY-MM-DD') as frst_reg_ymd,
-				TO_CHAR(TO_DATE(expry_ymd, 'YYYYMMDD') , 'YYYY-MM-DD') as expry_ymd,
-				TO_CHAR(car.reg_dt, 'YYYY-MM-DD') as reg_dt,
-				use_yn,
-				ownr_nm,
-				crno,
-				use_srhld
-			from
-			dqvs.dvs_rac_mt_car as car
+		(
+			with carList as (
+				select
+					vhcl_reg_no,
+					car.vin,
+					carmdl,
+					vhcl_nm,
+					mdlyr,
+					engine_fom,
+					TO_CHAR(TO_DATE(frst_reg_ymd, 'YYYYMMDD'), 'YYYY-MM-DD') as frst_reg_ymd,
+					TO_CHAR(TO_DATE(expry_ymd, 'YYYYMMDD') , 'YYYY-MM-DD') as expry_ymd,
+					TO_CHAR(car.reg_dt, 'YYYY-MM-DD') as reg_dt,
+					use_yn,
+					ownr_nm,
+					crno,
+					use_srhld
+				from
+				dqvs.dvs_rac_mt_car as car
+				),
+			<!--대여사업자 추출-->
+			filteredAgency as (
+				select
+					distinct on
+					(crno) bzmn_sn,
+					crno as agencyCrno,
+					bzmn_se_cd ,
+					brno ,
+					co_nm,
+					sgg_cd ,
+					reg_cmptnc_cd ,
+					ctpv_nm||' '||sgg_nm as sgg_nm
+				from
+				dqvs.dvs_rac_mt_agency
+				left join dqvs.dvs_cmm_mt_area on sgg_cd = stdg_cd
+				where
+					bzmn_se_cd = '1'
+					and bzmn_sn like 'RCC' || '%'
 			),
-		<!--대여사업자 추출-->
-		filteredAgency as (
-			select
-				distinct on
-				(crno) bzmn_sn,
-				crno as agencyCrno,
-				bzmn_se_cd ,
-				brno ,
-				co_nm,
-				sgg_cd ,
-				reg_cmptnc_cd ,
-				ctpv_nm||' '||sgg_nm as sgg_nm
-			from
-			dqvs.dvs_rac_mt_agency
-			left join dqvs.dvs_cmm_mt_area
-			on sgg_cd = stdg_cd
-			where
-				bzmn_se_cd = '1'
-				and bzmn_sn like 'RCC' || '%'
-		),
-		<!--join 추출한 대여사업자 -->
-		joinAgency AS (
-		SELECT
-			*
-		FROM
-		carList
-		LEFT JOIN
-		filteredAgency
-		ON carList.crno = filteredAgency.agencyCrno
-		),
-		<!--join 결함정보 -->
-		joinDefect AS (
-			SELECT
-				DISTINCT joinAgency.*,
-				CASE WHEN defect.vin IS NOT NULL THEN 'Y' ELSE 'N' END AS defect_yn,
-				defect.vin ,defect.defects_cn,
-				TO_CHAR(defect.ocrn_dt, 'YYYY-MM-DD HH24:MI') as ocrn_dt,
-				defect.actn_yn
-			FROM
-			joinAgency
-			LEFT JOIN dqvs.dvs_rac_mt_defect AS defect ON
-			joinAgency.vin = defect.vin
-		    where defect.actn_yn = 'N'
-		    order by ocrn_dt desc
-		),
-		<!-- 조회조건 -->
-		searchParams AS (
-			SELECT * FROM joinDefect
-			WHERE actn_yn = 'N'
-			<if test="vhclRegNo != null and vhclRegNo != ''">
-				and vhcl_reg_no = #{vhclRegNo}
-			</if>
-			<if test="crno != null and crno != ''">
-				and crno = #{crno}
-			</if>
-			<if test="defectYn != null and defectYn != ''">
-				and defect_yn = #{defectYn}
-			</if>
-		),
-		<!-- 권한 -->
-		auth AS (
-		SELECT * FROM searchParams
-		WHERE 1 = 1
-		<choose>
-			<!--S01 S02 S03 사업자 -->
-			<when test='authrtCd.equals("S01") or authrtCd.equals("S02") or authrtCd.equals("S03")'>
-				AND bzmn_sn = #{bzmnSn}
-			</when>
-			<!-- S04 플랫폼 : 미정-->
-			<when test='authrtCd.equals("S04")'>
-				AND crno = 'xxx'
-			</when>
-			<!-- 권한이 없을 경우 -->
-			<otherwise>
-				AND crno = 'xxx'
-			</otherwise>
-		</choose>
+			<!--join 추출한 대여사업자 -->
+			joinAgency AS (
+				SELECT
+					*
+				FROM
+				carList
+				LEFT JOIN
+				filteredAgency ON carList.crno = filteredAgency.agencyCrno
+			),
+			<!--join 결함정보 -->
+			joinDefect AS (
+				SELECT
+					DISTINCT joinAgency.*,
+					CASE WHEN defect.vin IS NOT NULL THEN 'Y' ELSE 'N' END AS defect_yn,
+					defect.vin ,defect.defects_cn,
+					TO_CHAR(defect.ocrn_dt, 'YYYY-MM-DD HH24:MI') as ocrn_dt,
+					defect.actn_yn
+				FROM
+				joinAgency
+				LEFT JOIN dqvs.dvs_rac_mt_defect AS defect ON joinAgency.vin = defect.vin
+				where defect.actn_yn = 'N'
+				order by ocrn_dt desc
+			),
+			<!-- 조회조건 -->
+			searchParams AS (
+				SELECT * FROM joinDefect
+				WHERE actn_yn = 'N'
+				<if test="vhclRegNo != null and vhclRegNo != ''">
+					and vhcl_reg_no = #{vhclRegNo}
+				</if>
+				<choose>
+					<when test= "crno != '' and crno != null">
+						AND crno = #{crno}
+					</when>
+					<otherwise>
+						AND 1 != 1
+					</otherwise>
+				</choose>
+				<if test="defectYn != null and defectYn != ''">
+					and defect_yn = #{defectYn}
+				</if>
+			)
+			select * from searchParams
+		) as deCarInfo
 	</sql>
 
 	<!--  해당 차량 상세 조회 :24.11.26 jeonghyewon-->
 	<select id="detailCarList" resultType="resultMap">
-		/* 차량 그리드 */
-		<if test='
-		authrtCd.equals("S01") or
-		authrtCd.equals("S02") or
-		authrtCd.equals("S03")
-		'>
-			<include refid="detailCarListSql" />
-			<!-- 순번 추가 -->
-			),
-			rowNum AS (
-			SELECT
-			<if test="bookmarkOrder != '' and bookmarkOrder != null">
-				ROW_NUMBER() OVER(ORDER BY CASE WHEN reg_yn = 'Y' THEN 0 ELSE 1 END, vhcl_reg_no) AS rn
-			</if>
-			<if test="bookmarkOrder == '' or bookmarkOrder == null">
-				ROW_NUMBER() OVER(ORDER BY vhcl_reg_no) AS rn
-			</if>
-			, *
-			FROM auth
-			),
-			<!-- 페이징 처리 -->
-			page AS (
-			SELECT * FROM rowNum
-			WHERE 1=1
-			<if test="take != '' and take != null">
-				AND rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
-			</if>
-			<if test="skip != '' and skip != null">
-				AND rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
-			</if>
-			)
-			SELECT * FROM page
+		with deCarRowNum as (
+			SELECT ROW_NUMBER() OVER(ORDER BY deCarInfo.vhcl_reg_no) AS rn, deCarInfo.*
+			FROM <include refid="detailCarListSql" />
+		)
+		SELECT *
+		FROM deCarRowNum
+		WHERE 1=1
+		<if test="take != '' and take != null">
+			AND rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		</if>
+		<if test="skip != '' and skip != null">
+			AND rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
 		</if>
 	</select>
 
+	<!-- 해당 차량 상세 조회 :24.11.26 jeonghyewon-->
 	<select id="detailCarListCnt" resultType="int">
-		/* 해당 차량 상세 조회 :24.11.26 jeonghyewon */
-		<if test='
-		authrtCd.equals("S01") or
-		authrtCd.equals("S02") or
-		authrtCd.equals("S03")
-		'>
-			<include refid="detailCarListSql" />
-			)
-			SELECT COUNT(1) FROM auth
-		</if>
+		SELECT count(deCarInfo.*)
+		FROM <include refid="detailCarListSql" />
 	</select>
 
 </mapper>
