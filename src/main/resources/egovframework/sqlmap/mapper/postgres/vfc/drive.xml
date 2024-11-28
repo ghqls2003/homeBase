@@ -31,11 +31,11 @@
 					dqvs.dvs_rac_mt_car drmc
 					left join (
 						select
-						vin ,
-						mdfr_sn,
-						'Y' as reg_yn
-						from
-						dqvs.dvs_rac_mt_fvrts
+							vin ,
+							mdfr_sn,
+							'Y' as reg_yn
+							from
+							dqvs.dvs_rac_mt_fvrts
 						where
 						mdfr_sn = #{userSn}::numeric ) as fvrts on drmc.vin = fvrts.vin
 				where
