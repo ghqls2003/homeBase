@@ -606,7 +606,9 @@
 							if(i != 'str' && i != 'end' && i != 'nrml') {for(var j=0; j<verfCountData.length; j++) {daySum += verfCountData[j][i];}}
 							dayTotalObj[i] = daySum;
 						}
-						dayTotalObj.avg = dayTotalObj.avg !== 0 && dayTotalObj.avg.toString().split(".")[1].length > 2 ? dayTotalObj.avg.toFixed(2) : dayTotalObj.avg;
+						if(typeof dayTotalObj.avg.toString().split(".")[1] != 'undefined') {
+							dayTotalObj.avg = dayTotalObj.avg !== 0 && dayTotalObj.avg.toString().split(".")[1].length > 2 ? dayTotalObj.avg.toFixed(2) : dayTotalObj.avg;
+						}
 						dayTotalObj.str = "일별";
 						dayTotalObj.end = "합계";
 						dayTotalObj.nrml = "정상";
@@ -630,7 +632,9 @@
 							if(i != 'str' && i != 'end' && i != 'nrml') {for(var j=0; j<verfCountDataTot.length; j++) {daySumTot += verfCountDataTot[j][i];}}
 							dayTotalObjTot[i] = daySumTot;
 						}
-						dayTotalObjTot.avg = dayTotalObjTot.avg !== 0 && dayTotalObjTot.avg.toString().split(".")[1].length > 2 ? dayTotalObjTot.avg.toFixed(2) : dayTotalObjTot.avg;
+						if(typeof dayTotalObjTot.avg.toString().split(".")[1] != 'undefined') {
+							dayTotalObjTot.avg = dayTotalObjTot.avg !== 0 && dayTotalObjTot.avg.toString().split(".")[1].length > 2 ? dayTotalObjTot.avg.toFixed(2) : dayTotalObjTot.avg;
+						}
 						dayTotalObjTot.nrml = "합계";
 						
 						verfCountDataTot.unshift(dayTotalObjTot);
@@ -693,7 +697,10 @@
 							if(i != 'str' && i != 'end' && i != 'nrml') {for(var j=0; j<verfCountDataTot.length; j++) {daySumTot += verfCountDataTot[j][i];}}
 							dayTotalObjTot[i] = daySumTot;
 						}
-						dayTotalObjTot.avg = dayTotalObjTot.avg !== 0 && dayTotalObjTot.avg.toString().split(".")[1].length > 2 ? dayTotalObjTot.avg.toFixed(2) : dayTotalObjTot.avg;
+						if(typeof dayTotalObjTot.avg.toString().split(".")[1] != 'undefined') {
+							dayTotalObjTot.avg = dayTotalObjTot.avg !== 0 && dayTotalObjTot.avg.toString().split(".")[1].length > 2 ? dayTotalObjTot.avg.toFixed(2) : dayTotalObjTot.avg;
+						}
+						console.log(dayTotalObjTot)
 						dayTotalObjTot.str = "일별";
 						dayTotalObjTot.end = "합계";
 						dayTotalObjTot.nrml = "합계";
