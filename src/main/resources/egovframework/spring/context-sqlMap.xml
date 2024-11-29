@@ -5,7 +5,8 @@
 
 	<!-- sqlsession setup for mybatis database layer -->
 	<bean id="sqlSession"
-		class="org.mybatis.spring.SqlSessionFactoryBean">
+		class="kr.or.kotsa.rims.cmmn.sys.service.RefreshableSqlSessionFactoryBean">
+<!-- 		class="org.mybatis.spring.SqlSessionFactoryBean"> -->
 		<property name="configLocation"
 			value="classpath:/egovframework/sqlmap/config/sql-map-config.xml" />
 		<property name="mapperLocations"

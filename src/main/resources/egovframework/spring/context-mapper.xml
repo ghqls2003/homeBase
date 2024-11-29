@@ -15,10 +15,12 @@
 
 	<!-- SqlSession setup for MyBatis Database Layer -->
 	<bean id="sqlSessionFactorypostgres"
-		class="org.mybatis.spring.SqlSessionFactoryBean">
+		class="kr.or.kotsa.rims.cmmn.sys.service.RefreshableSqlSessionFactoryBean">
+<!-- 		class="org.mybatis.spring.SqlSessionFactoryBean"> -->
 		<property name="dataSource" ref="dataSource" />
 		<property name="configLocation"
 			value="classpath:/egovframework/sqlmap/config/sql-map-config.xml" />
+		<property name="interval" value="500" /> <!-- 테스트 인터벌 -->
 		<property name="mapperLocations">
 			<list>
 				<value>classpath:/egovframework/sqlmap/mapper/postgres/**/*.xml
