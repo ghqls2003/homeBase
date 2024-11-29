@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="vfc.drive">
 
-<!--검색차량리스트sql 24.11.28 jeonghyewon -->
-	<sql id="selectCarListSql">
-		(
+	<!--검색차량리스트 24.11.28 jeonghyewon -->
+	<select id="selectCarList" resultType="resultMap">
+		select T3.*
+		from (
 			select
-			row_number() over() as rn,
-			T2.*
+				row_number() over() as rn, T2.*
 			from
 			(
 				select
@@ -55,30 +55,39 @@
 			) T2
 			order by case when T2.reg_yn = 'Y' then 0 else 1 end, T2.vhcl_reg_no
 		) T3
-
-	</sql>
-
-	<!--검색차량리스트 24.11.28 jeonghyewon -->
-	<select id="selectCarList" resultType="resultMap">
-		select T3.*
-		from <include refid="selectCarListSql"/>
 		where
-			1 = 1
-			<if test="take != '' and take != null">
-				AND T3.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
-			</if>
-			<if test="skip != '' and skip != null">
-				AND T3.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
-			</if>
+		1 = 1
+		<if test="take != '' and take != null">
+			AND T3.rn <![CDATA[<=]]> (CAST(#{take} AS INTEGER) + CAST(#{skip} AS INTEGER))
+		</if>
+		<if test="skip != '' and skip != null">
+			AND T3.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
+		</if>
 		order by T3.rn asc
 	</select>
 
-	<!--검색차량리스트cnt 24.11.28 jeonghyewon -->
-	<select id="selectCarListCnt" resultType="int">
-		select count(T3.*)
-		from <include refid="selectCarListSql"/>
-	</select>
 
+	<select id="selectCarListCnt" resultType="int">
+		select count(*)
+		from(
+			select
+				vhcl_reg_no, vin, carmdl, mdlyr, vhcl_nm, bzmn_sn, engine_fom, use_yn, sgg_cd, ownr_nm, reg_dt
+			from
+			dqvs.dvs_rac_mt_car
+				where use_yn='Y'
+				<if test="carNum != '' and carNum != null">
+					and vhcl_reg_no like '%' || #{carNum} || '%'
+				</if>
+				<choose>
+					<when test= "crno != '' and crno != null">
+						AND crno = #{crno}
+					</when>
+					<otherwise>
+						AND 1 != 1
+					</otherwise>
+				</choose>
+		)a
+	</select>
 	<select id="selectVerifyCd" resultType="resultMap">
 		select cd, cd_nm from dqvs.dvs_cmm_mt_code where cd_group = 'verify_cd' and use_yn ='Y' and del_yn = 'N'
 		<if test="cd != '' and cd != null">
@@ -175,7 +184,6 @@
 
 	<!-- 결함정보 -->
 	<select id="selectDefectList" resultType="resultMap">
-	/* 결함정보 */
 		SELECT T.*
 		FROM
 			<include refid="selectDefectListSql" />
@@ -187,9 +195,9 @@
 				AND T.rn <![CDATA[>]]> CAST(#{skip} AS INTEGER)
 			</if>
 	</select>
+
 	<!-- 결함정보cnt -->
 	<select id="selectDefectListCnt" resultType="int">
-	/* 결함정보cnt */
 		SELECT COUNT(*)
 		FROM
 			<include refid="selectDefectListSql" />
@@ -226,9 +234,8 @@
 		</if>
 	</select>
 
-	<!-- 최근 7일 운전자격이력 건수(팝업에 이거 사용함) -->
+	<!-- 최근 7일 운전자격이력 건수(팝업용) -->
 	<select id="selectVfcHistCnt" parameterType="paraMap" resultType="int">
-		/* 최근 7일 운전자격이력 건수(팝업용) */
 		WITH dln_with AS (SELECT dqvs.pca_encrypt(#{dln}, '200') AS dln)
 			SELECT COUNT(1) AS cnt
 			FROM
@@ -376,7 +383,6 @@
 		where  ddhv.dln_enc = end_de.dln_de
 			AND vrfc_dmnd_dt <![CDATA[>]]> now() - interval '7days'
 	</select>
-
 
 	<!-- 차량 그리드 목록 SQL -->
 	<sql id="detailCarListSql">
