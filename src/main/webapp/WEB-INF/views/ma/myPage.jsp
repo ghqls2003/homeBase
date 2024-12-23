@@ -258,9 +258,6 @@ AnySign.mXecureKeyPadHTML5Enable = true;
                     	<table id="grid"></table>
                     </div>
                 </div>
-                <div style="text-align: center;">
-	                <button id="switchAuthBtn" class="blue_btn" style="display: none;">사용자 전환</button>
-                </div>
                 <div class="btn_flex" style="display: none;">
                     <button id="modifyBtn" class="blue_btn" style="display: block;">수정</button>
                     <button id="userWithdrawBtn" class="gray_btn" style="display: block;">탈퇴</button>

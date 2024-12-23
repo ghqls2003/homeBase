@@ -16,7 +16,6 @@
 	<http pattern="/css/**" security="none" />
 	<!-- <http pattern="/audio/**" security="none" /> -->
 	<http pattern="/ext-lib/**" security="none" />
-	<http pattern="/DQVuserguide/**" security="none" />
 	<http pattern="/mip/**" security="none" /> <!-- 모바일면허 -->
 	<!-- <http pattern="/dashboard/**" security="none" /> -->
 	<http pattern="/sso/**" security="none" />

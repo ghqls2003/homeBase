@@ -9,7 +9,6 @@
                 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
                 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
                 <link rel="stylesheet" type="text/css" href="${contextPath}/css/custom/mainView.css" />
-<!--                 <script src="https://www.youtube.com/iframe_api"></script> -->
                 <script>
                     var guest = '${guest}' === 'true';
                     var admstt = '${admstt}' === 'true';
@@ -21,75 +20,9 @@
                 
                 <script>
                 	console.log('${ipCheck}')
-//                 	console.log("busine", busine)
-//                 	console.log("admstt", admstt)
                 </script>
 
                 <div class="main">
-<%--                     <c:if test="false"> --%>
-<!--                     Server Status Bar -->
-<!--                     <div class="serverStatusBar wt_box"> -->
-<!--                         <div class="bar_head"> -->
-<!--                             <h4>서버 상태</h4> -->
-<!--                         </div> -->
-<!--                         <div class="bar_cont"> -->
-<!--                             <ul class="server_list"> -->
-<!--                                 <li class="server_list_item server_list_item1" id="chck1"> -->
-<!--                                     <div class="server_list_item_inner"> -->
-<!--                                         <div class="status_icon_wrap"> -->
-<!--                                             <div class="status_icon"></div> -->
-<!--                                         </div> -->
-<!--                                         <p class="server_name">RIMS 서버</p> -->
-<!--                                         <div class="status"> -->
-<!--                                             <p class="status_text">확인중</p> -->
-<!--                                         </div> -->
-<!--                                     </div> -->
-<!--                                 </li> -->
-<!--                                 <li class="server_list_item server_list_item2" id="chck2"> -->
-<!--                                     <div class="server_list_item_inner"> -->
-<!--                                         <div class="status_icon_wrap"> -->
-<!--                                             <div class="status_icon"></div> -->
-<!--                                         </div> -->
-<!--                                         <p class="server_name">공단 서버</p> -->
-<!--                                         <div class="status"> -->
-<!--                                             <p class="status_text">확인중</p> -->
-<!--                                         </div> -->
-<!--                                     </div> -->
-<!--                                 </li> -->
-<!--                                 <li class="server_list_item server_list_item3"  id="chck3"> -->
-<!--                                     <div class="server_list_item_inner"> -->
-<!--                                         <div class="status_icon_wrap"> -->
-<!--                                             <div class="status_icon"></div> -->
-<!--                                         </div> -->
-<!--                                         <p class="server_name">경찰청 서버</p> -->
-<!--                                         <div class="status"> -->
-<!--                                             <p class="status_text">확인중</p> -->
-<!--                                         </div> -->
-<!--                                     </div> -->
-<!--                                 </li> -->
-<!--                             </ul> -->
-<!--                             <div class="chart_wrap scrollBar"> -->
-<!--                                 <div id="server_chart"></div> -->
-<!--                             </div> -->
-<!--                             <div class="server_btn_wrap"> -->
-<%--                                 <a id="transfrom_btn" href="${contextPath}/ma/switchAuthForAdmin" aria-label="사용자 전환 페이지로 이동">사용자 전환</a> --%>
-<!--                             </div> -->
-<!--                     </div> -->
-<!--                         <div class="server_alarm_wrap"> -->
-<!--                             <div class="server_alarm_icon off"> -->
-<%--                                 <audio id="sirenAd" src="${contextPath}/audio/siren_01.mp3"></audio> --%>
-<!--                                 <div id="if-siren"></div> -->
-<!--                             </div> -->
-<!--                             <div class="switch_wrap"> -->
-<!--                                 <p>알림설정</p> -->
-<!--                                 <label class="switch" aria-label="서버 상태 알림 설정"> -->
-<!--                                     <input type="checkbox"> -->
-<!--                                     <span></span> -->
-<!--                                 </label> -->
-<!--                             </div> -->
-<!--                         </div> -->
-<!--                     </div> -->
-<%--                     </c:if> --%>
                     <!-- 콘텐츠 시작 -->
                     <div id="container">
 
@@ -113,9 +46,9 @@
                                             <div id="youtube-popup-background"></div>
                                             <div class="m_cont02"
                                                 style="z-index: 999; left: 64%; position: absolute; width: 285px;">
-                                                <strong class="tit">대여사업자 등록 현황</strong>
+                                                <strong class="tit">여행 지역 현황</strong>
                                                 <table class="m_tb">
-                                                    <caption>대여사업자 등록 현황</caption>
+                                                    <caption>여행 지역 현황</caption>
                                                     <thead>
                                                         <tr>
                                                             <th scope="col" colspan="2" id="date"
@@ -128,28 +61,19 @@
                                                             <td><span class="bule" id="total"></span>개소</td>
                                                         </tr>
                                                         <tr>
-                                                            <th scope="col">주사무소</th>
-                                                            <td><span class="bule" id="mainOffice"></span>개소</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="col">영업소<br>(예약소)</th>
-                                                            <td><span class="bule" id="businessOffice"></span>개소</td>
+                                                            <th scope="col">방문 지역</th>
+                                                            <td><span class="bule" id="mainOffice"></span>곳</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
                                             <div id="mapid" style="height: 400px; border-radius: 15px;"></div>
-                                            <!-- <div class="bubbleBox">
-                                <span class="green">서울특별시</span>
-                                <p class="p_info">주사업자 10건</p>
-                                <p class="p_info">영업소 5건</p>
-                            </div> -->
                                         </div>
                                     </div>
                                     <div class="m_cont02 m_cont02_tablet">
-                                        <strong class="tit">대여사업자 등록 현황</strong>
+                                        <strong class="tit">여행 지역 현황</strong>
                                         <table class="m_tb">
-                                            <caption>대여사업자 등록 현황</caption>
+                                            <caption>여행 지역 현황</caption>
                                             <thead>
                                                 <tr>
                                                     <th scope="col" colspan="3" id="dateM" style="font-size: 2.4rem;">
@@ -160,12 +84,10 @@
                                                 <tr>
                                                     <th scope="col">전체</th>
                                                     <th scope="col">주사무소</th>
-                                                    <th scope="col">영업소(예약소)</th>
                                                 </tr>
                                                 <tr>
                                                     <td><span class="bule" id="totalM"></span>개소</td>
                                                     <td><span class="bule" id="mainOfficeM"></span>개소</td>
-                                                    <td><span class="bule" id="businessOfficeM"></span>개소</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -180,131 +102,77 @@
                                             <p class="main-visual-txt2 cm-word-split-JS words chars splitting"
                                                 data-splitting="" data-css-property="animation" data-speed="0.04"
                                                 data-speed-delay="0.1" style="--word-total:4; --char-total:10;">
-                                                <span class="word point" data-word="안전한" style="--word-index:0;">
+                                                <span class="word point" data-word="모든" style="--word-index:0;">
                                                     <em class="char-wrap">
-                                                        <span class="char" data-char="안"
-                                                            style="--char-index:0; animation-delay: 0.1s;">안</span>
+                                                        <span class="char" data-char="모" style="--char-index:0; animation-delay: 0.1s;">모</span>
                                                     </em>
                                                     <em class="char-wrap">
-                                                        <span class="char" data-char="전"
-                                                            style="--char-index:1; animation-delay: 0.14s;">전</span>
-                                                    </em>
-                                                    <em class="char-wrap">
-                                                        <span class="char" data-char="한"
-                                                            style="--char-index:2; animation-delay: 0.18s;">한</span>
+                                                        <span class="char" data-char="든" style="--char-index:1; animation-delay: 0.14s;">든</span>
                                                     </em>
                                                 </span>
 
                                                 <span class="whitespace"> </span>
 
-                                                <span class="word point" data-word="운전을" style="--word-index:1;">
+                                                <span class="word point" data-word="추억을" style="--word-index:1;">
                                                     <em class="char-wrap">
-                                                        <span class="char" data-char="운"
-                                                            style="--char-index:3; animation-delay: 0.22s;">운</span>
+                                                        <span class="char" data-char="추" style="--char-index:3; animation-delay: 0.18s;">추</span>
                                                     </em>
                                                     <em class="char-wrap">
-                                                        <span class="char" data-char="전"
-                                                            style="--char-index:4; animation-delay: 0.26s;">전</span>
+                                                        <span class="char" data-char="억" style="--char-index:4; animation-delay: 0.22s;">억</span>
                                                     </em>
+                                                </span>
+                                                <span class="word" data-word="을" style="--word-index:2;">
                                                     <em class="char-wrap">
-                                                        <span class="char" data-char="을"
-                                                            style="--char-index:5; animation-delay: 0.3s;">을</span>
+                                                        <span class="char" data-char="을" style="--char-index:5; animation-delay: 0.26s;">을</span>
                                                     </em>
                                                 </span>
 
                                                 <span class="whitespace"> </span>
 
-                                                <span class="word" data-word="위한" style="--word-index:2;">
+                                                <span class="word" data-word="위한" style="--word-index:3;">
                                                     <em class="char-wrap">
-                                                        <span class="char" data-char="위"
-                                                            style="--char-index:6; animation-delay: 0.34s;">위</span>
+                                                        <span class="char" data-char="위" style="--char-index:6; animation-delay: 0.30s;">위</span>
                                                     </em>
                                                     <em class="char-wrap">
-                                                        <span class="char" data-char="한"
-                                                            style="--char-index:7; animation-delay: 0.38s;">한</span>
+                                                        <span class="char" data-char="한" style="--char-index:7; animation-delay: 0.34s;">한</span>
                                                     </em>
                                                 </span>
-
                                             </p>
 
                                             <p class="main-visual-txt2 cm-word-split-JS words chars splitting"
                                                 data-splitting="" data-css-property="animation" data-speed="0.04"
                                                 data-speed-delay="0.1" style="--word-total:4; --char-total:10;">
-                                                <span class="word" data-word="신속하고" style="--word-index:3;">
+                                                <span class="word" data-word="저장공간" style="--word-index:4;">
                                                     <em class="char-wrap">
-                                                        <span class="char" data-char="신"
-                                                            style="--char-index:8; animation-delay: 0.41s;">신</span>
+                                                        <span class="char" data-char="저" style="--char-index:8; animation-delay: 0.37s;">저</span>
                                                     </em>
                                                     <em class="char-wrap">
-                                                        <span class="char" data-char="속"
-                                                            style="--char-index:9; animation-delay: 0.44s;">속</span>
+                                                        <span class="char" data-char="장" style="--char-index:9; animation-delay: 0.41s;">장</span>
                                                     </em>
                                                     <em class="char-wrap">
-                                                        <span class="char" data-char="하"
-                                                            style="--char-index:10; animation-delay: 0.48s;">하</span>
+                                                        <span class="char" data-char="공" style="--char-index:10; animation-delay: 0.45s;">공</span>
                                                     </em>
                                                     <em class="char-wrap">
-                                                        <span class="char" data-char="고"
-                                                            style="--char-index:11; animation-delay: 0.52s;">고</span>
+                                                        <span class="char" data-char="간" style="--char-index:11; animation-delay: 0.49s;">간</span>
                                                     </em>
                                                 </span>
 
                                                 <span class="whitespace"> </span>
 
-                                                <span class="word" data-word="편리한" style="--word-index:4;">
+                                                <span class="word point" data-word="해가득" style="--word-index:5;">
                                                     <em class="char-wrap">
-                                                        <span class="char" data-char="편"
-                                                            style="--char-index:12; animation-delay: 0.56s;">편</span>
+                                                        <span class="char" data-char="해" style="--char-index:15; animation-delay: 0.70s;">해</span>
                                                     </em>
                                                     <em class="char-wrap">
-                                                        <span class="char" data-char="리"
-                                                            style="--char-index:13; animation-delay: 0.60s;">리</span>
+                                                        <span class="char" data-char="가" style="--char-index:16; animation-delay: 0.74s;">가</span>
                                                     </em>
                                                     <em class="char-wrap">
-                                                        <span class="char" data-char="한"
-                                                            style="--char-index:14; animation-delay: 0.64s;">한</span>
+                                                        <span class="char" data-char="득" style="--char-index:16; animation-delay: 0.78s;">득</span>
                                                     </em>
                                                 </span>
-
-                                                <span class="whitespace"> </span>
-
-                                                <span class="word point" data-word="확인" style="--word-index:5;">
-                                                    <em class="char-wrap">
-                                                        <span class="char" data-char="확"
-                                                            style="--char-index:15; animation-delay: 0.70s;">확</span>
-                                                    </em>
-                                                    <em class="char-wrap">
-                                                        <span class="char" data-char="인"
-                                                            style="--char-index:16; animation-delay: 0.74s;">인</span>
-                                                    </em>
-                                                </span>
-
-                                                <span class="whitespace"> </span>
-
-                                                <span class="word point" data-word="시스템" style="--word-index:6;">
-                                                    <em class="char-wrap">
-                                                        <span class="char" data-char="시"
-                                                            style="--char-index:17; animation-delay: 0.78s;">시</span>
-                                                    </em>
-                                                    <em class="char-wrap">
-                                                        <span class="char" data-char="스"
-                                                            style="--char-index:18; animation-delay: 0.82s;">스</span>
-                                                    </em>
-                                                    <em class="char-wrap">
-                                                        <span class="char" data-char="템"
-                                                            style="--char-index:19; animation-delay: 0.86s;">템</span>
-                                                    </em>
-                                                </span>
-
                                             </p>
                                         </div>
                                     </div>
-                                    <button class="m_btn" id="myButton" hidden>
-                                        비대면 운전자격 검증
-                                        <span class="arrow_box">
-                                            <img src="${contextPath}/images/main/btn_arrow.png" alt="운전자격검증" class="ico_arrow">
-                                        </span>
-                                    </button>
                                 </div>
                             </div>
 
@@ -367,43 +235,7 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="link_wrap">
-                                    <div class="Shortcuts Shortcuts01" id="Shortcuts01">
-                                        <img src="${contextPath}/images/main/link_img01.png" alt="운전자격확인">
-                                        <div class="link_name">
-                                            <a href="">
-                                                운전자격확인
-                                                <div class="arrow_box">
-                                                    <img src="${contextPath}/images/main/btn_arrow.png" alt="운전자격확인">
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="Shortcuts Shortcuts02" id="Shortcuts02">
-                                        <img src="${contextPath}/images/main/link_img02.png" alt="서비스이용안내">
-                                        <div class="link_name">
-                                            <a href="${contextPath}/ma/userManualWeb">
-                                                서비스이용안내
-                                                <div class="arrow_box">
-                                                    <img src="${contextPath}/images/main/btn_arrow.png" alt="서비스이용안내">
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="Shortcuts Shortcuts03" id="Shortcuts03">
-                                        <img src="${contextPath}/images/main/link_img03.png" alt="자주 묻는 질문">
-                                        <div class="link_name">
-                                            <a href="${contextPath}/sft/faq">
-                                                자주 묻는 질문(FAQ)
-                                                <div class="arrow_box">
-                                                    <img src="${contextPath}/images/main/btn_arrow.png" alt="자주 묻는 질문">
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="popupNotice"></div>

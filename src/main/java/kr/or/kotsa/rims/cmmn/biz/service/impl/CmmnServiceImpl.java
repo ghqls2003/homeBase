@@ -386,10 +386,5 @@ public class CmmnServiceImpl extends CmmnAbstractServiceImpl implements CmmnServ
 	public Object selectPrvYn(Map<String, Object> paramsMap) {
 		return commonDao.selectPrvYn(paramsMap);
 	}
-
-	//사용자 전환 리스트
-	public Object trnsprtUserList(Map<String, Object> paramsMap) {
-		return commonDao.trnsprtUserList(paramsMap);
-	}
 }
 

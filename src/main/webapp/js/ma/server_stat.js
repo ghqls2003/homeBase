@@ -97,7 +97,6 @@
 						return statItem;
 					});
 					$serverStat.event.updateServStat(updatedStatList);
-	//				$serverStat.event.renderDefaultStatTemplate(statList);
 				});
 		},
 		updateServStat: function(dataList) {
@@ -119,24 +118,6 @@
 			}, this);
 			this.firstLoad = false;
 		},
-//		renderDefaultStatTemplate: function(statList) {
-//			// 기본 템플렛
-//			var code = "";
-//			statList.forEach(function(idx, item) {
-//				code += `<li class="server_list_item server_list_item${idx + 1}" id="${item.tgServ}">`;
-//				code += `<div class="server_list_item_inner">`;
-//				code += `<div class="status_icon_wrap">`;
-//				code += `<div class="status_icon"></div></div>`;
-//				code += `<p class="server_name">${item.servNm} 서버</p>`;
-//				code += `<div class="status">`;
-//				code += `<p class="status_text">확인중</p>`;
-//				code += `</div>`;
-//				code += `</div>`;
-//				code += `</li>`;
-//			})
-//			$(".server_list").html(code);
-//		},
-		
 		chkServNoticeCookie: function() {
 			return getCookie("servStatNoti") !== "";
 		},
@@ -171,7 +152,7 @@
 					data: data
 				},
 				title: {
-					text: "시간별 API 요청 건수",
+					text: "일별 접속 통계",
 					color: "#fff",
 				},
 				legend: {

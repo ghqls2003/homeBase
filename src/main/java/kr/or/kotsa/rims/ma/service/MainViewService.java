@@ -43,14 +43,6 @@ public interface MainViewService {
      * @param authrtCd 
    	 */
    public List<Map<String, Object>> selectMainPopup(String authrtCd) throws RimsException ;
-   
-   /**
-    * 개인정보보호 서약 처리
-    * @param paramsMap
-    * @return
-    * @throws RimsException
-    */
-   int updateAgre(Map<String, Object> paramsMap) throws RimsException;
 
 	/**
 	 * 시간별 API 요청 건수 조회

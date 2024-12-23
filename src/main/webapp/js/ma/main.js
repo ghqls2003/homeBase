@@ -1,37 +1,28 @@
 /**
  * mainPage
  *
- * history : 네이버시스템(주), 1.0, 2023/05/22  초기 작성
- * author : 최진호
+ * history : 2024.12.23
+ * author : 김경룡
  * version : 1.0
  *
  */
 (function (W, D, $) {
-    // bjlee, IE 10 부터 지원하는 strict mode 선언. 안전하지 않은 액션들에 대해 예외를 발생시킴
     'use strict';
 
     W.$main = W.$main || {};
 	var map
 	var colorMap;
-	var eventSource;
 
     $(document).ready(function() {
         $main.ui.pageLoad();		//최초 페이지 로드 시
         $main.event.setUIEvent();
         $main.event.popupLoad();
-        if(busine){
-        	$main.event.addYoutubeVideo();
-		}else if(admstt){
+        if(busine || admstt){
 			$main.event.addYoutubeAdmsttVideo();
-//			$main.event.svrStatLoad();
 		}
     });
-	function isEmpty(obj) {
-	    return Object.keys(obj).length === 0;
-	}
     $main.ui = {
         pageLoad : function() {
-			//console.log(guest);
 			map = L.map('mapid', {
 			    zoomControl: false,
 			    dragging: false,
@@ -50,26 +41,20 @@
 	            "Level4": "#44c596",
 	        };
 
-			ajax(true, contextPath + '/ma/main/selectShpMap', 'body', '조회 중입니다', null, function(data) {
-				if(data.features[0].properties.check !== 'Y'){
-					$main.ui.creatPolygonMap(data);
-					$main.ui.creatLegendRange(data);
-					$main.ui.creatRegistraStatus(data);
-//					console.log('N')
-				} else {
-					$main.ui.temporaryCreatPolygonMap(data);
-					$main.ui.temporaryCreatLegendRange(data);
-					$main.ui.temporaryCreatRegistraStatus(data);
-//					console.log('Y')
-				}
-			});
+//			ajax(true, contextPath + '/ma/main/selectShpMap', 'body', '조회 중입니다', null, function(data) {
+//				if(data.features[0].properties.check !== 'Y'){
+//					$main.ui.creatPolygonMap(data);
+//					$main.ui.creatLegendRange(data);
+//					$main.ui.creatRegistraStatus(data);
+//				} else {
+//					$main.ui.temporaryCreatPolygonMap(data);
+//					$main.ui.temporaryCreatLegendRange(data);
+//					$main.ui.temporaryCreatRegistraStatus(data);
+//				}
+//			});
 			ajax(true, contextPath + '/ma/main/topNotice', 'body', '조회 중입니다', null, function(data) {
 				$main.ui.creatTopNotice(data);
 			});
-			if(pcType == "MOBI" && !userTypeDetail && guest && old_new == "NEW"){  // 신규 앱 배포 시 주석 해제
-				$('#myButton').removeAttr("hidden");  // 신규 앱 배포 시 주석 해제
-			};  // 신규 앱 배포 시 주석 해제
-
         },
 	
 		//폴리곤 맵 그림
@@ -215,12 +200,10 @@
 			document.getElementById('date').innerText = currentDate + '기준';
 			document.getElementById('total').innerText = totalMainOffice + totalBusinessOffice;
 			document.getElementById('mainOffice').innerText = totalMainOffice;
-			document.getElementById('businessOffice').innerText = totalBusinessOffice;
 			
 			document.getElementById('dateM').innerText = currentDate + '기준';
 			document.getElementById('totalM').innerText = totalMainOffice + totalBusinessOffice;
 			document.getElementById('mainOfficeM').innerText = totalMainOffice;
-			document.getElementById('businessOfficeM').innerText = totalBusinessOffice;
 		},
 		
 		//폴리곤 맵 그림 임시 
@@ -339,14 +322,6 @@
 		
 		temporaryCreatRegistraStatus : function(data){
 			document.querySelector("div.m_cont02 > table > tbody > tr:nth-child(2) > th").style.borderRadius = '0 0 0 10px';
-			document.querySelector("div.m_cont02 > table > tbody > tr:nth-child(1)").style.display = 'none';
-			document.querySelector("div.m_cont02 > table > tbody > tr:nth-child(3)").style.display = 'none';
-			document.querySelector("div.m_cont02.m_cont02_tablet > table > tbody > tr:nth-child(1) > th:nth-child(1)").style.display = 'none';
-			document.querySelector("div.m_cont02.m_cont02_tablet > table > tbody > tr:nth-child(2) > td:nth-child(1)").style.display = 'none';
-			document.querySelector("div.m_cont02.m_cont02_tablet > table > tbody > tr:nth-child(1) > th:nth-child(3)").style.display = 'none';
-			document.querySelector("div.m_cont02.m_cont02_tablet > table > tbody > tr:nth-child(2) > td:nth-child(3)").style.display = 'none';
-//			document.getElementById('totalM').style.display = 'none';
-//			document.getElementById('businessOfficeM').style.display = 'none';
 			
 			let totalMain = 0;
 		    let totalMainOffice;
@@ -423,50 +398,10 @@
     //이벤트 정의
     $main.event = {
         setUIEvent : function() {
-//			document.getElementById("more_btn").addEventListener("click", function() {
-//			    window.location.href = `${contextPath}/sft/notice`;
-//			});
-			$('#myButton').on('click', function(){
-				window.location.href = `${contextPath}/vfc/contactlessVfc`;
-			});
-			document.getElementById("Shortcuts01").addEventListener("click", function() {
-				if(guest){
-					alert('로그인 후 사용 가능한 메뉴 입니다.')					
-				} else {
-					window.location.href = `${contextPath}/vfc/drive`;
-				}
-//				let web = document.createElement('a');
-//				web.href = contextPath+'/DQVuserguide/운전자격확인시스템_사용자지침서_대여사업자용_웹.pdf';
-//				web.download = '운전자격확인시스템_사용자지침서_대여사업자용_웹.pdf';
-//				document.body.appendChild(web);
-//				web.click();
-//				document.body.removeChild(web);
-			});
-			document.querySelector("#Shortcuts01 a").addEventListener('click', function(e) {
-			    e.preventDefault();
-			});
-			document.getElementById("Shortcuts02").addEventListener("click", function() {
-				window.location.href = `${contextPath}/ma/userManualWeb`;
-				/*let app = document.createElement('a');
-				app.href = contextPath+'/DQVuserguide/운전자격확인시스템_사용자지침서_대여사업자용_모바일.pdf';
-				app.download = '운전자격확인시스템_사용자지침서_대여사업자용_모바일.pdf';
-				document.body.appendChild(app);
-				app.click();
-				document.body.removeChild(app);*/
-			});
-			document.getElementById("Shortcuts03").addEventListener("click", function() {
-				window.location.href = `${contextPath}/sft/faq`;
-//			    alert("준비 중 입니다.");
-			});
 			document.querySelector('.more_btn').addEventListener('click', function(event) {
 			    event.preventDefault();
 			    window.location.href = `${contextPath}/sft/notice`;
 			});
-
-		/*	$('#moreBtn').on('click', function(e) {
-			    e.preventDefault();
-			    window.location.href = '/';
-			});*/
 
 			/* api 서버 모니터링 */
 			$(".switch input[type='checkbox']").on('change', function() {
@@ -790,39 +725,7 @@
 				});
 			}
 			
-			var popupSetTemplate = function() {
-				var data = PopupData.getData();
-				data.forEach(function(item, index){
-					var sn = item.popupSn;
-					var popupTemplate =`
-						<div class="overlay" id="overlay-${sn}" style="display: none;">
-		                   <div class="pop-wrap" id="pop-wrap-${sn}">
-		                       <div class="pop-cont" id="pop-cont-${sn}">
-		                           <div class="pop-ttl" id="pop-ttl-${sn}"></div>
-		                           <div class="scrollBar02">
-		                           		<div class="pop-ment" id="pop-ment-${sn}"></div>
-		                           </div>
-		                           <div class="pop-file" id="pop-file-${sn}" style="display: none;">
-								      <img class="pop-file-ico" src="${contextPath}/images/icons/ico_file.png" alt="파일다운로드 아이콘">
-								      <span class="pop-file-th" id="pop-file-th-${sn}">첨부파일 :</span>
-								      <span class="pop-file-name" id="pop-file-name-${sn}"></span>
-							      </div>
-			                       <div class="pop-bottom" id="pop-bottom-${sn}">
-			                           <button class="pop-close-btn" id="pop-close-btn-${sn}">닫기</button>
-				                       <div class="pop-today-close" id="pop-today-close-${sn}">
-				                           <input type="checkbox" class="pop-chk" id="pop-chk-${sn}">
-				                       	   <label for="pop-chk-${sn}">&nbsp;오늘 이 창을 열지 않음</label>
-				                       </div>
-			                       </div>
-		                       </div>
-		                   </div>
-	               		</div>`;
-					$(".popupNotice").append(popupTemplate);
-				});
-			}
-			
 			var popupController = async function() {
-				popupSetTemplate();
 				checkCookie();
 				checkView();
 				popupBindData();
@@ -846,61 +749,7 @@
 			}
 			popupData();
 		},
-		addYoutubeVideo: function() {
-			const background = $("#youtube-popup-background");
-            background.css("display", "flex");
-
-            const box = $("<div></div>", {"class": "youtube-popup-box"});
-            background.append(box);
-
-            const closeButton = $("<button></button>", {
-                text: '✕',
-                "class": 'close-button',
-                click: function() {
-//                    background.css("display", "none");
-					$("#youtube-popup-background").remove();	
-                }
-            });
-            box.append(closeButton);
-            
-
-            const iframe = $("<iframe></iframe>", {
-                src: 'https://www.youtube.com/embed/AoA3xfjxiyo?enablejsapi=1',
-                id: 'youtube-video',
-                css: {
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: '15px'
-                },
-                attr: {
-                    frameborder: '0',
-                    allowfullscreen: '',
-					title : 'youtubeVideo'
-                }
-            });
-
-            box.append(iframe);
-            
-//            var player = new YT.Player('player', {
-//			    width: '100%',
-//                height: '100%',
-//                borderRadius: '15px',
-//			    videoId: 'AoA3xfjxiyo', // 영상 ID 설정
-//			     playerVars: {
-//                    'autoplay': 0,
-//                    'modestbranding': 1
-//                },
-//			    events: {
-//			        'onReady': onPlayerReady,
-//			        'onStateChange': onPlayerStateChange,
-//			    }
-//			});
-//			function onPlayerReady(event) {
-//	            // 비디오 플레이어가 준비되었을 때 실행할 코드
-//	            // 예를 들어, 자동 재생을 시작하려면 event.target.playVideo(); 를 사용할 수 있습니다.
-//	        }
-            
-		},
+		
 		addYoutubeAdmsttVideo: function() {
 			const background = $("#youtube-popup-background");
             background.css("display", "flex");
@@ -912,7 +761,6 @@
                 text: '✕',
                 "class": 'close-button',
                 click: function() {
-//                    background.css("display", "none");
 					$("#youtube-popup-background").remove();	
                 }
             });
@@ -920,7 +768,7 @@
             
 
             const iframe = $("<iframe></iframe>", {
-                src: 'https://www.youtube.com/embed/G2E-qZLSxoI?enablejsapi=1',
+                src: 'https://www.youtube.com/embed/G-8JJE99pks?si=h19r8ketsnQ6S9Pc',
                 id: 'youtube-video',
                 css: {
                     width: '100%',
@@ -934,145 +782,6 @@
                 }
             });
             box.append(iframe);
-            
-//            var player = new YT.Player('player', {
-//			    width: '100%',
-//                height: '100%',
-//                borderRadius: '15px',
-//			    videoId: 'AoA3xfjxiyo', // 영상 ID 설정
-//			     playerVars: {
-//                    'autoplay': 0,
-//                    'modestbranding': 1
-//                },
-//			    events: {
-//			        'onReady': onPlayerReady,
-//			        'onStateChange': onPlayerStateChange,
-//			    }
-//			});
-//			function onPlayerReady(event) {
-//	            // 비디오 플레이어가 준비되었을 때 실행할 코드
-//	            // 예를 들어, 자동 재생을 시작하려면 event.target.playVideo(); 를 사용할 수 있습니다.
-//	        }
-            
-		},
-
-		/**
-		 * api 상태 모니터링 상태창
-		 * data:240712
-		 */
-		svrStatLoad : function(){
-			const url = contextPath + "/ma/main/svrStat";
-			eventSource = new EventSource(url);
-
-			// 서버 상태 호출
-			const authChk = $(".serverStatusBar");
-
-			if(authChk) {
-				$main.event.stVerfHourLoad();
-				const eventSource = new EventSource(url);
-				eventSource.onmessage = function(event){
-					$main.event.sseCall(event)
-				}
-				/*eventSource.onerror = function () {
-					$main.event.renderDefaultStatList(statList);
-				};*/
-			}
-
-		},
-		sseCall : function(event){
-			const statList = [
-				{"servNm" : "Rims", "tgServ" : "chck1", "servSt" : "", "servStVal" : ""},
-				{"servNm" : "공단", "tgServ" : "chck2","servSt" : "", "servStVal" : ""},
-				{"servNm" : "경찰청", "tgServ" : "chck3" ,"servSt" : "", "servStVal" : ""},
-			]
-			const data = JSON.parse(event.data);
-			if (data.success) {
-				const statDataList = data.svrStatList[0];
-				const updatedStatList = statList.map(statItem => {
-					const tgServ = statItem.tgServ;
-					if (statDataList.hasOwnProperty(tgServ)) {
-						statItem.servSt = statDataList[tgServ];
-					}
-
-					statItem.servStVal = statItem.servSt === "00" ? "정상" : "중단";
-					return statItem;
-				});
-				$main.event.updateServStat(updatedStatList);
-			} else {
-				$main.event.renderDefaultStatTemplate(statList);
-			}
-		},
-		updateServStat: function (dataList) {
-			let errIs = false;
-
-			dataList.forEach(function(item) {
-				const tgElem = $(`#${item.tgServ}`);
-				if (tgElem.length) {
-					const elem = tgElem.find(".status_icon");
-					const currentStatus = elem.attr("class")
-						.split(' ')
-						.filter(cls => cls !== 'status_icon')
-						.join('');
-					const newStatus = item.servSt === "00" ? "is_ok" : "is_error";
-
-					if (currentStatus !== newStatus) {
-						elem.removeClass("is_ok is_error").addClass(newStatus);
-						tgElem.find(".status_text").text(item.servStVal);
-
-						if (currentStatus !== "is_error" && newStatus === "is_error") {
-							errIs = true;
-						}
-					}
-
-					if (this.firstLoad && newStatus === "is_error") {
-						errIs = true;
-					}
-
-				}
-			}, this);
-			if (errIs) {
-				$main.event.playSiren();
-			}
-
-			this.firstLoad = false;
-		},
-		renderDefaultStatTemplate : function(statList){
-			// 기본 템플렛
-			var code = "";
-			statList.forEach(function(idx, item){
-				code += `<li class="server_list_item server_list_item${idx+1}" id="${item.tgServ}">`;
-				code += `<div class="server_list_item_inner">`;
-				code += `<div class="status_icon_wrap">`;
-				code += `<div class="status_icon"></div></div>`;
-				code += `<p class="server_name">${item.servNm} 서버</p>`;
-				code += `<div class="status">`;
-				code += `<p class="status_text">확인중</p>`;
-				code += `</div>`;
-				code += `</div>`;
-				code += `</li>`;
-			})
-			$(".server_list").html(code);
-		},
-		playSiren : function(){
-			const sirenTg = $("#sirenAd")[0];
-
-			if ($main.event.chkServNoticeCookie()) {
-
-				var agent = navigator.userAgent.toLowerCase();
-				if (agent.indexOf("chrome") != -1 ) {
-					const oldFrame = $('#if-siren').find('iframe');
-
-					if (oldFrame.length > 0) {
-						oldFrame[0].src = oldFrame[0].src;
-					} else {
-						var weaList = '<iframe style="width:0px; height:0px;" src="' + contextPath + '/audio/siren_01.mp3" allow="autoplay">'
-						$('#if-siren').html(weaList);
-					}
-				}else {
-					sirenTg.volume = 0.5;
-					sirenTg.play();
-				}
-			}
 		},
 		chkServNoticeCookie: function() {
 			return getCookie("servStatNoti") !== "";
@@ -1094,53 +803,6 @@
 			}
 
 		},
-		stVerfHourLoad : function(){
-			let stVerfHourList;
-			ajax(false, contextPath + '/ma/main/stVerfHour', 'body', '조회 중입니다', null, function(data) {
-				if(data.success){
-					stVerfHourList = data.stVerfHourList
-					$main.event.generateStHourChart(stVerfHourList);
-				}
-			});
-		},
-		generateStHourChart : function(data){
-			const month = data.map(function(elem){
-				return elem.hr
-			})
-			const chartcontainer = $(".chart_wrap");
-			const chartWidth = chartcontainer.width();
-			const chartHeight = chartcontainer.height();
-
-			$("#server_chart").kendoChart({
-				dataSource : {
-					data: data
-				},
-				title: {
-					text: "시간별 API 요청 건수",
-					color: "#fff",
-				},
-				legend: {
-					visible: false,
-				},
-				series: [{
-					name: "API 요청 건수",
-					field: "total"
-				}],
-				categoryAxis: {
-					categories: month,
-					color: "#585858",
-				},
-				tooltip: {
-					visible: true,
-					template: "#: kendo.format('{0:N0}', value)#건 "
-				},
-				chartArea: {
-					width: 840,
-					height: chartHeight
-				}
-			});
-		}
-
     };
 
 }(window, document, jQuery));

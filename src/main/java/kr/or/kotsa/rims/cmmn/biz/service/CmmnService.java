@@ -120,7 +120,7 @@ public interface CmmnService {
 	/**
 	 * 소속 목록
 	 * @return
-	 * @throws RimsException
+	 * @throws RimsException1
 	 */
 	public List<Map<String, Object>> selectBelongTypeList(Map<String, Object> paramsMap) throws RimsException ;
 
@@ -148,8 +148,4 @@ public interface CmmnService {
 
 	//개인정보 식별여부
 	public Object selectPrvYn(Map<String, Object> paramsMap);
-
-	//사용자 전환 리스트
-	public Object trnsprtUserList(Map<String, Object> paramsMap);
-
 }

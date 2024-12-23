@@ -45,7 +45,6 @@
 	<mvc:resources mapping="/css/**" location="/css/" />
 	<mvc:resources mapping="/audio/**" location="/audio/" />
 	<mvc:resources mapping="/ext-lib/**" location="/ext-lib/" />
-	<mvc:resources mapping="/DQVuserguide/**" location="/DQVuserguide/" />
 
 	<mvc:resources mapping="/mip/**" location="/mip/" />
 	<!-- <mvc:resources mapping="/dashboard/**" location="/dashboard/"/> <mvc:resources

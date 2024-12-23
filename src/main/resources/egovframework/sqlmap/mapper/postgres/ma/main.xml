@@ -257,11 +257,4 @@
 		ON T2.tmp_hr = T.hr
 		ORDER BY T2.tmp_hr	
 	</select>
-
-	
-	<update id="updateAgre" parameterType="paraMap">
-	<!-- 개인정보보호 서약 처리 -->
-		update dvs_cmm_mt_user set prvc_prcs_agre_yn = #{termsAgre}, prvc_prcs_agre_dt = NOW()	
-		where user_sn = #{userSn} and reg_ip = #{regIp}
-	</update>
 </mapper>

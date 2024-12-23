@@ -237,11 +237,6 @@ public class CmmnDao extends CmmnAbstractMapper {
 		return selectList("cmmn.common.selectPrvYn", paramsMap);
 	}
 
-	//사용자 전환 리스트
-	public Object trnsprtUserList(Map<String, Object> paramsMap) {
-		return selectList("cmmn.common.selectTrnsprtUserList", paramsMap);
-	}
-
 	// 인증서 등록
 	public void insertCert(Map<String, Object> paramsMap) {
 		insert("cmmn.common.insertCert", paramsMap);

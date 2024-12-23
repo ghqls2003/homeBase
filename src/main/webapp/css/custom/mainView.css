@@ -339,7 +339,6 @@
     align-items: center;
     gap: 16px;
     width: 56px;
-    height: 272px;
     padding: 24px 0;
     border-radius: 50px;
     z-index: 999;
@@ -367,7 +366,7 @@
 .main .serverStatusBar .bar_cont .server_list .server_list_item .status {display: none; width: 72px; height: 30px; padding: 4px 0; border-radius: 4px ; -webkit-border-radius: 4px ; -moz-border-radius: 4px ; -ms-border-radius: 4px ; -o-border-radius: 4px ; text-align: center; font-size: 1.6rem; color: #fff; background-color: #4357CA; opacity: 0;}
 .main .serverStatusBar .bar_cont .server_list .server_list_item .server_name {display: none; font-size: 1.5rem; opacity: 0; }
 .main .serverStatusBar .bar_cont .chart_wrap {position: relative; width: 400px; height: 344px; display: none; opacity: 0; overflow-x: scroll; overflow-y: hidden; padding-bottom: 12px}
-.main .serverStatusBar .bar_cont .chart_wrap::after {content: '시간별 API 요청 건수'; position: absolute; width: auto; left: 50%; top: 12px; transform: translateX(-50%)}
+.main .serverStatusBar .bar_cont .chart_wrap::after {content: '시간별 방문자 수'; position: absolute; width: auto; left: 50%; top: 12px; transform: translateX(-50%)}
 .main .serverStatusBar .bar_cont .chart_wrap #server_chart {width: 100%;}
 .main .serverStatusBar .bar_cont .server_btn_wrap {display: none; text-align: center; pointer-events: none; opacity: 0;}
 .main .serverStatusBar .bar_cont .server_btn_wrap #transfrom_btn {display: inline-block; width: 160px; height: 40px; background-color: #2845D8; border-radius:15px; -webkit-border-radius:15px; -moz-border-radius:15px; -ms-border-radius:15px; -o-border-radius:15px; color: #fff; font-size: 1.6rem; line-height: 40px;}

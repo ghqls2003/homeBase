@@ -272,19 +272,6 @@ public class CmmnController {
 		return commonService.selectPrvYn(paramsMap);
 	}
 
-	/**
-     * 사용자 전환 리스트
-     * @param paramsMap
-     * @return
-     * @throws RimsException
-     */
-	@RequestMapping("trnsprtUserList")
-	@ResponseBody
-	public Object trnsprtUserList(@RequestBody Map<String, Object> paramsMap) throws RimsException {
-
-		return commonService.trnsprtUserList(paramsMap);
-	}
-
     /**
      * 멀티그룹 코드 목록 조회
      * @return

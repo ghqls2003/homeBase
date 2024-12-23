@@ -3,12 +3,8 @@ package kr.or.kotsa.rims.ma.web;
 import static kr.or.kotsa.rims.cmmn.sys.util.GeojsonRenderer.renderGeojson;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.InetAddress;
-import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -18,14 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.google.gson.Gson;
-
-
-import org.apache.poi.util.SystemOutLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,11 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import kr.or.kotsa.rims.cmmn.biz.service.CmmnService;
 import kr.or.kotsa.rims.cmmn.sys.exception.RimsException;
 import kr.or.kotsa.rims.cmmn.sys.service.CmmnAbstractServiceImpl;
-import kr.or.kotsa.rims.ma.service.AuthService;
-import kr.or.kotsa.rims.ma.service.LoginViewService;
 import kr.or.kotsa.rims.ma.service.MainViewService;
 
 @Controller
@@ -58,14 +46,6 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 
 	@Autowired
 	private MainViewService mainViewService;
-
-	@Autowired
-	private CmmnService cmmnService;
-	
-	
-	@Autowired
-	private AuthService authService;
-	
 	
 	/**
 	 * 메인 화면
@@ -97,26 +77,6 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 		}
 		String userType = isDevice(request);
 		boolean userTypeDetail = isAccMthd(request);
-		
-		
-//      이건 내부 WAS를 못잡더라		
-//		try {
-//            // 현재 호스트의 IP 주소 가져오기
-//            InetAddress inetAddress = InetAddress.getLocalHost();
-//            String inIp = request.getRemoteAddr();
-//            String ipAddress = inetAddress.getHostAddress();
-//            
-//            if(inIp == "10.149.150.59" || ipAddress == "10.149.150.59") {
-//            	mav.addObject("ipCheck", "W1");
-//            } else if(inIp == "10.149.150.60" || ipAddress == "10.149.150.60") {
-//            	mav.addObject("ipCheck", "W2");
-//            } else {
-//            	mav.addObject("ipCheck", "none");
-//            }
-//        } catch (UnknownHostException e) {
-//            e.printStackTrace();
-//        }
-		
 		
 		try {
 			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
@@ -198,21 +158,6 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 			return "";
 		}
 	}	
-	
-	/**
-	 * 회원가입 화면
-	 *
-	 * @param paramsMap
-	 * @return
-	 * @throws HmtsException
-	 */
-	@RequestMapping("join")
-	public ModelAndView viewjoin(@RequestParam Map<String, Object> paramsMap, ModelAndView mav,
-			HttpServletRequest request, HttpServletResponse response) throws RimsException {
-		mav.setViewName("ma/join");
-		mav.addObject("error", request.getAttribute("error"));
-		return mav;
-	}
 
 	/**
 	 * 에러 페이지 설정
@@ -291,29 +236,6 @@ public class MainViewController extends CmmnAbstractServiceImpl{
 		return popupData;
 	}
 	
-	  /**
-     * 개인정보보호 보안 서약서 처리
-     *
-     * @param paramsMap
-     * @return
-     * @throws RimsException
-     */
-	@RequestMapping("main/updateTermsInfo")
-	@ResponseBody
-	public Object updateAgre(@RequestBody Map<String, Object> paramsMap, HttpServletRequest httpServletRequest) throws RimsException {
-		HttpSession httpSession = httpServletRequest.getSession();
-		paramsMap.put("userId", httpSession.getAttribute(SSO_ID).toString());
-		
-		Object userData = httpSession.getAttribute("userData");
-		Map<String, Object> userDataMap = (Map) userData;
-		
-		paramsMap.put("userSn", userDataMap.get("userSn"));
-		paramsMap.put("regIp", userDataMap.get("regIp"));
-		
-		int res = mainViewService.updateAgre(paramsMap);
-		return res;
-	}
-
 	/**
 	 * 시간별 API 요청 건수 조회
 	 * @param request

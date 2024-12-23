@@ -1,6 +1,5 @@
 package kr.or.kotsa.rims.vfc.service.impl;
 
-import kr.or.kotsa.rims.vfc.service.DrvVfcHistService;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ public class DriveServiceImpl extends CmmnAbstractServiceImpl implements DriveSe
 	static String branchName;
 	static String trxcode;
 
-	public DriveServiceImpl(DriveDao driveDao, MipDidVpService mipDidVpService, DrvVfcHistService drvVfcHistService) {
+	public DriveServiceImpl(DriveDao driveDao, MipDidVpService mipDidVpService) {
 		this.driveDao = driveDao;
 		this.mipDidVpService = mipDidVpService;
 	}

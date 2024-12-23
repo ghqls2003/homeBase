@@ -56,9 +56,6 @@
 				$("#authrtNm").val(data[0].authrtNm);
 				var certYn = data[0].certYn == 'Y' ? "등록 완료" : "등록 필요";
 
-				if(cd == "Z01" || cd == "K01")
-					$("#switchAuthBtn").css('display', 'revert');
-
 				if(data[0].certYn == 'Y')
 					$(".cer_mng_01").css('display', 'revert');
 
@@ -213,10 +210,6 @@
 
 			$('#searchBtn').click(function() {
 				$("#grid").data("kendoGrid").dataSource.page(1);
-			});
-
-			$('#switchAuthBtn').click(function() {
-				location.href='/ma/switchAuthForAdmin'
 			});
 		},
 
@@ -475,8 +468,6 @@
 			$('.btn_flex').css('display', 'none');
 			$('#heightChange').attr('style', 'height: 455px !important')
 			$("#formChange").attr('class','mypage_cont');
-			if(authrtCd == "Z01" || authrtCd == "K01")
-				$("#switchAuthBtn").css('display', 'revert');
 		},
 
 		etcInfo: function(){
@@ -492,7 +483,6 @@
 			$('.btn_flex').css('display', 'flex');
 			$('#heightChange').attr('style', 'height: 368px !important')
 			$("#formChange").attr('class','mypage_cont');
-			$("#switchAuthBtn").css('display', 'none');
 		},
 
 		serviceLog: function(){
@@ -507,7 +497,6 @@
 			$('.btn_flex').css('display', 'none');
 			$('#heightChange').attr('style', 'height: 600px !important')
 			$("#formChange").attr('class','cont');
-			$("#switchAuthBtn").css('display', 'none');
 		}
 	};
 }(window, document, jQuery));

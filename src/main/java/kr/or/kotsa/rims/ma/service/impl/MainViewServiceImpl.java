@@ -179,17 +179,6 @@ public class MainViewServiceImpl extends CmmnAbstractServiceImpl implements Main
         return filteredList;
 	
    	}
-	
-	  /**
-     * 개인정보보호 서약 처리
-     * @param paramsMap
-     * @return
-     * @throws RimsException
-     */
-	@Override
-    public int updateAgre(Map<String, Object> paramsMap) throws RimsException {
-	    return mainViewDao.updateAgre(paramsMap);
-	}
 
 	/**
 	 * 시간별 API 요청 건수 조회

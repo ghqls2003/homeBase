@@ -85,74 +85,10 @@ var mode = '${mode}'
 	                    <button id="loginBtn" class="blue_btn loginMove_btn">로그인</button>
 	                    <ul class="login_link">
 	                    	<li><label for="remember_id"></label> <input type="checkbox" name="remember_id" id="remember_id" style="line-height: 26px; color: #888888; font-size: 1.6rem;"></input> <spen style="line-height: 26px; color: #888888; font-size: 1.6rem;"> 아이디 저장</spen></li>
-							<li class="line"></li>
-	                        <li><button onClick="location.href='https://tsum.kotsa.or.kr/tsum/mbs/inqFrmFindMemberId.do?menuCode=08030000'" style="line-height: 26px; color: #888888; font-size: 1.6rem;">아이디 찾기</button></li>
-	                        <li class="line"></li>
-	                        <li><button onClick="location.href='https://tsum.kotsa.or.kr/tsum/mbs/inqFrmFindMemberPw.do?menuCode=08040000'" style="line-height: 26px; color: #888888; font-size: 1.6rem;">비밀번호 찾기</button></li>
-	                        <li class="line"></li>
-	                        <li><button onClick="location.href='${ contextPath }/ma/join'" style="line-height: 26px; color: #888888; font-size: 1.6rem;">회원가입</button></li>
 	                    </ul>
 	                </div>
 	            </div>
-<!-- 	            <div class="contBox flex-box Box02"> -->
-<!-- 	                <div class="nameBox"> -->
-<!-- 	                    <h4 class="name">인증서 로그인</h4> -->
-<!-- 	                </div> -->
-<!-- 	                <div class="cont"> -->
-<!-- 	                    <ul class="cer_login cer_login01"> -->
-<!-- 	                        <li class="li_01"> -->
-<!-- 	                            <button class="cerType"> -->
-<%-- 	                                <img src="${ contextPath }/images/sub/ico_type01.png" alt="디지털원패스" class="ico_type"> --%>
-<%-- 	                                <img src="${ contextPath }/images/sub/ico_type01_2.png" alt="디지털원패스" --%>
-<!-- 	                                    class="ico_type ico_type02"> -->
-<!-- 	                                디지털원패스 -->
-<!-- 	                            </button> -->
-<!-- 	                            <p>하나의 아이디로 여러 전자정부 서비스가 <br> 가능합니다.</p> -->
-<!-- 	                        </li> -->
-<!-- 	                        <li> -->
-<!-- 	                            <button class="cerType"> -->
-<%-- 	                                <img src="${ contextPath }/images/sub/ico_type02.png" alt="간편인증" class="ico_type"> --%>
-<%-- 	                                <img src="${ contextPath }/images/sub/ico_type02_2.png" alt="간편인증" --%>
-<!-- 	                                    class="ico_type ico_type02"> -->
-<!-- 	                                간편인증 -->
-<!-- 	                            </button> -->
-<!-- 	                            <p>민간인증서를 이용하여 로그인 하실 수 <br> 있습니다.</p> -->
-<!-- 	                        </li> -->
-<!-- 	                    </ul> -->
-<!-- 	                    <ul class="cer_login"> -->
-<!-- 	                        <li class="li_01"> -->
-<!-- 	                            <button class="cerType cerType03"> -->
-<%-- 	                                <img src="${ contextPath }/images/sub/ico_type03.png" alt="휴대폰 본인인증" class="ico_type"> --%>
-<%-- 	                                <img src="${ contextPath }/images/sub/ico_type03_2.png" alt="휴대폰 본인인증" --%>
-<!-- 	                                    class="ico_type ico_type02"> -->
-<!-- 	                                휴대폰 본인인증 -->
-<!-- 	                            </button> -->
-<!-- 	                            <p>본인명의의 휴대폰을 이용해 인증합니다.</p> -->
-<!-- 	                        </li> -->
-<!-- 	                        <li> -->
-<!-- 	                            <button class="cerType"> -->
-<%-- 	                                <img src="${ contextPath }/images/sub/ico_type04.png" alt="인증서 로그인" class="ico_type"> --%>
-<%-- 	                                <img src="${ contextPath }/images/sub/ico_type04_2.png" alt="인증서 로그인" --%>
-<!-- 	                                    class="ico_type ico_type02"> -->
-<!-- 	                                인증서 로그인 -->
-<!-- 	                            </button> -->
-<!-- 	                            <p>인증서를 이용해 인증합니다.</p> -->
-<!-- 	                        </li> -->
-<!-- 	                    </ul> -->
-<!-- 	                </div> -->
-<!-- 	            </div> -->
 	        </div>
-<!-- 	        <div class="p_info_wr"> -->
-<!-- 	            <p class="info">※ 키보드 보안 프로세스를 구동합니다.</p> -->
-<!-- 	            <p class="info info_02"> -->
-<!-- 	                ※ 보안프로그램 설치페이지로 이동 -->
-<!-- 	                <button class="install_btn"> -->
-<!-- 	                    설치페이지 이동 -->
-<!-- 	                    <img src="../images/sub/ico_install.png" alt="설치페이지" class="ico_install"> -->
-<!-- 	                    <img src="../images/sub/ico_install02.png" alt="설치페이지" class="ico_install ico_install02"> -->
-<!-- 	                </button> -->
-<!-- 	            </p> -->
-<!-- 	        </div> -->
 	    </div>
 	</div>
 </div>

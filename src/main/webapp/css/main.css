@@ -51,7 +51,7 @@ img.ani_img03{position: absolute;bottom: 50px;left: 50px;z-index: -1;animation: 
 
 .main .cont_flex02{margin-top: 20px;}
 .main .txt_box{width: 50%;}
-.main .txt_box .main_tit{font-family: 'SCoreDream';font-size: 4.7rem;line-height: 63px;color: #000A44;font-weight: 400;letter-spacing: -7.41px;} 
+.main .txt_box .main_tit{font-family: 'SCoreDream';font-size: 4.7rem;line-height: 63px;color: white;font-weight: 400;letter-spacing: -7.41px;} 
 .main .txt_box .main_tit span.point{font-weight: 800;}
 .main .txt_box .main_tit span.whitespace{margin-right: 10px;}
 .main .txt_box .main_tit em.char-wrap{font-style: normal;}
@@ -199,7 +199,7 @@ img.ani_img03{position: absolute;bottom: 50px;left: 50px;z-index: -1;animation: 
     .main #container{background: #f0f2ff;}
     .main .txt_box{margin-bottom: 0;padding-bottom: 149px;}
     .main .txt_box{position: relative;z-index: 2;}
-    .main .txt_box::before{position: absolute;content: ''; background: url(../images/main/main_bg_mo.png) no-repeat 50% 50% / cover;width: 100%;height: 100%;top: 0;right: -35px;z-index: -1;}
+    .main .txt_box::before{position: absolute;content: ''; background: url(../images/main/main_bg_mo.jpg) no-repeat 50% 50% / cover;width: 100%;height: 100%;top: 0;right: -35px;z-index: -1;}
     .main .txt_box .main_tit{font-size: 4.2rem;line-height: 44px;letter-spacing: -6.41px;}
     .main .txt_box button.m_btn{width: 189px;height: 57px;}
     .main .notice_wrap{height: 100%;}
@@ -225,7 +225,7 @@ img.ani_img03{position: absolute;bottom: 50px;left: 50px;z-index: -1;animation: 
     br.br_mo{display: block;}
     
     .main .txt_box{padding-bottom: 47px;}
-    .main .txt_box::before{background: url(../images/main/main_bg_mo.png) no-repeat 76% 50% / cover;}
+    .main .txt_box::before{background: url(../images/main/main_bg_mo.jpg) no-repeat 76% 50% / cover;}
     .main .txt_box .main_tit{font-size: 3.5rem;line-height: 43px;letter-spacing: -5.41px;}
     .main .txt_box button.m_btn{margin-top: 45px;}
     .main .m_content .m_cont01 .mapBox img{width: 89%;}
@@ -241,7 +241,7 @@ img.ani_img03{position: absolute;bottom: 50px;left: 50px;z-index: -1;animation: 
 }
 
 @media (max-width:420px) {
-    .main .txt_box::before {background: url(../images/main/main_bg_mo.png) no-repeat 63% 50% / cover;}
+    .main .txt_box::before {background: url(../images/main/main_bg_mo.jpg) no-repeat 63% 50% / cover;}
     .main .m_legend {width: 95px; position: absolute; z-index: 1;}
 }
 
