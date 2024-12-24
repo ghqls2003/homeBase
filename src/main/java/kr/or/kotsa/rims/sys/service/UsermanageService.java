@@ -36,8 +36,6 @@ public interface UsermanageService {
 
 	int updateWithdraw(Map<String, Object> paramsMap);
 
-	List<Map<String, Object>> selectApiStts(Map<String, Object> paramsMap);
-
 	List<Map<String, Object>> selectBzmnSe(Map<String, Object> paramsMap);
 
 	List<Map<String, Object>> selectCtpvNm(Map<String, Object> paramsMap);

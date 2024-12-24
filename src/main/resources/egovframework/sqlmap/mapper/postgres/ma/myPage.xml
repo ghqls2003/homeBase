@@ -137,25 +137,4 @@
 		where user_sn = #{userSn}::numeric
 	</update>
 
-	<select id="selectApiStts" resultType="resultMap">
-		select user_sn, stts_cd, issu_dt from dqvs.dvs_api_mt_key
-		WHERE 1=1
-		<if test="userSn != '' and userSn != null">
-			and user_sn = #{userSn}::numeric
-		</if>
-		order by issu_dt desc
-	</select>
-
-	<update id="updateApiKey">
-        UPDATE dqvs.dvs_api_mt_key
-        SET stts_cd='4'
-		where user_sn = #{userSn}::numeric
-	</update>
-
-	<update id="updateApiStts">
-        UPDATE dqvs.dvs_api_mt_stts
-        SET stts_cd='4'
-		where user_sn = #{userSn}::numeric
-	</update>
-
 </mapper>

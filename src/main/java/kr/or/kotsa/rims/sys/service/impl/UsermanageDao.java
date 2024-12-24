@@ -114,16 +114,4 @@ public class UsermanageDao extends CmmnAbstractMapper {
 		return selectOne("usermanage.selectCompanyListCnt", paramsMap);
 	}
 
-	public List<Map<String, Object>> selectApiStts(Map<String, Object> paramsMap) {
-		return selectList("usermanage.selectApiStts", paramsMap);
-	}
-
-	public int updateApiKey(Map<String, Object> paramsMap) {
-		return update("usermanage.updateApiKey", paramsMap);
-	}
-
-	public int updateApiStts(Map<String, Object> paramsMap) {
-		return update("usermanage.updateApiStts", paramsMap);
-	}
-
 }

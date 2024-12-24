@@ -48,21 +48,6 @@ public class MyPageServiceImpl extends CmmnAbstractServiceImpl implements MyPage
 	}
 
 	@Override
-	public int updateMyWithdraw(Map<String, Object> paramsMap) {
-		if(paramsMap.get("api").equals("Y")) {
-			myPageDao.updateApiKey(paramsMap);
-			myPageDao.updateApiStts(paramsMap);
-		}
-
-		return myPageDao.updateMyWithdraw(paramsMap);
-	}
-
-	@Override
-	public List<Map<String, Object>> selectApiStts(Map<String, Object> paramsMap) {
-		return myPageDao.selectApiStts(paramsMap);
-	}
-
-	@Override
 	public List<Map<String, Object>> listView(Map<String, Object> paramsMap) {
 		return myPageDao.listView(paramsMap);
 	}

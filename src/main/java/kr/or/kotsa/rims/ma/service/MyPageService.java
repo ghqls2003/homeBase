@@ -20,8 +20,6 @@ public interface MyPageService {
 
 	public int updateMyWithdraw(Map<String, Object> paramsMap);
 
-	public List<Map<String, Object>> selectApiStts(Map<String, Object> paramsMap);
-
 	public List<Map<String, Object>> listView(Map<String, Object> paramsMap);
 
 	public int listViewCnt(Map<String, Object> paramsMap);

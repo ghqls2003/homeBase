@@ -262,7 +262,6 @@
 					{ field: "authrt_nm", title: "권한명", width: "80px", template: "#= authrt_nm != null ? authrt_nm : '-' #", sortable: false},
 					{ field: "authrt_cd", title: "권한코드", width: "70px", template: "#= authrt_cd != null ? authrt_cd : '-' #", sortable: false},
 					{ field: "stts_cd", title: "계정상태", width: "70px", template: "#= stts_cd != null ? stts_cd : '-' #", sortable: false},
-					{ field: "api", title: "API 사용여부", width: "70px", template: "#: api #", sortable: false},
 					{ field: "reg_dt", title: "가입승인일", width: "130px", template: "#= reg_dt != null ? reg_dt : '-' #", sortable: true}
 				],
 				navigatable: true,
@@ -734,20 +733,13 @@
 		},
 		updateLock: function(user_sn){
 			var param = {
-				userSn : user_sn,
-				api : "N",
+				userSn : user_sn
 			};
-			ajax(false, contextPath + '/sys/usermanage/selectApiStts', 'body', '처리중입니다.', param, function(result) {
-				if(!result.isEmpty()){
-					if(result[0].sttsCd == "2")
-						param.api = "Y"
-				}
-				ajax(true, contextPath + '/sys/usermanage/updateLock.do', 'body', '확인인중입니다.', param, function (data) {
-					alert("정지되었습니다.");
+			ajax(true, contextPath + '/sys/usermanage/updateLock.do', 'body', '확인인중입니다.', param, function (data) {
+				alert("정지되었습니다.");
 
-					$usermanage.event.closeDetailPopup();
-					$usermanage.event.selectUserDetailInfo(param);
-				});
+				$usermanage.event.closeDetailPopup();
+				$usermanage.event.selectUserDetailInfo(param);
 			});
 		},
 

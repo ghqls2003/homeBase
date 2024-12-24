@@ -107,7 +107,6 @@
 									<th>권한명</th>
 									<th>권한코드</th>
 									<th>계정상태</th>
-									<th>API 사용여부</th>
 									<th>가입승인일</th>
 								</tr>
 							</thead>

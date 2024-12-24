@@ -106,20 +106,6 @@ public class MyPageController extends CmmnAbstractServiceImpl {
     }
 
 	/**
-     * api 상태 조회
-     * @param paramsMap
-     * @return
-     * @throws RimsException
-     */
-	@RequestMapping("/myPage/selectApiStts")
-	@ResponseBody
-    public Object ApiStts(@RequestBody Map<String, Object> paramsMap) throws RimsException {
-        paramsMap.put("userSn", getUserSn());
-
-        return mypageService.selectApiStts(paramsMap);
-    }
-
-	/**
 	 * 사용자 정보 수정
 	 *
 	 * @param paramsMap

@@ -37,17 +37,4 @@ public class MyPageDao extends CmmnAbstractMapper {
 	public int listViewCnt(Map<String, Object> paramsMap) {
 		return selectOne("myPage.listViewCnt", paramsMap);
 	}
-
-	public List<Map<String, Object>> selectApiStts(Map<String, Object> paramsMap) {
-		return selectList("myPage.selectApiStts", paramsMap);
-	}
-
-	public int updateApiKey(Map<String, Object> paramsMap) {
-		return update("myPage.updateApiKey", paramsMap);
-	}
-
-	public int updateApiStts(Map<String, Object> paramsMap) {
-		return update("myPage.updateApiStts", paramsMap);
-	}
-
 }

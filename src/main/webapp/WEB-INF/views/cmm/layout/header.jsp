@@ -34,14 +34,6 @@
 				// If message exists, display it and then remove it from session
 				if (authrtCd != null && !authrtCd.isEmpty() && !authrtCd.equals("A01")) {
 				%>
-				<div class="input2">
-					<label for="searchWrd_header">검색창</label> <input class="input"
-						id="searchWrd_header" aria-label="검색창"
-						style="position: relative; width: 253px; height: 43px; border-radius: 22px; background-color: #fff; font-size: 1.6rem; line-height: 26px; border-color: #4A64F5; padding-left: 15px;">
-					<button class="hr_btn2" id="searchBtnHeader">
-						<img src="${contextPath}/images/ico_search.png" alt="검색 아이콘">
-					</button>
-				</div>
 				<button class="hr_btn login_btn"
 					onClick="location.href='${ contextPath }/ma/logout'">
 					<!-- <button class="hr_btn login_btn"
@@ -58,13 +50,6 @@
 				<%
 				} else {
 				%>
-				<div class="input2">
-					<input class="input" id="searchWrd_header" aria-label="검색창"
-						style="position: relative; width: 253px; height: 43px; border-radius: 22px; background-color: #fff; font-size: 1.6rem; line-height: 26px; border-color: #4A64F5; padding-left: 15px;">
-					<button class="hr_btn3" id="searchBtnHeader">
-						<img src="${contextPath}/images/ico_search.png" alt="검색 아이콘">
-					</button>
-				</div>
 				<button class="hr_btn login_btn" onClick="location.href='${ contextPath }/ma/login'">로그인</button>
 				<%
 				}
@@ -87,14 +72,6 @@
 	</div>
 	<div class="mo_scroll">
 		<div class="inner">
-			<div class="input2">
-				<label for="searchWrd_header2">검색창</label>
-				<input class="input" id="searchWrd_header2" aria-label="검색창"
-					style="position: relative; height: 43px; border-radius: 22px; background-color: #fff; font-size: 1.6rem; line-height: 26px; border-color: #4A64F5; padding-left: 15px;">
-				<button class="hr_btn3" id="searchBtnHeader2">
-					<img src="${contextPath}/images/ico_search.png" alt="검색 아이콘">
-				</button>
-			</div>
 			<ul class="gnb mobileGnb">
 			</ul>
 			<!-- 2. 로그인전 나타나는 영역 시작-->

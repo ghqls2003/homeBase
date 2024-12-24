@@ -48,11 +48,7 @@
 		        WHEN user_sn IN (SELECT user_sn FROM dqvs.dvs_cmm_mt_sso) THEN 'sso'
 		        WHEN user_sn IN (SELECT user_sn FROM dqvs.dvs_cmm_mt_onepass) THEN 'onepass'
 		        ELSE '-'
-		    END AS source_table,
-		    case
-				when user_sn in ( select user_sn from dqvs.dvs_api_mt_key) then 'Y'
-				else 'N'
-			end as api
+		    END AS source_table
 		from
 			(
 			select * from (
@@ -166,11 +162,7 @@
 		        WHEN user_sn IN (SELECT user_sn FROM dqvs.dvs_cmm_mt_sso) THEN 'sso'
 		        WHEN user_sn IN (SELECT user_sn FROM dqvs.dvs_cmm_mt_onepass) THEN 'onepass'
 		        ELSE '-'
-		    END AS source_table,
-		    case
-				when user_sn in ( select user_sn from dqvs.dvs_api_mt_key) then 'Y'
-				else 'N'
-			end as api
+		    END AS source_table
 		from
 			(
 			select * from (
@@ -616,30 +608,5 @@
 	        	assi_telno=dqvs.pca_encrypt(#{assiTelno}, '150')
 			where user_sn = #{userSn}::numeric
     </update>
-
-    <select id="selectApiStts" resultType="resultMap">
-		select user_sn, stts_cd, issu_dt from dqvs.dvs_api_mt_key
-		WHERE 1=1
-		<if test="userSn != '' and userSn != null">
-			and user_sn = #{userSn}::numeric
-		</if>
-		order by issu_dt desc
-	</select>
-
-    <update id="updateApiKey">
-		<if test="userSn != null and userSn != ''">
-	        UPDATE dqvs.dvs_api_mt_key
-	        SET stts_cd='4'
-			where user_sn = #{userSn}::numeric
-		</if>
-	</update>
-
-	<update id="updateApiStts">
-		<if test="userSn != null and userSn != ''">
-	        UPDATE dqvs.dvs_api_mt_stts
-	        SET stts_cd='4'
-			where user_sn = #{userSn}::numeric
-		</if>
-	</update>
 
 </mapper>

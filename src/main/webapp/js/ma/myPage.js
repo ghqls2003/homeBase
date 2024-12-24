@@ -402,16 +402,9 @@
 			param = {userSn:$("#userSn").val()};
 
 			if($("#userSn").val() && confirm("탈퇴하시겠습니까?")){
-				ajax(false, contextPath + '/ma/myPage/selectApiStts', 'body', '처리중입니다.', param, function(result) {
-					if(result[0].sttsCd == "2")
-						param.api = "Y"
-					else
-						param.api = "N"
-
-					ajax(false, contextPath + '/ma/myPage/updateMyWithdraw.do', 'body', '처리중입니다.', param, function(data) {
-						alert("탈퇴처리 되었습니다.");
-						location.href=contextPath+'/ma/logout'
-					});
+				ajax(false, contextPath + '/ma/myPage/updateMyWithdraw.do', 'body', '처리중입니다.', param, function(data) {
+					alert("탈퇴처리 되었습니다.");
+					location.href=contextPath+'/ma/logout'
 				});
 			}
 		},

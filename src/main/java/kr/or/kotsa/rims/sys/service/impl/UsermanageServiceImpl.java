@@ -71,11 +71,6 @@ public class UsermanageServiceImpl extends CmmnAbstractServiceImpl implements Us
 
 	@Override
 	public int updateLock(Map<String, Object> paramsMap) {
-		if(paramsMap.get("api").equals("Y")) {
-			usermanageDao.updateApiKey(paramsMap);
-			usermanageDao.updateApiStts(paramsMap);
-		}
-
 		return usermanageDao.updateLock(paramsMap);
 	}
 
@@ -102,11 +97,6 @@ public class UsermanageServiceImpl extends CmmnAbstractServiceImpl implements Us
 	@Override
 	public int updateAdminInfo(Map<String, Object> paramsMap) {
 		return usermanageDao.updateAdminInfo(paramsMap);
-	}
-
-	@Override
-	public List<Map<String, Object>> selectApiStts(Map<String, Object> paramsMap) {
-		return usermanageDao.selectApiStts(paramsMap);
 	}
 
 	@Override
